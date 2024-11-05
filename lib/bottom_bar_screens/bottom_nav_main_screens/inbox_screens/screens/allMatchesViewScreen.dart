@@ -61,6 +61,7 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
                   top: 0,
                   left: 0,
                   right: 0,
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
