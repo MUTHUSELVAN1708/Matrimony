@@ -1,6 +1,6 @@
 class Api {
-  // static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
-  static const String baseUrl = 'http://192.168.1.12:8080/api/ahathirumanam';
+  static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
+  // static const String baseUrl = 'http://192.168.1.12:8080/api/ahathirumanam';
 
   static const String createUser = '$baseUrl/userCreate';
   static const String otpVerify = '$baseUrl/verifyOTP';

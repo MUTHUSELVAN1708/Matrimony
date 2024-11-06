@@ -163,7 +163,7 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                                   onChanged: (data) {
                                     setState(() {
                                       fromItem = data;
-                                      toItem = [];
+                                      toItem.clear();
                                     });
                                   },
                                 ),
