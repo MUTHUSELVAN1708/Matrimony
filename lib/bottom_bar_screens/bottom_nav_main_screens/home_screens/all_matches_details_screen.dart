@@ -6,7 +6,8 @@ class AllMatchesDetailsScreen extends StatefulWidget {
   const AllMatchesDetailsScreen({super.key});
 
   @override
-  State<AllMatchesDetailsScreen> createState() => _AllMatchesDetailsScreenState();
+  State<AllMatchesDetailsScreen> createState() =>
+      _AllMatchesDetailsScreenState();
 }
 
 class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
@@ -62,7 +63,6 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                   top: 0,
                   left: 0,
                   right: 0,
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -101,39 +101,62 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
           //     _buildInfoChip('Software Professional'),
           //   ],
           // ),
-          _buildBasicDetails('26 Yrs, 5\'9"','profileIcon'),
+          _buildBasicDetails('26 Yrs, 5\'9"', 'profileIcon'),
           const SizedBox(height: 8),
-          _buildBasicDetails('Church Of South India (Caste No Bar)','building_icon'),
+          _buildBasicDetails(
+              'Church Of South India (Caste No Bar)', 'building_icon'),
           const SizedBox(height: 8),
-          _buildBasicDetails('BE, Software Professional','professional_icon'),
+          _buildBasicDetails('BE, Software Professional', 'professional_icon'),
           const SizedBox(height: 8),
-          _buildBasicDetails('Chennai, Tamil Nadu','location_icon'),
+          _buildBasicDetails('Chennai, Tamil Nadu', 'location_icon'),
           const SizedBox(height: 15),
-          const Text('About Gowtham',style: TextStyle(
-            fontSize: 20,
-          ),),
+          const Text(
+            'About Gowtham',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
           const SizedBox(height: 8),
           const Text(
             'To describe about our family, we belong to the Christian Church of South India caste and looking for a match from other communities also. We are a nuclear family with traditional values. My son resides in Chennai.',
-            style: TextStyle(height: 1.5,fontSize: 14),
+            style: TextStyle(height: 1.5, fontSize: 14),
           ),
           const SizedBox(height: 8),
-          const Text('About his family',style: TextStyle(
-            fontSize: 20,
-          ),),
+          const Text(
+            'About his family',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
           const SizedBox(height: 8),
           const Text(
             'My son is Gowtham and myself working in real estate. My wife is a homemaker and my daughter is a fashion designer.',
-            style: TextStyle(height: 1.5,fontSize: 14),
+            style: TextStyle(height: 1.5, fontSize: 14),
           ),
           const SizedBox(height: 12),
-          Center(child: Text('Profile verification score - 2/5',style: TextStyle(color: Colors.red.shade700,fontSize: 20),)),
+          Center(
+              child: Text(
+            'Profile verification score - 2/5',
+            style: TextStyle(color: Colors.red.shade700, fontSize: 20),
+          )),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(5, (index) {
-              final stringsVerified = ['Mobile\nVerified','Govt.ID\nVerified','Photo\nVerified','Education\nVerified','Income\nVerified'];
-              final stringsNotVerified = ['Mobile Not\nVerified','Govt.ID Not\nVerified','Photo Not\nVerified','Education Not\nVerified','Income Not\nVerified'];
+              final stringsVerified = [
+                'Mobile\nVerified',
+                'Govt.ID\nVerified',
+                'Photo\nVerified',
+                'Education\nVerified',
+                'Income\nVerified'
+              ];
+              final stringsNotVerified = [
+                'Mobile Not\nVerified',
+                'Govt.ID Not\nVerified',
+                'Photo Not\nVerified',
+                'Education Not\nVerified',
+                'Income Not\nVerified'
+              ];
               return Column(
                 children: [
                   Container(
@@ -142,10 +165,14 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                     color: Colors.red,
                     // child: const CustomSvg(name: ''),
                   ),
-                  Text(stringsVerified[index],style: const TextStyle(
-                    color: Colors.black38,fontSize: 12,
+                  Text(
+                    stringsVerified[index],
+                    style: const TextStyle(
+                      color: Colors.black38,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,),
                 ],
               );
             }),
@@ -159,82 +186,83 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
     return Column(
       children: [
         _buildSection('His Basic Details', [
-          _buildDetailItem('Age', '26 Years','user_alt'),
-          _buildDetailItem('Physique', "68Kg | " "5'5 | ""Normal",'height'),
-          _buildDetailItem('Spoken Languages', 'Tamil (Mother Tongue)','language'),
-          _buildDetailItem('Eating Habits', 'To View His Eating Habits, Add Yours','chef_hat'),
-          _buildDetailItem('Profile Created By', 'Parents','user-edit'),
-          _buildDetailItem('Marital Status', 'Never Married','wedding_ring'),
-          _buildDetailItem('Lives In', 'Chennai, Tamil Nadu','location_icon'),
-          _buildDetailItem('Citizenship', 'Indian Citizen','flag'),
-          _buildDetailItem('Smoking Habits', 'Doesnt Smoke','smoking'),
-          _buildDetailItem('Drinking Habits', 'Doesnt Drink','wine_glass'),
+          _buildDetailItem('Age', '26 Years', 'user_alt'),
+          _buildDetailItem('Physique', "68Kg | " "5'5 | " "Normal", 'height'),
+          _buildDetailItem(
+              'Spoken Languages', 'Tamil (Mother Tongue)', 'language'),
+          _buildDetailItem('Eating Habits',
+              'To View His Eating Habits, Add Yours', 'chef_hat'),
+          _buildDetailItem('Profile Created By', 'Parents', 'user-edit'),
+          _buildDetailItem('Marital Status', 'Never Married', 'wedding_ring'),
+          _buildDetailItem('Lives In', 'Chennai, Tamil Nadu', 'location_icon'),
+          _buildDetailItem('Citizenship', 'Indian Citizen', 'flag'),
+          _buildDetailItem('Smoking Habits', 'Doesnt Smoke', 'smoking'),
+          _buildDetailItem('Drinking Habits', 'Doesnt Drink', 'wine_glass'),
         ]),
         _buildSection('contact number', [
-          _buildDetailItem('Mobile Number','+91 9560840637','Phone _Calling_icon'),
+          _buildDetailItem(
+              'Mobile Number', '+91 9560840637', 'Phone _Calling_icon'),
           ...[
-           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-               Container(
-                color: Colors.blue,
-                height: 20,
-                // width: 5,
-                child: Row(
-                  children: [
-                    Text('verified')
-
-                  ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  color: Colors.blue,
+                  height: 20,
+                  // width: 5,
+                  child: Row(
+                    children: [Text('verified')],
+                  ),
                 ),
-               ),
                 Container(
-                // color: Colors.blue,
-                height: 20,
-                //  width: 5,
-                 child: Row(
-                  children:  [
-                    SvgPicture.asset('assets/whatsapp_icon.svg'),
-
-                    Text('whatsapp')
-                    
-                  ],
-               ),),
+                  // color: Colors.blue,
+                  height: 20,
+                  //  width: 5,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset('assets/whatsapp_icon.svg'),
+                      Text('whatsapp')
+                    ],
+                  ),
+                ),
                 Container(
-                color: Colors.blue,
-                height: 20,
-                //  width: 5,
-                 child: Row(
-                  children: [
-                    Text('Call')
-                    
-                  ],
-               ))
-            ],
-           )
+                    color: Colors.blue,
+                    height: 20,
+                    //  width: 5,
+                    child: Row(
+                      children: [Text('Call')],
+                    ))
+              ],
+            )
           ]
         ]),
-
         _buildSection('His Religious Details', [
-          _buildDetailItem('Religion', 'Christian','kumbudu'),
-          _buildDetailItem('Caste/Subcaste', 'Church Of Sounth India','notes'),
-          _buildDetailItem('Gothra(M)', 'Not Specified','people'),
+          _buildDetailItem('Religion', 'Christian', 'kumbudu'),
+          _buildDetailItem('Caste/Subcaste', 'Church Of Sounth India', 'notes'),
+          _buildDetailItem('Gothra(M)', 'Not Specified', 'people'),
         ]),
         _buildSection('His Horoscope Details', [
-          _buildDetailItem('Date Of Birth', '19.09.2024','calendar_date'),
-          _buildDetailItem('Time Of Birth', '10:10:20','calendar_date'),
-          _buildDetailItem('Star/Rassi', 'Star is Ashwini\nRaasi is TVK','astronomy'),
+          _buildDetailItem('Date Of Birth', '19.09.2024', 'calendar_date'),
+          _buildDetailItem('Time Of Birth', '10:10:20', 'calendar_date'),
+          _buildDetailItem(
+              'Star/Rassi', 'Star is Ashwini\nRaasi is TVK', 'astronomy'),
         ]),
         _buildSection('His Professional Details', [
-          _buildDetailItem('Employment', 'Works in Private Sector','card_profile'),
-          _buildDetailItem('Annual Income', '16-18 Lakhs','money_bag'),
-          _buildDetailItem('Education', 'B.E Computer Science Engineering','professional_icon'),
-          _buildDetailItem('Occupation', 'Software Professional','professional_icon'),
+          _buildDetailItem(
+              'Employment', 'Works in Private Sector', 'card_profile'),
+          _buildDetailItem('Annual Income', '16-18 Lakhs', 'money_bag'),
+          _buildDetailItem('Education', 'B.E Computer Science Engineering',
+              'professional_icon'),
+          _buildDetailItem(
+              'Occupation', 'Software Professional', 'professional_icon'),
         ]),
         _buildSection('About His Family', [
-          _buildDetailItem('Family Type', 'Joint Family','family_type'),
-          _buildDetailItem('Family Status', 'Upper Middle Class','family_type'),
-          _buildDetailItem('Parents','Father is a businessman, mother is a home maker', '2person'),
-          _buildDetailItem('Sisters','1 Sister', 'profileIcon'),
+          _buildDetailItem('Family Type', 'Joint Family', 'family_type'),
+          _buildDetailItem(
+              'Family Status', 'Upper Middle Class', 'family_type'),
+          _buildDetailItem('Parents',
+              'Father is a businessman, mother is a home maker', '2person'),
+          _buildDetailItem('Sisters', '1 Sister', 'profileIcon'),
         ]),
       ],
     );
@@ -267,7 +295,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
     );
   }
 
-  Widget _buildDetailItem(String label, String value,String icon) {
+  Widget _buildDetailItem(String label, String value, String icon) {
     print("icon");
     print(icon);
     return Container(
@@ -288,7 +316,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                 ),
                 Text(
                   value,
-                  maxLines: 2, 
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 14,
@@ -299,7 +327,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
             ),
           ),
           const SizedBox(width: 8),
-         CustomSvg(name: (icon.isEmpty) ? 'new_verify' : icon)
+          CustomSvg(name: (icon.isEmpty) ? 'new_verify' : icon)
 // Space between text and icon
           // const Icon(
           //   Icons.verified,
@@ -373,29 +401,29 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
           ),
         ),
         _buildSection('His Basic Preferences', [
-          _buildDetailItem('Age', '24-28 years',''),
-          _buildDetailItem('Height', "4'7\"-5'7\"",''),
-          _buildDetailItem('Marital Status', 'Never Married',''),
-          _buildDetailItem('Physical Status', 'Normal',''),
+          _buildDetailItem('Age', '24-28 years', ''),
+          _buildDetailItem('Height', "4'7\"-5'7\"", ''),
+          _buildDetailItem('Marital Status', 'Never Married', ''),
+          _buildDetailItem('Physical Status', 'Normal', ''),
         ]),
         _buildSection('His Religious Preferences', [
-          _buildDetailItem('Preferred Religion', 'Christian',''),
-          _buildDetailItem('Preferred Caste', "Any",''),
-          _buildDetailItem('Preferred Star', 'Any',''),
-          _buildDetailItem('Preferred Dosham', 'Any',''),
+          _buildDetailItem('Preferred Religion', 'Christian', ''),
+          _buildDetailItem('Preferred Caste', "Any", ''),
+          _buildDetailItem('Preferred Star', 'Any', ''),
+          _buildDetailItem('Preferred Dosham', 'Any', ''),
         ]),
         _buildSection('His Professional Preferences', [
           _buildDetailItem('Preferred education',
-              'Aeronautical Engineering, B.Arch, B.Plan, BS',''),
-          _buildDetailItem('Preferred Employment Type', "Any",''),
-          _buildDetailItem('Preferred Occupation', 'Any',''),
-          _buildDetailItem('Preferred Annual Income', 'Any',''),
+              'Aeronautical Engineering, B.Arch, B.Plan, BS', ''),
+          _buildDetailItem('Preferred Employment Type', "Any", ''),
+          _buildDetailItem('Preferred Occupation', 'Any', ''),
+          _buildDetailItem('Preferred Annual Income', 'Any', ''),
         ]),
         _buildSection('His Location Preferences', [
-          _buildDetailItem('Preferred Country', 'India',''),
+          _buildDetailItem('Preferred Country', 'India', ''),
           _buildDetailItem('Preferred Residing State',
-              "Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, Pondicherry",''),
-          _buildDetailItem('Preferred Residing City', 'Any',''),
+              "Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, Pondicherry", ''),
+          _buildDetailItem('Preferred Residing City', 'Any', ''),
         ]),
       ],
     );
@@ -415,17 +443,14 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
     );
   }
 
-  Widget _buildBasicDetails(String label,String icon){
+  Widget _buildBasicDetails(String label, String icon) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14
-            ),
+            style: const TextStyle(color: Colors.black, fontSize: 14),
             overflow: TextOverflow.ellipsis,
           ),
         ),

@@ -52,6 +52,7 @@ class ImagePickerState {
     );
   }
 }
+
 class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
   ImagePickerNotifier() : super(ImagePickerState());
 
@@ -61,7 +62,8 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
     state = state.copyWith(isLoading1: true);
     await _pickImageAndUpdateState(
       pickImage: _pickAndConvertImage(),
-      updateState: (imageUrl) => state.copyWith(imageUrl1: imageUrl, isLoading1: false),
+      updateState: (imageUrl) =>
+          state.copyWith(imageUrl1: imageUrl, isLoading1: false),
       errorState: (error) => state.copyWith(error1: error, isLoading1: false),
     );
   }
@@ -70,7 +72,8 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
     state = state.copyWith(isLoading2: true);
     await _pickImageAndUpdateState(
       pickImage: _pickAndConvertImage(),
-      updateState: (imageUrl) => state.copyWith(imageUrl2: imageUrl, isLoading2: false),
+      updateState: (imageUrl) =>
+          state.copyWith(imageUrl2: imageUrl, isLoading2: false),
       errorState: (error) => state.copyWith(error2: error, isLoading2: false),
     );
   }
@@ -79,7 +82,8 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
     state = state.copyWith(isLoading3: true);
     await _pickImageAndUpdateState(
       pickImage: _pickAndConvertImage(),
-      updateState: (imageUrl) => state.copyWith(imageUrl3: imageUrl, isLoading3: false),
+      updateState: (imageUrl) =>
+          state.copyWith(imageUrl3: imageUrl, isLoading3: false),
       errorState: (error) => state.copyWith(error3: error, isLoading3: false),
     );
   }
@@ -102,13 +106,15 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
   }
 
   Future<String?> _pickAndConvertImage() async {
-    final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    final XFile? image =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
     print(image);
     if (image != null) {
       print("entered converter");
 
       if (kIsWeb) {
-        final Uint8List bytes = await image.readAsBytes(); // Use image.readAsBytes() directly
+        final Uint8List bytes =
+            await image.readAsBytes(); // Use image.readAsBytes() directly
         final base64String = base64Encode(bytes);
         print(base64String);
         return base64String;
@@ -122,11 +128,12 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
         return base64String;
       }
     }
-    return null; 
+    return null;
   }
 }
 
 // Provider
-final imagePickerProvider = StateNotifierProvider<ImagePickerNotifier, ImagePickerState>((ref) {
+final imagePickerProvider =
+    StateNotifierProvider<ImagePickerNotifier, ImagePickerState>((ref) {
   return ImagePickerNotifier();
 });

@@ -1,5 +1,5 @@
-class PartnerPreferenceConstData{
-   static const List<String> toAgeList = [
+class PartnerPreferenceConstData {
+  static const List<String> toAgeList = [
     '18',
     '19',
     '20',
@@ -25,7 +25,7 @@ class PartnerPreferenceConstData{
     '40',
   ];
 
-static  var myHeightOptions = {
+  static var myHeightOptions = {
     0: '4 ft 6 in (137 cm)',
     1: '4 ft 7 in (139 cm)',
     2: '4 ft 8 in (142 cm)',
@@ -54,33 +54,37 @@ static  var myHeightOptions = {
     25: '6 ft 8 in (203 cm)',
     26: '6 ft 9 in (206 cm)',
   };
-  static const  List<String> maritalStatusOptions = [
+  static const List<String> maritalStatusOptions = [
     'Never Married',
     'Divorced',
     'Widowed',
     'Separated'
   ];
- static const  List<String> motherTongueOptions = [
+  static const List<String> motherTongueOptions = [
     'English',
     'Hindi',
     'Tamil',
     'Telugu',
     'Malayalam'
   ];
-  static const  List<String> physicalStatusOptions = [
+  static const List<String> physicalStatusOptions = [
     'Normal',
     'Physically Challenged'
   ];
-  static const  List<String> eatingHabitsOptions = [
+  static const List<String> eatingHabitsOptions = [
     'Vegetarian',
     'Non-Vegetarian',
     'Eggetarian',
     'Vegan'
   ];
- static const  List<String> drinkingHabitsOptions = ['No', 'Occasionally', 'Yes'];
-  static const  List<String> smokingHabitsOptions = ['No', 'Occasionally', 'Yes'];
-
-
-
-
+  static const List<String> drinkingHabitsOptions = [
+    'No',
+    'Occasionally',
+    'Yes'
+  ];
+  static const List<String> smokingHabitsOptions = [
+    'No',
+    'Occasionally',
+    'Yes'
+  ];
 }

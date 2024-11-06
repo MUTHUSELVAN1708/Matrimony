@@ -226,9 +226,8 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                           : null,
                                       onChanged: (String? value) {
                                         setState(() {
-                                          selectedValues = value != null
-                                              ? [value]
-                                              : [];
+                                          selectedValues =
+                                              value != null ? [value] : [];
                                         });
                                       },
                                       activeColor: Colors.red,

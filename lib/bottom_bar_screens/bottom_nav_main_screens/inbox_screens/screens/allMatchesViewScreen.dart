@@ -61,7 +61,6 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
                   top: 0,
                   left: 0,
                   right: 0,
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -100,39 +99,62 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
           //     _buildInfoChip('Software Professional'),
           //   ],
           // ),
-          _buildBasicDetails('26 Yrs, 5\'9"','profileIcon'),
+          _buildBasicDetails('26 Yrs, 5\'9"', 'profileIcon'),
           const SizedBox(height: 8),
-          _buildBasicDetails('Church Of South India (Caste No Bar)','building_icon'),
+          _buildBasicDetails(
+              'Church Of South India (Caste No Bar)', 'building_icon'),
           const SizedBox(height: 8),
-          _buildBasicDetails('BE, Software Professional','professional_icon'),
+          _buildBasicDetails('BE, Software Professional', 'professional_icon'),
           const SizedBox(height: 8),
-          _buildBasicDetails('Chennai, Tamil Nadu','location_icon'),
+          _buildBasicDetails('Chennai, Tamil Nadu', 'location_icon'),
           const SizedBox(height: 15),
-          const Text('About Gowtham',style: TextStyle(
-            fontSize: 20,
-          ),),
+          const Text(
+            'About Gowtham',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
           const SizedBox(height: 8),
           const Text(
             'To describe about our family, we belong to the Christian Church of South India caste and looking for a match from other communities also. We are a nuclear family with traditional values. My son resides in Chennai.',
-            style: TextStyle(height: 1.5,fontSize: 14),
+            style: TextStyle(height: 1.5, fontSize: 14),
           ),
           const SizedBox(height: 8),
-          const Text('About his family',style: TextStyle(
-            fontSize: 20,
-          ),),
+          const Text(
+            'About his family',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
           const SizedBox(height: 8),
           const Text(
             'My son is Gowtham and myself working in real estate. My wife is a homemaker and my daughter is a fashion designer.',
-            style: TextStyle(height: 1.5,fontSize: 14),
+            style: TextStyle(height: 1.5, fontSize: 14),
           ),
           const SizedBox(height: 12),
-          Center(child: Text('Profile verification score - 2/5',style: TextStyle(color: Colors.red.shade700,fontSize: 20),)),
+          Center(
+              child: Text(
+            'Profile verification score - 2/5',
+            style: TextStyle(color: Colors.red.shade700, fontSize: 20),
+          )),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(5, (index) {
-              final stringsVerified = ['Mobile\nVerified','Govt.ID\nVerified','Photo\nVerified','Education\nVerified','Income\nVerified'];
-              final stringsNotVerified = ['Mobile Not\nVerified','Govt.ID Not\nVerified','Photo Not\nVerified','Education Not\nVerified','Income Not\nVerified'];
+              final stringsVerified = [
+                'Mobile\nVerified',
+                'Govt.ID\nVerified',
+                'Photo\nVerified',
+                'Education\nVerified',
+                'Income\nVerified'
+              ];
+              final stringsNotVerified = [
+                'Mobile Not\nVerified',
+                'Govt.ID Not\nVerified',
+                'Photo Not\nVerified',
+                'Education Not\nVerified',
+                'Income Not\nVerified'
+              ];
               return Column(
                 children: [
                   Container(
@@ -141,10 +163,14 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
                     color: Colors.red,
                     // child: const CustomSvg(name: ''),
                   ),
-                  Text(stringsVerified[index],style: const TextStyle(
-                    color: Colors.black38,fontSize: 12,
+                  Text(
+                    stringsVerified[index],
+                    style: const TextStyle(
+                      color: Colors.black38,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,),
                 ],
               );
             }),
@@ -158,38 +184,46 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
     return Column(
       children: [
         _buildSection('His Basic Details', [
-          _buildDetailItem('Age', '26 Years','user_alt'),
-          _buildDetailItem('Physique', "68Kg | " "5'5 | ""Normal",'height'),
-          _buildDetailItem('Spoken Languages', 'Tamil (Mother Tongue)','language'),
-          _buildDetailItem('Eating Habits', 'To View His Eating Habits, Add Yours','chef_hat'),
-          _buildDetailItem('Profile Created By', 'Parents','user-edit'),
-          _buildDetailItem('Marital Status', 'Never Married','wedding_ring'),
-          _buildDetailItem('Lives In', 'Chennai, Tamil Nadu','location_icon'),
-          _buildDetailItem('Citizenship', 'Indian Citizen','flag'),
-          _buildDetailItem('Smoking Habits', 'Doesnt Smoke','smoking'),
-          _buildDetailItem('Drinking Habits', 'Doesnt Drink','wine_glass'),
+          _buildDetailItem('Age', '26 Years', 'user_alt'),
+          _buildDetailItem('Physique', "68Kg | " "5'5 | " "Normal", 'height'),
+          _buildDetailItem(
+              'Spoken Languages', 'Tamil (Mother Tongue)', 'language'),
+          _buildDetailItem('Eating Habits',
+              'To View His Eating Habits, Add Yours', 'chef_hat'),
+          _buildDetailItem('Profile Created By', 'Parents', 'user-edit'),
+          _buildDetailItem('Marital Status', 'Never Married', 'wedding_ring'),
+          _buildDetailItem('Lives In', 'Chennai, Tamil Nadu', 'location_icon'),
+          _buildDetailItem('Citizenship', 'Indian Citizen', 'flag'),
+          _buildDetailItem('Smoking Habits', 'Doesnt Smoke', 'smoking'),
+          _buildDetailItem('Drinking Habits', 'Doesnt Drink', 'wine_glass'),
         ]),
         _buildSection('His Religious Details', [
-          _buildDetailItem('Religion', 'Christian','kumbudu'),
-          _buildDetailItem('Caste/Subcaste', 'Church Of Sounth India','notes'),
-          _buildDetailItem('Gothra(M)', 'Not Specified','people'),
+          _buildDetailItem('Religion', 'Christian', 'kumbudu'),
+          _buildDetailItem('Caste/Subcaste', 'Church Of Sounth India', 'notes'),
+          _buildDetailItem('Gothra(M)', 'Not Specified', 'people'),
         ]),
         _buildSection('His Horoscope Details', [
-          _buildDetailItem('Date Of Birth', '19.09.2024','calendar_date'),
-          _buildDetailItem('Time Of Birth', '10:10:20','calendar_date'),
-          _buildDetailItem('Star/Rassi', 'Star is Ashwini\nRaasi is TVK','astronomy'),
+          _buildDetailItem('Date Of Birth', '19.09.2024', 'calendar_date'),
+          _buildDetailItem('Time Of Birth', '10:10:20', 'calendar_date'),
+          _buildDetailItem(
+              'Star/Rassi', 'Star is Ashwini\nRaasi is TVK', 'astronomy'),
         ]),
         _buildSection('His Professional Details', [
-          _buildDetailItem('Employment', 'Works in Private Sector','card_profile'),
-          _buildDetailItem('Annual Income', '16-18 Lakhs','money_bag'),
-          _buildDetailItem('Education', 'B.E Computer Science Engineering','professional_icon'),
-          _buildDetailItem('Occupation', 'Software Professional','professional_icon'),
+          _buildDetailItem(
+              'Employment', 'Works in Private Sector', 'card_profile'),
+          _buildDetailItem('Annual Income', '16-18 Lakhs', 'money_bag'),
+          _buildDetailItem('Education', 'B.E Computer Science Engineering',
+              'professional_icon'),
+          _buildDetailItem(
+              'Occupation', 'Software Professional', 'professional_icon'),
         ]),
         _buildSection('About His Family', [
-          _buildDetailItem('Family Type', 'Joint Family','bank_building'),
-          _buildDetailItem('Family Status', 'Upper Middle Class','bank_building'),
-          _buildDetailItem('Parents','Father is a businessman, mother is a home maker', '2person'),
-          _buildDetailItem('Sisters','1 Sister', 'profileIcon'),
+          _buildDetailItem('Family Type', 'Joint Family', 'bank_building'),
+          _buildDetailItem(
+              'Family Status', 'Upper Middle Class', 'bank_building'),
+          _buildDetailItem('Parents',
+              'Father is a businessman, mother is a home maker', '2person'),
+          _buildDetailItem('Sisters', '1 Sister', 'profileIcon'),
         ]),
       ],
     );
@@ -222,7 +256,7 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
     );
   }
 
-  Widget _buildDetailItem(String label, String value,String icon) {
+  Widget _buildDetailItem(String label, String value, String icon) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -252,7 +286,7 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          CustomSvg(name: icon)// Space between text and icon
+          CustomSvg(name: icon) // Space between text and icon
           // const Icon(
           //   Icons.verified,
           //   color: Colors.green,
@@ -367,17 +401,14 @@ class _AllMatchesScreenState extends State<AllMatchesScreen> {
     );
   }
 
-  Widget _buildBasicDetails(String label,String icon){
+  Widget _buildBasicDetails(String label, String icon) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14
-            ),
+            style: const TextStyle(color: Colors.black, fontSize: 14),
             overflow: TextOverflow.ellipsis,
           ),
         ),

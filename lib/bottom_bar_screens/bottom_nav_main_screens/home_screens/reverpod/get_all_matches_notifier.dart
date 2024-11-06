@@ -54,7 +54,7 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
       );
       print('______________');
       print(response.statusCode);
-     
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         state = state.copyWith(isLoading: false, allMatchList: data);
@@ -74,6 +74,7 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
   }
 }
 
-final allMatchesProvider = StateNotifierProvider<AllMatchesNotifier, AllMatchState>(
+final allMatchesProvider =
+    StateNotifierProvider<AllMatchesNotifier, AllMatchState>(
   (ref) => AllMatchesNotifier(),
 );

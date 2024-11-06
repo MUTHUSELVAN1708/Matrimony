@@ -21,7 +21,7 @@ class UploadPhotoWidget extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           // Text
-           Text(
+          Text(
             'Put a face to your profile',
             style: TextStyle(
               color: Colors.black54, // Red color matching design
@@ -36,7 +36,8 @@ class UploadPhotoWidget extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE52938), // Red color matching design
+                backgroundColor:
+                    const Color(0xFFE52938), // Red color matching design
                 foregroundColor: Colors.white,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12),

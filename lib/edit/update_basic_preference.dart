@@ -41,7 +41,7 @@ class _UpdatePartnerBasicPreferenceScreenState
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(30)),
+                          BorderRadius.vertical(top: Radius.circular(30)),
                     ),
                     child: Column(
                       children: [
@@ -87,7 +87,7 @@ class _UpdatePartnerBasicPreferenceScreenState
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 15),
+                                    const EdgeInsets.symmetric(vertical: 15),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
                               ),
@@ -179,7 +179,7 @@ class _UpdatePartnerBasicPreferenceScreenState
       if (date != null) {
         setState(() {
           dateOfBirth =
-          "${DateTime.now().year - date.year} years / ${date.toLocal().toString().split(' ')[0]}";
+              "${DateTime.now().year - date.year} years / ${date.toLocal().toString().split(' ')[0]}";
         });
       }
     });
@@ -202,7 +202,7 @@ class _UpdatePartnerBasicPreferenceScreenState
   void _showWeightPicker() {
     // Example of how you might handle weight selection
     final List<String> weights =
-    List.generate(150, (index) => '${40 + index} kg');
+        List.generate(150, (index) => '${40 + index} kg');
     _showOptionsDialog('Select Weight', weights, (value) {
       setState(() {
         weight = value;
@@ -279,7 +279,7 @@ class _UpdatePartnerBasicPreferenceScreenState
                   // Collect the selected options and call the onSelect function
                   // Assuming you want to apply the last selected option
                   int selectedIndex =
-                  options.indexWhere((option) => option == options.last);
+                      options.indexWhere((option) => option == options.last);
                   if (selectedIndex != -1) {
                     onSelect(options[selectedIndex]);
                   }

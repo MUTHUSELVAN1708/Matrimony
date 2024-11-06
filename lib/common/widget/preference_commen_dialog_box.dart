@@ -4,7 +4,7 @@ import 'package:matrimony/common/colors.dart';
 class CustomPreferenceDropdownField extends StatefulWidget {
   final List<String> value;
   final String hint;
- List<String>? items;
+  List<String>? items;
   final Function(List<String>) onChanged;
   final String? hint2;
   final String? hint3;
@@ -13,7 +13,7 @@ class CustomPreferenceDropdownField extends StatefulWidget {
   final bool showSearch;
   final bool ageheight;
 
-   CustomPreferenceDropdownField(
+  CustomPreferenceDropdownField(
       {Key? key,
       required this.value,
       required this.hint,
@@ -75,7 +75,7 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
               child: Text(
                 selectedValues.isEmpty
                     ? widget.hint
-                    : widget.hint == 'Age' ||  widget.hint == 'Height'
+                    : widget.hint == 'Age' || widget.hint == 'Height'
                         ? "${fromItem[0]} - ${toItem[0]}  "
                         : selectedValues.join(', ').toString(),
                 style: TextStyle(
@@ -155,34 +155,37 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                       const SizedBox(height: 10),
                       widget.ageheight
                           ? Column(
-  children: [
-
-CustomPreferenceDropdownField(
-  value: fromItem,
-  hint: widget.hint2 ?? '',
-  items: widget.items,
-  onChanged: (data) {
-    setState(() {
-      fromItem = data;
-      toItem = [];
-    });
-  },
-),
-    SizedBox(height: 10),
-  fromItem.isEmpty?  SizedBox() :CustomPreferenceDropdownField(
-      value: toItem,
-      hint: widget.hint3 ?? '',
-     items:widget.items!.where((item) => int.parse(item) > int.parse(fromItem[0])).toList(),
-      onChanged: (data) {
-        setState(() {
-          toItem = data;
-        });
-      },
-    ),
-   
-  ],
-)
-
+                              children: [
+                                CustomPreferenceDropdownField(
+                                  value: fromItem,
+                                  hint: widget.hint2 ?? '',
+                                  items: widget.items,
+                                  onChanged: (data) {
+                                    setState(() {
+                                      fromItem = data;
+                                      toItem = [];
+                                    });
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                fromItem.isEmpty
+                                    ? SizedBox()
+                                    : CustomPreferenceDropdownField(
+                                        value: toItem,
+                                        hint: widget.hint3 ?? '',
+                                        items: widget.items!
+                                            .where((item) =>
+                                                int.parse(item) >
+                                                int.parse(fromItem[0]))
+                                            .toList(),
+                                        onChanged: (data) {
+                                          setState(() {
+                                            toItem = data;
+                                          });
+                                        },
+                                      ),
+                              ],
+                            )
                           : Expanded(
                               child: ListView.builder(
                                 shrinkWrap: true,
@@ -195,8 +198,7 @@ CustomPreferenceDropdownField(
                                     return ListTile(
                                       onTap: () {
                                         setState(() {
-                                          isSelectAll =
-                                              !isSelectAll ;
+                                          isSelectAll = !isSelectAll;
 
                                           if (isSelectAll) {
                                             selectedValues = List.from(widget
@@ -207,10 +209,15 @@ CustomPreferenceDropdownField(
                                           }
                                         });
                                       },
-                                      leading:isSelectAll? Icon(Icons.radio_button_checked_outlined,color: Colors.red,):
-                                      Icon(Icons.circle_outlined),
+                                      leading: isSelectAll
+                                          ? Icon(
+                                              Icons
+                                                  .radio_button_checked_outlined,
+                                              color: Colors.red,
+                                            )
+                                          : Icon(Icons.circle_outlined),
                                       title: const Text("Select All"),
-                                    );                               
+                                    );
                                   }
                                   final itemIndex =
                                       isSingleSelection ? index : index - 1;
@@ -219,18 +226,21 @@ CustomPreferenceDropdownField(
                                       : widget.items![itemIndex];
 
                                   if (isSingleSelection) {
-                                   return RadioListTile<String>(
-  title: Text(currentItem),
-  value: currentItem,
-  groupValue: selectedValues.isNotEmpty ? selectedValues.first : null,
-  onChanged: (String? value) {
-    setState(() {
-      selectedValues = value != null ? [value] : [];
-    });
-  },
-  activeColor: Colors.red, // Set the selected radio color to red
-);
-
+                                    return RadioListTile<String>(
+                                      title: Text(currentItem),
+                                      value: currentItem,
+                                      groupValue: selectedValues.isNotEmpty
+                                          ? selectedValues.first
+                                          : null,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          selectedValues =
+                                              value != null ? [value] : [];
+                                        });
+                                      },
+                                      activeColor: Colors
+                                          .red, // Set the selected radio color to red
+                                    );
                                   } else {
                                     return ListTile(
                                       leading: selectedValues

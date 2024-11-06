@@ -51,7 +51,9 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
               child: Text(
                 selectedValue.isEmpty ? widget.hint : selectedValue,
                 style: TextStyle(
-                  color: selectedValue.isEmpty ? Colors.grey.shade600 : Colors.black,
+                  color: selectedValue.isEmpty
+                      ? Colors.grey.shade600
+                      : Colors.black,
                   fontSize: 16,
                 ),
               ),
@@ -76,8 +78,10 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
             builder: (BuildContext context, StateSetter setState) {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                height: MediaQuery.of(context).size.height * 0.6, // Adjust the height as needed
-                width: MediaQuery.of(context).size.width * 0.8, // Adjust the width as needed
+                height: MediaQuery.of(context).size.height *
+                    0.6, // Adjust the height as needed
+                width: MediaQuery.of(context).size.width *
+                    0.8, // Adjust the width as needed
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -88,18 +92,24 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                           fillColor: AppColors.dialogboxSearchBackground,
                           filled: true,
                           hintText: 'Search...',
-                          hintStyle: const TextStyle(color: AppColors.dialogboxSearchTextColor),
-                          suffixIcon: const Icon(Icons.search, color: AppColors.dialogboxSearchTextColor),
+                          hintStyle: const TextStyle(
+                              color: AppColors.dialogboxSearchTextColor),
+                          suffixIcon: const Icon(Icons.search,
+                              color: AppColors.dialogboxSearchTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none, // Remove default border lines
+                            borderSide:
+                                BorderSide.none, // Remove default border lines
                           ),
                         ),
                         onChanged: (value) {
                           setState(() {
                             searchQuery = value;
-                            filteredItems = widget.items.where((item) =>
-                                item.toLowerCase().contains(searchQuery.toLowerCase())).toList();
+                            filteredItems = widget.items
+                                .where((item) => item
+                                    .toLowerCase()
+                                    .contains(searchQuery.toLowerCase()))
+                                .toList();
                           });
                         },
                       ),

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return      ProviderScope(
+    return ProviderScope(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
@@ -29,4 +29,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

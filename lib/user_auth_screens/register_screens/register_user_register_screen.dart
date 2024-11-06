@@ -13,7 +13,8 @@ import 'package:matrimony/user_auth_screens/register_screens/register_user_perso
 
 class RegisterUserDetailsScreen extends ConsumerStatefulWidget {
   final String? registerFor;
-  const RegisterUserDetailsScreen({Key? key,this.registerFor}) : super(key: key);
+  const RegisterUserDetailsScreen({Key? key, this.registerFor})
+      : super(key: key);
 
   @override
   ConsumerState<RegisterUserDetailsScreen> createState() =>
@@ -41,7 +42,7 @@ class _RegisterUserDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-        final registerState = ref.watch(registerProvider);
+    final registerState = ref.watch(registerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -258,30 +259,27 @@ class _RegisterUserDetailsScreenState
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: ()async {
+                    onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                            final registerNotifier = ref.read(registerProvider.notifier);
-                     registerNotifier.email = _emailController.text;
-                      registerNotifier.name = _nameController.text;
-                   registerNotifier.password = _passwordController.text;
-                      registerNotifier.phoneNumber = _phoneController.text;
-                     registerNotifier.profileFor = widget.registerFor;
-             
-   
+                        final registerNotifier =
+                            ref.read(registerProvider.notifier);
+                        registerNotifier.email = _emailController.text;
+                        registerNotifier.name = _nameController.text;
+                        registerNotifier.password = _passwordController.text;
+                        registerNotifier.phoneNumber = _phoneController.text;
+                        registerNotifier.profileFor = widget.registerFor;
 
-    bool success = await registerNotifier.register();
-    print(success);
-                        if(success){
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OtpScreen(
-                                    phoneNumber: _phoneController.text,
-                                  )),
-                        );
+                        bool success = await registerNotifier.register();
+                        print(success);
+                        if (success) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OtpScreen(
+                                      phoneNumber: _phoneController.text,
+                                    )),
+                          );
                         }
-
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
@@ -304,11 +302,15 @@ class _RegisterUserDetailsScreenState
                               builder: (context) => LoginScreen()),
                         );
                       },
-                      child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): Text(
-                        'Log In',
-                        style: AppTextStyles.spanTextStyle
-                            .copyWith(color: AppColors.headingTextColor),
-                      ),
+                      child: registerState.isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Text(
+                              'Log In',
+                              style: AppTextStyles.spanTextStyle
+                                  .copyWith(color: AppColors.headingTextColor),
+                            ),
                     ),
                   ],
                 ),

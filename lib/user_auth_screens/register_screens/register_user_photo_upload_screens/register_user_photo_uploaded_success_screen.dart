@@ -23,48 +23,45 @@ class RegisterUserPhotoUploadedSuccessScreen extends StatelessWidget {
               //   ),
               // ),
 
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.50,
-                    height: MediaQuery.of(context).size.width * 0.50,
-                    child: SvgPicture.asset(
-                      'assets/successcircle.svg',
-                      fit: BoxFit.contain, 
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Congratulations',
-                    style: AppTextStyles.headingTextstyle.copyWith(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w700
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Profile can be created',
-                    style:  AppTextStyles.headingTextstyle.copyWith(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w700
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'your photos are gettingvalidated aswe speak. it may take up to 1 hour.we will notify you once it’s done.',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.spanTextStyle,
-                  ),
-              const SizedBox(height:100),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.50,
+                height: MediaQuery.of(context).size.width * 0.50,
+                child: SvgPicture.asset(
+                  'assets/successcircle.svg',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Congratulations',
+                style: AppTextStyles.headingTextstyle
+                    .copyWith(fontSize: 25, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Profile can be created',
+                style: AppTextStyles.headingTextstyle
+                    .copyWith(fontSize: 23, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'your photos are gettingvalidated aswe speak. it may take up to 1 hour.we will notify you once it’s done.',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.spanTextStyle,
+              ),
+              const SizedBox(height: 100),
               SizedBox(
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-Navigator.of(context).pushAndRemoveUntil(
-  MaterialPageRoute(
-    builder: (context) => const RegisterUserGovernmentProof(),
-  ),
-  (route) => false, 
-);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const RegisterUserGovernmentProof(),
+                      ),
+                      (route) => false,
+                    );
                   },
                   style: AppTextStyles.primaryButtonstyle,
                   child: const Text(

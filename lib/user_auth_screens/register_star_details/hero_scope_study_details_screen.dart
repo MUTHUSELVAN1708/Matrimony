@@ -6,10 +6,12 @@ class HoroscopeStudyDetailScreen extends StatefulWidget {
   const HoroscopeStudyDetailScreen({Key? key}) : super(key: key);
 
   @override
-  State<HoroscopeStudyDetailScreen> createState() => _HoroscopeStudyDetailScreenState();
+  State<HoroscopeStudyDetailScreen> createState() =>
+      _HoroscopeStudyDetailScreenState();
 }
 
-class _HoroscopeStudyDetailScreenState extends State<HoroscopeStudyDetailScreen> {
+class _HoroscopeStudyDetailScreenState
+    extends State<HoroscopeStudyDetailScreen> {
   final TextEditingController _collegeController = TextEditingController();
   final TextEditingController _organizationController = TextEditingController();
 
@@ -37,13 +39,11 @@ class _HoroscopeStudyDetailScreenState extends State<HoroscopeStudyDetailScreen>
         ),
         actions: [
           TextButton(
-            onPressed: () {
-            },
+            onPressed: () {},
             child: Text(
               'Skip',
-              style:AppTextStyles.headingTextstyle.copyWith(
-                color: Colors.black
-              ),
+              style:
+                  AppTextStyles.headingTextstyle.copyWith(color: Colors.black),
             ),
           ),
         ],
@@ -54,15 +54,14 @@ class _HoroscopeStudyDetailScreenState extends State<HoroscopeStudyDetailScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-             Text(
+            Text(
               textAlign: TextAlign.center,
               'Add College / Institution And\nOrganization Details',
-              style:AppTextStyles.headingTextstyle.copyWith(
-                color: Colors.black
-              ),
+              style:
+                  AppTextStyles.headingTextstyle.copyWith(color: Colors.black),
             ),
             const SizedBox(height: 24),
-            
+
             // College TextField
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,15 +103,15 @@ class _HoroscopeStudyDetailScreenState extends State<HoroscopeStudyDetailScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Organization TextField
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                     textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
                   'Organization where you works',
                   style: TextStyle(
                     fontSize: 14,
@@ -148,18 +147,21 @@ class _HoroscopeStudyDetailScreenState extends State<HoroscopeStudyDetailScreen>
                 ),
               ],
             ),
-            
+
             const Spacer(),
-            
+
             // Next Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   // Handle next action
-                  if (_collegeController.text.isNotEmpty && 
+                  if (_collegeController.text.isNotEmpty &&
                       _organizationController.text.isNotEmpty) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>InterestPageView()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InterestPageView()));
                     print('College: ${_collegeController.text}');
                     print('Organization: ${_organizationController.text}');
                   }

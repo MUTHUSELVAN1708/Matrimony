@@ -12,10 +12,12 @@ class RegisterUserPersonalDetailsScreen extends ConsumerStatefulWidget {
   const RegisterUserPersonalDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RegisterUserPersonalDetailsScreen> createState() => _RegisterUserPersonalDetailsScreenState();
+  ConsumerState<RegisterUserPersonalDetailsScreen> createState() =>
+      _RegisterUserPersonalDetailsScreenState();
 }
 
-class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUserPersonalDetailsScreen> {
+class _RegisterUserPersonalDetailsScreenState
+    extends ConsumerState<RegisterUserPersonalDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? selectedGender;
@@ -28,28 +30,37 @@ class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUser
   String? age;
 
   final List<String> genderOptions = ['Male', 'Female'];
-  final List<String> physicalStatusOptions = ['Normal', 'Physically Challenged'];
-  final List<String> maritalStatusOptions = ['Never Married', 'Divorced', 'Widowed', 'Separated'];
-  final List<String> childrenStatus = ['1','2','3','3+'];
+  final List<String> physicalStatusOptions = [
+    'Normal',
+    'Physically Challenged'
+  ];
+  final List<String> maritalStatusOptions = [
+    'Never Married',
+    'Divorced',
+    'Widowed',
+    'Separated'
+  ];
+  final List<String> childrenStatus = ['1', '2', '3', '3+'];
 
   int calculateAge(DateTime? dateOfBirth) {
-    if(dateOfBirth != null){
-    final DateTime now = DateTime.now();
-    int calculatedAge = now.year - dateOfBirth.year;
+    if (dateOfBirth != null) {
+      final DateTime now = DateTime.now();
+      int calculatedAge = now.year - dateOfBirth.year;
 
-    if (now.month < dateOfBirth.month || (now.month == dateOfBirth.month && now.day < dateOfBirth.day)) {
-      calculatedAge--;
-    }
+      if (now.month < dateOfBirth.month ||
+          (now.month == dateOfBirth.month && now.day < dateOfBirth.day)) {
+        calculatedAge--;
+      }
 
-    age = calculatedAge.toString();
-    return calculatedAge;
+      age = calculatedAge.toString();
+      return calculatedAge;
     }
     return 0;
   }
 
   @override
   Widget build(BuildContext context) {
-        final registerState = ref.watch(registerProvider);
+    final registerState = ref.watch(registerProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -59,7 +70,8 @@ class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUser
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryButtonColor),
+            icon: const Icon(Icons.arrow_back_ios,
+                color: AppColors.primaryButtonColor),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -72,9 +84,11 @@ class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUser
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-                  const Text('Personal Details', style: AppTextStyles.headingTextstyle),
+                  const Text('Personal Details',
+                      style: AppTextStyles.headingTextstyle),
                   const SizedBox(height: 8),
-                  const Text('Your story of love starts here.', style: AppTextStyles.spanTextStyle),
+                  const Text('Your story of love starts here.',
+                      style: AppTextStyles.spanTextStyle),
                   const SizedBox(height: 30),
 
                   // Gender Selection
@@ -85,7 +99,8 @@ class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUser
                       title: 'Select Gender',
                       options: genderOptions,
                       selectedValue: selectedGender,
-                      onSelect: (value) => setState(() => selectedGender = value),
+                      onSelect: (value) =>
+                          setState(() => selectedGender = value),
                     ),
                   ),
 
@@ -98,7 +113,8 @@ class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUser
                       child: TextFormField(
                         decoration: _buildInputDecoration(
                           'Date of Birth',
-                          suffixIcon: const Icon(Icons.calendar_today, size: 20),
+                          suffixIcon:
+                              const Icon(Icons.calendar_today, size: 20),
                         ),
                         controller: TextEditingController(
                           text: dateOfBirth != null
@@ -117,49 +133,53 @@ class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUser
                   const SizedBox(height: 16),
 
                   // Height and Weight
-          // Height and Weight
-Row(
-  children: [
-    // Height field
-    Expanded(
-      child: TextFormField(
-        decoration: _buildInputDecoration('Height'),
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly, // Only allows digits
-          LengthLimitingTextInputFormatter(3),    // Restrict to 3 digits
-        ],
-        onChanged: (value) => height = value,
-        validator: (value) {
-          if (value?.isEmpty ?? true) {
-            return 'Required';
-          }
-          return null;
-        },
-      ),
-    ),
-    const SizedBox(width: 16),
+                  // Height and Weight
+                  Row(
+                    children: [
+                      // Height field
+                      Expanded(
+                        child: TextFormField(
+                          decoration: _buildInputDecoration('Height'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Only allows digits
+                            LengthLimitingTextInputFormatter(
+                                3), // Restrict to 3 digits
+                          ],
+                          onChanged: (value) => height = value,
+                          validator: (value) {
+                            if (value?.isEmpty ?? true) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
 
-    // Weight field
-    Expanded(
-      child: TextFormField(
-        decoration: _buildInputDecoration('Weight'),
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly, // Only allows digits
-          LengthLimitingTextInputFormatter(3),    // Restrict to 3 digits
-        ],
-        onChanged: (value) => weight = value,
-        validator: (value) {
-          if (value?.isEmpty ?? true) {
-            return 'Required';
-          }
-          return null;
-        },
-      ),
-    ),
-  ],
-),
+                      // Weight field
+                      Expanded(
+                        child: TextFormField(
+                          decoration: _buildInputDecoration('Weight'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Only allows digits
+                            LengthLimitingTextInputFormatter(
+                                3), // Restrict to 3 digits
+                          ],
+                          onChanged: (value) => weight = value,
+                          validator: (value) {
+                            if (value?.isEmpty ?? true) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -171,7 +191,8 @@ Row(
                       title: 'Select Physical Status',
                       options: physicalStatusOptions,
                       selectedValue: physicalStatus,
-                      onSelect: (value) => setState(() => physicalStatus = value),
+                      onSelect: (value) =>
+                          setState(() => physicalStatus = value),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -184,21 +205,24 @@ Row(
                       title: 'Select Marital Status',
                       options: maritalStatusOptions,
                       selectedValue: maritalStatus,
-                      onSelect: (value) => setState(() => maritalStatus = value),
+                      onSelect: (value) =>
+                          setState(() => maritalStatus = value),
                     ),
                   ),
-                      const SizedBox(height: 16),
-                                  maritalStatus == 'Divorced'?
-                _buildCustomField(
-                    label: 'Childrens',
-                    selectedValue: childrens,
-                    onTap: () => _showSelectionDialog(
-                      title: 'Select Childrens',
-                      options: childrenStatus,
-                      selectedValue: childrens,
-                      onSelect: (value) => setState(() => childrens = value),
-                    ),
-                  ):const SizedBox(),
+                  const SizedBox(height: 16),
+                  maritalStatus == 'Divorced'
+                      ? _buildCustomField(
+                          label: 'Childrens',
+                          selectedValue: childrens,
+                          onTap: () => _showSelectionDialog(
+                            title: 'Select Childrens',
+                            options: childrenStatus,
+                            selectedValue: childrens,
+                            onSelect: (value) =>
+                                setState(() => childrens = value),
+                          ),
+                        )
+                      : const SizedBox(),
 
                   const SizedBox(height: 30),
 
@@ -208,34 +232,37 @@ Row(
                     child: ElevatedButton(
                       onPressed: () {
                         print(calculateAge(dateOfBirth));
-                        if (_formKey.currentState?.validate() ?? false ) {
-                        
-                        final registerState =   ref.read(registerProvider.notifier);
+                        if (_formKey.currentState?.validate() ?? false) {
+                          final registerState =
+                              ref.read(registerProvider.notifier);
 
-                         
-                registerState.personalDetails(                         
-                            gender: selectedGender, 
-                            dateOfBirth:calculateAge(dateOfBirth),
-                             height: height, 
-                             weight: weight, 
-                             anyDisability: physicalStatus,
+                          registerState.personalDetails(
+                              gender: selectedGender,
+                              dateOfBirth: calculateAge(dateOfBirth),
+                              height: height,
+                              weight: weight,
+                              anyDisability: physicalStatus,
                               maritalStatus: maritalStatus,
-                               noOfChildren: childrens
-                               );
+                              noOfChildren: childrens);
 
-                         if( ref.watch(registerProvider).error == null){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterReligiousDetailsScreen(),
-                            ),
-                          );
-                         }
-  
+                          if (ref.watch(registerProvider).error == null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegisterReligiousDetailsScreen(),
+                              ),
+                            );
+                          }
                         }
                       },
                       style: AppTextStyles.primaryButtonstyle,
-                      child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text('Next', style: AppTextStyles.primarybuttonText),
+                      child: registerState.isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : const Text('Next',
+                              style: AppTextStyles.primarybuttonText),
                     ),
                   ),
                 ],
@@ -261,7 +288,7 @@ Row(
             suffixIcon: const Icon(Icons.arrow_drop_down, size: 24),
           ),
           controller: TextEditingController(text: selectedValue ?? ''),
-          validator:(value) {
+          validator: (value) {
             if (selectedValue == null) {
               return 'Please select your $label';
             }
@@ -272,7 +299,8 @@ Row(
     );
   }
 
-  InputDecoration _buildInputDecoration(String labelText, {Widget? suffixIcon}) {
+  InputDecoration _buildInputDecoration(String labelText,
+      {Widget? suffixIcon}) {
     return InputDecoration(
       labelText: labelText,
       labelStyle: TextStyle(color: Colors.grey.shade600),
@@ -298,36 +326,39 @@ Row(
     );
   }
 
- Future<void> _showDatePicker(BuildContext context) async {
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now().subtract(const Duration(days: 6570)), // 18 years ago
-    firstDate: DateTime.now().subtract(const Duration(days: 36500)), // 100 years ago
-    lastDate: DateTime.now().subtract(const Duration(days: 6570)), // 18 years ago
-    builder: (context, child) {
-      return Theme(
-        data: Theme.of(context).copyWith(
-          // Set the color scheme to have a white background
-          colorScheme: const ColorScheme.light(
-            primary: Colors.red,  // The primary color remains red
-            onPrimary: Colors.white,
-            surface: Colors.white,  // Surface background set to white
-            onSurface: Colors.black,
+  Future<void> _showDatePicker(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate:
+          DateTime.now().subtract(const Duration(days: 6570)), // 18 years ago
+      firstDate:
+          DateTime.now().subtract(const Duration(days: 36500)), // 100 years ago
+      lastDate:
+          DateTime.now().subtract(const Duration(days: 6570)), // 18 years ago
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            // Set the color scheme to have a white background
+            colorScheme: const ColorScheme.light(
+              primary: Colors.red, // The primary color remains red
+              onPrimary: Colors.white,
+              surface: Colors.white, // Surface background set to white
+              onSurface: Colors.black,
+            ),
+            // Set the date picker dialog background to white
+            dialogBackgroundColor: Colors.white,
           ),
-          // Set the date picker dialog background to white
-          dialogBackgroundColor: Colors.white,
-        ),
-        child: child!,
-      );
-    },
-  );
-  
-  if (picked != null) {
-    setState(() {
-      dateOfBirth = picked;
-    });
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        dateOfBirth = picked;
+      });
+    }
   }
-}
 
   Future<void> _showSelectionDialog({
     required String title,
@@ -346,6 +377,7 @@ Row(
     );
   }
 }
+
 class SelectionDialog extends StatefulWidget {
   final String title;
   final List<String> options;
@@ -370,7 +402,8 @@ class _SelectionDialogState extends State<SelectionDialog> {
   @override
   void initState() {
     super.initState();
-    _currentSelectedValue = widget.selectedValue; // Initialize with the current selected value
+    _currentSelectedValue =
+        widget.selectedValue; // Initialize with the current selected value
   }
 
   @override
@@ -402,13 +435,18 @@ class _SelectionDialogState extends State<SelectionDialog> {
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
                     margin: const EdgeInsets.symmetric(vertical: 4),
                     decoration: BoxDecoration(
-                      color: _currentSelectedValue == option ? Colors.green : Colors.grey.shade200,
+                      color: _currentSelectedValue == option
+                          ? Colors.green
+                          : Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: _currentSelectedValue == option ? Colors.green : Colors.grey.shade300,
+                        color: _currentSelectedValue == option
+                            ? Colors.green
+                            : Colors.grey.shade300,
                       ),
                     ),
                     child: Row(
@@ -417,7 +455,9 @@ class _SelectionDialogState extends State<SelectionDialog> {
                         Text(
                           option,
                           style: TextStyle(
-                            color: _currentSelectedValue == option ? Colors.white : Colors.black,
+                            color: _currentSelectedValue == option
+                                ? Colors.white
+                                : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -441,7 +481,8 @@ class _SelectionDialogState extends State<SelectionDialog> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // Change the color to fit your theme
+                  backgroundColor:
+                      Colors.green, // Change the color to fit your theme
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -462,4 +503,3 @@ class _SelectionDialogState extends State<SelectionDialog> {
     );
   }
 }
-

@@ -40,7 +40,7 @@ class _UpdatePartnerReligiousPreferenceScreenState
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(30)),
+                          BorderRadius.vertical(top: Radius.circular(30)),
                     ),
                     child: Column(
                       children: [
@@ -60,63 +60,63 @@ class _UpdatePartnerReligiousPreferenceScreenState
                               children: [
                                 _buildDetailItem('Religion', religion,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Religion', [
-                                      'Hindu',
-                                      'Muslim',
-                                      'Christian',
-                                      'Sikh'
-                                    ], (value) {
-                                      setState(() {
-                                        religion = value;
-                                      });
-                                    })),
+                                            'Select Religion', [
+                                          'Hindu',
+                                          'Muslim',
+                                          'Christian',
+                                          'Sikh'
+                                        ], (value) {
+                                          setState(() {
+                                            religion = value;
+                                          });
+                                        })),
                                 _buildDetailItem('Caste', caste,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Caste', [
-                                      'Nadar',
-                                      'Brahmin',
-                                      'Vellalar',
-                                      'Other'
-                                    ], (value) {
-                                      setState(() {
-                                        caste = value;
-                                      });
-                                    })),
+                                            'Select Caste', [
+                                          'Nadar',
+                                          'Brahmin',
+                                          'Vellalar',
+                                          'Other'
+                                        ], (value) {
+                                          setState(() {
+                                            caste = value;
+                                          });
+                                        })),
                                 _buildDetailItem('Division', division,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Division', [
-                                      'Any',
-                                      'Sub-Division 1',
-                                      'Sub-Division 2'
-                                    ], (value) {
-                                      setState(() {
-                                        division = value;
-                                      });
-                                    })),
+                                            'Select Division', [
+                                          'Any',
+                                          'Sub-Division 1',
+                                          'Sub-Division 2'
+                                        ], (value) {
+                                          setState(() {
+                                            division = value;
+                                          });
+                                        })),
                                 _buildDetailItem('Star', star,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Star', [
-                                      'Any',
-                                      'Ashwini',
-                                      'Bharani',
-                                      'Krithika'
-                                    ], (value) {
-                                      setState(() {
-                                        star = value;
-                                      });
-                                    })),
+                                            'Select Star', [
+                                          'Any',
+                                          'Ashwini',
+                                          'Bharani',
+                                          'Krithika'
+                                        ], (value) {
+                                          setState(() {
+                                            star = value;
+                                          });
+                                        })),
                                 _buildDetailItem('Raasi', raasi,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Raasi', [
-                                      'Any',
-                                      'Mesha',
-                                      'Vrishabha',
-                                      'Mithuna'
-                                    ], (value) {
-                                      setState(() {
-                                        raasi = value;
-                                      });
-                                    })),
+                                            'Select Raasi', [
+                                          'Any',
+                                          'Mesha',
+                                          'Vrishabha',
+                                          'Mithuna'
+                                        ], (value) {
+                                          setState(() {
+                                            raasi = value;
+                                          });
+                                        })),
                               ],
                             ),
                           ),
@@ -130,7 +130,7 @@ class _UpdatePartnerReligiousPreferenceScreenState
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 15),
+                                    const EdgeInsets.symmetric(vertical: 15),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
                               ),

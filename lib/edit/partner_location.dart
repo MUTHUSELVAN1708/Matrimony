@@ -81,7 +81,7 @@ class _UpdatePartnerLocationPreferenceScreenState
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(30)),
+                          BorderRadius.vertical(top: Radius.circular(30)),
                     ),
                     child: Column(
                       children: [
@@ -101,52 +101,52 @@ class _UpdatePartnerLocationPreferenceScreenState
                               children: [
                                 _buildDetailItem('Country', country,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Country', [
-                                      'India',
-                                      'USA',
-                                      'Canada',
-                                      'Australia',
-                                      'UK',
-                                      'Other'
-                                    ], (value) {
-                                      setState(() {
-                                        country = value;
-                                        state =
-                                        'Select State'; // Reset state
-                                        city = 'Select City'; // Reset city
-                                      });
-                                      if (value == 'India') {
-                                        selectedStates =
-                                        statesMap['India']!;
-                                      } else {
-                                        selectedStates = [];
-                                        selectedCities = [];
-                                      }
-                                    })),
+                                            'Select Country', [
+                                          'India',
+                                          'USA',
+                                          'Canada',
+                                          'Australia',
+                                          'UK',
+                                          'Other'
+                                        ], (value) {
+                                          setState(() {
+                                            country = value;
+                                            state =
+                                                'Select State'; // Reset state
+                                            city = 'Select City'; // Reset city
+                                          });
+                                          if (value == 'India') {
+                                            selectedStates =
+                                                statesMap['India']!;
+                                          } else {
+                                            selectedStates = [];
+                                            selectedCities = [];
+                                          }
+                                        })),
                                 // Only show states and cities if the selected country is India
                                 if (country == 'India') ...[
                                   _buildDetailItem('State', state, onTap: () {
                                     if (selectedStates.isNotEmpty) {
                                       _showOptionsDialog(
                                           'Select State', selectedStates,
-                                              (value) {
-                                            setState(() {
-                                              state = value;
-                                              city = 'Select City'; // Reset city
-                                            });
-                                            selectedCities = citiesMap[value] ?? [];
-                                          });
+                                          (value) {
+                                        setState(() {
+                                          state = value;
+                                          city = 'Select City'; // Reset city
+                                        });
+                                        selectedCities = citiesMap[value] ?? [];
+                                      });
                                     }
                                   }),
                                   _buildDetailItem('City', city, onTap: () {
                                     if (selectedCities.isNotEmpty) {
                                       _showOptionsDialog(
                                           'Select City', selectedCities,
-                                              (value) {
-                                            setState(() {
-                                              city = value;
-                                            });
-                                          });
+                                          (value) {
+                                        setState(() {
+                                          city = value;
+                                        });
+                                      });
                                     }
                                   }),
                                 ],
@@ -163,7 +163,7 @@ class _UpdatePartnerLocationPreferenceScreenState
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 15),
+                                    const EdgeInsets.symmetric(vertical: 15),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
                               ),

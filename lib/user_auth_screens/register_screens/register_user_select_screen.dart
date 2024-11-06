@@ -82,8 +82,8 @@ class _RegisterSetupUserScreenState extends State<RegisterSetupUserScreen> {
                 ),
                 const Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 40.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
                     child: Text(
                       'We have sent the OTP code. Please verify to create your account',
                       textAlign: TextAlign.center,
@@ -106,8 +106,7 @@ class _RegisterSetupUserScreenState extends State<RegisterSetupUserScreen> {
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: _getCrossAxisCount(),
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
@@ -143,8 +142,8 @@ class _RegisterSetupUserScreenState extends State<RegisterSetupUserScreen> {
                     style: _selectedOption != null
                         ? AppTextStyles.primaryButtonstyle
                         : ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.grey.shade400),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.grey.shade400),
                           ),
                     child: const Text(
                       'Next',
@@ -164,7 +163,7 @@ class _RegisterSetupUserScreenState extends State<RegisterSetupUserScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedOption = text; 
+          _selectedOption = text;
         });
       },
       child: Container(

@@ -16,18 +16,48 @@ class AddStarDetailScreen extends ConsumerStatefulWidget {
 class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
   // Define the lists for stars and raasi
   final List<String> starList = [
-    'Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashirsha', 
-    'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 
-    'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 
-    'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 
-    'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 
-    'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'
+    'Ashwini',
+    'Bharani',
+    'Krittika',
+    'Rohini',
+    'Mrigashirsha',
+    'Ardra',
+    'Punarvasu',
+    'Pushya',
+    'Ashlesha',
+    'Magha',
+    'Purva Phalguni',
+    'Uttara Phalguni',
+    'Hasta',
+    'Chitra',
+    'Swati',
+    'Vishakha',
+    'Anuradha',
+    'Jyeshtha',
+    'Mula',
+    'Purva Ashadha',
+    'Uttara Ashadha',
+    'Shravana',
+    'Dhanishta',
+    'Shatabhisha',
+    'Purva Bhadrapada',
+    'Uttara Bhadrapada',
+    'Revati'
   ];
 
   final List<String> raasiList = [
-    'Mesha', 'Vrishabha', 'Mithuna', 'Karka', 'Simha', 
-    'Kanya', 'Tula', 'Vrishchika', 'Dhanu', 'Makara', 
-    'Kumbha', 'Meena'
+    'Mesha',
+    'Vrishabha',
+    'Mithuna',
+    'Karka',
+    'Simha',
+    'Kanya',
+    'Tula',
+    'Vrishchika',
+    'Dhanu',
+    'Makara',
+    'Kumbha',
+    'Meena'
   ];
 
   // Variables to hold the selected star and raasi
@@ -46,7 +76,8 @@ class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.red),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Add Star Details', style: AppTextStyles.headingTextstyle),
+        title: const Text('Add Star Details',
+            style: AppTextStyles.headingTextstyle),
         actions: [
           TextButton(
             onPressed: () {},
@@ -83,7 +114,7 @@ class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
                 value: selectedStar,
                 hint: 'Enter Star',
                 items: starList,
-                onChanged: ( newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedStar = newValue!;
                   });
@@ -97,7 +128,7 @@ class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
                 value: selectedRaasi.toString(),
                 hint: 'Enter Raasi',
                 items: raasiList,
-                onChanged: ( Value) {
+                onChanged: (Value) {
                   setState(() {
                     selectedRaasi = Value!;
                   });
@@ -112,16 +143,14 @@ class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
-                     star: selectedStar,
-                     rassi: selectedRaasi
-                    );
+                    ref
+                        .read(preferenceInputProvider.notifier)
+                        .updatePreferenceInput(
+                            star: selectedStar, rassi: selectedRaasi);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HoroscopeAddDetailScreen(
-
-                        ),
+                        builder: (context) => HoroscopeAddDetailScreen(),
                       ),
                     );
                   },

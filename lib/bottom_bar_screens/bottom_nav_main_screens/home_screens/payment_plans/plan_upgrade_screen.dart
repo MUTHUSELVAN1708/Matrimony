@@ -19,10 +19,10 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
 
   final List<FeatureItem> basicFeatures = [
     FeatureItem('Send unlimited personalized messages', true),
-    FeatureItem('Access verified mobile numbers', true, 
-      threeMonthText: '40 Nos', sixMonthText: '80 Nos'),
+    FeatureItem('Access verified mobile numbers', true,
+        threeMonthText: '40 Nos', sixMonthText: '80 Nos'),
     FeatureItem('Send SMS', true,
-      threeMonthText: '30 SMS', sixMonthText: '60 SMS'),
+        threeMonthText: '30 SMS', sixMonthText: '60 SMS'),
     FeatureItem('Chat instantly with prospects', true),
     FeatureItem('View horoscope of members', true),
     FeatureItem('Profile Highlighter-Makes your profile stand out', false),
@@ -36,14 +36,14 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
 
   final List<FeatureItem> premiumFeatures = [
     FeatureItem('Send unlimited personalized Messages', true),
-    FeatureItem('Access verified mobile numbers', true, 
-      threeMonthText: '80 Nos', sixMonthText: '160 Nos'),
+    FeatureItem('Access verified mobile numbers', true,
+        threeMonthText: '80 Nos', sixMonthText: '160 Nos'),
     FeatureItem('Send SMS', true,
-      threeMonthText: '60 SMS', sixMonthText: '120 SMS'),
+        threeMonthText: '60 SMS', sixMonthText: '120 SMS'),
     FeatureItem('Chat instantly with prospects', true),
     FeatureItem('View horoscope of members', true),
     FeatureItem('Profile Highlighter-Makes your profile stand out', true,
-      threeMonthText: '4 month', sixMonthText: '6 month'),
+        threeMonthText: '4 month', sixMonthText: '6 month'),
     FeatureItem('Message - Stamping Shortcuts and contacts', false),
     FeatureItem('Priority in search results', true),
     FeatureItem('Profile tagged as paid member for more response', true),
@@ -59,12 +59,12 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
     FeatureItem('Chat instantly with prospects', true),
     FeatureItem('View horoscope of members', true),
     FeatureItem('Profile Highlighter-Makes your profile stand out', true,
-      threeMonthText: '1 month', sixMonthText: '2 month'),
+        threeMonthText: '1 month', sixMonthText: '2 month'),
     FeatureItem('Message - Stamping Shortcuts and contacts', true),
     FeatureItem('Priority in search results', true),
     FeatureItem('Profile tagged as paid member for more response', true),
     FeatureItem('Premium display in search results', true),
-    FeatureItem('Get instant notifications',  true ),
+    FeatureItem('Get instant notifications', true),
     FeatureItem('Profile Horoscope / Reference', true),
     FeatureItem('View Social and Professional profile of members', true),
   ];
@@ -91,39 +91,39 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
     }
   }
 
-    String get providedProfile {
+  String get providedProfile {
     switch (selectedPlan) {
       case 'Elite':
-        return isThreeMonthSelected ?  '3 month (50 Profile/Month)'
-                              : '6 month (50 Profile/Month)';
+        return isThreeMonthSelected
+            ? '3 month (50 Profile/Month)'
+            : '6 month (50 Profile/Month)';
       case 'Premium':
         return isThreeMonthSelected
-                              ?  '3 month (25 Profile/Month)'
-                              : '6 month (25 Profile/Month)';
+            ? '3 month (25 Profile/Month)'
+            : '6 month (25 Profile/Month)';
       default:
         return isThreeMonthSelected
-                              ?  '3 month (5 Profile/Month)'
-                              : '6 month (5 Profile/Month)';
-    }
-  }
-    String get totalProfile {
-    switch (selectedPlan) {
-      case 'Elite':
-        return isThreeMonthSelected ?  'Total Profile (150)'
-                              : 'Total Profile(300)';
-      case 'Premium':
-        return isThreeMonthSelected
-                              ?  'Total Profile (75)'
-                              : 'Total Profile (150)';
-      default:
-        return isThreeMonthSelected
-                              ?  'Total Profile (5)'
-                              : 'Total Profile(15)';
+            ? '3 month (5 Profile/Month)'
+            : '6 month (5 Profile/Month)';
     }
   }
 
+  String get totalProfile {
+    switch (selectedPlan) {
+      case 'Elite':
+        return isThreeMonthSelected
+            ? 'Total Profile (150)'
+            : 'Total Profile(300)';
+      case 'Premium':
+        return isThreeMonthSelected
+            ? 'Total Profile (75)'
+            : 'Total Profile (150)';
+      default:
+        return isThreeMonthSelected ? 'Total Profile (5)' : 'Total Profile(15)';
+    }
+  }
 
-    late Razorpay _razorpay;
+  late Razorpay _razorpay;
   bool _isLoading = false; // Track loading state
 
   @override
@@ -137,7 +137,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     setState(() {
-      _isLoading = false; 
+      _isLoading = false;
     });
     Fluttertoast.showToast(
       msg: "Payment Successful: ${response.paymentId}",
@@ -147,7 +147,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     setState(() {
-      _isLoading = false; 
+      _isLoading = false;
     });
     Fluttertoast.showToast(
       msg: "Payment Failed: ${response.message}",
@@ -167,18 +167,15 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
 
   void openPayment() {
     setState(() {
-      _isLoading = true; 
+      _isLoading = true;
     });
 
     var options = {
-      'key': 'rzp_live_ILgsfZCZoFIKMb', 
-      'amount': currentPrice * 100, 
+      'key': 'rzp_live_ILgsfZCZoFIKMb',
+      'amount': currentPrice * 100,
       'name': 'MatriMony',
       'description': 'Premium Membership',
-      'prefill': {
-        'contact': '9876543210', 
-        'email': 'user@example.com' 
-      },
+      'prefill': {'contact': '9876543210', 'email': 'user@example.com'},
       'external': {
         'wallets': ['paytm']
       }
@@ -189,7 +186,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
     } catch (e) {
       debugPrint('Error: $e');
       setState(() {
-        _isLoading = false; 
+        _isLoading = false;
       });
       Fluttertoast.showToast(
         msg: "Error: $e",
@@ -240,10 +237,12 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Text('3 month',
-                style: AppTextStyles.headingTextstyle.copyWith(
-                  color: !isThreeMonthSelected? AppColors.headingTextColor :Colors.black
-                ),
+                Text(
+                  '3 month',
+                  style: AppTextStyles.headingTextstyle.copyWith(
+                      color: !isThreeMonthSelected
+                          ? AppColors.headingTextColor
+                          : Colors.black),
                 ),
                 Transform.scale(
                   scale: 0.8,
@@ -260,13 +259,16 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
                     inactiveTrackColor: Colors.red.withOpacity(0.5),
                   ),
                 ),
-                Text('6 month',
-                style: AppTextStyles.headingTextstyle.copyWith(
-                  color:!isThreeMonthSelected? AppColors.headingTextColor :Colors.black
-                ),),
+                Text(
+                  '6 month',
+                  style: AppTextStyles.headingTextstyle.copyWith(
+                      color: !isThreeMonthSelected
+                          ? AppColors.headingTextColor
+                          : Colors.black),
+                ),
               ],
             ),
-            const SizedBox(height:2),
+            const SizedBox(height: 2),
             Expanded(
               child: Container(
                 margin: const EdgeInsets.all(16),
@@ -289,10 +291,8 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
                     children: [
                       Text(
                         '$selectedPlan Plan',
-                      
-                                style: AppTextStyles.headingTextstyle.copyWith(
-                fontSize: 27
-                                ),
+                        style: AppTextStyles.headingTextstyle
+                            .copyWith(fontSize: 27),
                       ),
                       const Text(
                         'Starting at',
@@ -302,55 +302,56 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
                       ),
                       Text(
                         currentPrice,
-                        
-                                style: AppTextStyles.headingTextstyle.copyWith(
-                fontSize: 50
-                                ),
+                        style: AppTextStyles.headingTextstyle
+                            .copyWith(fontSize: 50),
                       ),
                       Text(
-                       providedProfile,
+                        providedProfile,
                         style: const TextStyle(
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 3,),
-                       Text(
-                       totalProfile,
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      Text(
+                        totalProfile,
                         style: const TextStyle(
                           color: Colors.black,
                         ),
                       ),
                       const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
                           onPressed: () {
                             openPayment();
                           },
-                          style:AppTextStyles.primaryButtonstyle,
+                          style: AppTextStyles.primaryButtonstyle,
                           child: _isLoading
-                                  ? const CircularProgressIndicator():  const Text(
-                            'Get Price Estimate',
-                            style: AppTextStyles.primarybuttonText,
-                          ),
+                              ? const CircularProgressIndicator()
+                              : const Text(
+                                  'Get Price Estimate',
+                                  style: AppTextStyles.primarybuttonText,
+                                ),
                         ),
-                    ),
+                      ),
                       const SizedBox(height: 16),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
-                            children: currentFeatures.map((feature) => _buildFeatureItem(
-                              feature.name,
-                              feature.isIncluded,
-                              additionalText: isThreeMonthSelected
-                                  ? feature.threeMonthText
-                                  : feature.sixMonthText,
-                            )).toList(),
+                            children: currentFeatures
+                                .map((feature) => _buildFeatureItem(
+                                      feature.name,
+                                      feature.isIncluded,
+                                      additionalText: isThreeMonthSelected
+                                          ? feature.threeMonthText
+                                          : feature.sixMonthText,
+                                    ))
+                                .toList(),
                           ),
                         ),
                       )
-
                     ],
                   ),
                 ),
@@ -371,24 +372,23 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryButtonColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: 
-          AppTextStyles.primarybuttonText.copyWith(
-                        color: isSelected ? Colors.white : AppColors.secondaryButtonColor,
-            fontWeight: FontWeight.w700,
-          )   
-        )
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          decoration: BoxDecoration(
+            color:
+                isSelected ? AppColors.primaryButtonColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(text,
+              style: AppTextStyles.primarybuttonText.copyWith(
+                color:
+                    isSelected ? Colors.white : AppColors.secondaryButtonColor,
+                fontWeight: FontWeight.w700,
+              ))),
     );
   }
 
-  Widget _buildFeatureItem(String text, bool isIncluded, {String? additionalText}) {
+  Widget _buildFeatureItem(String text, bool isIncluded,
+      {String? additionalText}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -400,24 +400,24 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text.rich(
-  TextSpan(
-    text: text, 
-    style: AppTextStyles.spanTextStyle.copyWith(color: Colors.black,
-    fontSize: 16,
-    fontWeight: FontWeight.w400),
-    children: additionalText != null
-        ? [
+              child: Text.rich(
             TextSpan(
-              text: ' ($additionalText)',
-              style: AppTextStyles.spanTextStyle.copyWith(color: AppColors.headingTextColor),
+              text: text,
+              style: AppTextStyles.spanTextStyle.copyWith(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400),
+              children: additionalText != null
+                  ? [
+                      TextSpan(
+                        text: ' ($additionalText)',
+                        style: AppTextStyles.spanTextStyle
+                            .copyWith(color: AppColors.headingTextColor),
+                      ),
+                    ]
+                  : [],
             ),
-          ]
-        : [],
-  ),
-)
-
-          ),
+          )),
         ],
       ),
     );
@@ -430,6 +430,6 @@ class FeatureItem {
   final String? threeMonthText;
   final String? sixMonthText;
 
-  FeatureItem(this.name, this.isIncluded, {this.threeMonthText, this.sixMonthText});
+  FeatureItem(this.name, this.isIncluded,
+      {this.threeMonthText, this.sixMonthText});
 }
-

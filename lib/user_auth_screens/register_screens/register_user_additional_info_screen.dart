@@ -10,10 +10,12 @@ import '../../common/widget/linear_Progress_indicator.dart';
 
 class RegisterUserAdditionalInfoScreen extends ConsumerStatefulWidget {
   @override
-  _RegisterUserAdditionalInfoScreenState createState() => _RegisterUserAdditionalInfoScreenState();
+  _RegisterUserAdditionalInfoScreenState createState() =>
+      _RegisterUserAdditionalInfoScreenState();
 }
 
-class _RegisterUserAdditionalInfoScreenState extends ConsumerState<RegisterUserAdditionalInfoScreen> {
+class _RegisterUserAdditionalInfoScreenState
+    extends ConsumerState<RegisterUserAdditionalInfoScreen> {
   String? selectedFamilyStatus;
   final TextEditingController _aboutController = TextEditingController();
   String? name;
@@ -22,8 +24,6 @@ class _RegisterUserAdditionalInfoScreenState extends ConsumerState<RegisterUserA
   String? employedType;
   String? occupation;
   String? matrimonyProfile;
-
-  
 
   final List<String> familyStatusOptions = [
     'Lower Class',
@@ -37,19 +37,19 @@ class _RegisterUserAdditionalInfoScreenState extends ConsumerState<RegisterUserA
     getLocalDatas();
   }
 
+  Future<String?> getLocalDatas() async {
+    name = await SharedPrefHelper.getName() ?? 'user';
+    education = await SharedPrefHelper.getEducation() ?? 'Msc cs';
+    city = await SharedPrefHelper.getCity() ?? 'kalakad';
+    employedType = await SharedPrefHelper.getEmployedType() ?? 'farmer';
+    occupation = await SharedPrefHelper.getOccupation() ?? '';
+    matrimonyProfile =
+        'My name is $name. I have a $education degree and currently live in $city. I am employed as $employedType.';
+    _aboutController.text = matrimonyProfile.toString();
+    print(_aboutController);
+    print(matrimonyProfile);
+  }
 
- 
-Future<String?> getLocalDatas() async {
-  name = await SharedPrefHelper.getName() ?? 'user';
-  education = await SharedPrefHelper.getEducation() ?? 'Msc cs';
-  city = await SharedPrefHelper.getCity() ?? 'kalakad';
-  employedType = await SharedPrefHelper.getEmployedType() ?? 'farmer';
-  occupation = await SharedPrefHelper.getOccupation() ?? '';
-   matrimonyProfile = 'My name is $name. I have a $education degree and currently live in $city. I am employed as $employedType.';
-   _aboutController.text = matrimonyProfile.toString();
-   print(_aboutController);
-   print(matrimonyProfile);
-}
   @override
   void dispose() {
     _aboutController.dispose();
@@ -66,7 +66,8 @@ Future<String?> getLocalDatas() async {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryButtonColor),
+          icon: const Icon(Icons.arrow_back_ios,
+              color: AppColors.primaryButtonColor),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -76,17 +77,17 @@ Future<String?> getLocalDatas() async {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Align(
-              alignment: Alignment.center,
-            child:  Text(
-              'Additional Information',
-              style: AppTextStyles.headingTextstyle,
-            )),
+                alignment: Alignment.center,
+                child: Text(
+                  'Additional Information',
+                  style: AppTextStyles.headingTextstyle,
+                )),
             const Align(
-              alignment: Alignment.center, 
-              child:Text(
-              'The Perfect Match for your Personal Preference...',
-              style: AppTextStyles.spanTextStyle,
-            )),
+                alignment: Alignment.center,
+                child: Text(
+                  'The Perfect Match for your Personal Preference...',
+                  style: AppTextStyles.spanTextStyle,
+                )),
             const SizedBox(height: 20),
             const Align(
               alignment: Alignment.centerLeft,
@@ -96,24 +97,21 @@ Future<String?> getLocalDatas() async {
               ),
             ),
             const SizedBox(height: 30),
-
             Wrap(
-              alignment: WrapAlignment.start, 
-              spacing: 16.0, 
-              runSpacing: 12.0, 
+              alignment: WrapAlignment.start,
+              spacing: 16.0,
+              runSpacing: 12.0,
               children: familyStatusOptions
                   .map((status) => _buildFamilyStatusChip(status))
                   .toList(),
             ),
-
             const SizedBox(height: 30),
             const Text(
               'A Few Words About Yourself',
-             style: AppTextStyles.secondrySpanTextStyle,
+              style: AppTextStyles.secondrySpanTextStyle,
             ),
             const SizedBox(height: 10),
             TextField(
-              
               controller: _aboutController,
               maxLines: 4,
               maxLength: 200,
@@ -132,25 +130,31 @@ Future<String?> getLocalDatas() async {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () async{
-                      final registerState =   ref.read(registerProvider.notifier);
-                 bool success =   await   registerState.AddAddtionalApi(
-                        aboutYourSelf:_aboutController.text,
-                        employefamilyStatus:  selectedFamilyStatus
-                      );
-                      if(success){
-Navigator.pushAndRemoveUntil(
-  context,
-  MaterialPageRoute(
-    builder: (context) => RegisterUserInitialProfileSuccessScreen(),
-  ),
-  (Route<dynamic> route) => false, );
-                      }
-   
+                onPressed: () async {
+                  final registerState = ref.read(registerProvider.notifier);
+                  bool success = await registerState.AddAddtionalApi(
+                      aboutYourSelf: _aboutController.text,
+                      employefamilyStatus: selectedFamilyStatus);
+                  if (success) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RegisterUserInitialProfileSuccessScreen(),
+                      ),
+                      (Route<dynamic> route) => false,
+                    );
+                  }
                 },
-                style:AppTextStyles.primaryButtonstyle,
-                child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text('Next',
-                style: AppTextStyles.primarybuttonText,),
+                style: AppTextStyles.primaryButtonstyle,
+                child: registerState.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Text(
+                        'Next',
+                        style: AppTextStyles.primarybuttonText,
+                      ),
               ),
             ),
           ],
@@ -172,8 +176,7 @@ Navigator.pushAndRemoveUntil(
       backgroundColor: isSelected ? AppColors.selectedWrapBacgroundColor : null,
       selectedColor: Colors.red[100],
       labelStyle: AppTextStyles.spanTextStyle.copyWith(
-        color: isSelected? Colors.black:AppColors.spanTextColor,
-        
+        color: isSelected ? Colors.black : AppColors.spanTextColor,
       ),
     );
   }

@@ -29,31 +29,32 @@ class GovernmentProofApiState<T> {
   }
 }
 
-class GovernmentProofApiNotifier<T> extends StateNotifier<GovernmentProofApiState<T>> {
+class GovernmentProofApiNotifier<T>
+    extends StateNotifier<GovernmentProofApiState<T>> {
   GovernmentProofApiNotifier() : super(GovernmentProofApiState<T>());
-    Future<void> _saveUserData(String token) async {
+  Future<void> _saveUserData(String token) async {
     final prefs = await SharedPreferences.getInstance();
     // await prefs.setString('token', token);
     await prefs.setString('token', token);
   }
 
   Future<void> uploadGovernmentProofApi({
-  String? govtIdProof, 
-  String? idImage,  
+    String? govtIdProof,
+    String? idImage,
   }) async {
     state = state.copyWith(isLoading: true, error: null, successMessage: null);
     try {
       final int? userId = await SharedPrefHelper.getUserId();
       final response = await http.post(
-        Uri.parse(Api.createUploadGovernmentProof),  
+        Uri.parse(Api.createUploadGovernmentProof),
         headers: {
           'Content-Type': 'application/json',
           'AppId': '1',
         },
         body: jsonEncode({
           'userId': userId,
-          'govtIdProof': govtIdProof,  
-          'idImage': idImage,        
+          'govtIdProof': govtIdProof,
+          'idImage': idImage,
         }),
       );
 
@@ -64,7 +65,6 @@ class GovernmentProofApiNotifier<T> extends StateNotifier<GovernmentProofApiStat
         );
         final responseData = jsonDecode(response.body);
         _saveUserData(responseData.data['token']);
-        
       } else {
         state = state.copyWith(
           isLoading: false,
@@ -80,6 +80,7 @@ class GovernmentProofApiNotifier<T> extends StateNotifier<GovernmentProofApiStat
   }
 }
 
-final governmentProofApiProvider = StateNotifierProvider<GovernmentProofApiNotifier<void>, GovernmentProofApiState<void>>((ref) {
+final governmentProofApiProvider = StateNotifierProvider<
+    GovernmentProofApiNotifier<void>, GovernmentProofApiState<void>>((ref) {
   return GovernmentProofApiNotifier<void>();
 });
