@@ -140,11 +140,6 @@ class _LanguageSelectorState extends State<LanguageSelector> {
       'name': 'English',
       'letter': 'A',
     },
-    // {
-    //   'code': 'es',
-    //   'name': 'Spanish',
-    //   'letter': 'A!',
-    // },
   ];
 
   @override
