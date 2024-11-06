@@ -31,7 +31,6 @@ class ImageApiState<T> {
 class UploadImageApiNotifier<T> extends StateNotifier<ImageApiState<T>> {
   UploadImageApiNotifier() : super(ImageApiState<T>());
 
-
   Future<void> uploadPhoto(List<String> base64Image) async {
     state = state.copyWith(isLoading: true, error: null, successMessage: null);
     try {
@@ -40,13 +39,9 @@ class UploadImageApiNotifier<T> extends StateNotifier<ImageApiState<T>> {
         Uri.parse(Api.createUploadPhoto),
         headers: {
           'Content-Type': 'application/json',
-          'AppId': '1', 
+          'AppId': '1',
         },
-          
-        body: jsonEncode({
-          'userId': userId,
-          'images': base64Image 
-        }),
+        body: jsonEncode({'userId': userId, 'images': base64Image}),
       );
 
       if (response.statusCode == 200) {
@@ -69,6 +64,8 @@ class UploadImageApiNotifier<T> extends StateNotifier<ImageApiState<T>> {
   }
 }
 
-final imageRegisterApiProvider = StateNotifierProvider<UploadImageApiNotifier<void>, ImageApiState<void>>((ref) {
+final imageRegisterApiProvider =
+    StateNotifierProvider<UploadImageApiNotifier<void>, ImageApiState<void>>(
+        (ref) {
   return UploadImageApiNotifier<void>();
 });

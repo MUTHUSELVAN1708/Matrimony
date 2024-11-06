@@ -97,8 +97,8 @@ class InitialScreen extends StatelessWidget {
           top: 40,
           right: 10,
           child: InkWell(
-            onTap: (){
-              showLanguageDialog( context);
+            onTap: () {
+              showLanguageDialog(context);
             },
             child: Container(
               padding: const EdgeInsets.all(2),
@@ -117,7 +117,6 @@ class InitialScreen extends StatelessWidget {
     );
   }
 }
-
 
 class LanguageSelector extends StatefulWidget {
   const LanguageSelector({Key? key}) : super(key: key);
@@ -180,80 +179,81 @@ class _LanguageSelectorState extends State<LanguageSelector> {
               ],
             ),
             const SizedBox(height: 20),
-            
-            // Language options grid
-          GridView.builder(
-  shrinkWrap: true,
-  physics: const NeverScrollableScrollPhysics(),
-  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2,
-    crossAxisSpacing: 15,
-    mainAxisSpacing: 15,
-    childAspectRatio: 0.8,
-  ),
-  itemCount: languages.length,
-  itemBuilder: (context, index) {
-    final language = languages[index];
-    final isSelected = selectedLanguage == language['code'];
 
-    return InkWell(
-      onTap: () {
-        setState(() {
-          selectedLanguage = language['code'];
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? Colors.red : Colors.grey.shade300,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(12),
-          color: isSelected ? Colors.red.shade50 : Colors.white,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 60, // increased size for clearer circle
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isSelected ? Colors.red : Colors.grey.shade100,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2), // subtle shadow
+            // Language options grid
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: languages.length,
+              itemBuilder: (context, index) {
+                final language = languages[index];
+                final isSelected = selectedLanguage == language['code'];
+
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedLanguage = language['code'];
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: isSelected ? Colors.red : Colors.grey.shade300,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      color: isSelected ? Colors.red.shade50 : Colors.white,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 60, // increased size for clearer circle
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color:
+                                isSelected ? Colors.red : Colors.grey.shade100,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2), // subtle shadow
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              language['letter'] ?? '',
+                              style: TextStyle(
+                                fontSize: 24, // slightly larger text
+                                color: isSelected ? Colors.white : Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          language['name'] ?? '',
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  language['letter'] ?? '',
-                  style: TextStyle(
-                    fontSize: 24, // slightly larger text
-                    color: isSelected ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+                );
+              },
             ),
-            const SizedBox(height: 8),
-            Text(
-              language['name'] ?? '',
-              style: const TextStyle(
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  },
-),
             const SizedBox(height: 20),
-            
+
             // Apply button
             SizedBox(
               width: double.infinity,

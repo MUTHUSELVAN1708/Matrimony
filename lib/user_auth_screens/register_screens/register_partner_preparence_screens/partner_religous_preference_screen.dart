@@ -17,19 +17,19 @@ class PartnerReligiousPreferenceScreen extends ConsumerStatefulWidget {
 
 class _PartnerReligiousPreferenceScreenState
     extends ConsumerState<PartnerReligiousPreferenceScreen> {
-  List<String> selectedReligion  =[];
-  List<String> selectedCaste =[];
-  List<String> selectedSubCaste= [];
-  List<String> selectedStar =[];
+  List<String> selectedReligion = [];
+  List<String> selectedCaste = [];
+  List<String> selectedSubCaste = [];
+  List<String> selectedStar = [];
   List<String> selectedDosham = [];
-  List<String> selectedRassi= [];
+  List<String> selectedRassi = [];
 
   final List<String> religionList = ['Hindu', 'Muslim', 'Christian', 'Sikh'];
   final List<String> casteList = ['Brahmin', 'Kshatriya', 'Vaishya', 'Shudra'];
   final List<String> subCasteList = ['Iyengar', 'Iyer', 'Gounder', 'Nair'];
   final List<String> starList = ['Ashwini', 'Bharani', 'Krittika'];
   final List<String> doshamList = ['Yes', 'No', 'Don\'t Know'];
-    final List<String> rassiList= ['Yes', 'No', 'Don\'t Know'];
+  final List<String> rassiList = ['Yes', 'No', 'Don\'t Know'];
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +78,11 @@ class _PartnerReligiousPreferenceScreenState
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Religion Dropdown
                 CustomPreferenceDropdownField(
                   value: selectedReligion, // Set value as null initially
-                  hint: "Religion",  // Add hint text
+                  hint: "Religion", // Add hint text
                   items: religionList,
                   onChanged: (value) {
                     setState(() {
@@ -91,11 +91,11 @@ class _PartnerReligiousPreferenceScreenState
                   },
                 ),
                 const SizedBox(height: 10),
-                
+
                 // Caste Dropdown
                 CustomPreferenceDropdownField(
-                  value: selectedCaste,  // Set value as null initially
-                  hint: "Caste",  // Add hint text
+                  value: selectedCaste, // Set value as null initially
+                  hint: "Caste", // Add hint text
                   items: casteList,
                   onChanged: (value) {
                     setState(() {
@@ -104,11 +104,11 @@ class _PartnerReligiousPreferenceScreenState
                   },
                 ),
                 const SizedBox(height: 10),
-                
+
                 // Sub Caste Dropdown
                 CustomPreferenceDropdownField(
-                  value: selectedSubCaste,  
-                  hint: "SubCaste", 
+                  value: selectedSubCaste,
+                  hint: "SubCaste",
                   items: subCasteList,
                   onChanged: (value) {
                     setState(() {
@@ -117,11 +117,11 @@ class _PartnerReligiousPreferenceScreenState
                   },
                 ),
                 const SizedBox(height: 10),
-                
+
                 // Star Dropdown
                 CustomPreferenceDropdownField(
-                  value: selectedStar , 
-                  hint: "Star(Optional)", 
+                  value: selectedStar,
+                  hint: "Star(Optional)",
                   items: starList,
                   onChanged: (value) {
                     setState(() {
@@ -130,9 +130,9 @@ class _PartnerReligiousPreferenceScreenState
                   },
                 ),
                 const SizedBox(height: 10),
-                                CustomPreferenceDropdownField(
+                CustomPreferenceDropdownField(
                   value: selectedRassi,
-                  hint: "Rassi(Optional)", 
+                  hint: "Rassi(Optional)",
                   items: rassiList,
                   onChanged: (value) {
                     setState(() {
@@ -140,11 +140,11 @@ class _PartnerReligiousPreferenceScreenState
                     });
                   },
                 ),
-                    const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 // Dosham Dropdown
                 CustomPreferenceDropdownField(
                   value: selectedDosham,
-                  hint: "Dosham(Optional)", 
+                  hint: "Dosham(Optional)",
                   items: doshamList,
                   onChanged: (value) {
                     setState(() {
@@ -153,21 +153,21 @@ class _PartnerReligiousPreferenceScreenState
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Next Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-
-                    ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
-                       religion: selectedReligion.toString(),
-                       caste: selectedCaste.toString(),
-                       subcaste: selectedSubCaste.toString(),
-                       star: selectedStar.toString(),
-                       rassi: selectedRassi.toString(),
-                       dosham: selectedDosham.toString()
-                    );
+                      ref
+                          .read(preferenceInputProvider.notifier)
+                          .updatePreferenceInput(
+                              religion: selectedReligion.toString(),
+                              caste: selectedCaste.toString(),
+                              subcaste: selectedSubCaste.toString(),
+                              star: selectedStar.toString(),
+                              rassi: selectedRassi.toString(),
+                              dosham: selectedDosham.toString());
 
                       Navigator.push(
                         context,
@@ -184,14 +184,18 @@ class _PartnerReligiousPreferenceScreenState
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child:partnerRegisterState.isLoading?  const Center(child: CircularProgressIndicator(),): const Text(
-                      'Next',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    child: partnerRegisterState.isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text(
+                            'Next',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                   ),
                 ),
               ],

@@ -18,13 +18,12 @@ class PartnerProfessionalScreen extends ConsumerStatefulWidget {
       _PartnerProfessionalScreenState();
 }
 
-class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalScreen> {
-
+class _PartnerProfessionalScreenState
+    extends ConsumerState<PartnerProfessionalScreen> {
   List<String> selectedEdication = [];
-   List<String> selectedEmployed = [];
-    List<String> selectedOccupation= [];
-     List<String> selectedIncome = [];
-    
+  List<String> selectedEmployed = [];
+  List<String> selectedOccupation = [];
+  List<String> selectedIncome = [];
 
   List<String> educationList = [
     'High School',
@@ -34,7 +33,7 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
     'Other',
   ];
 
-   List<String> employedInList = [
+  List<String> employedInList = [
     'Government',
     'Private',
     'Business',
@@ -145,7 +144,7 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
 
             // Occupation Dropdown
             CustomPreferenceDropdownField(
-              value:selectedIncome,
+              value: selectedIncome,
               hint: "Occupation",
               items: occupationList,
               onChanged: (value) {
@@ -173,17 +172,17 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
-                      education: selectedEdication.toString(),
-                      employedIn: selectedEmployed.toString(),
-                      annualIncome: selectedIncome.toString(),
-                      profession: selectedOccupation.toString()
-                  );
+                  ref
+                      .read(preferenceInputProvider.notifier)
+                      .updatePreferenceInput(
+                          education: selectedEdication.toString(),
+                          employedIn: selectedEmployed.toString(),
+                          annualIncome: selectedIncome.toString(),
+                          profession: selectedOccupation.toString());
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const PartnerLocationScreen()));
+                          builder: (context) => const PartnerLocationScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -191,14 +190,18 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child:userRegisterState.isLoading?const Center(child: CircularProgressIndicator(),) :const Text(
-                  'Next',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: userRegisterState.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Text(
+                        'Next',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -240,4 +243,3 @@ class ProfessionalField {
     required this.title,
   });
 }
-

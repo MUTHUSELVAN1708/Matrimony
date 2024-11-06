@@ -8,8 +8,6 @@ import 'package:matrimony/user_register_riverpods/riverpod/create_user_photo_not
 import 'package:matrimony/user_register_riverpods/riverpod/user_photo_picker_notifier.dart'; // Riverpod image picker
 
 class RegisterUserPhotoUploadScreen extends ConsumerWidget {
-
- 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final imagePickerState = ref.watch(imagePickerProvider);
@@ -21,12 +19,15 @@ class RegisterUserPhotoUploadScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryButtonColor),
+          icon: const Icon(Icons.arrow_back_ios,
+              color: AppColors.primaryButtonColor),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           TextButton(
-            child: Text('Skip', style: AppTextStyles.headingTextstyle.copyWith(color: Colors.black)),
+            child: Text('Skip',
+                style: AppTextStyles.headingTextstyle
+                    .copyWith(color: Colors.black)),
             onPressed: () {
               // Add navigation to the next screen on skip
             },
@@ -100,35 +101,38 @@ class RegisterUserPhotoUploadScreen extends ConsumerWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                 final imagepicker = ref.watch(imagePickerProvider);
-                 final imageApi = ref.watch(imageRegisterApiProvider);
-                 final isImagesNotEmpty = [imagepicker.imageUrl1 ?? '',
-                   imagepicker.imageUrl2 ?? '',
-                   imagepicker.imageUrl3 ?? '' 
-                   ];
-                 if(isImagesNotEmpty.where((url) => url.isNotEmpty).length > 2){
-                  ref.read(imageRegisterApiProvider.notifier).uploadPhoto(
-                   isImagesNotEmpty
-                  );
-                  // if (imageApi.successMessage!.isNotEmpty ) {
-                 
-Navigator.of(context).push(
-  MaterialPageRoute(
-    builder: (context) => RegisterUserPhotoUploadedSuccessScreen(),
-  ),
-  // (route) => false, 
-);
+                  final imagepicker = ref.watch(imagePickerProvider);
+                  final imageApi = ref.watch(imageRegisterApiProvider);
+                  final isImagesNotEmpty = [
+                    imagepicker.imageUrl1 ?? '',
+                    imagepicker.imageUrl2 ?? '',
+                    imagepicker.imageUrl3 ?? ''
+                  ];
+                  if (isImagesNotEmpty.where((url) => url.isNotEmpty).length >
+                      2) {
+                    ref
+                        .read(imageRegisterApiProvider.notifier)
+                        .uploadPhoto(isImagesNotEmpty);
+                    // if (imageApi.successMessage!.isNotEmpty ) {
 
-                  // } 
-                   }
-                
-                  
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RegisterUserPhotoUploadedSuccessScreen(),
+                      ),
+                      // (route) => false,
+                    );
+
+                    // }
+                  }
                 },
                 style: AppTextStyles.primaryButtonstyle,
-                child:imageApi.isLoading? const Center(child: CircularProgressIndicator()): const Text(
-                  'Continue',
-                  style: AppTextStyles.primarybuttonText,
-                ),
+                child: imageApi.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : const Text(
+                        'Continue',
+                        style: AppTextStyles.primarybuttonText,
+                      ),
               ),
             ),
           ],
@@ -148,7 +152,9 @@ Navigator.of(context).push(
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: large ? MediaQuery.of(context).size.width * 0.4 : MediaQuery.of(context).size.width * 0.4,
+        width: large
+            ? MediaQuery.of(context).size.width * 0.4
+            : MediaQuery.of(context).size.width * 0.4,
         height: large ? 300 : 150,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
@@ -164,7 +170,8 @@ Navigator.of(context).push(
                 : DashedBorder(
                     borderRadius: 10,
                     child: Center(
-                      child: Icon(Icons.add, color: Colors.red, size: large ? 40 : 30),
+                      child: Icon(Icons.add,
+                          color: Colors.red, size: large ? 40 : 30),
                     ),
                   ),
       ),
@@ -176,7 +183,8 @@ class DashedBorder extends StatelessWidget {
   final Widget child;
   final double borderRadius;
 
-  const DashedBorder({Key? key, required this.child, this.borderRadius = 0}) : super(key: key);
+  const DashedBorder({Key? key, required this.child, this.borderRadius = 0})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -11,17 +11,25 @@ class HoroscopeAddDetailScreen extends ConsumerStatefulWidget {
   const HoroscopeAddDetailScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<HoroscopeAddDetailScreen> createState() => _HoroscopeAddDetailScreenState();
+  ConsumerState<HoroscopeAddDetailScreen> createState() =>
+      _HoroscopeAddDetailScreenState();
 }
 
-class _HoroscopeAddDetailScreenState extends ConsumerState<HoroscopeAddDetailScreen> {
+class _HoroscopeAddDetailScreenState
+    extends ConsumerState<HoroscopeAddDetailScreen> {
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController(); // Date controller for date picker
+  final TextEditingController _dateController =
+      TextEditingController(); // Date controller for date picker
 
   // Sample data lists for dropdowns
   final List<String> _birthTimes = ['Morning', 'Afternoon', 'Evening', 'Night'];
   final List<String> _countries = ['USA', 'India', 'UK', 'Canada'];
-  final List<String> _states = ['California', 'Maharashtra', 'London', 'Ontario'];
+  final List<String> _states = [
+    'California',
+    'Maharashtra',
+    'London',
+    'Ontario'
+  ];
   final List<String> _cities = ['Los Angeles', 'Mumbai', 'London', 'Toronto'];
 
   String? selectedBirthTime;
@@ -170,7 +178,7 @@ class _HoroscopeAddDetailScreenState extends ConsumerState<HoroscopeAddDetailScr
                 child: ElevatedButton(
                   onPressed: () {
                     // ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
-                       
+
                     // );
                     Navigator.push(
                       context,
@@ -193,5 +201,3 @@ class _HoroscopeAddDetailScreenState extends ConsumerState<HoroscopeAddDetailScr
     );
   }
 }
-
-

@@ -74,10 +74,8 @@ class NotificationTile extends StatelessWidget {
                 Text(
                   notification.name,
                   style: AppTextStyles.headingTextstyle.copyWith(
-                    fontSize: 18,
-                    color: getDarkerShade(notification
-                .backgroundColor)
-                  ),
+                      fontSize: 18,
+                      color: getDarkerShade(notification.backgroundColor)),
                 ),
                 Text(
                   notification.message,

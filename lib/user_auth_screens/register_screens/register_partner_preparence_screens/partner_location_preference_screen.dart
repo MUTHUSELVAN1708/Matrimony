@@ -11,7 +11,8 @@ class PartnerLocationScreen extends ConsumerStatefulWidget {
   const PartnerLocationScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<PartnerLocationScreen> createState() => _PartnerLocationScreenState();
+  ConsumerState<PartnerLocationScreen> createState() =>
+      _PartnerLocationScreenState();
 }
 
 class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
@@ -101,14 +102,14 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
 
             // Country Dropdown
             CustomPreferenceDropdownField(
-              value: selectedCountry ,
+              value: selectedCountry,
               hint: "Country",
               items: countries,
               onChanged: (value) {
                 setState(() {
                   selectedCountry = value;
                   selectedState = []; // Reset state when country changes
-                  selectedCity =[]; // Reset city when country changes
+                  selectedCity = []; // Reset city when country changes
                 });
               },
             ),
@@ -116,11 +117,10 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
 
             // State Dropdown
             CustomPreferenceDropdownField(
-              value: selectedState ,
+              value: selectedState,
               hint: "State",
-              items: selectedCountry != null
-                  ? states[selectedCountry!] ?? []
-                  : [],
+              items:
+                  selectedCountry != null ? states[selectedCountry!] ?? [] : [],
               onChanged: (value) {
                 setState(() {
                   selectedState = value;
@@ -132,7 +132,7 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
 
             // City Dropdown
             CustomPreferenceDropdownField(
-              value: selectedCity ,
+              value: selectedCity,
               hint: "City",
               items: selectedState != null ? cities[selectedState!] ?? [] : [],
               onChanged: (value) {
@@ -149,11 +149,12 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
-                    country: selectedCountry.toString(),
-                    states: selectedState.toString(),
-                    city: selectedCity.toString()
-                  );
+                  ref
+                      .read(preferenceInputProvider.notifier)
+                      .updatePreferenceInput(
+                          country: selectedCountry.toString(),
+                          states: selectedState.toString(),
+                          city: selectedCity.toString());
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -167,14 +168,16 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child:userRegisterState.isLoading? const Center(child: CircularProgressIndicator()): const Text(
-                  'Next',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: userRegisterState.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : const Text(
+                        'Next',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
               ),
             ),
           ],

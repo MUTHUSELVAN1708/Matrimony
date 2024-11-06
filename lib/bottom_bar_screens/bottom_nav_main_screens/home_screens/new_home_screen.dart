@@ -20,14 +20,15 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   @override
   void initState() {
     super.initState();
-     getData ();
+    getData();
   }
 
-  Future<void> getData ()async{
+  Future<void> getData() async {
     await Future.delayed(Duration.zero);
     ref.read(allMatchesProvider.notifier).allMatchDataFetch();
     print("end..... completed fetching");
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,7 +116,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   Widget _buildPendingTasks() {
     final colors = [0xFF0D5986, 0xFFD6151A, 0xFFD65915, 0xFF7C590C];
-    final strings = ['Accept\nReceived','Interests\nReceived', 'Viewed\nYou', 'Shortlisted\nYou'];
+    final strings = [
+      'Accept\nReceived',
+      'Interests\nReceived',
+      'Viewed\nYou',
+      'Shortlisted\nYou'
+    ];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
@@ -192,7 +198,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   color: Colors.pink.shade50,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                height: MediaQuery.of(context).size.height *0.20,
+                height: MediaQuery.of(context).size.height * 0.20,
                 width: MediaQuery.of(context).size.width - 20,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -209,7 +215,9 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                             // Rounded corners
                             child: Container(
                               width: 100,
-                              height: MediaQuery.of(context).size.height *0.20/2 , // Made the container square
+                              height: MediaQuery.of(context).size.height *
+                                  0.20 /
+                                  2, // Made the container square
                               decoration: BoxDecoration(
                                 color: Colors.pink[200], // Fallback color
                               ),
@@ -526,9 +534,10 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 InkWell(
                   onTap: () {
                     Navigator.push(
-  context,
-  MaterialPageRoute(builder: (context) => const PlanUpgradeScreen()),
-);
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PlanUpgradeScreen()),
+                    );
                   },
                   child: Container(
                     width: 100,
@@ -718,5 +727,3 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     );
   }
 }
-
-

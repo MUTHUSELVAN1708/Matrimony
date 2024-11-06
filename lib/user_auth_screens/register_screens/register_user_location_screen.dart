@@ -9,16 +9,18 @@ import 'package:matrimony/user_auth_screens/register_screens/register_user_addit
 
 class RegisterUserLocationScreen extends ConsumerStatefulWidget {
   @override
-  _RegisterUserLocationScreenState createState() => _RegisterUserLocationScreenState();
+  _RegisterUserLocationScreenState createState() =>
+      _RegisterUserLocationScreenState();
 }
 
-class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocationScreen> {
+class _RegisterUserLocationScreenState
+    extends ConsumerState<RegisterUserLocationScreen> {
   final _formKey = GlobalKey<FormState>();
   String? country, state, city, pincode, flatNumber, address;
 
   @override
   Widget build(BuildContext context) {
-        final registerState = ref.watch(registerProvider);
+    final registerState = ref.watch(registerProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -26,7 +28,8 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryButtonColor),
+          icon: const Icon(Icons.arrow_back_ios,
+              color: AppColors.primaryButtonColor),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -41,7 +44,7 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 'Location Information',
                 style: AppTextStyles.headingTextstyle,
               ),
-               const SizedBox(height: 10),
+              const SizedBox(height: 10),
               const Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -54,7 +57,8 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 decoration: const InputDecoration(
                   labelText: 'Your Residing Country',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)), // BorderRadius 12
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(12)), // BorderRadius 12
                   ),
                 ),
                 onSaved: (value) => country = value,
@@ -64,7 +68,8 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 decoration: const InputDecoration(
                   labelText: 'Your Residing State',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)), // BorderRadius 12
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(12)), // BorderRadius 12
                   ),
                 ),
                 onSaved: (value) => state = value,
@@ -74,7 +79,8 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 decoration: const InputDecoration(
                   labelText: 'Your Residing City',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)), // BorderRadius 12
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(12)), // BorderRadius 12
                   ),
                 ),
                 onSaved: (value) => city = value,
@@ -84,7 +90,8 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 decoration: const InputDecoration(
                   labelText: 'Pincode',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)), // BorderRadius 12
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(12)), // BorderRadius 12
                   ),
                 ),
                 onSaved: (value) => pincode = value,
@@ -94,7 +101,8 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 decoration: const InputDecoration(
                   labelText: 'Flat Number',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)), // BorderRadius 12
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(12)), // BorderRadius 12
                   ),
                 ),
                 onSaved: (value) => flatNumber = value,
@@ -104,7 +112,8 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 decoration: const InputDecoration(
                   labelText: 'Address',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)), // BorderRadius 12
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(12)), // BorderRadius 12
                   ),
                 ),
                 onSaved: (value) => address = value,
@@ -114,35 +123,37 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                  final   registerState =  ref.read(registerProvider.notifier);
-              bool success =     await  registerState.createLocationApi(
-                    country: country ?? '',
-                     states: state ?? '' ,
-                      pincode: pincode ?? '',
-                       city: city ?? '',
-                        flatNumber: flatNumber ?? '',
-                         address: address ?? ''
-                         );
-                         if(success){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                RegisterUserAdditionalInfoScreen()),
-                      );
-                         }
-
+                      final registerState = ref.read(registerProvider.notifier);
+                      bool success = await registerState.createLocationApi(
+                          country: country ?? '',
+                          states: state ?? '',
+                          pincode: pincode ?? '',
+                          city: city ?? '',
+                          flatNumber: flatNumber ?? '',
+                          address: address ?? '');
+                      if (success) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  RegisterUserAdditionalInfoScreen()),
+                        );
+                      }
                     }
                   },
                   style: AppTextStyles.primaryButtonstyle,
-                  child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text(
-                    'Next',
-                    style: AppTextStyles.primarybuttonText,
-                  ),
+                  child: registerState.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : const Text(
+                          'Next',
+                          style: AppTextStyles.primarybuttonText,
+                        ),
                 ),
               ),
             ],

@@ -10,10 +10,12 @@ class RegisterUserProfessionalInfoScreen extends ConsumerStatefulWidget {
   const RegisterUserProfessionalInfoScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RegisterUserProfessionalInfoScreen> createState() => _RegisterUserProfessionalInfoScreenState();
+  ConsumerState<RegisterUserProfessionalInfoScreen> createState() =>
+      _RegisterUserProfessionalInfoScreenState();
 }
 
-class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUserProfessionalInfoScreen> {
+class _RegisterUserProfessionalInfoScreenState
+    extends ConsumerState<RegisterUserProfessionalInfoScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? educationDetails;
@@ -98,7 +100,8 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
     ],
   };
 
-  void _showSelectionDialog(String title, List<String> options, String? currentValue, Function(String) onSelect) {
+  void _showSelectionDialog(String title, List<String> options,
+      String? currentValue, Function(String) onSelect) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -108,7 +111,8 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
         return StatefulBuilder(
           builder: (context, setState) {
             List<String> filteredOptions = options
-                .where((option) => option.toLowerCase().contains(searchQuery.toLowerCase()))
+                .where((option) =>
+                    option.toLowerCase().contains(searchQuery.toLowerCase()))
                 .toList();
 
             return Dialog(
@@ -128,8 +132,10 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
                               fillColor: AppColors.dialogboxSearchBackground,
                               filled: true,
                               hintText: 'Search...',
-                              hintStyle: const TextStyle(color: AppColors.dialogboxSearchTextColor),
-                              suffixIcon: const Icon(Icons.search, color: AppColors.dialogboxSearchTextColor),
+                              hintStyle: const TextStyle(
+                                  color: AppColors.dialogboxSearchTextColor),
+                              suffixIcon: const Icon(Icons.search,
+                                  color: AppColors.dialogboxSearchTextColor),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -153,8 +159,10 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
                           Expanded(
                             child: ScrollbarTheme(
                               data: ScrollbarThemeData(
-                                trackColor: MaterialStateProperty.all(Colors.pink[100]),
-                                thumbColor: MaterialStateProperty.all(Colors.pink),
+                                trackColor:
+                                    MaterialStateProperty.all(Colors.pink[100]),
+                                thumbColor:
+                                    MaterialStateProperty.all(Colors.pink),
                                 radius: const Radius.circular(12),
                               ),
                               child: Scrollbar(
@@ -166,7 +174,8 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
                                         title: Text(option),
                                         value: option,
                                         groupValue: selectedValue,
-                                        activeColor: AppColors.primaryButtonColor,
+                                        activeColor:
+                                            AppColors.primaryButtonColor,
                                         onChanged: (value) {
                                           setState(() {
                                             selectedValue = value;
@@ -195,7 +204,8 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
                               }
                             : null,
                         style: AppTextStyles.primaryButtonstyle,
-                        child: const Text('Apply', style: AppTextStyles.primarybuttonText),
+                        child: const Text('Apply',
+                            style: AppTextStyles.primarybuttonText),
                       ),
                     ),
                   ],
@@ -214,26 +224,26 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
     required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              value.isEmpty ? hint : value,
-              style: TextStyle(
-                color: value.isEmpty ? Colors.grey.shade600 : Colors.black,
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                value.isEmpty ? hint : value,
+                style: TextStyle(
+                  color: value.isEmpty ? Colors.grey.shade600 : Colors.black,
+                ),
               ),
-            ),
-            Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
-          ],
-        ),
-    ));
+              Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+            ],
+          ),
+        ));
   }
 
   @override
@@ -246,7 +256,8 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryButtonColor),
+          icon: const Icon(Icons.arrow_back_ios,
+              color: AppColors.primaryButtonColor),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -302,88 +313,99 @@ class _RegisterUserProfessionalInfoScreenState extends ConsumerState<RegisterUse
                 const SizedBox(height: 16),
 
                 // Occupation Selection
-            employmentType == 'Not Working' ?SizedBox():   _buildSelectionField(
-                  value: occupation ?? '',
-                  hint: 'Select your occupation',
-                  onTap: () {
-                    _showSelectionDialog(
-                      'Select Occupation',
-                      occupationOptions,
-                      occupation,
-                      (value) => setState(() => occupation = value),
-                    );
-                  },
-                ),
+                employmentType == 'Not Working'
+                    ? SizedBox()
+                    : _buildSelectionField(
+                        value: occupation ?? '',
+                        hint: 'Select your occupation',
+                        onTap: () {
+                          _showSelectionDialog(
+                            'Select Occupation',
+                            occupationOptions,
+                            occupation,
+                            (value) => setState(() => occupation = value),
+                          );
+                        },
+                      ),
                 const SizedBox(height: 16),
 
                 // Income Currency Selection
-               employmentType == 'Not Working' ?SizedBox(): _buildSelectionField(
-                  value: incomeCurrency ?? '',
-                  hint: 'Select your income currency',
-                  onTap: () {
-                    _showSelectionDialog(
-                      'Select Income Currency',
-                      currencyOptions,
-                      incomeCurrency,
-                      (value) {
-                        setState(() {
-                          incomeCurrency = value;
-                          annualIncome = null; // Reset annualIncome when currency changes
-                        });
-                      },
-                    );
-                  },
-                ),
+                employmentType == 'Not Working'
+                    ? SizedBox()
+                    : _buildSelectionField(
+                        value: incomeCurrency ?? '',
+                        hint: 'Select your income currency',
+                        onTap: () {
+                          _showSelectionDialog(
+                            'Select Income Currency',
+                            currencyOptions,
+                            incomeCurrency,
+                            (value) {
+                              setState(() {
+                                incomeCurrency = value;
+                                annualIncome =
+                                    null; // Reset annualIncome when currency changes
+                              });
+                            },
+                          );
+                        },
+                      ),
                 const SizedBox(height: 16),
 
                 // Annual Income Selection
-              employmentType == 'Not Working' ?SizedBox():   _buildSelectionField(
-                  value: annualIncome ?? '',
-                  hint: 'Select your annual income',
-                  onTap: () {
-                    if (incomeCurrency != null) {
-                      _showSelectionDialog(
-                        'Select Annual Income',
-                        incomeRangeOptions[incomeCurrency]!,
-                        annualIncome,
-                        (value) => setState(() => annualIncome = value),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select an income currency first.')),
-                      );
-                    }
-                  },
-                ),
+                employmentType == 'Not Working'
+                    ? SizedBox()
+                    : _buildSelectionField(
+                        value: annualIncome ?? '',
+                        hint: 'Select your annual income',
+                        onTap: () {
+                          if (incomeCurrency != null) {
+                            _showSelectionDialog(
+                              'Select Annual Income',
+                              incomeRangeOptions[incomeCurrency]!,
+                              annualIncome,
+                              (value) => setState(() => annualIncome = value),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Please select an income currency first.')),
+                            );
+                          }
+                        },
+                      ),
                 const SizedBox(height: 16),
 
                 // Next Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        bool success =  await ref.read(registerProvider.notifier).createprofesionalApi(
-                          education: educationDetails,
-                          annualIncome: annualIncome,
-                          employedType:employmentType,
-                         occupation:occupation,
-                  annualIncomeCurrency:incomeCurrency,
-                     
+                        bool success = await ref
+                            .read(registerProvider.notifier)
+                            .createprofesionalApi(
+                              education: educationDetails,
+                              annualIncome: annualIncome,
+                              employedType: employmentType,
+                              occupation: occupation,
+                              annualIncomeCurrency: incomeCurrency,
+                            );
+                        if (success) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  RegisterUserLocationScreen(),
+                            ),
                           );
-                          if(success){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterUserLocationScreen(),
-                          ),
-                        );
-                          }
-
+                        }
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
-                    child: const Text('Next', style: AppTextStyles.primarybuttonText),
+                    child: const Text('Next',
+                        style: AppTextStyles.primarybuttonText),
                   ),
                 ),
               ],

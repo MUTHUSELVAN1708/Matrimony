@@ -29,6 +29,7 @@ class _RegisterPartnerBasicPreferenceScreenState
   void getUserId() async {
     userId = await SharedPrefHelper.getUserId() ?? 1;
   }
+
   List<String> selectFromAge = [];
   String selectToAge = '';
   String selectFromHeight = '';
@@ -112,18 +113,17 @@ class _RegisterPartnerBasicPreferenceScreenState
                   ),
                   const SizedBox(height: 10),
                   HeightDropdownField(
-                    value:
-                        selectedHeight,
+                    value: selectedHeight,
                     hint: 'Height',
                     hint2: 'From Height',
                     hint3: 'To Height',
-                    items:PartnerPreferenceConstData.myHeightOptions.values.toList(),
+                    items: PartnerPreferenceConstData.myHeightOptions.values
+                        .toList(),
                     ageheight: true,
                     onChanged: (value) {
                       setState(() {
-                  
-                          selectedHeight = value;
-                      
+                        selectedHeight = value;
+
                         print("+++$selectedHeight");
                       });
                     },
@@ -235,14 +235,16 @@ class _RegisterPartnerBasicPreferenceScreenState
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child:userRegisterState.isLoading? const Center(child: CircularProgressIndicator()): const Text(
-                        'Next',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      child: userRegisterState.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : const Text(
+                              'Next',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                     ),
                   ),
                 ],

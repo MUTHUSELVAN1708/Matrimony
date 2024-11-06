@@ -47,7 +47,6 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
     },
   ];
 
-
   void nextProfile() {
     if (currentIndex < profiles.length - 1) {
       setState(() {
@@ -66,7 +65,6 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
 
   @override
   Widget build(BuildContext context) {
-
     final currentProfile = profiles[currentIndex];
 
     return Stack(
@@ -90,14 +88,16 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
                   GestureDetector(
                     onTap: () {},
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 4),
                       decoration: const BoxDecoration(
                         color: AppColors.primaryButtonColor,
                         borderRadius: BorderRadius.all(Radius.circular(6)),
                       ),
                       child: Text(
                         'View Details',
-                        style: AppTextStyles.primarybuttonText.copyWith(fontSize: 12),
+                        style: AppTextStyles.primarybuttonText
+                            .copyWith(fontSize: 12),
                       ),
                     ),
                   ),
@@ -191,9 +191,9 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
                                 borderRadius: BorderRadius.circular(5)),
                             child: const Center(
                                 child: Text(
-                                  'Accept',
-                                  style: TextStyle(color: Colors.white),
-                                )),
+                              'Accept',
+                              style: TextStyle(color: Colors.white),
+                            )),
                           ),
                         ],
                       ),
@@ -229,9 +229,9 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
                                   borderRadius: BorderRadius.circular(5)),
                               child: const Center(
                                   child: Text(
-                                    'Decline',
-                                    style: TextStyle(color: Colors.white),
-                                  )),
+                                'Decline',
+                                style: TextStyle(color: Colors.white),
+                              )),
                             ),
                           ],
                         ),
@@ -280,7 +280,8 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
           bottom: 0,
           child: Center(
             child: IconButton(
-              onPressed: currentIndex < profiles.length - 1 ? nextProfile : null,
+              onPressed:
+                  currentIndex < profiles.length - 1 ? nextProfile : null,
               icon: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(

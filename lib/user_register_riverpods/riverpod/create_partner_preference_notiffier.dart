@@ -27,11 +27,12 @@ class PartnerPreferenceState<T> {
   }
 }
 
-class PartnerPreferenceNotifier<T> extends StateNotifier<PartnerPreferenceState<T>> {
+class PartnerPreferenceNotifier<T>
+    extends StateNotifier<PartnerPreferenceState<T>> {
   PartnerPreferenceNotifier() : super(PartnerPreferenceState<T>());
 
   Future<void> uploadPartnerPreference({
-    int? userId, 
+    int? userId,
     int? fromAge,
     int? toAge,
     String? height,
@@ -64,18 +65,17 @@ class PartnerPreferenceNotifier<T> extends StateNotifier<PartnerPreferenceState<
     String? food,
     String? spokenLanguages,
     String? interest,
-    
   }) async {
     state = state.copyWith(isLoading: true, error: null, successMessage: null);
     try {
       final response = await http.post(
-        Uri.parse(Api.createpartnerPreference), 
+        Uri.parse(Api.createpartnerPreference),
         headers: {
           'Content-Type': 'application/json',
           'AppId': '1',
         },
         body: jsonEncode({
-          'userId': userId,     
+          'userId': userId,
           'fromAge': fromAge,
           'toAge': toAge,
           'height': height,
@@ -119,7 +119,8 @@ class PartnerPreferenceNotifier<T> extends StateNotifier<PartnerPreferenceState<
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: 'Failed to upload partner preference: ${response.reasonPhrase}',
+          error:
+              'Failed to upload partner preference: ${response.reasonPhrase}',
         );
       }
     } catch (e) {
@@ -131,6 +132,7 @@ class PartnerPreferenceNotifier<T> extends StateNotifier<PartnerPreferenceState<
   }
 }
 
-final partnerPreferenceProvider = StateNotifierProvider<PartnerPreferenceNotifier<void>, PartnerPreferenceState<void>>((ref) {
+final partnerPreferenceProvider = StateNotifierProvider<
+    PartnerPreferenceNotifier<void>, PartnerPreferenceState<void>>((ref) {
   return PartnerPreferenceNotifier<void>();
 });

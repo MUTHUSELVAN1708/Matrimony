@@ -20,9 +20,10 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     const NewHomeScreen(),
     const MatchesScreen(),
     const Notification2Screen(),
-    const Inbox(), 
+    const Inbox(),
     // const InboxScreen(),
-    const Text("Profile Screen"), // Replace with the actual Profile screen widget
+    const Text(
+        "Profile Screen"), // Replace with the actual Profile screen widget
   ];
 
   @override
@@ -52,11 +53,13 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/matchesicon.svg'), // Corrected here
+              icon:
+                  SvgPicture.asset('assets/matchesicon.svg'), // Corrected here
               label: 'Matches',
             ),
             BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/notificationicon.svg'), // Corrected here
+              icon: SvgPicture.asset(
+                  'assets/notificationicon.svg'), // Corrected here
               label: 'Notification',
             ),
             BottomNavigationBarItem(
@@ -64,7 +67,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               label: 'Inbox',
             ),
             BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/settingsicon.svg'), // Corrected here
+              icon:
+                  SvgPicture.asset('assets/settingsicon.svg'), // Corrected here
               label: 'Profile',
             ),
           ],

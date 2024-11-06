@@ -45,13 +45,13 @@ class RegisterService {
         // 'token': token!,
       },
       body: jsonEncode({
-        'id':userId,
+        'id': userId,
         'otp': otp,
         'phoneNumber': phoneNo,
       }),
     );
     print("$otp,$phoneNo");
-   print(response.statusCode);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       print(response.statusCode);
     } else {
@@ -88,147 +88,143 @@ class RegisterService {
     );
 
     if (response.statusCode == 200) {
-         print(response.statusCode);
+      print(response.statusCode);
     } else {
-   
       throw Exception('Failed to submit personal details: ${response.body}');
     }
   }
 
-Future<String> religiousInformationsApi(
-  String motherTongue,
-  String religion,
-  String caste,
-  String subCaste,
-  String division,
-) async {
-  final int? userId = await SharedPrefHelper.getUserId();
-  final response = await http.post(
-    Uri.parse(Api.createReligionsApi),  
-    headers: {
-      'Content-Type': 'application/json',
-      'AppId': "1",
-    },
-    body: jsonEncode({
-      'userId': userId,
-      'motherTongue': motherTongue,
-      'religion': religion,
-      'caste': caste,
-      'subCaste': subCaste,
-      'division': division,
-    }),
-  );
+  Future<String> religiousInformationsApi(
+    String motherTongue,
+    String religion,
+    String caste,
+    String subCaste,
+    String division,
+  ) async {
+    final int? userId = await SharedPrefHelper.getUserId();
+    final response = await http.post(
+      Uri.parse(Api.createReligionsApi),
+      headers: {
+        'Content-Type': 'application/json',
+        'AppId': "1",
+      },
+      body: jsonEncode({
+        'userId': userId,
+        'motherTongue': motherTongue,
+        'religion': religion,
+        'caste': caste,
+        'subCaste': subCaste,
+        'division': division,
+      }),
+    );
 
-  if (response.statusCode == 200) {
-   return 'Successfully Added';
-  } else {
-    throw Exception('Failed to submit personal details: ${response.body}');
+    if (response.statusCode == 200) {
+      return 'Successfully Added';
+    } else {
+      throw Exception('Failed to submit personal details: ${response.body}');
+    }
   }
-}
 
-Future<void> professionalInformation({
+  Future<void> professionalInformation({
+    required String education,
+    required String employedType,
+    required String occupation,
+    required String annualIncomeCurrency,
+    String? annualIncome,
+  }) async {
+    final int? userId = await SharedPrefHelper.getUserId();
 
-  required String education,
-  required String employedType,
-  required String occupation,
-  required String annualIncomeCurrency,
-   String? annualIncome,
-}) async {
-  final int? userId = await SharedPrefHelper.getUserId();
+    final response = await http.post(
+      Uri.parse(Api.createProfessionalInformation),
+      headers: {
+        'Content-Type': 'application/json',
+        'AppId': "1",
+      },
+      body: jsonEncode({
+        'userId': userId,
+        'education': education,
+        'employedType': employedType,
+        'occupation': occupation,
+        'annualIncomeCurrency': annualIncomeCurrency,
+        'annualIncome': annualIncome,
+      }),
+    );
 
-  final response = await http.post(
-    Uri.parse(Api.createProfessionalInformation), 
-    headers: {
-      'Content-Type': 'application/json',
-      'AppId': "1",
-    },
-    body: jsonEncode({
-      'userId': userId,
-      'education': education,
-      'employedType': employedType,
-      'occupation': occupation,
-      'annualIncomeCurrency': annualIncomeCurrency,
-      'annualIncome': annualIncome,
-    }),
-  );
-
-  if (response.statusCode == 200) {
-    print(response.statusCode);
-  } else {
-    throw Exception('Failed to submit professional information: ${response.body}');
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+    } else {
+      throw Exception(
+          'Failed to submit professional information: ${response.body}');
+    }
   }
-}
 
+  Future<void> LocationInformation({
+    String? country,
+    String? state,
+    String? pincode,
+    String? city,
+    String? flatNumber,
+    String? address,
+  }) async {
+    final int? userId = await SharedPrefHelper.getUserId();
+    final prefs = await SharedPreferences.getInstance();
 
-Future<void> LocationInformation({
- String? country,
-   String? state,
-   String? pincode,
-  String? city,
-  String? flatNumber,
-  String? address,
-}) async {
-  final int? userId = await SharedPrefHelper.getUserId();
-  final prefs = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse(Api.createLocationDetails),
+      headers: {
+        'Content-Type': 'application/json',
+        'AppId': "1",
+      },
+      body: jsonEncode({
+        'userId': userId,
+        'country': country,
+        'state': state,
+        'pincode': pincode,
+        'city': city,
+        'flatNumber': flatNumber,
+        'address': address,
+      }),
+    );
 
-  final response = await http.post(
-    Uri.parse(Api.createLocationDetails), 
-    headers: {
-      'Content-Type': 'application/json',
-      'AppId': "1",
-    },
-    body: jsonEncode({
-      'userId': userId,
-      'country': country,
-      'state': state,
-      'pincode': pincode,
-      'city': city,
-      'flatNumber': flatNumber,
-      'address': address,
-    }),
-  );
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      prefs.setString('name', responseData['name']);
+      prefs.setString('employedType', responseData['employedType']);
+      prefs.setString('occupation', responseData['occupation']);
+      prefs.setString('education', responseData['education']);
+      prefs.setString('city', responseData['city']);
 
-  if (response.statusCode == 200) {
-    final responseData = jsonDecode(response.body);
-    prefs.setString('name',responseData['name']);
-    prefs.setString('employedType',responseData['employedType']);
-     prefs.setString('occupation',responseData['occupation']);
-      prefs.setString('education',responseData['education']);
-       prefs.setString('city',responseData['city']);
-
-    print(response.statusCode);
-  } else {
-    throw Exception('Failed to submit location information: ${response.body}');
+      print(response.statusCode);
+    } else {
+      throw Exception(
+          'Failed to submit location information: ${response.body}');
+    }
   }
-}
 
-Future<void> createAddtionalInformation({
+  Future<void> createAddtionalInformation({
+    String? familyStatus,
+    String? aboutYourSelf,
+  }) async {
+    final int? userId = await SharedPrefHelper.getUserId();
 
-String? familyStatus,
- String? aboutYourSelf,
-}) async {
-  final int? userId = await SharedPrefHelper.getUserId();
+    final response = await http.post(
+      Uri.parse(Api.createAddtionalInformation),
+      headers: {
+        'Content-Type': 'application/json',
+        'AppId': "1",
+      },
+      body: jsonEncode({
+        'userId': userId,
+        'familyStatus': familyStatus,
+        'aboutYourSelf': aboutYourSelf,
+      }),
+    );
 
-  final response = await http.post(
-    Uri.parse(Api.createAddtionalInformation),
-    headers: {
-      'Content-Type': 'application/json',
-      'AppId': "1",
-    },
-    body: jsonEncode({
-      'userId': userId,
-      'familyStatus': familyStatus, 
-      'aboutYourSelf': aboutYourSelf,
-    }),
-  );
-
-  if (response.statusCode == 200) {
-    print('Successfully submitted information: ${response.statusCode}');
-  } else {
-    throw Exception('Failed to submit professional information: ${response.body}');
+    if (response.statusCode == 200) {
+      print('Successfully submitted information: ${response.statusCode}');
+    } else {
+      throw Exception(
+          'Failed to submit professional information: ${response.body}');
+    }
   }
-}
-
-
-
 }

@@ -39,7 +39,7 @@ class _UpdatePartnerProfessionalPreferenceScreenState
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(30)),
+                          BorderRadius.vertical(top: Radius.circular(30)),
                     ),
                     child: Column(
                       children: [
@@ -59,56 +59,56 @@ class _UpdatePartnerProfessionalPreferenceScreenState
                               children: [
                                 _buildDetailItem('Occupation', occupation,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Occupation', [
-                                      'Engineer',
-                                      'Doctor',
-                                      'Teacher',
-                                      'Business',
-                                      'Artist',
-                                      'Other'
-                                    ], (value) {
-                                      setState(() {
-                                        occupation = value;
-                                      });
-                                    })),
+                                            'Select Occupation', [
+                                          'Engineer',
+                                          'Doctor',
+                                          'Teacher',
+                                          'Business',
+                                          'Artist',
+                                          'Other'
+                                        ], (value) {
+                                          setState(() {
+                                            occupation = value;
+                                          });
+                                        })),
                                 _buildDetailItem('Annual Income', annualIncome,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Annual Income', [
-                                      'Less than ₹3 Lakh',
-                                      '₹3-5 Lakh',
-                                      '₹5-10 Lakh',
-                                      'More than ₹10 Lakh'
-                                    ], (value) {
-                                      setState(() {
-                                        annualIncome = value;
-                                      });
-                                    })),
+                                            'Select Annual Income', [
+                                          'Less than ₹3 Lakh',
+                                          '₹3-5 Lakh',
+                                          '₹5-10 Lakh',
+                                          'More than ₹10 Lakh'
+                                        ], (value) {
+                                          setState(() {
+                                            annualIncome = value;
+                                          });
+                                        })),
                                 _buildDetailItem(
                                     'Employment Type', employmentType,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Employment Type', [
-                                      'Private Sector',
-                                      'Government',
-                                      'Self-Employed',
-                                      'Unemployed'
-                                    ], (value) {
-                                      setState(() {
-                                        employmentType = value;
-                                      });
-                                    })),
+                                            'Select Employment Type', [
+                                          'Private Sector',
+                                          'Government',
+                                          'Self-Employed',
+                                          'Unemployed'
+                                        ], (value) {
+                                          setState(() {
+                                            employmentType = value;
+                                          });
+                                        })),
                                 _buildDetailItem('Education', education,
                                     onTap: () => _showOptionsDialog(
-                                        'Select Education', [
-                                      'High School',
-                                      'Bachelor\'s Degree',
-                                      'Master\'s Degree',
-                                      'PhD',
-                                      'Other'
-                                    ], (value) {
-                                      setState(() {
-                                        education = value;
-                                      });
-                                    })),
+                                            'Select Education', [
+                                          'High School',
+                                          'Bachelor\'s Degree',
+                                          'Master\'s Degree',
+                                          'PhD',
+                                          'Other'
+                                        ], (value) {
+                                          setState(() {
+                                            education = value;
+                                          });
+                                        })),
                               ],
                             ),
                           ),
@@ -122,7 +122,7 @@ class _UpdatePartnerProfessionalPreferenceScreenState
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 15),
+                                    const EdgeInsets.symmetric(vertical: 15),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
                               ),

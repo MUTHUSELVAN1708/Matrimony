@@ -20,7 +20,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
   void _handleGetOTP() {
     if (_emailController.text.isNotEmpty) {
-
       print('Sending OTP to: ${_emailController.text}');
     }
   }
@@ -35,7 +34,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height:100),
+              const SizedBox(height: 100),
               const Text(
                 'Reset Password',
                 style: TextStyle(
@@ -52,47 +51,44 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   fontSize: 14,
                 ),
               ),
-              const SizedBox(height:80),
-
+              const SizedBox(height: 80),
               Center(
                 child: Image.asset(
-                  'assets/resetpasswordimage.png', 
+                  'assets/resetpasswordimage.png',
                   height: 200,
                   fit: BoxFit.contain,
                 ),
               ),
               const SizedBox(height: 50),
-
-             TextField(
-  controller: _emailController,
-  decoration: InputDecoration(
-    hintText: 'Mobile No / Email ID',
-    filled: true,
-    fillColor: Colors.grey[100],
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.black),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.black), 
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.black), 
-    ),
-  ),
-  keyboardType: TextInputType.emailAddress,
-),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  hintText: 'Mobile No / Email ID',
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.black),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.black),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.black),
+                  ),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
               const SizedBox(height: 20),
-
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   onPressed: _handleGetOTP,
-                  style:AppTextStyles.primaryButtonstyle,         
-                           child: const Text(
+                  style: AppTextStyles.primaryButtonstyle,
+                  child: const Text(
                     'Get OTP',
                     style: TextStyle(
                       color: Colors.white,
@@ -102,7 +98,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-
               Center(
                 child: TextButton(
                   onPressed: () {

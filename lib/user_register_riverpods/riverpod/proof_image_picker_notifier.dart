@@ -43,17 +43,17 @@ class ProofImageNotifier extends StateNotifier<ProofImageState> {
       //     });
       //   });
       // } else {
-        // For mobile platforms
-        final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-        if (pickedFile != null) {
-          final bytes = await File(pickedFile.path).readAsBytes();
-          final base64String = base64Encode(bytes);
-          final imageName = pickedFile.path.split('/').last; // Get file name
-          state = ProofImageState(
-            base64Image: base64String,
-            imageName: imageName,
-          );
-        }
+      // For mobile platforms
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        final bytes = await File(pickedFile.path).readAsBytes();
+        final base64String = base64Encode(bytes);
+        final imageName = pickedFile.path.split('/').last; // Get file name
+        state = ProofImageState(
+          base64Image: base64String,
+          imageName: imageName,
+        );
+      }
       // }
     } catch (error) {
       // Handle errors gracefully (for debugging/logging as needed)

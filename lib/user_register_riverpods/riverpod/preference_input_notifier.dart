@@ -2,39 +2,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PreferenceInput {
   int? userId;
-int? fromAge;
-int? toAge;
-String? height; 
-String? maritalStatus;
-String? motherTongue;
-String? physicalStatus;
-String? eatingHabits;
-String? drinkingHabits;
-String? smokingHabits;
-String? religion;
-String? caste;
-String? subcaste;
-String? star;
-String? rassi;
-String? dosham;
-String? education;
-String? employedIn;
-String? profession;
-String? annualIncome;
-String? country;
-String? states;
-String? city;
-String? lookingFor;
-String? lifestyle;
-String? hobbies;
-String? music;
-String? reading;
-String? moviesTvShows;
-String? sportsAndFitness;
-String? food;
-String? spokenLanguages;
-String? interest;
-
+  int? fromAge;
+  int? toAge;
+  String? height;
+  String? maritalStatus;
+  String? motherTongue;
+  String? physicalStatus;
+  String? eatingHabits;
+  String? drinkingHabits;
+  String? smokingHabits;
+  String? religion;
+  String? caste;
+  String? subcaste;
+  String? star;
+  String? rassi;
+  String? dosham;
+  String? education;
+  String? employedIn;
+  String? profession;
+  String? annualIncome;
+  String? country;
+  String? states;
+  String? city;
+  String? lookingFor;
+  String? lifestyle;
+  String? hobbies;
+  String? music;
+  String? reading;
+  String? moviesTvShows;
+  String? sportsAndFitness;
+  String? food;
+  String? spokenLanguages;
+  String? interest;
 
   PreferenceInput({
     this.userId,
@@ -149,6 +148,7 @@ class PreferenceInputNotifier extends StateNotifier<PreferenceInput?> {
   }
 }
 
-final preferenceInputProvider = StateNotifierProvider<PreferenceInputNotifier, PreferenceInput?>((ref) {
+final preferenceInputProvider =
+    StateNotifierProvider<PreferenceInputNotifier, PreferenceInput?>((ref) {
   return PreferenceInputNotifier();
 });
