@@ -74,7 +74,7 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                 selectedValues.isEmpty
                     ? widget.hint
                     : widget.hint == 'Age' || widget.hint == 'Height'
-                        ? "${toItem.isNotEmpty ? toItem[0] : ''} - ${fromItem.isNotEmpty ? fromItem[0] : ''}"
+                        ? "${toItem.isNotEmpty ? fromItem[0] : ''} - ${fromItem.isNotEmpty ? toItem[0] : ''}"
                         : selectedValues.join(', ').toString(),
                 style: TextStyle(
                   overflow: TextOverflow.ellipsis,
@@ -171,7 +171,7 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                     : HeightDropdownField(
                                         value: toItem,
                                         hint: widget.hint3 ?? '',
-                                        items: widget.items!,
+                                        items: widget.items,
                                         onChanged: (data) {
                                           setState(() {
                                             toItem = data;

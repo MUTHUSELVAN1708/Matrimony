@@ -14,7 +14,7 @@ class InitialScreen extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Colors.pink,
             image: DecorationImage(
-              image: AssetImage('assets/initialScreen.jpg'),
+              image: AssetImage('assets/initialScreen.png'),
               fit: BoxFit.cover,
             ),
           ),
