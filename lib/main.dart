@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return      ProviderScope(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter',
+        title: 'Flutter Demo',
         // home:  RegisterUserPhotoUploadScreen(),
         home: InitialScreen(),
       ),
