@@ -1,34 +1,33 @@
+
 import 'package:flutter/material.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
-import 'inbox_screens/screens/allMatchesViewScreen.dart';
-
 class MatchesScreen extends StatelessWidget {
-  const MatchesScreen({super.key});
+  const MatchesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
-          '3 Matches',
-          textAlign: TextAlign.center,
-          style: AppTextStyles.headingTextstyle,
+        const Text('3 Matches',
+        textAlign: TextAlign.center,
+        style: AppTextStyles.headingTextstyle,
         ),
-        Text(
-          'Based on your Partner preferences',
-          textAlign: TextAlign.center,
-          style: AppTextStyles.spanTextStyle.copyWith(color: Colors.black),
+        Text('Based on your Partner preferences',
+                textAlign: TextAlign.center,
+        style: AppTextStyles.spanTextStyle.copyWith(
+          color: Colors.black
         ),
-        const SizedBox(
-          height: 10,
         ),
+        const SizedBox(height: 10,),
         Expanded(
           child: ScrollConfiguration(
-            behavior:
-                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            behavior: ScrollConfiguration.of(context).copyWith(
+              scrollbars: false
+            ),
             child: ListView.builder(
               itemCount: matchesList.length,
               itemBuilder: (context, index) {
@@ -42,13 +41,14 @@ class MatchesScreen extends StatelessWidget {
   }
 }
 
+
 class MatchCard extends StatelessWidget {
   final Match match;
 
   const MatchCard({
-    super.key,
+    Key? key,
     required this.match,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +56,9 @@ class MatchCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Stack(
         children: [
-          // Background image
+      
           ClipRRect(
-            borderRadius:
-                BorderRadius.circular(4), // Adjust radius for the card
+            borderRadius: BorderRadius.circular(4), // Adjust radius for the card
             child: match.imageUrl.isNotEmpty
                 ? Image.asset(
                     match.imageUrl,
@@ -80,61 +79,61 @@ class MatchCard extends StatelessWidget {
                     ),
                   ),
           ),
+   
           Container(
             height: MediaQuery.of(context).size.height * 0.3,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3), // Black transparent overlay
+              color: Colors.black.withOpacity(0.3), 
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-          // Content of the card
+         
           Positioned(
-            bottom: 50,
-            left: 15,
+           bottom: 50,
+           left: 15,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   match.name,
                   style: AppTextStyles.headingTextstyle.copyWith(
-                      color: AppColors.primaryButtonTextColor,
-                      fontWeight: FontWeight.w700),
+                    color: AppColors.primaryButtonTextColor,
+                    fontWeight: FontWeight.w700
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   match.id,
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                      color: AppColors.primaryButtonTextColor, fontSize: 14),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            right: 10,
-            top: 10,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AllMatchesScreen(),
+                                    style: AppTextStyles.spanTextStyle.copyWith(
+                    color: AppColors.primaryButtonTextColor,
+                    fontSize: 14
+                    
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              ),
-              child: const Text(
-                'View Details',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
                 ),
-              ),
+                            ],
             ),
           ),
+        Positioned(
+          right: 10,
+          top: 10,
+          child:   ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const AllMatchesDetailsScreen()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 4),
+                  ),
+                  child: const Text(
+                    'View Details',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+),
           Positioned(
             bottom: 8,
             left: 8,
@@ -212,7 +211,7 @@ final List<Match> matchesList = [
     caste: 'Caste',
     location: 'Tirunelveli',
   ),
-  Match(
+    Match(
     name: 'Ragavarshini',
     id: '#d23543245',
     imageUrl: 'assets/image/image3.png',

@@ -12,6 +12,5 @@ class Api {
   static const String createUploadPhoto  = '$baseUrl/uploadPhoto';
   static const String createUploadGovernmentProof  = '$baseUrl/govtIdProof';
     static const String createpartnerPreference  = '$baseUrl/partnerPreference';
-  static const String allMatchesGetAPi  = '$baseUrl/allautomatch';
-  // static const String allMatchesGetAPi  = '$baseUrl/allautomatch';
+  static const String getAllMatches = '$baseUrl/allautomatch';
 }

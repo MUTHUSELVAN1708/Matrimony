@@ -6,6 +6,8 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_location_preference_screen.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
 
 class PartnerProfessionalScreen extends ConsumerStatefulWidget {
@@ -58,6 +60,7 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
 
   @override
   Widget build(BuildContext context) {
+    final userRegisterState = ref.watch(partnerPreferenceProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -153,7 +156,6 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
             ),
             const SizedBox(height: 10),
 
-            // Annual Income Dropdown
             CustomPreferenceDropdownField(
               value: selectedOccupation,
               hint: "Annual Income",
@@ -166,7 +168,6 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
             ),
             const SizedBox(height: 16),
 
-            // Next Button
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -190,7 +191,7 @@ class _PartnerProfessionalScreenState extends ConsumerState<PartnerProfessionalS
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
+                child:userRegisterState.isLoading?const Center(child: CircularProgressIndicator(),) :const Text(
                   'Next',
                   style: TextStyle(
                     color: Colors.white,

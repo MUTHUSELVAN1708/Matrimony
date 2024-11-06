@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
 import 'package:matrimony/common/widget/age_height_comment_box.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_religous_preference_screen.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
 
 class RegisterPartnerBasicPreferenceScreen extends ConsumerStatefulWidget {
@@ -45,6 +45,7 @@ class _RegisterPartnerBasicPreferenceScreenState
   @override
   Widget build(BuildContext context) {
     final inputStates = ref.read(preferenceInputProvider.notifier);
+    final userRegisterState = ref.watch(partnerPreferenceProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -102,7 +103,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     items: PartnerPreferenceConstData.toAgeList,
                     onChanged: (value) {
                       setState(() {
-                        selectedAge = value!;
+                        selectedAge = value;
                         selectFromAge = selectedAge;
                         // selectToAge = selectedAge[1];
                       });
@@ -134,7 +135,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     items: PartnerPreferenceConstData.maritalStatusOptions,
                     onChanged: (value) {
                       setState(() {
-                        selectedMaritalStatus = value!;
+                        selectedMaritalStatus = value;
                       });
                     },
                   ),
@@ -145,7 +146,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     items: PartnerPreferenceConstData.motherTongueOptions,
                     onChanged: (value) {
                       setState(() {
-                        selectedMotherTongue = value!;
+                        selectedMotherTongue = value;
                       });
                     },
                   ),
@@ -156,7 +157,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     items: PartnerPreferenceConstData.physicalStatusOptions,
                     onChanged: (value) {
                       setState(() {
-                        selectedPhysicalStatus = value!;
+                        selectedPhysicalStatus = value;
                       });
                     },
                   ),
@@ -167,7 +168,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     items: PartnerPreferenceConstData.eatingHabitsOptions,
                     onChanged: (value) {
                       setState(() {
-                        selectedEatingHabits = value!;
+                        selectedEatingHabits = value;
                       });
                     },
                   ),
@@ -178,7 +179,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     items: PartnerPreferenceConstData.drinkingHabitsOptions,
                     onChanged: (value) {
                       setState(() {
-                        selectedDrinkingHabits = value!;
+                        selectedDrinkingHabits = value;
                       });
                     },
                   ),
@@ -189,7 +190,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     items: PartnerPreferenceConstData.smokingHabitsOptions,
                     onChanged: (value) {
                       setState(() {
-                        selectedSmokingHabits = value!;
+                        selectedSmokingHabits = value;
                       });
                     },
                   ),
@@ -218,18 +219,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                             drinkingHabits: selectedDrinkingHabits.toString(),
                             eatingHabits: selectedEatingHabits.toString(),
                             smokingHabits: selectedSmokingHabits.toString());
-                        final inputState = ref.watch(preferenceInputProvider);
 
-                        print('From Age: ${inputState?.fromAge}');
-                        print('To Age: ${inputState?.toAge}');
-                        print('Height: ${inputState?.height}');
-                        print('Marital Status: ${inputState?.maritalStatus}');
-                        print('Mother Tongue: ${inputState?.motherTongue}');
-                        print('Drinking Habits: ${inputState?.drinkingHabits}');
-                        print('Eating Habits: ${inputState?.eatingHabits}');
-                        print('Smoking Habits: ${inputState?.smokingHabits}');
-
-                        // Navigate to the next screen
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -245,7 +235,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text(
+                      child:userRegisterState.isLoading? const Center(child: CircularProgressIndicator()): const Text(
                         'Next',
                         style: TextStyle(
                           color: Colors.white,

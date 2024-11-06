@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_initial_profile_success_screen.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 
-class RegisterUserExtraDetailScreen extends StatefulWidget {
+class RegisterUserExtraDetailScreen extends ConsumerStatefulWidget {
   @override
   _RegisterUserExtraDetailScreenState createState() => _RegisterUserExtraDetailScreenState();
 }
 
-class _RegisterUserExtraDetailScreenState extends State<RegisterUserExtraDetailScreen> {
+class _RegisterUserExtraDetailScreenState extends ConsumerState<RegisterUserExtraDetailScreen> {
   List<String> selectedDescribeTraits = [];
   List<String> selectedHobbies = [];
 
@@ -28,6 +30,7 @@ class _RegisterUserExtraDetailScreenState extends State<RegisterUserExtraDetailS
 
   @override
   Widget build(BuildContext context) {
+        final registerState = ref.watch(registerProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -96,7 +99,7 @@ class _RegisterUserExtraDetailScreenState extends State<RegisterUserExtraDetailS
                     );
                   },
                   style: AppTextStyles.primaryButtonstyle,
-                  child: const Text('Save & Continue',style: AppTextStyles.primarybuttonText,),
+                  child: registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text('Save & Continue',style: AppTextStyles.primarybuttonText,),
                 ),
               ),
             ],

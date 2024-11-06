@@ -134,7 +134,7 @@ class _RegisterSetupUserScreenState extends State<RegisterSetupUserScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => RegisterUserDetailsScreen(
-                                  registerFor: _selectedOption!, // Pass the selected option here
+                                  registerFor: _selectedOption!,
                                 ),
                               ),
                             );

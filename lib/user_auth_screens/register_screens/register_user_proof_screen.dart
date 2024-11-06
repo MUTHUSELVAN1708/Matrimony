@@ -32,7 +32,7 @@ class _RegisterUserGovernmentProofState
 
   @override
   Widget build(BuildContext context) {
-    // final proofState = ref.watch(proofImageProvider);
+    final proofState = ref.watch(proofImageProvider);
     final proofApiState = ref.watch(governmentProofApiProvider);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -141,14 +141,14 @@ class _RegisterUserGovernmentProofState
               ),
               child: Row(
                 children: [
-                  // Text(
-                  //   proofState.imageName ?? 'Add Id Proof',
-                  //   style: TextStyle(color: Colors.grey),
-                  // ),
+                  Text(
+                    proofState.imageName ?? 'Add Id Proof',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                   Spacer(),
                   InkWell(
                       onTap: () {
-                        // ref.read(proofImageProvider.notifier).pickImage();
+                        ref.read(proofImageProvider.notifier).pickImage();
                       },
                       child: Icon(Icons.upload_outlined, color: Colors.grey)),
                 ],
@@ -159,23 +159,23 @@ class _RegisterUserGovernmentProofState
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // if (selectedProof != null && proofState.base64Image != null) {
-                  //   ref
-                  //       .read(governmentProofApiProvider.notifier)
-                  //       .uploadGovernmentProofApi(
-                  //           govtIdProof: selectedProof,
-                  //           idImage: proofState.base64Image);
-                  //   if (proofApiState.successMessage!.isNotEmpty) {
-                  //     Navigator.pushAndRemoveUntil(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) =>
-                  //               RegisterUserGovernmentProofSuccessScreen()),
-                  //       (Route<dynamic> route) =>
-                  //           false, // Removes all previous routes
-                  //     );
-                  //   }
-                  // }
+                  if (selectedProof != null && proofState.base64Image != null) {
+                    ref
+                        .read(governmentProofApiProvider.notifier)
+                        .uploadGovernmentProofApi(
+                            govtIdProof: selectedProof,
+                            idImage: proofState.base64Image);
+                    if (proofApiState.successMessage!.isNotEmpty) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                RegisterUserGovernmentProofSuccessScreen()),
+                        (Route<dynamic> route) =>
+                            false, // Removes all previous routes
+                      );
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,

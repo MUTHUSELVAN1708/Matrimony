@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
@@ -59,6 +58,7 @@ Future<String?> getLocalDatas() async {
 
   @override
   Widget build(BuildContext context) {
+    final registerState = ref.watch(registerProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -149,7 +149,7 @@ Navigator.pushAndRemoveUntil(
    
                 },
                 style:AppTextStyles.primaryButtonstyle,
-                child: const Text('Next',
+                child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text('Next',
                 style: AppTextStyles.primarybuttonText,),
               ),
             ),

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/user_auth_screens/register_star_details/user_star_details.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
 
 class PartnerLocationScreen extends ConsumerStatefulWidget {
@@ -35,6 +37,7 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userRegisterState = ref.watch(partnerPreferenceProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -164,7 +167,7 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
+                child:userRegisterState.isLoading? const Center(child: CircularProgressIndicator()): const Text(
                   'Next',
                   style: TextStyle(
                     color: Colors.white,

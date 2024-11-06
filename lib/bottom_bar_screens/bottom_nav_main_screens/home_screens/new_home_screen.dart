@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/circularPercentIndicator.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profileScreen.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profile_card_stack.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/home_screen_circle_precentage_integator.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/home_screen_profile_stack_slide.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
-class NewHomeScreen extends StatelessWidget {
+class NewHomeScreen extends ConsumerStatefulWidget {
   const NewHomeScreen({super.key});
 
+  @override
+  ConsumerState<NewHomeScreen> createState() => _NewHomeScreenState();
+}
+
+class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+     getData ();
+  }
+
+  Future<void> getData ()async{
+    await Future.delayed(Duration.zero);
+    ref.read(allMatchesProvider.notifier).allMatchDataFetch();
+    print("end..... completed fetching");
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +40,7 @@ class NewHomeScreen extends StatelessWidget {
             _buildAllMatches(),
             _buildCompleteProfile(),
             _buildSuccessStory(context),
-            _buildUpgradeNow(),
+            _buildUpgradeNow(context),
             // _buildUpgradeCard(),
             const ProfileCardStack(),
             _buildAssistanceService(),
@@ -173,7 +192,7 @@ class NewHomeScreen extends StatelessWidget {
                   color: Colors.pink.shade50,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                height: 175,
+                height: MediaQuery.of(context).size.height *0.20,
                 width: MediaQuery.of(context).size.width - 20,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -190,7 +209,7 @@ class NewHomeScreen extends StatelessWidget {
                             // Rounded corners
                             child: Container(
                               width: 100,
-                              height: 100, // Made the container square
+                              height: MediaQuery.of(context).size.height *0.20/2 , // Made the container square
                               decoration: BoxDecoration(
                                 color: Colors.pink[200], // Fallback color
                               ),
@@ -248,9 +267,9 @@ class NewHomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        // Positioned pending tasks at the top
+
         Positioned(
-          top: 0, // Position at the very top of the stack
+          top: 0,
           left: 0,
           right: 0,
           child: _buildPendingTasks(),
@@ -464,21 +483,6 @@ class NewHomeScreen extends StatelessWidget {
   }
 
   // Widget _buildDownloadBanner() {
-  //   return Container(
-  //     padding: const EdgeInsets.all(16),
-  //     child: ElevatedButton(
-  //       onPressed: () {},
-  //       style: ElevatedButton.styleFrom(
-  //         backgroundColor: Colors.red,
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(8),
-  //         ),
-  //       ),
-  //       child: const Text('Download'),
-  //     ),
-  //   );
-  // }
-
   Widget _buildSuccessStory(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16),
@@ -493,7 +497,7 @@ class NewHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUpgradeNow() {
+  Widget _buildUpgradeNow(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
       child: Container(
@@ -519,25 +523,33 @@ class NewHomeScreen extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                Container(
-                  width: 100,
-                  decoration: BoxDecoration(
-                    // border: Border.all(color: Colors.black38,),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(
-                            0, 2), // Add a slight shadow for a raised effect
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => const PlanUpgradeScreen()),
+);
+                  },
+                  child: Container(
+                    width: 100,
+                    decoration: BoxDecoration(
+                      // border: Border.all(color: Colors.black38,),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: const Offset(
+                              0, 2), // Add a slight shadow for a raised effect
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Upgrade Now',
+                        style: TextStyle(color: Colors.black54, fontSize: 12),
                       ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Upgrade Now',
-                      style: TextStyle(color: Colors.black54, fontSize: 12),
                     ),
                   ),
                 )
@@ -635,7 +647,7 @@ class NewHomeScreen extends StatelessWidget {
         height: 400,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/image/homepagebottom.png'),
+            image: AssetImage('assets/image/assist.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -705,168 +717,6 @@ class NewHomeScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildAssistedService(BuildContext context) {
-    return WaitingResponseSlider();
-    // return Container(
-    //   height: MediaQuery.of(context).size.height *0.60,
-    //   width:double.infinity,
-    //   decoration: BoxDecoration(
-    //     image: const DecorationImage(
-    //       image:AssetImage('assets/image/assist.png'),
-    //       fit: BoxFit.fill
-    //     ),
-    //     color: Colors.green[50],
-    //     borderRadius: BorderRadius.circular(8),
-    //   ),
-    //   child: Container(
-
-    //   margin: const EdgeInsets.all(20),
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.center,
-    //       mainAxisAlignment: MainAxisAlignment.start,
-    //       children: [
-    //         Text('Assisted Service',
-    //         style: AppTextStyles.headingTextstyle.copyWith(
-    //           color: Colors.black,
-    //           fontSize: 25
-    //         ),
-    //         ),
-    //         const SizedBox(height: 10,),
-    //         Align(
-    //           alignment: Alignment.center,
-    //           child: Text(
-    //             textAlign: TextAlign.center,
-    //             'Personalized matchmaking by experienced relationship managers (RM)',
-    //             style:AppTextStyles.spanTextStyle.copyWith(
-    //               color: AppColors.primaryButtonColor,
-    //               fontSize: 16
-    //             ),
-    //           ),
-    //         ),
-    //          const SizedBox(height: 10,),
-    //         Align(
-    //            alignment: Alignment.center,
-    //           child: Text(
-    //              textAlign: TextAlign.center,
-    //             'RM handpicks suitable matches from a large pool of profiles',
-    //            style:AppTextStyles.spanTextStyle.copyWith(
-    //               color: AppColors.primaryButtonColor
-    //             ),
-    //           ),
-    //         ),
-    //          const SizedBox(height: 10,),
-    //         Align(
-    //            alignment: Alignment.center,
-    //           child: Text(
-    //              textAlign: TextAlign.center,
-    //             'RM arranges meetings with prospects you are interested in',
-    //                      style:AppTextStyles.spanTextStyle.copyWith(
-    //               color: AppColors.primaryButtonColor
-    //             ),
-    //           ),
-    //         ),
-    //          const SizedBox(height: 10,),
-    //         ElevatedButton(onPressed: (){}, child: Text("Know More",style: AppTextStyles.primarybuttonText.copyWith(
-    //           color: Colors.black
-    //         ),))
-
-    //       ],
-    //     ),
-    //   ),
-    // );
-  }
 }
 
-class WaitingResponseSlider extends StatefulWidget {
-  @override
-  _WaitingResponseSliderState createState() => _WaitingResponseSliderState();
-}
 
-class _WaitingResponseSliderState extends State<WaitingResponseSlider> {
-  final PageController _pageController = PageController();
-  int _currentIndex = 0;
-
-  // Sample list of responses for demonstration
-  final List<String> responses = [
-    'User 1 is waiting for your response. Please check their profile and respond.',
-    'User 2 is waiting for your response. Please check their profile and respond.',
-    'User 3 is waiting for your response. Please check their profile and respond.',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 160,
-          // Adjust height as needed
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: PageView.builder(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            itemCount: responses.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  const Text(
-                    'Waiting For Your Response',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          color: Colors.pink[100], // Placeholder color
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          responses[index],
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-        // Dots indicator to show current page index
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            responses.length,
-            (index) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: _currentIndex == index ? 12 : 8,
-              height: _currentIndex == index ? 12 : 8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _currentIndex == index ? Colors.black : Colors.grey,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}

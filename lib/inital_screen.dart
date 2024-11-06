@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
@@ -5,8 +6,6 @@ import 'package:matrimony/user_auth_screens/login_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_select_screen.dart';
 
 class InitialScreen extends StatelessWidget {
-  const InitialScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +14,7 @@ class InitialScreen extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Colors.pink,
             image: DecorationImage(
-              image: AssetImage('assets/initialScreen.png'),
+              image: AssetImage('assets/initialScreen.jpg'),
               fit: BoxFit.cover,
             ),
           ),

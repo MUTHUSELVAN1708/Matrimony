@@ -18,6 +18,7 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
 
   @override
   Widget build(BuildContext context) {
+        final registerState = ref.watch(registerProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -138,7 +139,7 @@ class _RegisterUserLocationScreenState extends ConsumerState<RegisterUserLocatio
                     }
                   },
                   style: AppTextStyles.primaryButtonstyle,
-                  child: const Text(
+                  child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text(
                     'Next',
                     style: AppTextStyles.primarybuttonText,
                   ),

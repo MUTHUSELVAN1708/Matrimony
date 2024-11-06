@@ -11,8 +11,8 @@ class Themes {
       iconTheme: IconThemeData(color: Colors.white),
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.black),
-      bodyMedium: TextStyle(color: Colors.black87),
+      bodyText1: TextStyle(color: Colors.black),
+      bodyText2: TextStyle(color: Colors.black87),
     ),
     buttonTheme: const ButtonThemeData(
       buttonColor: Colors.blue,
@@ -50,8 +50,8 @@ class Themes {
       iconTheme: IconThemeData(color: Colors.white),
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.white),
-      bodyMedium: TextStyle(color: Colors.white70),
+      bodyText1: TextStyle(color: Colors.white),
+      bodyText2: TextStyle(color: Colors.white70),
     ),
     buttonTheme: const ButtonThemeData(
       buttonColor: Colors.blueGrey,

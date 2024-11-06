@@ -49,6 +49,7 @@ class _RegisterUserPersonalDetailsScreenState extends ConsumerState<RegisterUser
 
   @override
   Widget build(BuildContext context) {
+        final registerState = ref.watch(registerProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -234,7 +235,7 @@ Row(
                         }
                       },
                       style: AppTextStyles.primaryButtonstyle,
-                      child: const Text('Next', style: AppTextStyles.primarybuttonText),
+                      child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text('Next', style: AppTextStyles.primarybuttonText),
                     ),
                   ),
                 ],

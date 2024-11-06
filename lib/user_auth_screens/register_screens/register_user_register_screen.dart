@@ -41,6 +41,7 @@ class _RegisterUserDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+        final registerState = ref.watch(registerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -303,7 +304,7 @@ class _RegisterUserDetailsScreenState
                               builder: (context) => LoginScreen()),
                         );
                       },
-                      child: Text(
+                      child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): Text(
                         'Log In',
                         style: AppTextStyles.spanTextStyle
                             .copyWith(color: AppColors.headingTextColor),

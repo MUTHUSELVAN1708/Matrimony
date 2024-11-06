@@ -31,7 +31,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
       body: SafeArea(child: _screens[_currentIndex]),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.blue,
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),

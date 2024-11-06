@@ -66,6 +66,7 @@ class _RegisterReligiousDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+        final registerState = ref.watch(registerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -208,7 +209,7 @@ class _RegisterReligiousDetailsScreenState
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
-                    child: const Text(
+                    child:registerState.isLoading? const Center(child: CircularProgressIndicator(),): const Text(
                       'Next',
                       style: AppTextStyles.primarybuttonText,
                     ),
