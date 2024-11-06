@@ -8,7 +8,6 @@ class HeightDropdownField extends StatefulWidget {
   final Function(List<String>) onChanged;
   final String? hint2;
   final String? hint3;
-
   final bool isRequired;
   final bool showSearch;
   final bool ageheight;
@@ -36,12 +35,7 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
   String searchQuery = '';
   bool isSelectAll = false;
 
-  final List<String> singleSelectionHints = [
-    'To Age',
-    'From Height',
-    'From Age',
-    'To Height'
-  ];
+  final List<String> singleSelectionHints = ['From Height', 'To Height'];
 
   bool get isSingleSelection => singleSelectionHints.contains(widget.hint);
 
@@ -74,7 +68,7 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                 selectedValues.isEmpty
                     ? widget.hint
                     : widget.hint == 'Age' || widget.hint == 'Height'
-                        ? "${toItem.isNotEmpty ? fromItem[0] : ''} - ${fromItem.isNotEmpty ? toItem[0] : ''}"
+                        ? "${fromItem.isNotEmpty ? fromItem[0] : ''} - ${toItem.isNotEmpty ? toItem[0] : ''}"
                         : selectedValues.join(', ').toString(),
                 style: TextStyle(
                   overflow: TextOverflow.ellipsis,
@@ -92,7 +86,7 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
     );
   }
 
-  void _showSelectionDialog(BuildContext context, ageHeight) {
+  void _showSelectionDialog(BuildContext context, bool ageHeight) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -161,7 +155,13 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                   onChanged: (data) {
                                     setState(() {
                                       fromItem = data;
-                                      toItem = [];
+                                      toItem.clear();
+                                      if (fromItem.isNotEmpty) {
+                                        int fromIndex = widget.items!
+                                            .indexOf(fromItem.first);
+                                        filteredItems = widget.items!
+                                            .sublist(fromIndex + 1);
+                                      }
                                     });
                                   },
                                 ),
@@ -169,9 +169,9 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                 fromItem.isEmpty
                                     ? SizedBox()
                                     : HeightDropdownField(
-                                        value: toItem,
+                                        value: toItem.isEmpty ? [] : toItem,
                                         hint: widget.hint3 ?? '',
-                                        items: widget.items,
+                                        items: filteredItems,
                                         onChanged: (data) {
                                           setState(() {
                                             toItem = data;
@@ -193,12 +193,9 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                       onTap: () {
                                         setState(() {
                                           isSelectAll = !isSelectAll;
-                                          if (isSelectAll) {
-                                            selectedValues =
-                                                List.from(widget.items!);
-                                          } else {
-                                            selectedValues.clear();
-                                          }
+                                          selectedValues = isSelectAll
+                                              ? List.from(widget.items!)
+                                              : [];
                                         });
                                       },
                                       leading: isSelectAll
@@ -270,7 +267,9 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (fromItem.isNotEmpty && toItem.isNotEmpty) {
-                                selectedValues = ["$fromItem $toItem"];
+                                selectedValues = [
+                                  "${fromItem[0]} - ${toItem[0]}"
+                                ];
                                 widget.onChanged(selectedValues);
                               } else {
                                 widget.onChanged(selectedValues);
