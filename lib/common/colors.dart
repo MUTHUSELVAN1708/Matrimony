@@ -13,4 +13,10 @@ class AppColors {
   static const Color dialogboxSearchTextColor = Color(0xFF868686);
   static const Color selectedWrapBacgroundColor = Color(0xFFFFCBCC);
   static const Color userCardListColor = Color(0xFF3D3D3D);
+  static const Color black = Color(0xFF000000);
+  static const Color darkBlack = Color(0xFF1A1A1A);
+  static const Color mediumBlack = Color(0xFF333333);
+  static const Color lightBlack = Color(0xFF4D4D4D);
+  static const Color subtleBlack = Color(0xFF666666);
 }
+
