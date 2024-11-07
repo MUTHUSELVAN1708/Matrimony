@@ -247,7 +247,7 @@ class _RegisterUserDetailsScreenState
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Your password must be at least 15-20 characters',
+                    "Password must be 15-20 characters long, include at least one special character, and one alphabet.",
                     style: AppTextStyles.spanTextStyle.copyWith(fontSize: 13),
                   ),
                 ),
@@ -283,8 +283,12 @@ class _RegisterUserDetailsScreenState
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
-                    child: const Text('Get OTP',
-                        style: AppTextStyles.primarybuttonText),
+                    child: registerState.isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text('Get OTP',
+                            style: AppTextStyles.primarybuttonText),
                   ),
                 ),
 
@@ -302,15 +306,11 @@ class _RegisterUserDetailsScreenState
                               builder: (context) => LoginScreen()),
                         );
                       },
-                      child: registerState.isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : Text(
-                              'Log In',
-                              style: AppTextStyles.spanTextStyle
-                                  .copyWith(color: AppColors.headingTextColor),
-                            ),
+                      child: Text(
+                        'Log In',
+                        style: AppTextStyles.spanTextStyle
+                            .copyWith(color: AppColors.headingTextColor),
+                      ),
                     ),
                   ],
                 ),

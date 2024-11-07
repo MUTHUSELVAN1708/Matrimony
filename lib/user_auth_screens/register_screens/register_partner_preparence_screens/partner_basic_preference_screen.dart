@@ -27,7 +27,8 @@ class _RegisterPartnerBasicPreferenceScreenState
   }
 
   void getUserId() async {
-    userId = await SharedPrefHelper.getUserId() ?? 1;
+    userId = await SharedPrefHelper.getUserId();
+    print(userId);
   }
 
   List<String> selectFromAge = [];

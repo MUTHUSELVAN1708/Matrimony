@@ -5,8 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class RegisterState {
   final bool isLoading;
   final String? error;
+  final String? success;
 
-  RegisterState({required this.isLoading, this.error});
+  RegisterState({required this.isLoading, this.error, this.success});
 }
 
 final registerProvider =
@@ -18,7 +19,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
   final RegisterService _service;
 
   RegisterNotifier(this._service)
-      : super(RegisterState(isLoading: false, error: null));
+      : super(RegisterState(isLoading: false, error: null, success: null));
 
   String? profileFor;
   String? name;
@@ -29,14 +30,15 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
   String? phoneNo;
 
   Future<bool> register() async {
-    state = RegisterState(isLoading: true, error: null);
+    state = RegisterState(isLoading: true, error: null, success: null);
 
     if (profileFor == null ||
         name == null ||
         email == null ||
         password == null ||
         phoneNumber == null) {
-      state = RegisterState(isLoading: false, error: 'Please fill all fields.');
+      state = RegisterState(
+          isLoading: false, error: 'Please fill all fields.', success: null);
       return false;
     }
 
@@ -48,119 +50,94 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         password!,
         phoneNumber!,
       );
-      print(response);
+
       if (response != null) {
         await _saveUserData(response['userId']);
+        state = RegisterState(
+            isLoading: false, error: null, success: 'Registration successful.');
+        return true;
+      } else {
+        state = RegisterState(
+            isLoading: false,
+            error: 'Invalid response from server.',
+            success: null);
+        return false;
       }
-      print('hhh');
-      // state = RegisterState(isLoading: false, error: null);
-      return true;
     } catch (e) {
-      print(e.toString());
-      state = RegisterState(isLoading: false, error: e.toString());
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
       return false;
     }
   }
 
   Future<bool> otpVerification() async {
-    state = RegisterState(isLoading: true, error: null);
+    state = RegisterState(isLoading: true, error: null, success: null);
 
     if (otp == null || phoneNo == null) {
-      state = RegisterState(isLoading: false, error: 'Please fill all fields.');
+      state = RegisterState(
+          isLoading: false, error: 'Please fill all fields.', success: null);
       return false;
     }
 
     try {
       final response = await _service.otpVerificationApi(otp!, phoneNo!);
 
-      state = RegisterState(isLoading: false, error: null);
+      state = RegisterState(
+          isLoading: false,
+          error: null,
+          success: 'OTP verification successful.');
       return true;
     } catch (e) {
-      state = RegisterState(isLoading: false, error: e.toString());
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
       return false;
     }
   }
 
   Future<bool> personalDetails({
     String? gender,
-    int? dateOfBirth,
+    String? dateOfBirth,
+    int? age,
     String? height,
     String? weight,
     String? anyDisability,
     String? maritalStatus,
     String? noOfChildren,
   }) async {
-    state = RegisterState(isLoading: true, error: null);
+    state = RegisterState(isLoading: true, error: null, success: null);
 
     if (gender == null ||
         dateOfBirth == null ||
+        age == null ||
         height == null ||
         weight == null ||
         anyDisability == null ||
         maritalStatus == null) {
-      state = RegisterState(isLoading: false, error: 'Please fill all fields.');
-      return false;
-    }
-
-    try {
-      final response = await _service.personalDetailsApi(
-        gender!,
-        dateOfBirth!,
-        height!,
-        weight!,
-        anyDisability,
-        maritalStatus,
-        noOfChildren!,
-      );
-
-      state = RegisterState(isLoading: false, error: null);
-      return true;
-    } catch (e) {
-      print(e.toString());
-      state = RegisterState(isLoading: false, error: e.toString());
-      return false;
-    }
-  }
-
-  Future<bool> persionalDetailsAddingApi({
-    String? gender,
-    int? dateOfBirth,
-    String? height,
-    String? weight,
-    String? anyDisability,
-    String? maritalStatus,
-    String? noOfChildren,
-  }) async {
-    state = RegisterState(isLoading: true, error: null);
-
-    if (gender == null || dateOfBirth == null || maritalStatus == null) {
       state = RegisterState(
-          isLoading: false,
-          error:
-              'Please provide essential fields: gender, date of birth, and marital status.');
+          isLoading: false, error: 'Please fill all fields.', success: null);
       return false;
     }
 
     try {
-      final response = await _service.personalDetailsApi(
+      await _service.personalDetailsApi(
         gender,
         dateOfBirth,
-        height ?? '',
-        weight ?? '',
-        anyDisability ?? '',
+        age,
+        height,
+        weight,
+        anyDisability,
         maritalStatus,
-        noOfChildren ?? '',
+        noOfChildren,
       );
-      if (response != null) {
-        state = RegisterState(isLoading: false, error: null);
-        return true;
-      } else {
-        state = RegisterState(
-            isLoading: false, error: 'Invalid response from server.');
-        return false;
-      }
+
+      state = RegisterState(
+          isLoading: false,
+          error: null,
+          success: 'Personal details saved successfully.');
+      return true;
     } catch (e) {
-      state = RegisterState(isLoading: false, error: e.toString());
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
       return false;
     }
   }
@@ -172,7 +149,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     String? subCaste,
     String? division,
   }) async {
-    state = RegisterState(isLoading: true, error: null);
+    state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
       final response = await _service.religiousInformationsApi(
@@ -183,28 +160,33 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
           division ?? '');
 
       if (response != null) {
-        state = RegisterState(isLoading: false, error: null);
+        state = RegisterState(
+            isLoading: false,
+            error: null,
+            success: 'Religious information saved successfully.');
         return true;
       } else {
         state = RegisterState(
-            isLoading: false, error: 'Invalid response from server.');
+            isLoading: false,
+            error: 'Invalid response from server.',
+            success: null);
         return false;
       }
     } catch (e) {
-      // Handle error
-      state = RegisterState(isLoading: false, error: e.toString());
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
       return false;
     }
   }
 
-  Future<bool> createprofesionalApi({
+  Future<bool> createProfessionalApi({
     String? education,
     String? employedType,
     String? occupation,
     String? annualIncomeCurrency,
     String? annualIncome,
   }) async {
-    state = RegisterState(isLoading: true, error: null);
+    state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
       await _service.professionalInformation(
@@ -215,11 +197,14 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         annualIncome: annualIncome ?? '',
       );
 
-      state = RegisterState(isLoading: false, error: null);
+      state = RegisterState(
+          isLoading: false,
+          error: null,
+          success: 'Professional information saved successfully.');
       return true;
     } catch (e) {
-      // Handle error
-      state = RegisterState(isLoading: false, error: e.toString());
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
       return false;
     }
   }
@@ -232,7 +217,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     String? flatNumber,
     String? address,
   }) async {
-    state = RegisterState(isLoading: true, error: null);
+    state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
       await _service.LocationInformation(
@@ -244,38 +229,43 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         address: address,
       );
 
-      state = RegisterState(isLoading: false, error: null);
+      state = RegisterState(
+          isLoading: false,
+          error: null,
+          success: 'Location information saved successfully.');
       return true;
     } catch (e) {
-      // Handle error
-      state = RegisterState(isLoading: false, error: e.toString());
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
       return false;
     }
   }
 
-  Future<bool> AddAddtionalApi({
+  Future<bool> addAdditionalApi({
     String? employefamilyStatus,
     String? aboutYourSelf,
   }) async {
-    state = RegisterState(isLoading: true, error: null);
+    state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
       await _service.createAddtionalInformation(
           aboutYourSelf: aboutYourSelf.toString(),
           familyStatus: employefamilyStatus.toString());
 
-      state = RegisterState(isLoading: false, error: null);
+      state = RegisterState(
+          isLoading: false,
+          error: null,
+          success: 'Additional information saved successfully.');
       return true;
     } catch (e) {
-      // Handle error
-      state = RegisterState(isLoading: false, error: e.toString());
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
       return false;
     }
   }
 
   Future<void> _saveUserData(int userId) async {
     final prefs = await SharedPreferences.getInstance();
-    // await prefs.setString('token', token);
     await prefs.setInt('userId', userId);
   }
 }
