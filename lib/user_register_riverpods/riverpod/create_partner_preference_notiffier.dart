@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/api_list.dart';
 import 'package:http/http.dart' as http;
+import 'package:matrimony/common/local_storage.dart';
 
 class PartnerPreferenceState<T> {
   final bool isLoading;
@@ -68,6 +69,7 @@ class PartnerPreferenceNotifier<T>
   }) async {
     state = state.copyWith(isLoading: true, error: null, successMessage: null);
     try {
+      final int userIds = await SharedPrefHelper.getUserId() ?? 2;
       final response = await http.post(
         Uri.parse(Api.createpartnerPreference),
         headers: {
@@ -75,7 +77,7 @@ class PartnerPreferenceNotifier<T>
           'AppId': '1',
         },
         body: jsonEncode({
-          'userId': userId,
+          'userId': userIds,
           'fromAge': fromAge,
           'toAge': toAge,
           'height': height,
@@ -112,6 +114,7 @@ class PartnerPreferenceNotifier<T>
       );
 
       if (response.statusCode == 200) {
+        print(response.statusCode);
         state = state.copyWith(
           isLoading: false,
           successMessage: "Partner preference uploaded successfully!",

@@ -61,12 +61,13 @@ class RegisterService {
 
   Future<Map<String, dynamic>?> personalDetailsApi(
     String gender,
-    int dateOfBirth,
+    String dateOfBirth,
+    int age,
     String height,
     String weight,
     String anyDisability,
     String maritalStatus,
-    String noOfChildren,
+    String? noOfChildren,
   ) async {
     final int? userId = await SharedPrefHelper.getUserId();
     final response = await http.post(
@@ -79,6 +80,7 @@ class RegisterService {
         'userId': userId,
         'gender': gender,
         'dateOfBirth': dateOfBirth,
+        'age': age,
         'height': height,
         'weight': weight,
         'anyDisability': anyDisability,

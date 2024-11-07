@@ -6,13 +6,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 // Matches Model
-class Matches extends Equatable {
+class dailyRecomment extends Equatable {
   final int? id;
   final String? name;
   final List<String>? image;
   final String? age;
 
-  const Matches({this.id, this.name, this.image, this.age});
+  const dailyRecomment({this.id, this.name, this.image, this.age});
 
   Map<String, dynamic> toJson() {
     return {
@@ -23,8 +23,8 @@ class Matches extends Equatable {
     };
   }
 
-  factory Matches.fromJson(Map<String, dynamic> json) {
-    return Matches(
+  factory dailyRecomment.fromJson(Map<String, dynamic> json) {
+    return dailyRecomment(
       id: json['id'] as int,
       name: json['name'] as String?,
       image: (json['image'] as List<dynamic>?)
@@ -38,45 +38,45 @@ class Matches extends Equatable {
   List<Object?> get props => [name, image, age];
 }
 
-class AllMatchState extends Equatable {
+class dailyRecommentState extends Equatable {
   final bool isLoading;
-  final List<Matches>? allMatchList;
+  final List<dailyRecomment>? dailyRecommentList;
   final String? error;
 
-  const AllMatchState({
+  const dailyRecommentState({
     this.isLoading = false,
-    this.allMatchList,
+    this.dailyRecommentList,
     this.error,
   });
 
-  AllMatchState copyWith({
+  dailyRecommentState copyWith({
     bool? isLoading,
-    List<Matches>? allMatchList,
+    List<dailyRecomment>? dailyRecommentList,
     String? error,
   }) {
-    return AllMatchState(
+    return dailyRecommentState(
       isLoading: isLoading ?? this.isLoading,
-      allMatchList: allMatchList ?? this.allMatchList,
+      dailyRecommentList: dailyRecommentList ?? this.dailyRecommentList,
       error: error ?? this.error,
     );
   }
 
   @override
-  List<Object?> get props => [isLoading, allMatchList, error];
+  List<Object?> get props => [isLoading, dailyRecommentList, error];
 }
 
-class AllMatchesNotifier extends StateNotifier<AllMatchState> {
-  AllMatchesNotifier() : super(const AllMatchState());
+class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
+  dailyRecommentNotifier() : super(const dailyRecommentState());
 
-  Future<void> allMatchDataFetch() async {
+  Future<void> dailyRecommentFetchData() async {
     state = state.copyWith(isLoading: true);
 
     try {
-      final int? userId = await SharedPrefHelper.getUserId();
+      final int userId = await SharedPrefHelper.getUserId() ?? 1;
       print('Fetching data for user ID: $userId');
 
       final response = await http.post(
-        Uri.parse(Api.getAllMatches),
+        Uri.parse(Api.dailyRecommented),
         headers: {
           'Content-Type': 'application/json',
           'AppId': '1',
@@ -88,15 +88,17 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
+        print(response.body.length);
         final data = jsonDecode(response.body) as List<dynamic>;
-
-        final List<Matches> matchList = data.map((item) {
-          return Matches.fromJson(item as Map<String, dynamic>);
+        print(data.length);
+        final List<dailyRecomment> dailyRecommentList = data.map((item) {
+          return dailyRecomment.fromJson(item as Map<String, dynamic>);
         }).toList();
-        print(matchList.length);
+        print(dailyRecommentList.length);
 
-        state = state.copyWith(isLoading: false, allMatchList: matchList);
-        print('Fetched matches: $matchList');
+        state = state.copyWith(
+            isLoading: false, dailyRecommentList: dailyRecommentList);
+        print('Fetched matches: $dailyRecommentList');
       } else {
         state = state.copyWith(
           isLoading: false,
@@ -112,7 +114,7 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
   }
 }
 
-final allMatchesProvider =
-    StateNotifierProvider<AllMatchesNotifier, AllMatchState>(
-  (ref) => AllMatchesNotifier(),
+final dailyRecommentProvider =
+    StateNotifierProvider<dailyRecommentNotifier, dailyRecommentState>(
+  (ref) => dailyRecommentNotifier(),
 );

@@ -58,9 +58,53 @@ class _RegisterUserPersonalDetailsScreenState
     return 0;
   }
 
+  bool _validateFields() {
+    if (selectedGender == null) {
+      _showErrorDialog('Please select your gender');
+      return false;
+    }
+    if (dateOfBirth == null) {
+      _showErrorDialog('Please select your date of birth');
+      return false;
+    }
+    if (height == null || height!.isEmpty) {
+      _showErrorDialog('Please enter your height');
+      return false;
+    }
+    if (weight == null || weight!.isEmpty) {
+      _showErrorDialog('Please enter your weight');
+      return false;
+    }
+    if (physicalStatus == null) {
+      _showErrorDialog('Please select your physical status');
+      return false;
+    }
+    if (maritalStatus == null) {
+      _showErrorDialog('Please select your marital status');
+      return false;
+    }
+    return true;
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Validation Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final registerState = ref.watch(registerProvider);
+    final registerStatenotifier = ref.watch(registerProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -231,35 +275,65 @@ class _RegisterUserPersonalDetailsScreenState
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        print(calculateAge(dateOfBirth));
-                        if (_formKey.currentState?.validate() ?? false) {
-                          final registerState =
-                              ref.read(registerProvider.notifier);
+                        if (selectedGender == null) {
+                          _showErrorDialog('Please select your gender');
+                          return;
+                        }
+                        if (dateOfBirth == null) {
+                          _showErrorDialog('Please select your date of birth');
+                          return;
+                        }
+                        if (height == null || height!.isEmpty) {
+                          _showErrorDialog('Please enter your height');
+                          return;
+                        }
+                        if (weight == null || weight!.isEmpty) {
+                          _showErrorDialog('Please enter your weight');
+                          return;
+                        }
+                        if (physicalStatus == null) {
+                          _showErrorDialog(
+                              'Please select your physical status');
+                          return;
+                        }
+                        if (maritalStatus == null) {
+                          _showErrorDialog('Please select your marital status');
+                          return;
+                        }
 
-                          registerState.personalDetails(
-                              gender: selectedGender,
-                              dateOfBirth: calculateAge(dateOfBirth),
-                              height: height,
-                              weight: weight,
-                              anyDisability: physicalStatus,
-                              maritalStatus: maritalStatus,
-                              noOfChildren: childrens);
+                        final registerState =
+                            ref.read(registerProvider.notifier);
+                        registerState.personalDetails(
+                          gender: selectedGender,
+                          dateOfBirth: dateOfBirth.toString(),
+                          age: calculateAge(dateOfBirth),
+                          height: height,
+                          weight: weight,
+                          anyDisability: physicalStatus,
+                          maritalStatus: maritalStatus,
+                        );
 
-                          if (ref.watch(registerProvider).error == null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const RegisterReligiousDetailsScreen(),
-                              ),
-                            );
-                          }
+                        if (ref.watch(registerProvider).error == null &&
+                            registerStatenotifier.success != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const RegisterReligiousDetailsScreen(),
+                            ),
+                          );
                         }
                       },
                       style: AppTextStyles.primaryButtonstyle,
-                      child: registerState.isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(),
+                      child: registerStatenotifier.isLoading
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1,
+                                ),
+                              ),
                             )
                           : const Text('Next',
                               style: AppTextStyles.primarybuttonText),
@@ -402,8 +476,7 @@ class _SelectionDialogState extends State<SelectionDialog> {
   @override
   void initState() {
     super.initState();
-    _currentSelectedValue =
-        widget.selectedValue; // Initialize with the current selected value
+    _currentSelectedValue = widget.selectedValue;
   }
 
   @override
@@ -425,75 +498,119 @@ class _SelectionDialogState extends State<SelectionDialog> {
               ),
             ),
             const SizedBox(height: 24),
-            Column(
-              children: widget.options.map((option) {
-                return GestureDetector(
-                  onTap: () {
-                    // Update the internal selected value on tap
-                    setState(() {
-                      _currentSelectedValue = option;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _currentSelectedValue == option
-                          ? Colors.green
-                          : Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: _currentSelectedValue == option
-                            ? Colors.green
-                            : Colors.grey.shade300,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          option,
-                          style: TextStyle(
-                            color: _currentSelectedValue == option
-                                ? Colors.white
-                                : Colors.black,
-                            fontWeight: FontWeight.bold,
+            widget.title == 'Select Gender'
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: widget.options.map((option) {
+                      bool isSelected = _currentSelectedValue == option;
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _currentSelectedValue = option;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                              8), // Uniform padding for consistency
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 8), // Spacing between options
+                          child: Column(
+                            mainAxisSize: MainAxisSize
+                                .min, // Minimize the size of the column
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (option == "Male" || option == "Female")
+                                CircleAvatar(
+                                  radius: 40, // Adjust the radius as needed
+                                  backgroundColor: isSelected
+                                      ? AppColors.selectedWrapBacgroundColor
+                                      : Colors.grey.shade300,
+                                  child: Icon(
+                                    option == "Male"
+                                        ? Icons.male
+                                        : Icons.female,
+                                    color: isSelected
+                                        ? Colors.black
+                                        : AppColors.secondryspanTextColor,
+                                  ),
+                                ),
+                              const SizedBox(
+                                  height: 8), // Space between icon and text
+                              Text(
+                                option,
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? Colors.black
+                                      : AppColors.secondryspanTextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (isSelected)
+                                const Icon(Icons.check, color: Colors.white),
+                            ],
                           ),
                         ),
-                        if (_currentSelectedValue == option)
-                          const Icon(Icons.check, color: Colors.white),
-                      ],
-                    ),
+                      );
+                    }).toList(),
+                  )
+                : Column(
+                    children: widget.options.map((option) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _currentSelectedValue = option;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          decoration: BoxDecoration(
+                            color: _currentSelectedValue == option
+                                ? AppColors.selectedWrapBacgroundColor
+                                : Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: _currentSelectedValue == option
+                                  ? AppColors.selectedWrapBacgroundColor
+                                  : Colors.grey.shade300,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                option,
+                                style: TextStyle(
+                                  color: _currentSelectedValue == option
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (_currentSelectedValue == option)
+                                const Icon(Icons.check, color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                );
-              }).toList(),
-            ),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Call the onSelect function with the new selected value
                   if (_currentSelectedValue != null) {
                     widget.onSelect(_currentSelectedValue!);
                   }
                   Navigator.of(context).pop();
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green, // Change the color to fit your theme
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
+                style: AppTextStyles.primaryButtonstyle,
                 child: const Text(
                   'Apply',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+                  style: AppTextStyles.primarybuttonText,
                 ),
               ),
             ),

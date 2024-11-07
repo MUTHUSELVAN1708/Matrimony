@@ -385,7 +385,7 @@ class _RegisterUserProfessionalInfoScreenState
                       if (_formKey.currentState!.validate()) {
                         bool success = await ref
                             .read(registerProvider.notifier)
-                            .createprofesionalApi(
+                            .createProfessionalApi(
                               education: educationDetails,
                               annualIncome: annualIncome,
                               employedType: employmentType,

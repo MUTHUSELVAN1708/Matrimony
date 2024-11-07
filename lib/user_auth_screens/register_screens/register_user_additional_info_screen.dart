@@ -132,7 +132,7 @@ class _RegisterUserAdditionalInfoScreenState
               child: ElevatedButton(
                 onPressed: () async {
                   final registerState = ref.read(registerProvider.notifier);
-                  bool success = await registerState.AddAddtionalApi(
+                  bool success = await registerState.addAdditionalApi(
                       aboutYourSelf: _aboutController.text,
                       employefamilyStatus: selectedFamilyStatus);
                   if (success) {
