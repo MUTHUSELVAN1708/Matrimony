@@ -3,14 +3,31 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/profile/widgets/upload_photo.dart';
 
 import '../common/colors.dart';
+import '../edit/edit_contact_screen.dart';
+import '../helper/nav_helper.dart';
 
-class EditProfileScreen extends StatelessWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  bool _showProfileElements = true;
+
+  void _updateProfileElementsVisibility(bool show) {
+    setState(() {
+      _showProfileElements = show;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final heightQuery = MediaQuery.of(context).size.height;
     final widthQuery = MediaQuery.of(context).size.width;
+
 
     return Scaffold(
       body: Stack(
@@ -30,8 +47,9 @@ class EditProfileScreen extends StatelessWidget {
               color: Colors.black.withOpacity(0.4),
             ),
           ),
+          if (_showProfileElements)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 40.0,left: 16),
             child: Row(
               children: [
                 GestureDetector(
@@ -67,6 +85,7 @@ class EditProfileScreen extends StatelessWidget {
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
+                        if (_showProfileElements)
                         // Profile Image and Title
                         Positioned(
                           top: -(widthQuery * 0.17),
@@ -102,6 +121,7 @@ class EditProfileScreen extends StatelessWidget {
                                     width:
                                         (widthQuery / 4) - (widthQuery * 0.15),
                                   ),
+
                                   Container(
                                     width: widthQuery * 0.32,
                                     height: widthQuery * 0.32,
@@ -136,9 +156,9 @@ class EditProfileScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    _buildActionButton('Edit Contact', () {}),
-                                    _buildActionButton('Add Photos', () {}),
-                                    _buildActionButton('Add Horoscope', () {}),
+                                    _buildActionButton('Edit Contact', () {},context),
+                                    _buildActionButton('Add Photos', () {},context),
+                                    _buildActionButton('Add Horoscope', () {},context),
                                   ],
                                 ),
                               ),
@@ -183,11 +203,23 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(String text, VoidCallback onTap) {
+  Widget _buildActionButton(String text, VoidCallback onTap, BuildContext context) {
     return OutlinedButton(
-      onPressed: onTap,
+      onPressed: () {
+        if (text == 'Edit Contact') {
+          _updateProfileElementsVisibility(false);
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: EditContactScreen(
+              onPop: () => _updateProfileElementsVisibility(true),
+            ),
+          );
+        } else {
+          onTap();
+        }
+      },
       style: OutlinedButton.styleFrom(
-        side: BorderSide(color: Colors.grey.shade200), // Gray border
+        side: BorderSide(color: Colors.grey.shade200),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -195,7 +227,7 @@ class EditProfileScreen extends StatelessWidget {
       child: Text(
         text,
         style: const TextStyle(
-          color: Colors.black45, // Black text
+          color: Colors.black45,
         ),
       ),
     );
@@ -257,7 +289,7 @@ class EditProfileScreen extends StatelessWidget {
           style: const TextStyle(fontSize: 16, color: Colors.black54),
         ),
         trailing: SvgPicture.asset(
-          'assets/edit_icon.svg',
+          'assets/editIcon.svg',
           height: 20,
           color: Colors.black54,
         ),
@@ -325,4 +357,5 @@ class EditProfileScreen extends StatelessWidget {
       ),
     );
   }
+
 }
