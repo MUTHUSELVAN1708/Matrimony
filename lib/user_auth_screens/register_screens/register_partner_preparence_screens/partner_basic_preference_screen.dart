@@ -4,7 +4,7 @@ import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
 import 'package:matrimony/common/widget/age_height_comment_box.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
-import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_religous_preference_screen.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/partner_religous_preference_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
 
@@ -131,7 +131,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                   ),
                   const SizedBox(height: 10),
                   CustomPreferenceDropdownField(
-                    value: PartnerPreferenceConstData.maritalStatusOptions,
+                    value: selectedMaritalStatus,
                     hint: 'Marital Status',
                     items: PartnerPreferenceConstData.maritalStatusOptions,
                     onChanged: (value) {

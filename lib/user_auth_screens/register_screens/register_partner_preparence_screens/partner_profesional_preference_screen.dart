@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
-import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_location_preference_screen.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/partner_location_preference_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';

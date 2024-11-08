@@ -20,4 +20,3 @@ class AppColors {
   static const Color subtleBlack = Color(0xFF666666);
   static const Color cancelBtnColor = Color(0xFFCCCCCC);
 }
-

@@ -153,6 +153,12 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      const Row(
+                        children: [Icon(Icons.circle_outlined), Text('Any')],
+                      ),
+                      Divider(
+                        color: Colors.black,
+                      ),
                       widget.ageheight
                           ? Column(
                               children: [
@@ -167,9 +173,9 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                                     });
                                   },
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 fromItem.isEmpty
-                                    ? SizedBox()
+                                    ? const SizedBox()
                                     : CustomPreferenceDropdownField(
                                         value: toItem,
                                         hint: widget.hint3 ?? '',
@@ -201,21 +207,20 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                                           isSelectAll = !isSelectAll;
 
                                           if (isSelectAll) {
-                                            selectedValues = List.from(widget
-                                                .items!); // Select all items
+                                            selectedValues =
+                                                List.from(widget.items!);
                                           } else {
-                                            selectedValues
-                                                .clear(); // Unselect all items
+                                            selectedValues.clear();
                                           }
                                         });
                                       },
                                       leading: isSelectAll
-                                          ? Icon(
+                                          ? const Icon(
                                               Icons
                                                   .radio_button_checked_outlined,
                                               color: Colors.red,
                                             )
-                                          : Icon(Icons.circle_outlined),
+                                          : const Icon(Icons.circle_outlined),
                                       title: const Text("Select All"),
                                     );
                                   }
@@ -238,14 +243,13 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                                               value != null ? [value] : [];
                                         });
                                       },
-                                      activeColor: Colors
-                                          .red, // Set the selected radio color to red
+                                      activeColor: Colors.red,
                                     );
                                   } else {
                                     return ListTile(
                                       leading: selectedValues
                                               .contains(currentItem)
-                                          ? Icon(
+                                          ? const Icon(
                                               Icons.radio_button_checked,
                                               color: Colors.red,
                                             )

@@ -20,7 +20,7 @@ class _RegisterUserLocationScreenState
 
   @override
   Widget build(BuildContext context) {
-    final registerState = ref.watch(registerProvider);
+    final registerStateNotifier = ref.watch(registerProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -146,9 +146,15 @@ class _RegisterUserLocationScreenState
                     }
                   },
                   style: AppTextStyles.primaryButtonstyle,
-                  child: registerState.isLoading
+                  child: registerStateNotifier.isLoading
                       ? const Center(
-                          child: CircularProgressIndicator(),
+                          child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              )),
                         )
                       : const Text(
                           'Next',

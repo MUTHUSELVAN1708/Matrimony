@@ -1,18 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
-class MatchesScreen extends StatelessWidget {
+class MatchesScreen extends ConsumerStatefulWidget {
   const MatchesScreen({Key? key}) : super(key: key);
 
   @override
+  ConsumerState<MatchesScreen> createState() => _MatchesScreenState();
+}
+
+class _MatchesScreenState extends ConsumerState<MatchesScreen> {
+  @override
   Widget build(BuildContext context) {
+    final allMatchProvider = ref.watch(allMatchesProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
-          '3 Matches',
+        Text(
+          '${allMatchProvider.allMatchList!.length} Matches',
           textAlign: TextAlign.center,
           style: AppTextStyles.headingTextstyle,
         ),
@@ -29,9 +39,10 @@ class MatchesScreen extends StatelessWidget {
             behavior:
                 ScrollConfiguration.of(context).copyWith(scrollbars: false),
             child: ListView.builder(
-              itemCount: matchesList.length,
+              itemCount: allMatchProvider.allMatchList!.length,
               itemBuilder: (context, index) {
-                return MatchCard(match: matchesList[index]);
+                final matchingData = allMatchProvider.allMatchList![index];
+                return MatchCard(match: matchingData);
               },
             ),
           ),
@@ -42,7 +53,7 @@ class MatchesScreen extends StatelessWidget {
 }
 
 class MatchCard extends StatelessWidget {
-  final Match match;
+  final Matches match;
 
   const MatchCard({
     Key? key,
@@ -58,9 +69,9 @@ class MatchCard extends StatelessWidget {
           ClipRRect(
             borderRadius:
                 BorderRadius.circular(4), // Adjust radius for the card
-            child: match.imageUrl.isNotEmpty
-                ? Image.asset(
-                    match.imageUrl,
+            child: match.photos![0].isNotEmpty
+                ? Image.memory(
+                    base64Decode(match.photos![0]),
                     height: MediaQuery.of(context).size.height * 0.3,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -92,14 +103,14 @@ class MatchCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  match.name,
+                  match.name.toString(),
                   style: AppTextStyles.headingTextstyle.copyWith(
                       color: AppColors.primaryButtonTextColor,
                       fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  match.id,
+                  match.id.toString(),
                   style: AppTextStyles.spanTextStyle.copyWith(
                       color: AppColors.primaryButtonTextColor, fontSize: 14),
                 ),
@@ -142,9 +153,9 @@ class MatchCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   _buildInfoChip('${match.age} Years'),
                   const SizedBox(width: 8),
-                  _buildInfoChip(match.caste),
+                  _buildInfoChip("match.caste"),
                   const SizedBox(width: 8),
-                  _buildInfoChip(match.location),
+                  _buildInfoChip("match.location"),
                 ],
               ),
             ),
@@ -167,52 +178,9 @@ class MatchCard extends StatelessWidget {
           fontSize: 12,
           color: Colors.black87,
         ),
+        overflow: TextOverflow.ellipsis, // Ellipsis for long text
+        maxLines: 1, // Limit to one line
       ),
     );
   }
 }
-
-class Match {
-  final String name;
-  final String id;
-  final String imageUrl;
-  final int age;
-  final String caste;
-  final String location;
-
-  Match({
-    required this.name,
-    required this.id,
-    required this.imageUrl,
-    required this.age,
-    required this.caste,
-    required this.location,
-  });
-}
-
-final List<Match> matchesList = [
-  Match(
-    name: 'Divya Sree',
-    id: '#d23543245',
-    imageUrl: 'assets/image/image1.png',
-    age: 20,
-    caste: 'Caste',
-    location: 'Tirunelveli',
-  ),
-  Match(
-    name: 'Ragavarshini',
-    id: '#d23543245',
-    imageUrl: 'assets/image/image2.png',
-    age: 20,
-    caste: 'Caste',
-    location: 'Tirunelveli',
-  ),
-  Match(
-    name: 'Ragavarshini',
-    id: '#d23543245',
-    imageUrl: 'assets/image/image3.png',
-    age: 20,
-    caste: 'Caste',
-    location: 'Tirunelveli',
-  ),
-];
