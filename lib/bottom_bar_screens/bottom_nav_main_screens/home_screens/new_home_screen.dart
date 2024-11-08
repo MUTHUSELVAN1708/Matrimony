@@ -12,6 +12,8 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
+import '../../../profile/profile.dart';
+
 class NewHomeScreen extends ConsumerStatefulWidget {
   const NewHomeScreen({super.key});
 
@@ -100,7 +102,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ProfileScreen()));
+                              builder: (context) => const EditProfileScreen()));
                     },
                   ),
                 ],
