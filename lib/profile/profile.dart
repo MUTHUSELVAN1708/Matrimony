@@ -3,7 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/profile/widgets/upload_photo.dart';
 
 import '../common/colors.dart';
-import '../edit/edit_contact_screen.dart';
+import '../edit/profile/basic_details.dart';
+import '../edit/profile/edit_contact_screen.dart';
 import '../helper/nav_helper.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -293,7 +294,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           height: 20,
           color: Colors.black54,
         ),
-        onTap: () {},
+        onTap: () {
+          if (title == 'Basic Details') {
+            _updateProfileElementsVisibility(false);
+            NavigationHelper.slideNavigateTo(
+              context: context,
+              screen: EditBasicDetailScreen(
+                onPop: () => _updateProfileElementsVisibility(true),
+              ),
+            );
+          }
+        },
       ),
     );
   }
