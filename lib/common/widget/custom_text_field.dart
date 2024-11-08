@@ -135,8 +135,8 @@ class CustomTextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController effectiveController = controller ??
-        TextEditingController(text: initialValue);
+    final TextEditingController effectiveController =
+        controller ?? TextEditingController(text: initialValue);
 
     return Padding(
       padding: isEnabled ? const EdgeInsets.only(bottom: 8.0) : EdgeInsets.zero,
@@ -196,7 +196,8 @@ class CustomTextFieldWidget extends StatelessWidget {
           hintText: hintText,
           filled: filled,
           fillColor: fillColor ?? Colors.white,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
           hintStyle: const TextStyle(color: Colors.grey),
           prefixIcon: _getDefaultPrefixIcon(),
           enabledBorder: OutlineInputBorder(
@@ -217,4 +218,3 @@ class CustomTextFieldWidget extends StatelessWidget {
     );
   }
 }
-

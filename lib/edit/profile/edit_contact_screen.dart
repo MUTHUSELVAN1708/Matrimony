@@ -36,7 +36,9 @@ class EditContactScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(width: heightQuery * 0.15,),
+                SizedBox(
+                  width: heightQuery * 0.15,
+                ),
                 const Text(
                   'Edit Contact Info',
                   style: TextStyle(
@@ -96,8 +98,9 @@ class EditContactScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      _buildTextField('Current Email', 'dummyxxx@gmail.com',false),
-                      _buildTextField('Enter your new Email address', '',true),
+                      _buildTextField(
+                          'Current Email', 'dummyxxx@gmail.com', false),
+                      _buildTextField('Enter your new Email address', '', true),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
@@ -108,8 +111,10 @@ class EditContactScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      _buildTextField('Current contact number', '1234567890',false),
-                      _buildTextField('Enter your new contact number', '',true),
+                      _buildTextField(
+                          'Current contact number', '1234567890', false),
+                      _buildTextField(
+                          'Enter your new contact number', '', true),
                       const SizedBox(height: 16),
                       const Text(
                         'Contact Preference',
@@ -157,14 +162,12 @@ class EditContactScreen extends StatelessWidget {
   }
 
   Widget _buildTextField(String hintText, String initialValue, bool isEnabled) {
-
-    return  CustomTextFieldWidget(
+    return CustomTextFieldWidget(
       hintText: hintText,
-      initialValue:initialValue,
+      initialValue: initialValue,
       isEnabled: true,
     );
   }
-
 
   Widget _buildListTile(String title, String subtitle) {
     return ListTile(

@@ -3,14 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profileScreen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/home_screen_circle_precentage_integator.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/home_screen_profile_stack_slide.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/matches_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
 import '../../../profile/profile.dart';
 
@@ -22,6 +24,10 @@ class NewHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
+  bool isAllMatchesLoading = true;
+  bool isImageLoading = true;
+  bool isDailyRecommendLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -30,8 +36,36 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   Future<void> getData() async {
     await Future.delayed(Duration.zero);
-    ref.read(allMatchesProvider.notifier).allMatchDataFetch();
-    ref.read(dailyRecommentProvider.notifier).dailyRecommentFetchData();
+    fetchAllMatches();
+    fetchImage();
+    fetchDailyRecommendations();
+  }
+
+  Future<void> fetchAllMatches() async {
+    await ref.read(allMatchesProvider.notifier).allMatchDataFetch();
+    if (mounted) {
+      setState(() {
+        isAllMatchesLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchImage() async {
+    await ref.read(getImageApiProvider.notifier).getImage();
+    if (mounted) {
+      setState(() {
+        isImageLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchDailyRecommendations() async {
+    await ref.read(dailyRecommentProvider.notifier).dailyRecommentFetchData();
+    if (mounted) {
+      setState(() {
+        isDailyRecommendLoading = false;
+      });
+    }
   }
 
   @override
@@ -59,6 +93,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.bottomCenter,
@@ -66,49 +101,67 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
         Container(
           height: 250,
           decoration: BoxDecoration(
-            color: Colors.pink[200],
-            image: const DecorationImage(
-              image: AssetImage('assets/image/user1.png'),
-              fit: BoxFit.cover,
-            ),
+            color: Colors.white,
+            image: getImageApiProviderState.isLoading || isImageLoading
+                ? null
+                : DecorationImage(
+                    image: getImageApiProviderState.error != null ||
+                            getImageApiProviderState.data == null ||
+                            getImageApiProviderState.data!.images.isEmpty
+                        ? const AssetImage('assets/image/user1.png')
+                            as ImageProvider<Object>
+                        : MemoryImage(
+                            base64Decode(
+                              getImageApiProviderState.data!.images[0]
+                                  .toString()
+                                  .replaceAll('\n', '')
+                                  .replaceAll('\r', ''),
+                            ),
+                          ) as ImageProvider<
+                            Object>, // Use MemoryImage for fetched image
+                    fit: BoxFit.cover,
+                  ),
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Mano',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+          child: getImageApiProviderState.isLoading || isImageLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Mano',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '#d23543245',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          ],
                         ),
-                      ),
-                      Text(
-                        '#d23543245',
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ],
+                        IconButton(
+                          icon: const Icon(Icons.menu, color: Colors.white),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const EditProfileScreen()));
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.menu, color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const EditProfileScreen()));
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+                ),
         ),
         Positioned(
             bottom: -200,
@@ -203,13 +256,13 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   color: Colors.pink.shade50,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                height: MediaQuery.of(context).size.height * 0.20,
+                height: MediaQuery.of(context).size.height * 0.24,
                 width: MediaQuery.of(context).size.width - 20,
                 child: dailyRecommentsState.error != null
                     ? Center(
                         child: Text(dailyRecommentsState.error.toString()),
                       )
-                    : dailyRecommentsState.isLoading
+                    : dailyRecommentsState.isLoading || isDailyRecommendLoading
                         ? const Center(
                             child: CircularProgressIndicator(),
                           )
@@ -229,10 +282,10 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Container(
-                                        width: 100,
+                                        width: 120,
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.20 /
+                                                0.25 /
                                                 2,
                                         decoration: BoxDecoration(
                                           color: Colors.pink[200],
@@ -249,7 +302,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                                     ),
                                     const SizedBox(height: 8),
                                     Container(
-                                      width: 100,
+                                      width: 120,
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 4),
                                       decoration: BoxDecoration(
@@ -275,11 +328,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                                                 fontSize:
                                                     14, // Adjusted font size
                                               ),
+                                              overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.center,
                                             ),
                                             Text(
-                                              dailyRecommentData.age.toString(),
-                                              style: TextStyle(
+                                              '${dailyRecommentData.age.toString()} Yrs',
+                                              style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize:
                                                     10, // Adjusted font size
@@ -325,7 +379,14 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                     .copyWith(color: AppColors.primaryButtonTextColor),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const BottomNavBarScreen(
+                                index: 1,
+                              )));
+                },
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
@@ -334,7 +395,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(6)),
                   ),
                   child: Text(
-                    'View Details',
+                    'View All',
                     style:
                         AppTextStyles.primarybuttonText.copyWith(fontSize: 12),
                   ),
@@ -349,7 +410,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             height: 120,
             child: matingData.error != null
                 ? Center(child: Text(matingData.error.toString()))
-                : matingData.isLoading
+                : matingData.isLoading || isAllMatchesLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         scrollDirection: Axis.horizontal,

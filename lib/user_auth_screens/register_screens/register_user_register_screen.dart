@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/common_mobile_picker.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
@@ -11,6 +12,7 @@ import 'package:matrimony/user_auth_screens/otp_screen.dart';
 
 class RegisterUserDetailsScreen extends ConsumerStatefulWidget {
   final String? registerFor;
+
   const RegisterUserDetailsScreen({Key? key, this.registerFor})
       : super(key: key);
 
@@ -255,7 +257,7 @@ class _RegisterUserDetailsScreenState
                 // Get OTP Button
                 SizedBox(
                   width: double.infinity,
-                  height: 50,
+                  height: 55,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
@@ -273,20 +275,21 @@ class _RegisterUserDetailsScreenState
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => OtpScreen(
-                                      phoneNumber: _phoneController.text,
-                                    )),
+                              builder: (context) => OtpScreen(
+                                phoneNumber: _phoneController.text,
+                              ),
+                            ),
                           );
                         }
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
                     child: registerState.isLoading
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : const Text('Get OTP',
-                            style: AppTextStyles.primarybuttonText),
+                        ? const LoadingIndicator()
+                        : const Text(
+                            'Get OTP',
+                            style: AppTextStyles.primarybuttonText,
+                          ),
                   ),
                 ),
 

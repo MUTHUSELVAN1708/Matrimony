@@ -6,8 +6,8 @@ class DatePickerService {
   static const int minimumAge = 18;
 
   static DateTime get maximumDate => DateTime.now().subtract(
-    const Duration(days: minimumAge * 365),
-  );
+        const Duration(days: minimumAge * 365),
+      );
 
   // Update the minimumDate to 1950
   static DateTime get minimumDate => DateTime(1950);
@@ -21,8 +21,8 @@ class DatePickerService {
     final DateTime validInitialDate = initialDate.isAfter(maximumDate)
         ? maximumDate
         : initialDate.isBefore(minimumDate)
-        ? minimumDate
-        : initialDate;
+            ? minimumDate
+            : initialDate;
 
     return await showDatePicker(
       context: context,
@@ -36,7 +36,7 @@ class DatePickerService {
               primary: AppColors.primaryButtonColor,
               onPrimary: Colors.white,
               surface: AppColors.primaryButtonColor,
-              onSurface:AppColors.black,
+              onSurface: AppColors.black,
             ),
           ),
           child: child!,
