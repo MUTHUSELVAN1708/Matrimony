@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:matrimony/common/colors.dart';
 
 class DatePickerService {
   static const int minimumAge = 18;
@@ -8,26 +9,34 @@ class DatePickerService {
         const Duration(days: minimumAge * 365),
       );
 
-  static DateTime get minimumDate => DateTime(1940);
+  // Update the minimumDate to 1950
+  static DateTime get minimumDate => DateTime(1950);
 
   static Future<DateTime?> showCustomDatePicker(BuildContext context) async {
     final DateTime initialDate = DateTime.now().subtract(
-      const Duration(days: minimumAge * 365),
+      const Duration(days: (minimumAge + 1) * 365),
     );
+
+    // Ensure initialDate is within the valid range
+    final DateTime validInitialDate = initialDate.isAfter(maximumDate)
+        ? maximumDate
+        : initialDate.isBefore(minimumDate)
+            ? minimumDate
+            : initialDate;
 
     return await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: validInitialDate,
       firstDate: minimumDate,
       lastDate: maximumDate,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Theme.of(context).primaryColor,
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primaryButtonColor,
               onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
+              surface: AppColors.primaryButtonColor,
+              onSurface: AppColors.black,
             ),
           ),
           child: child!,

@@ -51,16 +51,15 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         phoneNumber!,
       );
 
-      if (response != null) {
+      if (response != null && response['errorMessage'] == '') {
         await _saveUserData(response['userId']);
         state = RegisterState(
             isLoading: false, error: null, success: 'Registration successful.');
         return true;
       } else {
+        print(response?['errorMessage']);
         state = RegisterState(
-            isLoading: false,
-            error: 'Invalid response from server.',
-            success: null);
+            isLoading: false, error: response?['errorMessage'], success: null);
         return false;
       }
     } catch (e) {

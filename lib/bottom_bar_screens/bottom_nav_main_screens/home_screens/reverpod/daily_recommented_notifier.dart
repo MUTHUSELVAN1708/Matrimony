@@ -96,9 +96,7 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
-        print(response.body.length);
         final data = jsonDecode(response.body) as List<dynamic>;
-        print(data.length);
         final List<DailyRecomment> dailyRecommentList = data.map((item) {
           return DailyRecomment.fromJson(item as Map<String, dynamic>);
         }).toList();
@@ -110,7 +108,7 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: 'Failed to fetch data. Status code: ${response.statusCode}',
+          error: 'No Daily Recommendation Available',
         );
       }
     } catch (e) {

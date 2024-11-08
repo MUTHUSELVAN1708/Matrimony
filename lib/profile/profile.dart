@@ -208,17 +208,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       String text, VoidCallback onTap, BuildContext context) {
     return OutlinedButton(
       onPressed: () {
-        if (text == 'Edit Contact') {
-          _updateProfileElementsVisibility(false);
-          NavigationHelper.slideNavigateTo(
-            context: context,
-            screen: EditContactScreen(
-              onPop: () => _updateProfileElementsVisibility(true),
-            ),
-          );
-        } else {
-          onTap();
-        }
+        // if (text == 'Edit Contact') {
+        //   _updateProfileElementsVisibility(false);
+        //   NavigationHelper.slideNavigateTo(
+        //     context: context,
+        //     screen: EditContactScreen(onPop: (value) {
+        //       if (value as bool) {
+        //         _updateProfileElementsVisibility(true);
+        //       }
+        //     }),
+        //   );
+        // } else {
+        //   onTap();
+        // }
       },
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: Colors.grey.shade200),
@@ -237,21 +239,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   List<Widget> _buildMenuItems(double widthQuery) {
     final menuItems = [
-      {'title': 'A Few Words About You', 'color': Colors.orange},
-      {'title': 'Basic Details', 'color': Colors.blue},
-      {'title': 'Religious Information', 'color': Colors.brown},
-      {'title': 'Professional Information', 'color': Colors.orange},
-      {'title': 'Location', 'color': Colors.blue},
-      {'title': 'Family Details', 'color': Colors.pink},
-      {'title': 'About Our Family', 'color': Colors.purple},
-      {'title': 'Hobbies & Interests', 'color': Colors.green},
+      {
+        'title': 'A Few Words About You',
+        'color': Colors.orange,
+        'icon': 'assets/pen.svg'
+      },
+      {
+        'title': 'Basic Details',
+        'color': Colors.blue,
+        'icon': 'assets/File Text.svg'
+      },
+      {
+        'title': 'Religious Information',
+        'color': Colors.brown,
+        'icon': 'assets/Notebook Minimalistic.svg'
+      },
+      {
+        'title': 'Professional Information',
+        'color': Colors.orange,
+        'icon': 'assets/Square Academic Cap.svg'
+      },
+      {
+        'title': 'Location',
+        'color': Colors.blue,
+        'icon': 'assets/Map Point.svg'
+      },
+      {
+        'title': 'Family Details',
+        'color': Colors.pink,
+        'icon': 'assets/Users Group Two Rounded.svg'
+      },
+      // {'title': 'About Our Family', 'color': Colors.purple,'icon': Colors.orange},
+      {
+        'title': 'Hobbies & Interests',
+        'color': Colors.green,
+        'icon': 'assets/Headphones Round Sound.svg'
+      },
     ];
 
     return menuItems.map((item) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: _buildMenuItem(
-          icon: 'assets/add_icon.svg',
+          icon: item['icon'] as String,
           title: item['title'] as String,
           color: item['color'] as Color,
         ),
@@ -300,9 +330,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,
-              screen: EditBasicDetailScreen(
-                onPop: () => _updateProfileElementsVisibility(true),
-              ),
+              screen: EditBasicDetailScreen(onPop: (value) {
+                if (value as bool) {
+                  _updateProfileElementsVisibility(true);
+                }
+              }),
             );
           }
         },

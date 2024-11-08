@@ -7,7 +7,7 @@ class Api {
   static const String createPersonalDetails = '$baseUrl/personalDetails';
   static const String createReligionsApi = '$baseUrl/religiousInformation';
   static const String createProfessionalInformation =
-      '$baseUrl/ProfessionalInformation';
+      '$baseUrl/professionalInformation';
   static const String createLocationDetails = '$baseUrl/loctionInformation';
   static const String createAddtionalInformation =
       '$baseUrl/addtionalInformation';
@@ -17,6 +17,6 @@ class Api {
   static const String getAllMatches = '$baseUrl/allautomatch';
   static const String dailyRecommented = '$baseUrl/dailyRecommendation';
   static const String getReligious = '$baseUrl/getreligion';
-  static const String getUserImage = '$baseUrl/getimage';
+  static const String getUserImage = '$baseUrl/userDetails';
   static const String passwordWithLogin = '$baseUrl/loginwithpassword';
 }

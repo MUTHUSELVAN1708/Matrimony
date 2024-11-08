@@ -26,6 +26,34 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     state = state.copyWith(selectedHeight: value);
   }
 
+  void updateWeight(String value) {
+    state = state.copyWith(selectedWeight: value);
+  }
+
+  void updateSkinTone(String value) {
+    state = state.copyWith(skinTone: value);
+  }
+
+  void updateMaritalStatus(String value) {
+    state = state.copyWith(maritalStatus: value);
+  }
+
+  void updatePhysicalStatus(String value) {
+    state = state.copyWith(physicalStatus: value);
+  }
+
+  void updateEatingHabitsStatus(String value) {
+    state = state.copyWith(eatingHabits: value);
+  }
+
+  void updateDrinkingHabitsStatus(String value) {
+    state = state.copyWith(drinkingHabits: value);
+  }
+
+  void updateSmokingHabitsStatus(String value) {
+    state = state.copyWith(smokingHabits: value);
+  }
+
   // void updateDateOfBirth(DateTime value) {
   //   state = state.copyWith(selectedDateOfBirth: value);
   // }

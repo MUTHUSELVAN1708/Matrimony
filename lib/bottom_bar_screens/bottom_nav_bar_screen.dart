@@ -7,7 +7,8 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/notificatio
 import 'package:matrimony/common/colors.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
-  const BottomNavBarScreen({Key? key}) : super(key: key);
+  final int? index;
+  const BottomNavBarScreen({super.key, this.index});
 
   @override
   _BottomNavBarScreenState createState() => _BottomNavBarScreenState();
@@ -25,6 +26,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     const Text(
         "Profile Screen"), // Replace with the actual Profile screen widget
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.index != null) {
+      _currentIndex = widget.index!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

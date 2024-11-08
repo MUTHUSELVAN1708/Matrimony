@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:matrimony/common/api_list.dart';
 import 'package:matrimony/common/local_storage.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:equatable/equatable.dart';
 
@@ -88,10 +89,9 @@ class LoginState {
 class LogStateNotifier extends StateNotifier<LoginState> {
   LogStateNotifier() : super(LoginState());
 
-  Future<void> passwordWithLogin(String password, String email) async {
+  Future<LogUserModel> passwordWithLogin(String password, String email) async {
     state = state.copyWith(isLoading: true, error: null, data: null);
     try {
-      final int? userId = await SharedPrefHelper.getUserId();
       final response = await http.post(
         Uri.parse(Api.passwordWithLogin),
         headers: {
@@ -99,7 +99,6 @@ class LogStateNotifier extends StateNotifier<LoginState> {
           'AppId': '1',
         },
         body: jsonEncode({
-          'userId': userId,
           'password': password,
           'email': email,
         }),
@@ -111,23 +110,32 @@ class LogStateNotifier extends StateNotifier<LoginState> {
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('Token', userImageData.token);
+        await prefs.setInt('userId', userImageData.id);
 
+        print(userImageData.toJson());
         state = state.copyWith(
           isLoading: false,
           data: userImageData,
         );
-      } else {
+
+        return userImageData;
+      } else if (response.statusCode == 400) {
         state = state.copyWith(
           isLoading: false,
-          error: 'Failed to retrieve data: ${response.reasonPhrase}',
+          error: json.decode(response.body)['errorMessage'],
         );
+        return LogUserModel(
+            id: 1, email: '', phoneNumber: '', role: '', token: '');
       }
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
       );
+      return LogUserModel(
+          id: 1, email: '', phoneNumber: '', role: '', token: '');
     }
+    return LogUserModel(id: 1, email: '', phoneNumber: '', role: '', token: '');
   }
 }
 
