@@ -118,8 +118,8 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                       ),
                     )
                   : Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: RawScrollbar(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: RawScrollbar(
                         thumbColor: AppColors.primaryButtonColor,
                         controller: _scrollController,
                         thumbVisibility: true,
@@ -128,7 +128,8 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                         child: ListView.builder(
                           controller: _scrollController,
                           itemCount: filteredOptions.length,
-                          itemBuilder: (context, index) => RadioListTile<String>(
+                          itemBuilder: (context, index) =>
+                              RadioListTile<String>(
                             title: Text(
                               filteredOptions[index],
                               style: const TextStyle(fontSize: 16),
@@ -144,7 +145,7 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                           ),
                         ),
                       ),
-                  ),
+                    ),
             ),
             Container(
               padding: const EdgeInsets.all(16.0),

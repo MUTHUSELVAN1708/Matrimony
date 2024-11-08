@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
+import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/riverpod/religious_api_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_profesional_preference_screen.dart';
@@ -28,9 +29,56 @@ class _PartnerReligiousPreferenceScreenState
   final List<String> religionList = ['Hindu', 'Muslim', 'Christian', 'Sikh'];
   final List<String> casteList = ['Brahmin', 'Kshatriya', 'Vaishya', 'Shudra'];
   final List<String> subCasteList = ['Iyengar', 'Iyer', 'Gounder', 'Nair'];
-  final List<String> starList = ['Ashwini', 'Bharani', 'Krittika'];
-  final List<String> doshamList = ['Yes', 'No', 'Don\'t Know'];
-  final List<String> rassiList = ['Yes', 'No', 'Don\'t Know'];
+  final List<String> starList = [
+    'Ashwini (அஸ்வினி)',
+    'Bharani (பரணி)',
+    'Krittika (கிருத்திகை)',
+    'Rohini (ரோகிணி)',
+    'Mrigashira (மிருகசீரிடம்)',
+    'Ardra (திருவாதிரை)',
+    'Punarvasu (புனர்பூசம்)',
+    'Pushya (பூசம்)',
+    'Ashlesha (ஆயில்யம்)',
+    'Magha (மகம்)',
+    'Purva Phalguni (பூரம்)',
+    'Uttara Phalguni (உத்திரம்)',
+    'Hasta (அஸ்தம்)',
+    'Chitra (சித்திரை)',
+    'Swati (ஸ்வாதி)',
+  ];
+
+  final List<String> doshamList = [
+    'Yes',
+    'No',
+    'Don\'t Know',
+    'Not Applicable',
+    'Unclear',
+    'Inconclusive',
+    'May be',
+    'Not Specified',
+    'Confirmed',
+    'Pending',
+    'Under Consideration',
+    'Suggested',
+    'Review Pending',
+    'Referred',
+    'Rejected',
+  ];
+
+  final List<String> rassiList = [
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces"
+  ];
 
   @override
   void initState() {
@@ -71,14 +119,30 @@ class _PartnerReligiousPreferenceScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 8),
-                const Align(
+                Align(
                   alignment: Alignment.center,
-                  child: Text(
+                  child: RichText(
                     textAlign: TextAlign.center,
-                    'Acceptable matches (Your preferences will be shown\naccording to your preferences)',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
+                    text: TextSpan(
+                      style: const TextStyle(
+                        fontSize: 12,
+                        height: 1.5,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Matches recommended by us are based on\n',
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                        TextSpan(
+                          text: 'Acceptable matches ',
+                          style: TextStyle(color: Colors.grey.shade800),
+                        ),
+                        TextSpan(
+                          text:
+                              'criteria and at times might\ngo slightly beyond your preferences',
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -109,8 +173,8 @@ class _PartnerReligiousPreferenceScreenState
 
                 // Caste Dropdown
                 CustomPreferenceDropdownField(
-                  value: selectedCaste, // Set value as null initially
-                  hint: "Caste", // Add hint text
+                  value: selectedCaste,
+                  hint: "Caste",
                   items: casteList,
                   onChanged: (value) {
                     setState(() {
@@ -134,7 +198,7 @@ class _PartnerReligiousPreferenceScreenState
                 const SizedBox(height: 10),
 
                 // Star Dropdown
-                CustomPreferenceDropdownField(
+                AnyCustomPreferenceDropdown(
                   value: selectedStar,
                   hint: "Star(Optional)",
                   items: starList,
@@ -145,7 +209,7 @@ class _PartnerReligiousPreferenceScreenState
                   },
                 ),
                 const SizedBox(height: 10),
-                CustomPreferenceDropdownField(
+                AnyCustomPreferenceDropdown(
                   value: selectedRassi,
                   hint: "Rassi(Optional)",
                   items: rassiList,
@@ -155,18 +219,18 @@ class _PartnerReligiousPreferenceScreenState
                     });
                   },
                 ),
-                const SizedBox(height: 10),
-                // Dosham Dropdown
-                CustomPreferenceDropdownField(
-                  value: selectedDosham,
-                  hint: "Dosham(Optional)",
-                  items: doshamList,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedDosham = value;
-                    });
-                  },
-                ),
+                // const SizedBox(height: 10),
+                // // Dosham Dropdown
+                // AnyCustomPreferenceDropdown(
+                //   value: selectedDosham,
+                //   hint: "Dosham(Optional)",
+                //   items: doshamList,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       selectedDosham = value;
+                //     });
+                //   },
+                // ),
                 const SizedBox(height: 16),
 
                 // Next Button

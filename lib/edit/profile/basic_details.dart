@@ -152,10 +152,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildHeightSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(

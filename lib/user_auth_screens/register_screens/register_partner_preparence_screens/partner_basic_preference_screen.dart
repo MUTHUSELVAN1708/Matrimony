@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
-import 'package:matrimony/common/widget/age_height_comment_box.dart';
+import 'package:matrimony/common/widget/prefarence_height_comment_box.dart';
+import 'package:matrimony/common/widget/preference_age_dialogBox.dart';
+import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/partner_religous_preference_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
@@ -78,13 +80,30 @@ class _RegisterPartnerBasicPreferenceScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Align(
+                  Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      'You will be notified by us based on\nacceptable matches (your preferences will be considered)',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontSize: 12,
+                          height: 1.5,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Matches recommended by us are based on\n',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                          TextSpan(
+                            text: 'Acceptable matches ',
+                            style: TextStyle(color: Colors.grey.shade800),
+                          ),
+                          TextSpan(
+                            text:
+                                'criteria and at times might\ngo slightly beyond your preferences',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -97,7 +116,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     ),
                   ),
                   const SizedBox(height: 10),
-                  CustomPreferenceDropdownField(
+                  AgeCustomDialogBox(
                     value: selectFromAge,
                     hint: 'Age',
                     hint2: 'From Age',
@@ -124,13 +143,11 @@ class _RegisterPartnerBasicPreferenceScreenState
                     onChanged: (value) {
                       setState(() {
                         selectedHeight = value;
-
-                        print("+++$selectedHeight");
                       });
                     },
                   ),
                   const SizedBox(height: 10),
-                  CustomPreferenceDropdownField(
+                  AnyCustomPreferenceDropdown(
                     value: selectedMaritalStatus,
                     hint: 'Marital Status',
                     items: PartnerPreferenceConstData.maritalStatusOptions,
@@ -152,7 +169,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  CustomPreferenceDropdownField(
+                  AnyCustomPreferenceDropdown(
                     value: selectedPhysicalStatus,
                     hint: 'Physical Status',
                     items: PartnerPreferenceConstData.physicalStatusOptions,
@@ -174,7 +191,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  CustomPreferenceDropdownField(
+                  AnyCustomPreferenceDropdown(
                     value: selectedDrinkingHabits,
                     hint: 'Drinking Habits(Optional)',
                     items: PartnerPreferenceConstData.drinkingHabitsOptions,
@@ -185,7 +202,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  CustomPreferenceDropdownField(
+                  AnyCustomPreferenceDropdown(
                     value: selectedSmokingHabits,
                     hint: 'Smoking Habits(Optional)',
                     items: PartnerPreferenceConstData.smokingHabitsOptions,
@@ -209,7 +226,6 @@ class _RegisterPartnerBasicPreferenceScreenState
                             originalList.map((e) => e[0]).toList();
                         List<int> secondList = originalList[1];
 
-                        // Assign values to inputState
                         inputStates.updatePreferenceInput(
                             userId: userId,
                             fromAge: firstList[0],

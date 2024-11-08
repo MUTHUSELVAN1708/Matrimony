@@ -5,8 +5,8 @@ class DatePickerService {
   static const int minimumAge = 18;
 
   static DateTime get maximumDate => DateTime.now().subtract(
-    const Duration(days: minimumAge * 365),
-  );
+        const Duration(days: minimumAge * 365),
+      );
 
   static DateTime get minimumDate => DateTime(1940);
 
@@ -45,7 +45,6 @@ class DatePickerService {
 
     return '$age Years / $formattedMonth ${date.day} ${date.year}';
   }
-
 
   static int calculateAge(DateTime birthDate) {
     final now = DateTime.now();
