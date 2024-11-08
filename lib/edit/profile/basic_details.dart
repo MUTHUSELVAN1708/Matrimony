@@ -10,7 +10,7 @@ import 'data/profile_options.dart';
 import 'notifier/profile_notifier.dart';
 
 class EditBasicDetailScreen extends ConsumerWidget {
-  final VoidCallback onPop;
+  final Function(bool? value) onPop;
 
   const EditBasicDetailScreen({
     super.key,
@@ -41,7 +41,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () {
-              onPop();
+              onPop(true);
               Navigator.pop(context);
             },
             child: const Icon(
@@ -101,6 +101,13 @@ class EditBasicDetailScreen extends ConsumerWidget {
                 _buildNameField(context, ref, profileState),
                 _buildDateOfBirthField(context, ref, profileState),
                 _buildHeightSelection(context, ref, profileState),
+                _buildWeightSelection(context, ref, profileState),
+                _buildSkinToneSelection(context, ref, profileState),
+                _buildMaritalStatusSelection(context, ref, profileState),
+                _buildPhysicalStatusSelection(context, ref, profileState),
+                _buildEatingHabitsSelection(context, ref, profileState),
+                _buildDrinkingHabitsSelection(context, ref, profileState),
+                _buildSmokingHabitsSelection(context, ref, profileState),
                 const SizedBox(height: 24),
                 _buildSaveButton(context, ref, profileState),
                 const SizedBox(height: 16),
@@ -177,6 +184,189 @@ class EditBasicDetailScreen extends ConsumerWidget {
     );
   }
 
+  Widget _buildWeightSelection(
+      BuildContext context,
+      WidgetRef ref,
+      ProfileState profileState,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Your Weight',
+            options: ProfileOptions.weight,
+            selectedValue: profileState.selectedWeight,
+            onSelect: (value) {
+              ref.read(profileProvider.notifier).updateWeight(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Weight',
+        profileState.selectedWeight,
+      ),
+    );
+  }
+
+
+  Widget _buildSkinToneSelection(
+      BuildContext context,
+      WidgetRef ref,
+      ProfileState profileState,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Your Skin Tone',
+            options: ProfileOptions.skinTones,
+            selectedValue: profileState.skinTone,
+            onSelect: (value) {
+              ref.read(profileProvider.notifier).updateSkinTone(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Skin Tone',
+        profileState.skinTone,
+      ),
+    );
+  }
+
+  Widget _buildMaritalStatusSelection(
+      BuildContext context,
+      WidgetRef ref,
+      ProfileState profileState,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Your Marital Status',
+            options: ProfileOptions.maritalStatus,
+            selectedValue: profileState.maritalStatus,
+            onSelect: (value) {
+              ref.read(profileProvider.notifier).updateMaritalStatus(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Marital Status',
+        profileState.maritalStatus,
+      ),
+    );
+  }
+
+  Widget _buildPhysicalStatusSelection(
+      BuildContext context,
+      WidgetRef ref,
+      ProfileState profileState,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Your Physical Status',
+            options: ProfileOptions.physicalStatus,
+            selectedValue: profileState.physicalStatus,
+            onSelect: (value) {
+              ref.read(profileProvider.notifier).updatePhysicalStatus(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Physical Status',
+        profileState.physicalStatus,
+      ),
+    );
+  }
+
+  Widget _buildEatingHabitsSelection(
+      BuildContext context,
+      WidgetRef ref,
+      ProfileState profileState,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Your Eating Habit',
+            options: ProfileOptions.eatingHabits,
+            selectedValue: profileState.eatingHabits,
+            onSelect: (value) {
+              ref.read(profileProvider.notifier).updateEatingHabitsStatus(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Eating Habit',
+        profileState.eatingHabits,
+      ),
+    );
+  }
+
+  Widget _buildDrinkingHabitsSelection(
+      BuildContext context,
+      WidgetRef ref,
+      ProfileState profileState,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Your Drinking Habit',
+            options: ProfileOptions.drinkingHabits,
+            selectedValue: profileState.drinkingHabits,
+            onSelect: (value) {
+              ref.read(profileProvider.notifier).updateDrinkingHabitsStatus(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Drinking Habits',
+        profileState.drinkingHabits,
+      ),
+    );
+  }
+
+  Widget _buildSmokingHabitsSelection(
+      BuildContext context,
+      WidgetRef ref,
+      ProfileState profileState,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Your Smoking Habit',
+            options: ProfileOptions.smokingHabits,
+            selectedValue: profileState.smokingHabits,
+            onSelect: (value) {
+              ref.read(profileProvider.notifier).updateSmokingHabitsStatus(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Smoking Habits',
+        profileState.smokingHabits,
+      ),
+    );
+  }
+
   Widget _buildNameField(
     BuildContext context,
     WidgetRef ref,
@@ -218,17 +408,35 @@ class EditBasicDetailScreen extends ConsumerWidget {
       child: ElevatedButton(
         onPressed: () {
           if (ref.read(profileProvider.notifier).validateProfile()) {
+            Future.delayed(const Duration(microseconds: 50), () {
+              Navigator.pop(context);
+              onPop(true);
+            }).then((_){
+              CustomSnackBar.show(
+                isError: false,
+                context: context,
+                message: 'Profile updated successfully!',
+              );
+            });
             // Handle save logic
-            CustomSnackBar.show(
-              context: context,
-              message: 'Profile updated successfully!',
-            );
+
           } else {
-            CustomSnackBar.show(
-              context: context,
-              message: 'Please fill all required fields and ensure age is 18+',
-              isError: true,
-            );
+            Future.delayed(const Duration(microseconds: 50), () {
+              Navigator.pop(context);
+              onPop(true);
+            }).then((_){
+              CustomSnackBar.show(
+                isError: false,
+                context: context,
+                message: 'Profile updated successfully!',
+              );
+            });
+
+            // CustomSnackBar.show(
+            //   context: context,
+            //   message: 'Please fill all required fields and ensure age is 18+',
+            //   isError: true,
+            // );
           }
         },
         style: ElevatedButton.styleFrom(

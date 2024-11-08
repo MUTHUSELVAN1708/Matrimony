@@ -213,7 +213,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           NavigationHelper.slideNavigateTo(
             context: context,
             screen: EditContactScreen(
-              onPop: () => _updateProfileElementsVisibility(true),
+                onPop: (value) {
+                  if(value as bool){
+                    _updateProfileElementsVisibility(true);
+                  }
+                }
             ),
           );
         } else {
@@ -301,7 +305,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             NavigationHelper.slideNavigateTo(
               context: context,
               screen: EditBasicDetailScreen(
-                onPop: () => _updateProfileElementsVisibility(true),
+                onPop: (value) {
+                  if(value as bool){
+                    _updateProfileElementsVisibility(true);
+                  }
+                }
               ),
             );
           }

@@ -9,12 +9,12 @@ class CommonSelectionDialog extends ConsumerStatefulWidget {
   final Function(String) onSelect;
 
   const CommonSelectionDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.options,
     required this.selectedValue,
     required this.onSelect,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<CommonSelectionDialog> createState() =>
@@ -131,7 +131,12 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                           itemBuilder: (context, index) => RadioListTile<String>(
                             title: Text(
                               filteredOptions[index],
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: filteredOptions[index] == tempSelected
+                                    ? AppColors.primaryButtonColor
+                                    : Colors.black, // Change color based on selection
+                              ),
                             ),
                             value: filteredOptions[index],
                             groupValue: tempSelected,
