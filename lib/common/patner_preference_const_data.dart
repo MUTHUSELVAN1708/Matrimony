@@ -56,14 +56,15 @@ class PartnerPreferenceConstData {
   };
   static const List<String> maritalStatusOptions = [
     'Never Married',
-    'Divorced',
-    'Widowed',
-    'Separated'
+    'Widow',
+    'divorced',
+    'Awaiting Divorce'
   ];
 
   static const List<String> physicalStatusOptions = [
     'Normal',
-    'Physically Challenged'
+    'Physically Challenged',
+    'Doesn’t Matter'
   ];
   static const List<String> eatingHabitsOptions = [
     'Vegetarian',
@@ -72,14 +73,16 @@ class PartnerPreferenceConstData {
     'Vegan'
   ];
   static const List<String> drinkingHabitsOptions = [
-    'No',
-    'Occasionally',
-    'Yes'
+    'Doesn’t Matter',
+    'Never Drinks',
+    'Drinks Socially',
+    'Drinks Regularly'
   ];
   static const List<String> smokingHabitsOptions = [
-    'No',
-    'Occasionally',
-    'Yes'
+    'Doesn’t Matter',
+    'Never Smokes',
+    'Smokes Occasionally',
+    'Smokes Regularly'
   ];
 
   static const List<String> motherTongueOptions = [

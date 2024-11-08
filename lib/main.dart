@@ -28,13 +28,13 @@ class MyApp extends StatelessWidget {
               return const MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: BottomNavBarScreen(),
+                home: RegisterPartnerBasicPreferenceScreen(),
               );
             } else {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: InitialScreen(),
+                home: RegisterPartnerBasicPreferenceScreen(),
               );
             }
           }

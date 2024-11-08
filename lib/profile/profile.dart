@@ -208,19 +208,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       String text, VoidCallback onTap, BuildContext context) {
     return OutlinedButton(
       onPressed: () {
-        if (text == 'Edit Contact') {
-          _updateProfileElementsVisibility(false);
-          NavigationHelper.slideNavigateTo(
-            context: context,
-            screen: EditContactScreen(onPop: (value) {
-              if (value as bool) {
-                _updateProfileElementsVisibility(true);
-              }
-            }),
-          );
-        } else {
-          onTap();
-        }
+        // if (text == 'Edit Contact') {
+        //   _updateProfileElementsVisibility(false);
+        //   NavigationHelper.slideNavigateTo(
+        //     context: context,
+        //     screen: EditContactScreen(onPop: (value) {
+        //       if (value as bool) {
+        //         _updateProfileElementsVisibility(true);
+        //       }
+        //     }),
+        //   );
+        // } else {
+        //   onTap();
+        // }
       },
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: Colors.grey.shade200),

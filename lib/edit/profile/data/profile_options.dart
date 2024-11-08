@@ -83,6 +83,7 @@ class ProfileOptions {
     '8 ft 0 in (244 cm)'
   ];
 
+
   static const List<String> weightInLbs = [
     '5 lbs (2 kg)',
     '10 lbs (5 kg)',

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
+import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/partner_location_preference_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
@@ -30,7 +31,17 @@ class _PartnerProfessionalScreenState
     'Bachelor\'s Degree',
     'Master\'s Degree',
     'PhD',
-    'Other',
+    'Associate Degree',
+    'Diploma',
+    'Certificate',
+    'Postdoctoral',
+    'Vocational Training',
+    'Online Courses',
+    'Technical Certification',
+    'Secondary School',
+    'Undergraduate',
+    'Graduate',
+    'Postgraduate',
   ];
 
   List<String> employedInList = [
@@ -38,7 +49,17 @@ class _PartnerProfessionalScreenState
     'Private',
     'Business',
     'Self-employed',
-    'Other',
+    'Freelancer',
+    'Non-profit Organization',
+    'NGO',
+    'Start-up',
+    'Multinational Corporation',
+    'Startup',
+    'Public Sector',
+    'Healthcare',
+    'Educational Institution',
+    'Research Organization',
+    'Consultancy',
   ];
 
   final List<String> occupationList = [
@@ -46,7 +67,17 @@ class _PartnerProfessionalScreenState
     'Doctor',
     'Teacher',
     'Business Analyst',
-    'Other',
+    'Software Developer',
+    'Nurse',
+    'Architect',
+    'Scientist',
+    'Accountant',
+    'Lawyer',
+    'Teacher',
+    'Marketing Manager',
+    'Data Analyst',
+    'HR Manager',
+    'Project Manager',
   ];
 
   final List<String> incomeList = [
@@ -55,6 +86,16 @@ class _PartnerProfessionalScreenState
     '1L - 5L',
     '5L - 10L',
     'More than 10L',
+    '10L - 20L',
+    '20L - 50L',
+    '50L - 1 Cr',
+    '1 Cr - 2 Cr',
+    '2 Cr - 5 Cr',
+    '5 Cr - 10 Cr',
+    '10 Cr - 20 Cr',
+    '20 Cr - 50 Cr',
+    '50 Cr - 100 Cr',
+    'More than 100 Cr',
   ];
 
   @override
@@ -116,21 +157,19 @@ class _PartnerProfessionalScreenState
             ),
             const SizedBox(height: 16),
 
-            // Education Dropdown
-            CustomPreferenceDropdownField(
+            AnyCustomPreferenceDropdown(
               value: selectedEdication,
               hint: "Education",
               items: educationList,
               onChanged: (value) {
                 setState(() {
-                  educationList = value;
+                  selectedEdication = value;
                 });
               },
             ),
             const SizedBox(height: 10),
 
-            // Employed In Dropdown
-            CustomPreferenceDropdownField(
+            AnyCustomPreferenceDropdown(
               value: selectedEmployed,
               hint: "Employed In",
               items: employedInList,
@@ -143,7 +182,7 @@ class _PartnerProfessionalScreenState
             const SizedBox(height: 10),
 
             // Occupation Dropdown
-            CustomPreferenceDropdownField(
+            AnyCustomPreferenceDropdown(
               value: selectedIncome,
               hint: "Occupation",
               items: occupationList,
@@ -155,7 +194,7 @@ class _PartnerProfessionalScreenState
             ),
             const SizedBox(height: 10),
 
-            CustomPreferenceDropdownField(
+            AnyCustomPreferenceDropdown(
               value: selectedOccupation,
               hint: "Annual Income",
               items: incomeList,

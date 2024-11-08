@@ -4,7 +4,7 @@ import '../../common/colors.dart';
 import '../../common/widget/custom_text_field.dart';
 
 class EditContactScreen extends StatelessWidget {
-  final Function(bool? value) onPop;
+  final VoidCallback onPop;
 
   const EditContactScreen({
     super.key,
@@ -27,7 +27,7 @@ class EditContactScreen extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    onPop(true);
+                    onPop();
                     Navigator.pop(context);
                   },
                   child: const Icon(
@@ -77,8 +77,8 @@ class EditContactScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Center(
-                        child: Text(
+                      Center(
+                        child: const Text(
                           'Personal Information',
                           style: TextStyle(
                             color: AppColors.primaryButtonColor,
@@ -88,9 +88,9 @@ class EditContactScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: const Text(
                           'Current Email',
                           style: TextStyle(
                             color: AppColors.black,
@@ -101,9 +101,9 @@ class EditContactScreen extends StatelessWidget {
                       _buildTextField(
                           'Current Email', 'dummyxxx@gmail.com', false),
                       _buildTextField('Enter your new Email address', '', true),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: const Text(
                           'Current Contact Number',
                           style: TextStyle(
                             color: AppColors.black,
