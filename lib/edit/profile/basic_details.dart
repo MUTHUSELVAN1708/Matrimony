@@ -159,10 +159,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildHeightSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -185,10 +185,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildWeightSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -210,12 +210,11 @@ class EditBasicDetailScreen extends ConsumerWidget {
     );
   }
 
-
   Widget _buildSkinToneSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -238,10 +237,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildMaritalStatusSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -264,10 +263,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildPhysicalStatusSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -290,10 +289,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildEatingHabitsSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -303,7 +302,9 @@ class EditBasicDetailScreen extends ConsumerWidget {
             options: ProfileOptions.eatingHabits,
             selectedValue: profileState.eatingHabits,
             onSelect: (value) {
-              ref.read(profileProvider.notifier).updateEatingHabitsStatus(value);
+              ref
+                  .read(profileProvider.notifier)
+                  .updateEatingHabitsStatus(value);
             },
           ),
         );
@@ -316,10 +317,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildDrinkingHabitsSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -329,7 +330,9 @@ class EditBasicDetailScreen extends ConsumerWidget {
             options: ProfileOptions.drinkingHabits,
             selectedValue: profileState.drinkingHabits,
             onSelect: (value) {
-              ref.read(profileProvider.notifier).updateDrinkingHabitsStatus(value);
+              ref
+                  .read(profileProvider.notifier)
+                  .updateDrinkingHabitsStatus(value);
             },
           ),
         );
@@ -342,10 +345,10 @@ class EditBasicDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildSmokingHabitsSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfileState profileState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfileState profileState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -355,7 +358,9 @@ class EditBasicDetailScreen extends ConsumerWidget {
             options: ProfileOptions.smokingHabits,
             selectedValue: profileState.smokingHabits,
             onSelect: (value) {
-              ref.read(profileProvider.notifier).updateSmokingHabitsStatus(value);
+              ref
+                  .read(profileProvider.notifier)
+                  .updateSmokingHabitsStatus(value);
             },
           ),
         );
@@ -411,7 +416,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
               onPop(true);
-            }).then((_){
+            }).then((_) {
               CustomSnackBar.show(
                 isError: false,
                 context: context,
@@ -419,12 +424,11 @@ class EditBasicDetailScreen extends ConsumerWidget {
               );
             });
             // Handle save logic
-
           } else {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
               onPop(true);
-            }).then((_){
+            }).then((_) {
               CustomSnackBar.show(
                 isError: false,
                 context: context,

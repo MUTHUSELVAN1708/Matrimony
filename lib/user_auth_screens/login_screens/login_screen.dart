@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/request_user_list_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/user_auth_screens/forget_password_screen.dart';
 import 'package:matrimony/user_auth_screens/login_screens/reverpod/login_password_notifier.dart';
 import 'package:matrimony/user_auth_screens/otp_screen.dart';
@@ -104,19 +105,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 loginState.error != null
                     ? Text(
                         loginState.error.toString(),
-                        style: TextStyle(color: Colors.red),
+                        style: const TextStyle(color: Colors.red),
                       )
                     : const SizedBox(),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     focusNode: loginButton,
-                    onPressed: () {
+                    onPressed: () async {
                       //  Navigator.push(context, MaterialPageRoute(builder: (context) => const ExampleScreen()));
-                      ref.read(logApiProvider.notifier).passwordWithLogin(
-                          passwordController.text, emailController.text);
+                      final logUserModel = await ref
+                          .read(logApiProvider.notifier)
+                          .passwordWithLogin(
+                              passwordController.text, emailController.text);
 
-                      if (loginState.data!.token != '') {
+                      if (logUserModel.token != '') {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -130,10 +133,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: SizedBox(
                               height: 24,
                               width: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
+                              child: LoadingIndicator(),
                             ),
                           )
                         : const Text(

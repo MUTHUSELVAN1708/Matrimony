@@ -100,7 +100,7 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: 'Failed to fetch data. Status code: ${response.statusCode}',
+          error: 'No Matches Available',
         );
       }
     } catch (e) {

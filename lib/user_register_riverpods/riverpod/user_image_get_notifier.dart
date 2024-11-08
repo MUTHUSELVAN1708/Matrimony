@@ -9,8 +9,12 @@ class UserImageModel extends Equatable {
   final int id;
   final int userId;
   final List<String> images;
+  final bool paymentStatus;
+  final String name;
 
   const UserImageModel({
+    required this.paymentStatus,
+    required this.name,
     required this.id,
     required this.userId,
     required this.images,
@@ -18,10 +22,11 @@ class UserImageModel extends Equatable {
 
   factory UserImageModel.fromJson(Map<String, dynamic> json) {
     return UserImageModel(
-      id: json['id'] as int,
-      userId: json['userId'] as int,
-      images: List<String>.from(json['images'] as List<dynamic>),
-    );
+        id: json['id'] as int,
+        userId: json['userId'] as int,
+        images: List<String>.from(json['images'] as List<dynamic>),
+        paymentStatus: json['paymentStatus'] as bool,
+        name: json['name'] as String);
   }
 
   Map<String, dynamic> toJson() {
@@ -29,6 +34,8 @@ class UserImageModel extends Equatable {
       'id': id,
       'userId': userId,
       'images': images,
+      'paymentStatus': paymentStatus,
+      'name': name
     };
   }
 
@@ -36,16 +43,20 @@ class UserImageModel extends Equatable {
     int? id,
     int? userId,
     List<String>? images,
+    bool? paymentStatus,
+    String? name,
   }) {
     return UserImageModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       images: images ?? this.images,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+      name: name ?? this.name,
     );
   }
 
   @override
-  List<Object?> get props => [id, userId, images];
+  List<Object?> get props => [id, userId, images, paymentStatus, name];
 }
 
 class GetImageState {
@@ -90,8 +101,9 @@ class GetImageApiNotifier extends StateNotifier<GetImageState> {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
+        print('Name ');
         final userImageData = UserImageModel.fromJson(jsonResponse);
-
+        print(userImageData.name);
         state = state.copyWith(
           isLoading: false,
           data: userImageData,
