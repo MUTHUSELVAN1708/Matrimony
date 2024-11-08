@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/patner_preference_const_data.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
@@ -25,48 +26,12 @@ class _RegisterReligiousDetailsScreenState
   String? subCaste;
   bool willingToMarryOtherCastes = false;
 
-  final List<String> motherTongueOptions = [
-    'Hindi',
-    'English',
-    'Tamil',
-    'Telugu',
-    'Malayalam',
-    'Kannada',
-    'Bengali',
-    'Marathi',
-    'Gujarati',
-    'Punjabi'
-  ];
 
-  final List<String> religionOptions = [
-    'Hindu',
-    'Muslim',
-    'Christian',
-    'Sikh',
-    'Buddhist',
-    'Jain',
-    'Jewish',
-    'Parsi',
-    'Other'
-  ];
 
-  final List<String> casteOptions = [
-    'Brahmin',
-    'Kshatriya',
-    'Vaishya',
-    'Others'
-  ];
-
-  final List<String> subCasteOptions = [
-    'Sub Caste 1',
-    'Sub Caste 2',
-    'Sub Caste 3',
-    'Others'
-  ];
 
   @override
   Widget build(BuildContext context) {
-    final registerState = ref.watch(registerProvider);
+    final registerStateNotifier = ref.watch(registerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -104,7 +69,7 @@ class _RegisterReligiousDetailsScreenState
                 CustomDropdownField(
                   value: motherTongue ?? '',
                   hint: 'Mother Tongue',
-                  items: motherTongueOptions,
+                  items: PartnerPreferenceConstData.motherTongueOptions,
                   onChanged: (value) {
                     setState(() => motherTongue = value);
                   },
@@ -115,7 +80,7 @@ class _RegisterReligiousDetailsScreenState
                 CustomDropdownField(
                   value: religion ?? '',
                   hint: 'Religion',
-                  items: religionOptions,
+                  items: PartnerPreferenceConstData.religionOptions,
                   onChanged: (value) {
                     setState(() {
                       religion = value;
@@ -130,7 +95,7 @@ class _RegisterReligiousDetailsScreenState
                 CustomDropdownField(
                   value: caste ?? '',
                   hint: 'Caste',
-                  items: casteOptions,
+                  items:PartnerPreferenceConstData.casteOptions,
                   onChanged: (value) {
                     setState(() {
                       caste = value;
@@ -144,14 +109,12 @@ class _RegisterReligiousDetailsScreenState
                 CustomDropdownField(
                   value: subCaste ?? '',
                   hint: 'Sub Caste',
-                  items: subCasteOptions,
+                  items: PartnerPreferenceConstData.subCasteOptions,
                   onChanged: (value) {
                     setState(() => subCaste = value);
                   },
                 ),
                 const SizedBox(height: 16),
-
-                // Willing to marry other castes checkbox
                 Row(
                   children: [
                     SizedBox(
@@ -197,8 +160,7 @@ class _RegisterReligiousDetailsScreenState
                           subCaste: subCaste,
                           division: '',
                         );
-                        print(success);
-                        if (success) {
+                        if (registerStateNotifier.error == null && registerStateNotifier.success != null) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -209,9 +171,15 @@ class _RegisterReligiousDetailsScreenState
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
-                    child: registerState.isLoading
+                    child: registerStateNotifier.isLoading
                         ? const Center(
-                            child: CircularProgressIndicator(),
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              )),
                           )
                         : const Text(
                             'Next',

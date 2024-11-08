@@ -9,33 +9,33 @@ import 'dart:convert';
 class Matches extends Equatable {
   final int? id;
   final String? name;
-  final List<String>? image;
-  final String? age;
+  final int? age;
+  final List<String>? photos; 
 
-  const Matches({this.id, this.name, this.image, this.age});
+  const Matches({this.id, this.name,  this.age, this.photos});
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'image': image,
       'age': age,
+      'photos': photos, 
     };
   }
 
   factory Matches.fromJson(Map<String, dynamic> json) {
     return Matches(
-      id: json['id'] as int,
+      id: json['id'] as int?,
       name: json['name'] as String?,
-      image: (json['image'] as List<dynamic>?)
-          ?.map((item) => item as String)
+      age: json['age'] as int?,
+      photos: (json['photos'] as List<dynamic>?) 
+          ?.map((item) => item.toString())
           .toList(),
-      age: json['age'] as String?,
     );
   }
 
   @override
-  List<Object?> get props => [name, image, age];
+  List<Object?> get props => [id,name, age, photos]; 
 }
 
 class AllMatchState extends Equatable {
@@ -72,8 +72,8 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final int? userId = await SharedPrefHelper.getUserId();
-      print('Fetching data for user ID: $userId');
+      final int? userId = await SharedPrefHelper.getUserId() ?? 1;
+      print('Fetching data for user ID: $userId'); 
 
       final response = await http.post(
         Uri.parse(Api.getAllMatches),

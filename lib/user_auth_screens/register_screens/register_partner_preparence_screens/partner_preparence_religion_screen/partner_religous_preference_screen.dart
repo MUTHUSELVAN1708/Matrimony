@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/riverpod/religious_api_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_profesional_preference_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
@@ -17,6 +18,7 @@ class PartnerReligiousPreferenceScreen extends ConsumerStatefulWidget {
 
 class _PartnerReligiousPreferenceScreenState
     extends ConsumerState<PartnerReligiousPreferenceScreen> {
+
   List<String> selectedReligion = [];
   List<String> selectedCaste = [];
   List<String> selectedSubCaste = [];
@@ -32,9 +34,20 @@ class _PartnerReligiousPreferenceScreenState
   final List<String> rassiList = ['Yes', 'No', 'Don\'t Know'];
 
   @override
+  void initState() {
+    super.initState();
+    // getReligious();
+  }
+  Future<void> getReligious()async{
+      await Future.delayed(Duration.zero);
+      ref.read(religiousProvider.notifier).getReligiousData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final inputState = ref.read(preferenceInputProvider.notifier);
     final partnerRegisterState = ref.watch(partnerPreferenceProvider);
+    final religionState = ref.watch(religiousProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -49,6 +62,7 @@ class _PartnerReligiousPreferenceScreenState
           style: AppTextStyles.headingTextstyle,
         ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ScrollConfiguration(
@@ -79,11 +93,13 @@ class _PartnerReligiousPreferenceScreenState
                 ),
                 const SizedBox(height: 16),
 
-                // Religion Dropdown
                 CustomPreferenceDropdownField(
-                  value: selectedReligion, // Set value as null initially
-                  hint: "Religion", // Add hint text
-                  items: religionList,
+                  value: selectedReligion, 
+                  hint: "Religion", 
+                //   items:  religionState.data!
+                // .map((religiousModel) => religiousModel.religion)
+                // .toList()  ?? [],
+                items:religionList ,
                   onChanged: (value) {
                     setState(() {
                       selectedReligion = value;
@@ -168,6 +184,7 @@ class _PartnerReligiousPreferenceScreenState
                               star: selectedStar.toString(),
                               rassi: selectedRassi.toString(),
                               dosham: selectedDosham.toString());
+                          
 
                       Navigator.push(
                         context,
@@ -186,7 +203,13 @@ class _PartnerReligiousPreferenceScreenState
                     ),
                     child: partnerRegisterState.isLoading
                         ? const Center(
-                            child: CircularProgressIndicator(),
+                            child: SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              )),
                           )
                         : const Text(
                             'Next',
@@ -204,5 +227,6 @@ class _PartnerReligiousPreferenceScreenState
         ),
       ),
     );
+    
   }
 }

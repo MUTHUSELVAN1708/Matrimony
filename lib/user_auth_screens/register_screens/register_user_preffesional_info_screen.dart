@@ -160,9 +160,9 @@ class _RegisterUserProfessionalInfoScreenState
                             child: ScrollbarTheme(
                               data: ScrollbarThemeData(
                                 trackColor:
-                                    MaterialStateProperty.all(Colors.pink[100]),
+                                    WidgetStateProperty.all(Colors.pink[100]),
                                 thumbColor:
-                                    MaterialStateProperty.all(Colors.pink),
+                                    WidgetStateProperty.all(Colors.pink),
                                 radius: const Radius.circular(12),
                               ),
                               child: Scrollbar(
@@ -248,6 +248,7 @@ class _RegisterUserProfessionalInfoScreenState
 
   @override
   Widget build(BuildContext context) {
+    final registerStateNotifier = ref.watch(registerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -297,7 +298,6 @@ class _RegisterUserProfessionalInfoScreenState
                 ),
                 const SizedBox(height: 16),
 
-                // Employment Type Selection
                 _buildSelectionField(
                   value: employmentType ?? '',
                   hint: 'Select your employment type',
@@ -312,9 +312,8 @@ class _RegisterUserProfessionalInfoScreenState
                 ),
                 const SizedBox(height: 16),
 
-                // Occupation Selection
                 employmentType == 'Not Working'
-                    ? SizedBox()
+                    ? const SizedBox()
                     : _buildSelectionField(
                         value: occupation ?? '',
                         hint: 'Select your occupation',
@@ -329,9 +328,8 @@ class _RegisterUserProfessionalInfoScreenState
                       ),
                 const SizedBox(height: 16),
 
-                // Income Currency Selection
                 employmentType == 'Not Working'
-                    ? SizedBox()
+                    ? const SizedBox()
                     : _buildSelectionField(
                         value: incomeCurrency ?? '',
                         hint: 'Select your income currency',
@@ -344,7 +342,7 @@ class _RegisterUserProfessionalInfoScreenState
                               setState(() {
                                 incomeCurrency = value;
                                 annualIncome =
-                                    null; // Reset annualIncome when currency changes
+                                    null; 
                               });
                             },
                           );
@@ -354,7 +352,7 @@ class _RegisterUserProfessionalInfoScreenState
 
                 // Annual Income Selection
                 employmentType == 'Not Working'
-                    ? SizedBox()
+                    ? const SizedBox()
                     : _buildSelectionField(
                         value: annualIncome ?? '',
                         hint: 'Select your annual income',
@@ -392,7 +390,7 @@ class _RegisterUserProfessionalInfoScreenState
                               occupation: occupation,
                               annualIncomeCurrency: incomeCurrency,
                             );
-                        if (success) {
+                        if (registerStateNotifier.error == null && registerStateNotifier.success != null) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -404,7 +402,15 @@ class _RegisterUserProfessionalInfoScreenState
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
-                    child: const Text('Next',
+                    child: registerStateNotifier.isLoading? const Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              )),
+                          ): const Text('Next',
                         style: AppTextStyles.primarybuttonText),
                   ),
                 ),

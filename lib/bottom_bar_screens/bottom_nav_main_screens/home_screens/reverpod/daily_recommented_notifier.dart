@@ -5,42 +5,51 @@ import 'package:matrimony/common/local_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// Matches Model
-class dailyRecomment extends Equatable {
+import 'package:equatable/equatable.dart';
+
+class DailyRecomment extends Equatable {
   final int? id;
   final String? name;
-  final List<String>? image;
-  final String? age;
+  final int? age;
+  final List<String>? photos;
 
-  const dailyRecomment({this.id, this.name, this.image, this.age});
+  const DailyRecomment({
+    this.id,
+    this.name,
+    this.age,
+    this.photos,
+  });
 
+  // Method to convert object to JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
-      'image': image,
-      'age': age,
+      'id': id ?? 0,
+      'name': name ?? '',
+      'age': age ?? 0,
+      'photos': photos ?? [],
     };
   }
 
-  factory dailyRecomment.fromJson(Map<String, dynamic> json) {
-    return dailyRecomment(
-      id: json['id'] as int,
-      name: json['name'] as String?,
-      image: (json['image'] as List<dynamic>?)
-          ?.map((item) => item as String)
-          .toList(),
-      age: json['age'] as String?,
+  factory DailyRecomment.fromJson(Map<String, dynamic> json) {
+    return DailyRecomment(
+      id: json['id'] as int? ?? 0,
+      name: json['name'] as String? ?? '',
+      age: json['age'] as int? ?? 0,
+      photos: (json['photos'] as List<dynamic>?)
+              ?.map((item) => item as String)
+              .toList() ??
+          [], // Return an empty list if photos is null
     );
   }
 
   @override
-  List<Object?> get props => [name, image, age];
+  List<Object?> get props => [name, photos, age];
 }
+
 
 class dailyRecommentState extends Equatable {
   final bool isLoading;
-  final List<dailyRecomment>? dailyRecommentList;
+  final List<DailyRecomment>? dailyRecommentList;
   final String? error;
 
   const dailyRecommentState({
@@ -51,7 +60,7 @@ class dailyRecommentState extends Equatable {
 
   dailyRecommentState copyWith({
     bool? isLoading,
-    List<dailyRecomment>? dailyRecommentList,
+    List<DailyRecomment>? dailyRecommentList,
     String? error,
   }) {
     return dailyRecommentState(
@@ -91,14 +100,14 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
         print(response.body.length);
         final data = jsonDecode(response.body) as List<dynamic>;
         print(data.length);
-        final List<dailyRecomment> dailyRecommentList = data.map((item) {
-          return dailyRecomment.fromJson(item as Map<String, dynamic>);
+        final List<DailyRecomment> dailyRecommentList = data.map((item) {
+          return DailyRecomment.fromJson(item as Map<String, dynamic>);
         }).toList();
         print(dailyRecommentList.length);
 
         state = state.copyWith(
             isLoading: false, dailyRecommentList: dailyRecommentList);
-        print('Fetched matches: $dailyRecommentList');
+        print('Fetched daily recommendations: $dailyRecommentList');
       } else {
         state = state.copyWith(
           isLoading: false,
