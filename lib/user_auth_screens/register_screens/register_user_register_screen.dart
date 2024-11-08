@@ -6,7 +6,7 @@ import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/common_mobile_picker.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
-import 'package:matrimony/user_auth_screens/login_screen.dart';
+import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
 import 'package:matrimony/user_auth_screens/otp_screen.dart';
 
 class RegisterUserDetailsScreen extends ConsumerStatefulWidget {

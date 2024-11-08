@@ -149,12 +149,12 @@ class _RegisterUserLocationScreenState
                   child: registerStateNotifier.isLoading
                       ? const Center(
                           child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            )),
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              )),
                         )
                       : const Text(
                           'Next',

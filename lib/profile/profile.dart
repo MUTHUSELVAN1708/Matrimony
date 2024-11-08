@@ -22,12 +22,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final heightQuery = MediaQuery.of(context).size.height;
     final widthQuery = MediaQuery.of(context).size.width;
-
 
     return Scaffold(
       body: Stack(
@@ -48,21 +46,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
           if (_showProfileElements)
-          Padding(
-            padding: const EdgeInsets.only(top: 40.0,left: 16),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: 20,
+            Padding(
+              padding: const EdgeInsets.only(top: 40.0, left: 16),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           // Main content
           SafeArea(
             child: Column(
@@ -86,64 +84,63 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       clipBehavior: Clip.none,
                       children: [
                         if (_showProfileElements)
-                        // Profile Image and Title
-                        Positioned(
-                          top: -(widthQuery * 0.17),
-                          left: 0,
-                          right: 0,
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                // Action to update profile image
-                              },
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: widthQuery * 0.13,
-                                        left: widthQuery * 0.02),
-                                    child: const Row(
-                                      children: [
-                                        Icon(Icons.person, size: 30),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'Bio-Data',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                          // Profile Image and Title
+                          Positioned(
+                            top: -(widthQuery * 0.17),
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Action to update profile image
+                                },
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: widthQuery * 0.13,
+                                          left: widthQuery * 0.02),
+                                      child: const Row(
+                                        children: [
+                                          Icon(Icons.person, size: 30),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'Bio-Data',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: (widthQuery / 4) -
+                                          (widthQuery * 0.15),
+                                    ),
+                                    Container(
+                                      width: widthQuery * 0.32,
+                                      height: widthQuery * 0.32,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppColors.primaryButtonColor,
+                                          width: 2.0,
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        (widthQuery / 4) - (widthQuery * 0.15),
-                                  ),
-
-                                  Container(
-                                    width: widthQuery * 0.32,
-                                    height: widthQuery * 0.32,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.primaryButtonColor,
-                                        width: 2.0,
+                                      ),
+                                      child: ClipOval(
+                                        child: SvgPicture.asset(
+                                          'assets/profileIcon.svg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                    child: ClipOval(
-                                      child: SvgPicture.asset(
-                                        'assets/profileIcon.svg',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
                         // Content
                         Padding(
                           padding: EdgeInsets.only(top: heightQuery * 0.15),
@@ -156,9 +153,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    _buildActionButton('Edit Contact', () {},context),
-                                    _buildActionButton('Add Photos', () {},context),
-                                    _buildActionButton('Add Horoscope', () {},context),
+                                    _buildActionButton(
+                                        'Edit Contact', () {}, context),
+                                    _buildActionButton(
+                                        'Add Photos', () {}, context),
+                                    _buildActionButton(
+                                        'Add Horoscope', () {}, context),
                                   ],
                                 ),
                               ),
@@ -203,7 +203,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildActionButton(String text, VoidCallback onTap, BuildContext context) {
+  Widget _buildActionButton(
+      String text, VoidCallback onTap, BuildContext context) {
     return OutlinedButton(
       onPressed: () {
         if (text == 'Edit Contact') {
@@ -357,5 +358,4 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
-
 }

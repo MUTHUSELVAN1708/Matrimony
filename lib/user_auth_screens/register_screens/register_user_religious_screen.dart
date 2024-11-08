@@ -26,9 +26,6 @@ class _RegisterReligiousDetailsScreenState
   String? subCaste;
   bool willingToMarryOtherCastes = false;
 
-
-
-
   @override
   Widget build(BuildContext context) {
     final registerStateNotifier = ref.watch(registerProvider);
@@ -95,7 +92,7 @@ class _RegisterReligiousDetailsScreenState
                 CustomDropdownField(
                   value: caste ?? '',
                   hint: 'Caste',
-                  items:PartnerPreferenceConstData.casteOptions,
+                  items: PartnerPreferenceConstData.casteOptions,
                   onChanged: (value) {
                     setState(() {
                       caste = value;
@@ -160,7 +157,8 @@ class _RegisterReligiousDetailsScreenState
                           subCaste: subCaste,
                           division: '',
                         );
-                        if (registerStateNotifier.error == null && registerStateNotifier.success != null) {
+                        if (registerStateNotifier.error == null &&
+                            registerStateNotifier.success != null) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -174,12 +172,12 @@ class _RegisterReligiousDetailsScreenState
                     child: registerStateNotifier.isLoading
                         ? const Center(
                             child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              )),
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                )),
                           )
                         : const Text(
                             'Next',

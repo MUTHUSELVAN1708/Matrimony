@@ -46,7 +46,6 @@ class DailyRecomment extends Equatable {
   List<Object?> get props => [name, photos, age];
 }
 
-
 class dailyRecommentState extends Equatable {
   final bool isLoading;
   final List<DailyRecomment>? dailyRecommentList;

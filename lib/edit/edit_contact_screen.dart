@@ -35,7 +35,9 @@ class EditContactScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(width: heightQuery * 0.15,),
+                SizedBox(
+                  width: heightQuery * 0.15,
+                ),
                 const Text(
                   'Edit Contact Info',
                   style: TextStyle(
@@ -95,8 +97,9 @@ class EditContactScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      _buildTextField('Current Email', 'dummyxxx@gmail.com',false),
-                      _buildTextField('Enter your new Email address', '',true),
+                      _buildTextField(
+                          'Current Email', 'dummyxxx@gmail.com', false),
+                      _buildTextField('Enter your new Email address', '', true),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: const Text(
@@ -107,8 +110,10 @@ class EditContactScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      _buildTextField('Current contact number', '1234567890',false),
-                      _buildTextField('Enter your new contact number', '',true),
+                      _buildTextField(
+                          'Current contact number', '1234567890', false),
+                      _buildTextField(
+                          'Enter your new contact number', '', true),
                       const SizedBox(height: 16),
                       const Text(
                         'Contact Preference',
@@ -159,14 +164,17 @@ class EditContactScreen extends StatelessWidget {
     Icon? _getPrefixIcon() {
       if (hintText.toLowerCase().contains('email')) {
         return const Icon(Icons.email, color: Colors.grey);
-      } else if (hintText.toLowerCase().contains('contact') || hintText.toLowerCase().contains('phone')) {
+      } else if (hintText.toLowerCase().contains('contact') ||
+          hintText.toLowerCase().contains('phone')) {
         return const Icon(Icons.phone, color: Colors.grey);
       }
       return null;
     }
 
     return Padding(
-      padding: isEnabled ? const EdgeInsets.symmetric(vertical: 8.0) : EdgeInsets.zero,
+      padding: isEnabled
+          ? const EdgeInsets.symmetric(vertical: 8.0)
+          : EdgeInsets.zero,
       child: TextField(
         controller: TextEditingController(text: initialValue),
         enabled: isEnabled,
@@ -174,7 +182,8 @@ class EditContactScreen extends StatelessWidget {
           hintText: hintText,
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
           hintStyle: const TextStyle(color: Colors.grey),
           prefixIcon: _getPrefixIcon(),
           enabledBorder: OutlineInputBorder(
@@ -194,7 +203,6 @@ class EditContactScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildListTile(String title, String subtitle) {
     return ListTile(

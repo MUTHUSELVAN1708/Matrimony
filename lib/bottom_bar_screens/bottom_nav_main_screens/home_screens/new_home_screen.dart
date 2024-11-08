@@ -112,7 +112,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             bottom: -200,
             left: 0,
             right: 0,
-            child: _buildDailyRecommendations(context,ref))
+            child: _buildDailyRecommendations(context, ref))
       ],
     );
   }
@@ -166,7 +166,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     );
   }
 
-  Widget _buildDailyRecommendations(BuildContext context,WidgetRef ref) {
+  Widget _buildDailyRecommendations(BuildContext context, WidgetRef ref) {
     final dailyRecommentsState = ref.watch(dailyRecommentProvider);
     return Stack(
       clipBehavior: Clip.none,
@@ -203,83 +203,100 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 ),
                 height: MediaQuery.of(context).size.height * 0.20,
                 width: MediaQuery.of(context).size.width - 20,
-                child: dailyRecommentsState.error != null? Center(
-                  child: Text(dailyRecommentsState.error.toString()),
-                ) :dailyRecommentsState.isLoading? const Center(child: CircularProgressIndicator(),):  ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.all(16),
-                  itemCount: dailyRecommentsState.dailyRecommentList!.length,
-                  itemBuilder: (context, index) {
-                   final dailyRecommentData =   dailyRecommentsState.dailyRecommentList![index];
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              width: 100,
-                              height: MediaQuery.of(context).size.height *
-                                  0.20 /
-                                  2, 
-                              decoration: BoxDecoration(
-                                color: Colors.pink[200], 
-                              ),
-                              child: Image.memory(
-                                base64Decode(dailyRecommentData.photos![0].toString().replaceAll('\n', '').replaceAll('\r', '')),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            width: 100,
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 1),
+                child: dailyRecommentsState.error != null
+                    ? Center(
+                        child: Text(dailyRecommentsState.error.toString()),
+                      )
+                    : dailyRecommentsState.isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.all(16),
+                            itemCount:
+                                dailyRecommentsState.dailyRecommentList!.length,
+                            itemBuilder: (context, index) {
+                              final dailyRecommentData = dailyRecommentsState
+                                  .dailyRecommentList![index];
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Container(
+                                        width: 100,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.20 /
+                                                2,
+                                        decoration: BoxDecoration(
+                                          color: Colors.pink[200],
+                                        ),
+                                        child: Image.memory(
+                                          base64Decode(dailyRecommentData
+                                              .photos![0]
+                                              .toString()
+                                              .replaceAll('\n', '')
+                                              .replaceAll('\r', '')),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      width: 100,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            blurRadius: 2,
+                                            offset: Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              dailyRecommentData.name
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                color: Colors
+                                                    .red, // Customized color
+                                                fontSize:
+                                                    14, // Adjusted font size
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            Text(
+                                              dailyRecommentData.age.toString(),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize:
+                                                    10, // Adjusted font size
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    dailyRecommentData.name.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.red, // Customized color
-                                      fontSize: 14, // Adjusted font size
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                   Text(
-                                    dailyRecommentData.age.toString(),
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 10, // Adjusted font size
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
+                              );
+                            },
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
               ),
             ],
           ),
         ),
-
         Positioned(
           top: 0,
           left: 0,
@@ -290,7 +307,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     );
   }
 
-  Widget _buildAllMatches(WidgetRef  ref) {
+  Widget _buildAllMatches(WidgetRef ref) {
     final matingData = ref.watch(allMatchesProvider);
     return Container(
       padding: const EdgeInsets.all(16),
@@ -328,62 +345,69 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           ),
           SizedBox(
             height: 120,
-            child:  matingData.error != null? Center(child: Text( matingData.error.toString())): matingData.isLoading? const Center(child: CircularProgressIndicator()) : ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: matingData.allMatchList!.length,
-              itemBuilder: (context, index) {
-                final matching =  matingData.allMatchList![index];
-                return
-                 Container(
-                  width: 100,
-                  margin: const EdgeInsets.only(right: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: DecorationImage(
-                      image:MemoryImage(base64Decode(matching.photos![0].toString().replaceAll('\n', '')
-    .replaceAll('\r', '')
-    .replaceAll(' ', ''))),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      decoration: const BoxDecoration(
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(12),
-                          bottomRight: Radius.circular(12),
-                        ),
-                      ),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text:  TextSpan(
-                          children: [
-                            TextSpan(
-                              text: matching.name,
-                              style: const TextStyle(
-                                color: Colors.white, 
-                                fontSize: 12,
+            child: matingData.error != null
+                ? Center(child: Text(matingData.error.toString()))
+                : matingData.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: matingData.allMatchList!.length,
+                        itemBuilder: (context, index) {
+                          final matching = matingData.allMatchList![index];
+                          return Container(
+                            width: 100,
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              image: DecorationImage(
+                                image: MemoryImage(base64Decode(matching
+                                    .photos![0]
+                                    .toString()
+                                    .replaceAll('\n', '')
+                                    .replaceAll('\r', '')
+                                    .replaceAll(' ', ''))),
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            TextSpan(
-                              text: matching.age.toString(),
-                              style: const TextStyle(
-                                color: Colors.white, 
-                                fontSize: 8, 
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: double.infinity,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.black12,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(12),
+                                    bottomRight: Radius.circular(12),
+                                  ),
+                                ),
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: matching.name,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: matching.age.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 8,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
           ),
           const SizedBox(
             height: 10,

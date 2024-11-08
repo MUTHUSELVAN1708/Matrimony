@@ -1,6 +1,6 @@
 class Api {
-  // static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
-  static const String baseUrl = 'http://192.168.29.15:8080/api/ahathirumanam';
+  static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
+  // static const String baseUrl = 'http://192.168.29.15:8080/api/ahathirumanam';
 
   static const String createUser = '$baseUrl/userCreate';
   static const String otpVerify = '$baseUrl/verifyOTP';
@@ -17,5 +17,6 @@ class Api {
   static const String getAllMatches = '$baseUrl/allautomatch';
   static const String dailyRecommented = '$baseUrl/dailyRecommendation';
   static const String getReligious = '$baseUrl/getreligion';
-   static const String getUserImage = '$baseUrl/getimage';
+  static const String getUserImage = '$baseUrl/getimage';
+  static const String passwordWithLogin = '$baseUrl/loginwithpassword';
 }

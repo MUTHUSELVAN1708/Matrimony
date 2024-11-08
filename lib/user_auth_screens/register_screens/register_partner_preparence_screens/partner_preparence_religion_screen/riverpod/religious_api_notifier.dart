@@ -36,7 +36,7 @@ class ReligiousState extends Equatable {
 
   const ReligiousState({
     this.isLoading = false,
-    this.data ,
+    this.data,
     this.errorMessage,
   });
 
@@ -70,9 +70,8 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
         final jsonData = json.decode(response.body) as List;
         print(jsonData);
 
-        final religiousData = jsonData
-            .map((item) => ReligiousModel.fromJson(item))
-            .toList();
+        final religiousData =
+            jsonData.map((item) => ReligiousModel.fromJson(item)).toList();
         print('_________');
         print(religiousData);
 
@@ -87,10 +86,9 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
       );
     }
   }
-
-
 }
 
-final religiousProvider = StateNotifierProvider<ReligiousNotifier, ReligiousState>(
+final religiousProvider =
+    StateNotifierProvider<ReligiousNotifier, ReligiousState>(
   (ref) => ReligiousNotifier(),
 );

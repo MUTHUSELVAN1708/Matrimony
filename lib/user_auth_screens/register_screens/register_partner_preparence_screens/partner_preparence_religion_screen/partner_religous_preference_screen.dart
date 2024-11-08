@@ -18,7 +18,6 @@ class PartnerReligiousPreferenceScreen extends ConsumerStatefulWidget {
 
 class _PartnerReligiousPreferenceScreenState
     extends ConsumerState<PartnerReligiousPreferenceScreen> {
-
   List<String> selectedReligion = [];
   List<String> selectedCaste = [];
   List<String> selectedSubCaste = [];
@@ -38,9 +37,10 @@ class _PartnerReligiousPreferenceScreenState
     super.initState();
     // getReligious();
   }
-  Future<void> getReligious()async{
-      await Future.delayed(Duration.zero);
-      ref.read(religiousProvider.notifier).getReligiousData();
+
+  Future<void> getReligious() async {
+    await Future.delayed(Duration.zero);
+    ref.read(religiousProvider.notifier).getReligiousData();
   }
 
   @override
@@ -62,7 +62,6 @@ class _PartnerReligiousPreferenceScreenState
           style: AppTextStyles.headingTextstyle,
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ScrollConfiguration(
@@ -94,12 +93,12 @@ class _PartnerReligiousPreferenceScreenState
                 const SizedBox(height: 16),
 
                 CustomPreferenceDropdownField(
-                  value: selectedReligion, 
-                  hint: "Religion", 
-                //   items:  religionState.data!
-                // .map((religiousModel) => religiousModel.religion)
-                // .toList()  ?? [],
-                items:religionList ,
+                  value: selectedReligion,
+                  hint: "Religion",
+                  //   items:  religionState.data!
+                  // .map((religiousModel) => religiousModel.religion)
+                  // .toList()  ?? [],
+                  items: religionList,
                   onChanged: (value) {
                     setState(() {
                       selectedReligion = value;
@@ -184,7 +183,6 @@ class _PartnerReligiousPreferenceScreenState
                               star: selectedStar.toString(),
                               rassi: selectedRassi.toString(),
                               dosham: selectedDosham.toString());
-                          
 
                       Navigator.push(
                         context,
@@ -204,12 +202,12 @@ class _PartnerReligiousPreferenceScreenState
                     child: partnerRegisterState.isLoading
                         ? const Center(
                             child: SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              )),
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                )),
                           )
                         : const Text(
                             'Next',
@@ -227,6 +225,5 @@ class _PartnerReligiousPreferenceScreenState
         ),
       ),
     );
-    
   }
 }

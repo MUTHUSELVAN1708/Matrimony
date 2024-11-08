@@ -131,7 +131,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                   ),
                   const SizedBox(height: 10),
                   CustomPreferenceDropdownField(
-                    value: PartnerPreferenceConstData.maritalStatusOptions,
+                    value: selectedMaritalStatus,
                     hint: 'Marital Status',
                     items: PartnerPreferenceConstData.maritalStatusOptions,
                     onChanged: (value) {

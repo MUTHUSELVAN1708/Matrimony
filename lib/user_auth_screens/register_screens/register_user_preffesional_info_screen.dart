@@ -341,8 +341,7 @@ class _RegisterUserProfessionalInfoScreenState
                             (value) {
                               setState(() {
                                 incomeCurrency = value;
-                                annualIncome =
-                                    null; 
+                                annualIncome = null;
                               });
                             },
                           );
@@ -390,7 +389,8 @@ class _RegisterUserProfessionalInfoScreenState
                               occupation: occupation,
                               annualIncomeCurrency: incomeCurrency,
                             );
-                        if (registerStateNotifier.error == null && registerStateNotifier.success != null) {
+                        if (registerStateNotifier.error == null &&
+                            registerStateNotifier.success != null) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -402,16 +402,18 @@ class _RegisterUserProfessionalInfoScreenState
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
-                    child: registerStateNotifier.isLoading? const Center(
+                    child: registerStateNotifier.isLoading
+                        ? const Center(
                             child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              )),
-                          ): const Text('Next',
-                        style: AppTextStyles.primarybuttonText),
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                )),
+                          )
+                        : const Text('Next',
+                            style: AppTextStyles.primarybuttonText),
                   ),
                 ),
               ],

@@ -71,7 +71,7 @@ class MatchCard extends StatelessWidget {
                 BorderRadius.circular(4), // Adjust radius for the card
             child: match.photos![0].isNotEmpty
                 ? Image.memory(
-                   base64Decode(match.photos![0]),
+                    base64Decode(match.photos![0]),
                     height: MediaQuery.of(context).size.height * 0.3,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -165,23 +165,22 @@ class MatchCard extends StatelessWidget {
     );
   }
 
-Widget _buildInfoChip(String label) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: Colors.grey[200],
-      borderRadius: BorderRadius.circular(4),
-    ),
-    child: Text(
-      label,
-      style: const TextStyle(
-        fontSize: 12,
-        color: Colors.black87,
+  Widget _buildInfoChip(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(4),
       ),
-      overflow: TextOverflow.ellipsis, // Ellipsis for long text
-      maxLines: 1, // Limit to one line
-    ),
-  );
-}
-
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          color: Colors.black87,
+        ),
+        overflow: TextOverflow.ellipsis, // Ellipsis for long text
+        maxLines: 1, // Limit to one line
+      ),
+    );
+  }
 }

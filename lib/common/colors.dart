@@ -19,4 +19,3 @@ class AppColors {
   static const Color lightBlack = Color(0xFF4D4D4D);
   static const Color subtleBlack = Color(0xFF666666);
 }
-

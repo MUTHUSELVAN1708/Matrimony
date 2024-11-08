@@ -21,7 +21,7 @@ class NavigationHelper {
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return PopScope(
-              onPopInvokedWithResult: (b,v) {
+              onPopInvokedWithResult: (b, v) {
                 onPop();
               },
               child: SlideTransition(
