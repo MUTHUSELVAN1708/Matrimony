@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../common/colors.dart';
+import '../../common/colors.dart';
+import '../../common/widget/custom_text_field.dart';
 
 class EditContactScreen extends StatelessWidget {
   final VoidCallback onPop;
@@ -156,42 +157,11 @@ class EditContactScreen extends StatelessWidget {
   }
 
   Widget _buildTextField(String hintText, String initialValue, bool isEnabled) {
-    Icon? _getPrefixIcon() {
-      if (hintText.toLowerCase().contains('email')) {
-        return const Icon(Icons.email, color: Colors.grey);
-      } else if (hintText.toLowerCase().contains('contact') || hintText.toLowerCase().contains('phone')) {
-        return const Icon(Icons.phone, color: Colors.grey);
-      }
-      return null;
-    }
 
-    return Padding(
-      padding: isEnabled ? const EdgeInsets.symmetric(vertical: 8.0) : EdgeInsets.zero,
-      child: TextField(
-        controller: TextEditingController(text: initialValue),
-        enabled: isEnabled,
-        decoration: InputDecoration(
-          hintText: hintText,
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
-          hintStyle: const TextStyle(color: Colors.grey),
-          prefixIcon: _getPrefixIcon(),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Colors.red, width: 2.0),
-          ),
-        ),
-        style: const TextStyle(color: Colors.black),
-      ),
+    return  CustomTextFieldWidget(
+      hintText: hintText,
+      initialValue:initialValue,
+      isEnabled: true,
     );
   }
 
