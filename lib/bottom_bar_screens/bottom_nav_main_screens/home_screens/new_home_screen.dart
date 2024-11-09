@@ -1,16 +1,17 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profile_card_stack.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
-import '../../../common/app_text_style.dart';
-import '../../../common/colors.dart';
-import '../../../profile/main_profile_screen.dart';
-import '../../../testing.dart';
-import '../../../user_register_riverpods/riverpod/user_image_get_notifier.dart';
-import '../../bottom_nav_bar_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
+import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/profile/main_profile_screen.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'circularPercentIndicator.dart';
 
 class NewHomeScreen extends ConsumerStatefulWidget {
@@ -99,73 +100,76 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
       clipBehavior: Clip.none,
       alignment: Alignment.bottomCenter,
       children: [
-        Container(
-          height: 250,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            image: getImageApiProviderState.isLoading || isImageLoading
-                ? null
-                : DecorationImage(
-                    image: getImageApiProviderState.error != null ||
-                            getImageApiProviderState.data == null ||
-                            getImageApiProviderState.data!.images.isEmpty
-                        ? const AssetImage('assets/image/user1.png')
-                            as ImageProvider<Object>
-                        : MemoryImage(
-                            base64Decode(
-                              getImageApiProviderState.data!.images[0]
-                                  .toString()
-                                  .replaceAll('\n', '')
-                                  .replaceAll('\r', ''),
-                            ),
-                          ) as ImageProvider<Object>,
-                    fit: BoxFit.cover,
-                  ),
-          ),
-          child: getImageApiProviderState.isLoading || isImageLoading
-              ? const Center(child: CircularProgressIndicator())
-              : SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        if (getImageApiProviderState.isLoading || isImageLoading)
+          const SizedBox(
+            height: 250,
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else
+          Container(
+            height: 250,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              image: getImageApiProviderState.isLoading || isImageLoading
+                  ? null
+                  : DecorationImage(
+                      image: getImageApiProviderState.error != null ||
+                              getImageApiProviderState.data == null ||
+                              getImageApiProviderState.data!.images.isEmpty
+                          ? const AssetImage('assets/image/user1.png')
+                              as ImageProvider<Object>
+                          : MemoryImage(
+                              base64Decode(
+                                getImageApiProviderState.data!.images[0]
+                                    .toString()
+                                    .replaceAll('\n', '')
+                                    .replaceAll('\r', ''),
+                              ),
+                            ) as ImageProvider<
+                              Object>, // Use MemoryImage for fetched image
+                      fit: BoxFit.cover,
+                    ),
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Mano',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              '#d23543245',
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                          ],
+                        Text(
+                          getImageApiProviderState.data?.name ?? '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.menu, color: Colors.white),
-                          onPressed: () {
-                            // Updated drawer opening method
-                            _scaffoldKey.currentState?.openEndDrawer();
-                          },
+                        Text(
+                          '#${getImageApiProviderState.data?.uniqueId ?? ''}',
+                          style: const TextStyle(color: Colors.white70),
                         ),
                       ],
                     ),
-                  ),
+                    IconButton(
+                      icon: const Icon(Icons.menu, color: Colors.white),
+                      onPressed: () {
+                        _scaffoldKey.currentState?.openEndDrawer();
+                      },
+                    ),
+                  ],
                 ),
-        ),
+              ),
+            ),
+          ),
         Positioned(
-          bottom: -200,
-          left: 0,
-          right: 0,
-          child: _buildDailyRecommendations(context, ref),
-        ),
+            bottom: -200,
+            left: 0,
+            right: 0,
+            child: _buildDailyRecommendations(context, ref))
       ],
     );
   }
@@ -174,6 +178,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   Widget _buildPendingTasks() {
     // Your existing _buildPendingTasks code...
     final colors = [0xFF0D5986, 0xFFD6151A, 0xFFD65915, 0xFF7C590C];
+    final colorsBackground = [0xFFE7F6FF, 0xFFFFE4E4, 0xFFFDDACB, 0xFFFFF4E7];
     final strings = [
       'Accept\nReceived',
       'Interests\nReceived',
@@ -190,7 +195,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
               width: 60,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Color(colorsBackground[index]),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -416,47 +421,57 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               image: DecorationImage(
-                                image: MemoryImage(base64Decode(matching
-                                    .photos![0]
-                                    .toString()
-                                    .replaceAll('\n', '')
-                                    .replaceAll('\r', '')
-                                    .replaceAll(' ', ''))),
+                                image: MemoryImage(
+                                  base64Decode(
+                                    matching.photos![0]
+                                        .toString()
+                                        .replaceAll('\n', '')
+                                        .replaceAll('\r', '')
+                                        .replaceAll(' ', ''),
+                                  ),
+                                ),
                                 fit: BoxFit.cover,
                               ),
                             ),
                             child: Align(
                               alignment: Alignment.bottomCenter,
-                              child: Container(
-                                width: double.infinity,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 2),
-                                decoration: const BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(12),
-                                    bottomRight: Radius.circular(12),
-                                  ),
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(12),
+                                  bottomRight: Radius.circular(12),
                                 ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: matching.name,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
+                                child: BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 5, sigmaY: 4),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.3),
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8))),
+                                    width: double.infinity,
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          matching.name.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      TextSpan(
-                                        text: matching.age.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 8,
+                                        Text(
+                                          '${matching.age.toString()} Yrs',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
