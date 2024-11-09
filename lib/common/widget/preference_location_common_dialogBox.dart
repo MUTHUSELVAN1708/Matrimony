@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/colors.dart';
 
-class CustomPreferenceDropdownField extends StatefulWidget {
+class LocationDropdown extends StatefulWidget {
   final List<String> value;
   final String hint;
   final List<String>? items;
@@ -9,7 +9,7 @@ class CustomPreferenceDropdownField extends StatefulWidget {
   final bool isRequired;
   final bool showSearch;
 
-  CustomPreferenceDropdownField({
+  LocationDropdown({
     Key? key,
     required this.value,
     required this.hint,
@@ -20,11 +20,10 @@ class CustomPreferenceDropdownField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CustomPreferenceDropdownField> createState() =>
-      _CustomDropdownFieldState();
+  State<LocationDropdown> createState() => _LocationDropdownState();
 }
 
-class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
+class _LocationDropdownState extends State<LocationDropdown> {
   late List<String> selectedValues;
   List<String> filteredItems = [];
   String searchQuery = '';

@@ -15,7 +15,9 @@ class ProfileMainScreen extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           _buildProfileHeader(),
           _buildUpgradeCard(),
           Expanded(

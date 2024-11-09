@@ -67,10 +67,10 @@ class PartnerPreferenceConstData {
     'Doesn’t Matter'
   ];
   static const List<String> eatingHabitsOptions = [
+    'Doesn’t Matter',
     'Vegetarian',
-    'Non-Vegetarian',
-    'Eggetarian',
-    'Vegan'
+    'Non - Vegetarian',
+    'Eggetarian'
   ];
   static const List<String> drinkingHabitsOptions = [
     'Doesn’t Matter',

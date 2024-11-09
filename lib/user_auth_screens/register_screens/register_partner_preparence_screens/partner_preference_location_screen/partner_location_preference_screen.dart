@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
+import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
+import 'package:matrimony/common/widget/preference_location_common_dialogBox.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_star_details/user_star_details.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
@@ -16,9 +19,9 @@ class PartnerLocationScreen extends ConsumerStatefulWidget {
 }
 
 class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
-  List<String> selectedCountry = [];
-  List<String> selectedState = [];
-  List<String> selectedCity = [];
+  List<String>? selectedCountry;
+  List<String>? selectedState;
+  List<String>? selectedCity;
 
   final List<String> countries = ['India', 'Pakistan', 'USA', 'UK'];
   final Map<String, List<String>> states = {
@@ -33,8 +36,18 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
     'Delhi': ['New Delhi', 'Dwarka', 'Connaught Place'],
     'Punjab': ['Lahore', 'Faisalabad', 'Multan'],
     'California': ['Los Angeles', 'San Francisco', 'San Diego'],
-    // Add more states and cities as necessary
   };
+
+  @override
+  initState() {
+    super.initState();
+    getLocation();
+  }
+
+  Future<void> getLocation() async {
+    await Future.delayed(Duration.zero);
+    ref.read(locationProvider.notifier).getallCountryData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,38 +114,38 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
             const SizedBox(height: 16),
 
             // Country Dropdown
-            CustomPreferenceDropdownField(
-              value: selectedCountry,
+            AnyCustomPreferenceDropdown(
+              value: selectedCountry != null ? selectedCountry! : [],
               hint: "Country",
               items: countries,
               onChanged: (value) {
                 setState(() {
                   selectedCountry = value;
-                  selectedState = []; // Reset state when country changes
-                  selectedCity = []; // Reset city when country changes
+                  selectedState = null; // Reset state when country changes
+                  selectedCity = null; // Reset city when country changes
                 });
               },
             ),
             const SizedBox(height: 10),
 
             // State Dropdown
-            CustomPreferenceDropdownField(
-              value: selectedState,
+            AnyCustomPreferenceDropdown(
+              value: selectedState != null ? selectedState! : [],
               hint: "State",
               items:
                   selectedCountry != null ? states[selectedCountry!] ?? [] : [],
               onChanged: (value) {
                 setState(() {
                   selectedState = value;
-                  selectedCity = []; // Reset city when state changes
+                  selectedCity = null; // Reset city when state changes
                 });
               },
             ),
             const SizedBox(height: 10),
 
             // City Dropdown
-            CustomPreferenceDropdownField(
-              value: selectedCity,
+            AnyCustomPreferenceDropdown(
+              value: selectedCity != null ? selectedCity! : [],
               hint: "City",
               items: selectedState != null ? cities[selectedState!] ?? [] : [],
               onChanged: (value) {
@@ -149,18 +162,30 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  ref
-                      .read(preferenceInputProvider.notifier)
-                      .updatePreferenceInput(
-                          country: selectedCountry.toString(),
-                          states: selectedState.toString(),
-                          city: selectedCity.toString());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddStarDetailScreen(),
-                    ),
-                  );
+                  if (selectedCountry != null &&
+                      selectedState != null &&
+                      selectedCity != null) {
+                    ref
+                        .read(preferenceInputProvider.notifier)
+                        .updatePreferenceInput(
+                          country: selectedCountry![0],
+                          states: selectedState![0],
+                          city: selectedCity![0],
+                        );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddStarDetailScreen(),
+                      ),
+                    );
+                  } else {
+                    // Show a dialog or snackbar to alert the user to select all fields
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please select country, state, and city'),
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,

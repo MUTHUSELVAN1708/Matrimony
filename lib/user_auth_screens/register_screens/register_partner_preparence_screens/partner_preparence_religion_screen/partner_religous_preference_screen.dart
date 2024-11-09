@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
-import 'package:matrimony/common/widget/common_dialog_box.dart';
 import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
+import 'package:matrimony/common/widget/show_toastdialog.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/riverpod/religious_api_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_profesional_preference_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
@@ -83,7 +83,7 @@ class _PartnerReligiousPreferenceScreenState
   @override
   void initState() {
     super.initState();
-    // getReligious();
+    getReligious();
   }
 
   Future<void> getReligious() async {
@@ -156,45 +156,72 @@ class _PartnerReligiousPreferenceScreenState
                 ),
                 const SizedBox(height: 16),
 
-                CustomPreferenceDropdownField(
+                AnyCustomPreferenceDropdown(
                   value: selectedReligion,
                   hint: "Religion",
-                  //   items:  religionState.data!
-                  // .map((religiousModel) => religiousModel.religion)
-                  // .toList()  ?? [],
-                  items: religionList,
-                  onChanged: (value) {
+                  items: religionState.data != null
+                      ? religionState.data!
+                              .map((religiousModel) => religiousModel.religion)
+                              .toList() ??
+                          []
+                      : [],
+                  // items: religionList,
+                  onChanged: (value) async {
+                    await ref
+                        .read(religiousProvider.notifier)
+                        .getCasteData('1');
                     setState(() {
                       selectedReligion = value;
                     });
                   },
                 ),
-                const SizedBox(height: 10),
 
-                // Caste Dropdown
-                CustomPreferenceDropdownField(
-                  value: selectedCaste,
-                  hint: "Caste",
-                  items: casteList,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedCaste = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
+                selectedReligion.isEmpty
+                    ? SizedBox()
+                    : const SizedBox(height: 10),
 
-                // Sub Caste Dropdown
-                CustomPreferenceDropdownField(
-                  value: selectedSubCaste,
-                  hint: "SubCaste",
-                  items: subCasteList,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedSubCaste = value;
-                    });
-                  },
-                ),
+                selectedReligion.isEmpty
+                    ? SizedBox()
+                    : AnyCustomPreferenceDropdown(
+                        value: selectedCaste,
+                        hint: "Caste",
+                        items: religionState.casteList != null
+                            ? religionState.casteList!
+                                    .map((religiousModel) =>
+                                        religiousModel.caste)
+                                    .toList() ??
+                                []
+                            : [],
+                        onChanged: (value) async {
+                          await ref
+                              .read(religiousProvider.notifier)
+                              .getSubCasteData('32');
+                          setState(() {
+                            selectedCaste = value;
+                          });
+                        },
+                      ),
+                selectedReligion.isEmpty && selectedCaste.isEmpty
+                    ? SizedBox()
+                    : const SizedBox(height: 10),
+                selectedReligion.isEmpty && selectedCaste.isEmpty
+                    ? SizedBox()
+                    : CustomPreferenceDropdownField(
+                        value: selectedSubCaste,
+                        hint: "SubCaste",
+                        items: religionState.subCasteList != null
+                            ? religionState.subCasteList!
+                                    .map((subCasteModel) =>
+                                        subCasteModel.subCaste)
+                                    .toList() ??
+                                []
+                            : [],
+                        onChanged: (value) {
+                          setState(() {
+                            selectedSubCaste = value;
+                          });
+                        },
+                      ),
                 const SizedBox(height: 10),
 
                 // Star Dropdown
@@ -255,6 +282,11 @@ class _PartnerReligiousPreferenceScreenState
                               const PartnerProfessionalScreen(),
                         ),
                       );
+                      //                       ToastDialog.showToast(
+                      //   context,
+                      //   message: 'Something went wrong. Please try again.',
+                      //   isSuccess: false,
+                      // );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,

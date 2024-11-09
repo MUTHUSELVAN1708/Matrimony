@@ -17,6 +17,11 @@ class Api {
   static const String getAllMatches = '$baseUrl/allautomatch';
   static const String dailyRecommented = '$baseUrl/dailyRecommendation';
   static const String getReligious = '$baseUrl/getreligion';
+  static const String getcaste = '$baseUrl/getcaste';
+  static const String getSubcaste = '$baseUrl/getSubcaste';
+  static const String getallCountry = '$baseUrl/getallCountry';
+  static const String getState = '$baseUrl/getState';
+  static const String getcity = '$baseUrl/getcity';
   static const String getUserImage = '$baseUrl/userDetails';
   static const String passwordWithLogin = '$baseUrl/loginwithpassword';
 }
