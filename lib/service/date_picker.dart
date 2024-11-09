@@ -34,8 +34,8 @@ class DatePickerService {
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
               primary: AppColors.primaryButtonColor,
-              onPrimary: Colors.white,
-              surface: AppColors.primaryButtonColor,
+              onPrimary: AppColors.primaryButtonTextColor,
+              surface: AppColors.primaryButtonTextColor,
               onSurface: AppColors.black,
             ),
           ),

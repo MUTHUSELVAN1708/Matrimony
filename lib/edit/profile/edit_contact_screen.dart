@@ -4,7 +4,7 @@ import '../../common/colors.dart';
 import '../../common/widget/custom_text_field.dart';
 
 class EditContactScreen extends StatelessWidget {
-  final VoidCallback onPop;
+  final Function(bool value) onPop;
 
   const EditContactScreen({
     super.key,
@@ -27,7 +27,7 @@ class EditContactScreen extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    onPop();
+                    onPop(true);
                     Navigator.pop(context);
                   },
                   child: const Icon(

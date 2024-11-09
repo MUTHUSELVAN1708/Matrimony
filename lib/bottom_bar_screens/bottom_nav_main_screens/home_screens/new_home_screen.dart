@@ -1,20 +1,17 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profile_card_stack.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/home_screen_circle_precentage_integator.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/home_screen_profile_stack_slide.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/matches_screen.dart';
-import 'package:matrimony/common/app_text_style.dart';
-import 'package:matrimony/common/colors.dart';
-import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
-
-import '../../../profile/profile.dart';
+import '../../../common/app_text_style.dart';
+import '../../../common/colors.dart';
+import '../../../profile/main_profile_screen.dart';
+import '../../../testing.dart';
+import '../../../user_register_riverpods/riverpod/user_image_get_notifier.dart';
+import '../../bottom_nav_bar_screen.dart';
+import 'circularPercentIndicator.dart';
 
 class NewHomeScreen extends ConsumerStatefulWidget {
   const NewHomeScreen({super.key});
@@ -27,6 +24,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   bool isAllMatchesLoading = true;
   bool isImageLoading = true;
   bool isDailyRecommendLoading = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // Add this line
 
   @override
   void initState() {
@@ -71,6 +69,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // Add this line
+      endDrawer: const ProfileMainScreen(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,74 +105,73 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             image: getImageApiProviderState.isLoading || isImageLoading
                 ? null
                 : DecorationImage(
-                    image: getImageApiProviderState.error != null ||
-                            getImageApiProviderState.data == null ||
-                            getImageApiProviderState.data!.images.isEmpty
-                        ? const AssetImage('assets/image/user1.png')
-                            as ImageProvider<Object>
-                        : MemoryImage(
-                            base64Decode(
-                              getImageApiProviderState.data!.images[0]
-                                  .toString()
-                                  .replaceAll('\n', '')
-                                  .replaceAll('\r', ''),
-                            ),
-                          ) as ImageProvider<
-                            Object>, // Use MemoryImage for fetched image
-                    fit: BoxFit.cover,
-                  ),
+              image: getImageApiProviderState.error != null ||
+                  getImageApiProviderState.data == null ||
+                  getImageApiProviderState.data!.images.isEmpty
+                  ? const AssetImage('assets/image/user1.png')
+              as ImageProvider<Object>
+                  : MemoryImage(
+                base64Decode(
+                  getImageApiProviderState.data!.images[0]
+                      .toString()
+                      .replaceAll('\n', '')
+                      .replaceAll('\r', ''),
+                ),
+              ) as ImageProvider<Object>,
+              fit: BoxFit.cover,
+            ),
           ),
           child: getImageApiProviderState.isLoading || isImageLoading
               ? const Center(child: CircularProgressIndicator())
               : SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Mano',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              '#d23543245',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ],
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Mano',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.menu, color: Colors.white),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const EditProfileScreen()));
-                          },
-                        ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        '#d23543245',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ],
                   ),
-                ),
+                  IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.white),
+                    onPressed: () {
+                      // Updated drawer opening method
+                      _scaffoldKey.currentState?.openEndDrawer();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         Positioned(
-            bottom: -200,
-            left: 0,
-            right: 0,
-            child: _buildDailyRecommendations(context, ref))
+          bottom: -200,
+          left: 0,
+          right: 0,
+          child: _buildDailyRecommendations(context, ref),
+        ),
       ],
     );
   }
 
+  // Rest of your existing code remains the same...
   Widget _buildPendingTasks() {
+    // Your existing _buildPendingTasks code...
     final colors = [0xFF0D5986, 0xFFD6151A, 0xFFD65915, 0xFF7C590C];
     final strings = [
       'Accept\nReceived',
@@ -184,7 +183,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
         4,
-        (index) => Column(
+            (index) => Column(
           children: [
             Container(
               width: 60,
@@ -203,7 +202,6 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // const SizedBox(height: 4),
                   Text(
                     strings[index],
                     textAlign: TextAlign.center,
@@ -231,18 +229,16 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           width: double.infinity,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), // Adjust the radius as needed
-              topRight: Radius.circular(20), // Adjust the radius as needed
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            color: Colors.white, // Background color for the container
+            color: Colors.white,
           ),
           margin: const EdgeInsets.only(top: 50, bottom: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -260,95 +256,11 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 width: MediaQuery.of(context).size.width - 20,
                 child: dailyRecommentsState.error != null
                     ? Center(
-                        child: Text(dailyRecommentsState.error.toString()),
-                      )
+                  child: Text(dailyRecommentsState.error.toString()),
+                )
                     : dailyRecommentsState.isLoading || isDailyRecommendLoading
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.all(16),
-                            itemCount:
-                                dailyRecommentsState.dailyRecommentList!.length,
-                            itemBuilder: (context, index) {
-                              final dailyRecommentData = dailyRecommentsState
-                                  .dailyRecommentList![index];
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Container(
-                                        width: 120,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.25 /
-                                                2,
-                                        decoration: BoxDecoration(
-                                          color: Colors.pink[200],
-                                        ),
-                                        child: Image.memory(
-                                          base64Decode(dailyRecommentData
-                                              .photos![0]
-                                              .toString()
-                                              .replaceAll('\n', '')
-                                              .replaceAll('\r', '')),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Container(
-                                      width: 120,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 2,
-                                            offset: Offset(0, 1),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              dailyRecommentData.name
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                color: Colors
-                                                    .red, // Customized color
-                                                fontSize:
-                                                    14, // Adjusted font size
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            Text(
-                                              '${dailyRecommentData.age.toString()} Yrs',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize:
-                                                    10, // Adjusted font size
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildRecommendationsList(dailyRecommentsState, context),
               ),
             ],
           ),
@@ -363,6 +275,82 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     );
   }
 
+  Widget _buildRecommendationsList(dynamic dailyRecommentsState, BuildContext context) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.all(16),
+      itemCount: dailyRecommentsState.dailyRecommentList!.length,
+      itemBuilder: (context, index) {
+        final dailyRecommentData = dailyRecommentsState.dailyRecommentList![index];
+        return Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 120,
+                  height: MediaQuery.of(context).size.height * 0.25 / 2,
+                  decoration: BoxDecoration(
+                    color: Colors.pink[200],
+                  ),
+                  child: Image.memory(
+                    base64Decode(
+                      dailyRecommentData.photos![0]
+                          .toString()
+                          .replaceAll('\n', '')
+                          .replaceAll('\r', ''),
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: 120,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 2,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        dailyRecommentData.name.toString(),
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${dailyRecommentData.age.toString()} Yrs',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 10,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
   Widget _buildAllMatches(WidgetRef ref) {
     final matingData = ref.watch(allMatchesProvider);
     return Container(
@@ -384,12 +372,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const BottomNavBarScreen(
-                                index: 1,
-                              )));
+                            index: 1,
+                          )));
                 },
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                   decoration: const BoxDecoration(
                     color: AppColors.primaryButtonColor,
                     borderRadius: BorderRadius.all(Radius.circular(6)),
@@ -397,7 +385,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   child: Text(
                     'View All',
                     style:
-                        AppTextStyles.primarybuttonText.copyWith(fontSize: 12),
+                    AppTextStyles.primarybuttonText.copyWith(fontSize: 12),
                   ),
                 ),
               ),
@@ -411,66 +399,66 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             child: matingData.error != null
                 ? Center(child: Text(matingData.error.toString()))
                 : matingData.isLoading || isAllMatchesLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: matingData.allMatchList!.length,
-                        itemBuilder: (context, index) {
-                          final matching = matingData.allMatchList![index];
-                          return Container(
-                            width: 100,
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: MemoryImage(base64Decode(matching
-                                    .photos![0]
-                                    .toString()
-                                    .replaceAll('\n', '')
-                                    .replaceAll('\r', '')
-                                    .replaceAll(' ', ''))),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                width: double.infinity,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 2),
-                                decoration: const BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(12),
-                                    bottomRight: Radius.circular(12),
-                                  ),
-                                ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: matching.name,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: matching.age.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 8,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: matingData.allMatchList!.length,
+              itemBuilder: (context, index) {
+                final matching = matingData.allMatchList![index];
+                return Container(
+                  width: 100,
+                  margin: const EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: MemoryImage(base64Decode(matching
+                          .photos![0]
+                          .toString()
+                          .replaceAll('\n', '')
+                          .replaceAll('\r', '')
+                          .replaceAll(' ', ''))),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: double.infinity,
+                      padding:
+                      const EdgeInsets.symmetric(vertical: 2),
+                      decoration: const BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
+                        ),
                       ),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: matching.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                            TextSpan(
+                              text: matching.age.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           const SizedBox(
             height: 10,
@@ -613,51 +601,51 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           children: [
             Expanded(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Upgrade now to find your\nperfect life partner\nfaster than ever!',
-                  style: TextStyle(color: Colors.red.shade700, fontSize: 20),
-                ),
-                const Text(
-                    'Take the Next Step Towards Your\nHappily Even After!',
-                    style: TextStyle(color: Colors.black, fontSize: 15)),
-                const SizedBox(
-                  height: 5,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PlanUpgradeScreen()),
-                    );
-                  },
-                  child: Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                      // border: Border.all(color: Colors.black38,),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: const Offset(
-                              0, 2), // Add a slight shadow for a raised effect
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Upgrade now to find your\nperfect life partner\nfaster than ever!',
+                      style: TextStyle(color: Colors.red.shade700, fontSize: 20),
+                    ),
+                    const Text(
+                        'Take the Next Step Towards Your\nHappily Even After!',
+                        style: TextStyle(color: Colors.black, fontSize: 15)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PlanUpgradeScreen()),
+                        );
+                      },
+                      child: Container(
+                        width: 100,
+                        decoration: BoxDecoration(
+                          // border: Border.all(color: Colors.black38,),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: const Offset(
+                                  0, 2), // Add a slight shadow for a raised effect
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Upgrade Now',
-                        style: TextStyle(color: Colors.black54, fontSize: 12),
+                        child: const Center(
+                          child: Text(
+                            'Upgrade Now',
+                            style: TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                )
-              ],
-            )),
+                    )
+                  ],
+                )),
             const CircleAvatar(
               radius: 60,
               backgroundImage: AssetImage('assets/image/successimage.png'),

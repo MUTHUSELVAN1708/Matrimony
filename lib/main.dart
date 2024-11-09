@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'package:matrimony/inital_screen.dart';
+import 'package:matrimony/profile/main_profile_screen.dart';
+import 'package:matrimony/profile/profile.dart';
 import 'package:matrimony/user_auth_screens/otp_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_basic_preference_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,10 +33,10 @@ class MyApp extends StatelessWidget {
                 home: RegisterPartnerBasicPreferenceScreen(),
               );
             } else {
-              return MaterialApp(
+              return const MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: RegisterPartnerBasicPreferenceScreen(),
+                home: BottomNavBarScreen(),
               );
             }
           }
