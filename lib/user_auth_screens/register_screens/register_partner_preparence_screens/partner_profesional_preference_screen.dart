@@ -81,21 +81,18 @@ class _PartnerProfessionalScreenState
   ];
 
   final List<String> incomeList = [
-    'Less than 50k',
-    '50k - 1L',
-    '1L - 5L',
-    '5L - 10L',
-    'More than 10L',
-    '10L - 20L',
-    '20L - 50L',
-    '50L - 1 Cr',
-    '1 Cr - 2 Cr',
-    '2 Cr - 5 Cr',
-    '5 Cr - 10 Cr',
-    '10 Cr - 20 Cr',
-    '20 Cr - 50 Cr',
-    '50 Cr - 100 Cr',
-    'More than 100 Cr',
+    '₹ 1 lakh & below',
+    '₹ 1 lakh - ₹ 2 lakh',
+    '₹ 2 lakh - ₹ 3 lakh',
+    '₹ 3 lakh - ₹ 5 lakh',
+    '₹ 5 lakh - ₹ 7 lakh',
+    '₹ 7 lakh - ₹ 10 lakh',
+    '₹ 10 lakh - ₹ 15 lakh',
+    '₹ 15 lakh - ₹ 20 lakh',
+    '₹ 20 lakh - ₹ 30 lakh',
+    '₹ 30 lakh - ₹ 40 lakh',
+    '₹ 40 lakh - ₹ 50 lakh',
+    '₹ 50 lakh & above',
   ];
 
   @override
