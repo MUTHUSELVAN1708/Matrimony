@@ -22,6 +22,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   FocusNode loginButton = FocusNode();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +100,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   focusNode: Password,
                   onSubmitted: (value) =>
                       FocusScope.of(context).requestFocus(loginButton),
-                  obscureText: true,
+                  obscureText: _obscureText,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: _togglePasswordVisibility,
+                    ),
                     hintText: 'Enter Your Password',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),

@@ -81,7 +81,6 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
 
     try {
       final int userId = await SharedPrefHelper.getUserId() ?? 1;
-      print('Fetching data for user ID: $userId');
 
       final response = await http.post(
         Uri.parse(Api.dailyRecommented),
@@ -93,18 +92,15 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
           "userId": userId,
         }),
       );
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as List<dynamic>;
         final List<DailyRecomment> dailyRecommentList = data.map((item) {
           return DailyRecomment.fromJson(item as Map<String, dynamic>);
         }).toList();
-        print(dailyRecommentList.length);
 
         state = state.copyWith(
             isLoading: false, dailyRecommentList: dailyRecommentList);
-        print('Fetched daily recommendations: $dailyRecommentList');
       } else {
         state = state.copyWith(
           isLoading: false,

@@ -122,8 +122,8 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                               searchQuery = value;
                               filteredItems = widget.items!
                                   .where((item) => item
-                                  .toLowerCase()
-                                  .contains(searchQuery.toLowerCase()))
+                                      .toLowerCase()
+                                      .contains(searchQuery.toLowerCase()))
                                   .toList();
                             });
                           },
@@ -142,8 +142,8 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: (widget.showSearch
-                              ? filteredItems.length
-                              : widget.items!.length) +
+                                  ? filteredItems.length
+                                  : widget.items!.length) +
                               (isSingleSelection ? 0 : 1),
                           itemBuilder: (context, index) {
                             if (!isSingleSelection && index == 0) {
@@ -158,16 +158,16 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                                 },
                                 leading: isSelectAll
                                     ? const Icon(
-                                  Icons.radio_button_checked_outlined,
-                                  color: Colors.red,
-                                )
+                                        Icons.radio_button_checked_outlined,
+                                        color: Colors.red,
+                                      )
                                     : const Icon(Icons.circle_outlined),
                                 title: const Text("Select All"),
                               );
                             }
 
                             final itemIndex =
-                            isSingleSelection ? index : index - 1;
+                                isSingleSelection ? index : index - 1;
                             final currentItem = widget.showSearch
                                 ? filteredItems[itemIndex]
                                 : widget.items![itemIndex];
@@ -182,7 +182,7 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                                 onChanged: (String? value) {
                                   setState(() {
                                     selectedValues =
-                                    value != null ? [value] : [];
+                                        value != null ? [value] : [];
                                   });
                                 },
                                 activeColor: Colors.red,
@@ -191,9 +191,9 @@ class _CustomDropdownFieldState extends State<CustomPreferenceDropdownField> {
                               return ListTile(
                                 leading: selectedValues.contains(currentItem)
                                     ? const Icon(
-                                  Icons.radio_button_checked,
-                                  color: Colors.red,
-                                )
+                                        Icons.radio_button_checked,
+                                        color: Colors.red,
+                                      )
                                     : const Icon(Icons.circle_outlined),
                                 title: Text(currentItem),
                                 onTap: () {
