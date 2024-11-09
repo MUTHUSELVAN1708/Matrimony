@@ -6,8 +6,7 @@ import 'package:matrimony/common/local_storage.dart';
 import 'package:equatable/equatable.dart';
 
 class UserImageModel extends Equatable {
-  final int id;
-  final int userId;
+  final String uniqueId;
   final List<String> images;
   final bool paymentStatus;
   final String name;
@@ -15,15 +14,13 @@ class UserImageModel extends Equatable {
   const UserImageModel({
     required this.paymentStatus,
     required this.name,
-    required this.id,
-    required this.userId,
+    required this.uniqueId,
     required this.images,
   });
 
   factory UserImageModel.fromJson(Map<String, dynamic> json) {
     return UserImageModel(
-        id: json['id'] as int,
-        userId: json['userId'] as int,
+        uniqueId: json['uniqueId'] as String,
         images: List<String>.from(json['images'] as List<dynamic>),
         paymentStatus: json['paymentStatus'] as bool,
         name: json['name'] as String);
@@ -31,8 +28,7 @@ class UserImageModel extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'userId': userId,
+      'uniqueId': uniqueId,
       'images': images,
       'paymentStatus': paymentStatus,
       'name': name
@@ -40,15 +36,13 @@ class UserImageModel extends Equatable {
   }
 
   UserImageModel copyWith({
-    int? id,
-    int? userId,
+    String? uniqueId,
     List<String>? images,
     bool? paymentStatus,
     String? name,
   }) {
     return UserImageModel(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
+      uniqueId: uniqueId ?? this.uniqueId,
       images: images ?? this.images,
       paymentStatus: paymentStatus ?? this.paymentStatus,
       name: name ?? this.name,
@@ -56,7 +50,7 @@ class UserImageModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, userId, images, paymentStatus, name];
+  List<Object?> get props => [uniqueId, images, paymentStatus, name];
 }
 
 class GetImageState {
@@ -101,9 +95,7 @@ class GetImageApiNotifier extends StateNotifier<GetImageState> {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('Name ');
         final userImageData = UserImageModel.fromJson(jsonResponse);
-        print(userImageData.name);
         state = state.copyWith(
           isLoading: false,
           data: userImageData,
