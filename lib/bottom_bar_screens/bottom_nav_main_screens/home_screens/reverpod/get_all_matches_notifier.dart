@@ -72,8 +72,7 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final int? userId = await SharedPrefHelper.getUserId() ?? 1;
-      print('Fetching data for user ID: $userId');
+      final int? userId = await SharedPrefHelper.getUserId();
 
       final response = await http.post(
         Uri.parse(Api.getAllMatches),
@@ -85,7 +84,6 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
           "userId": userId,
         }),
       );
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as List<dynamic>;
@@ -93,10 +91,14 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
         final List<Matches> matchList = data.map((item) {
           return Matches.fromJson(item as Map<String, dynamic>);
         }).toList();
-        print(matchList.length);
-
-        state = state.copyWith(isLoading: false, allMatchList: matchList);
-        print('Fetched matches: $matchList');
+        if (matchList.isEmpty) {
+          state = state.copyWith(
+            isLoading: false,
+            error: 'No Matches Available',
+          );
+        } else {
+          state = state.copyWith(isLoading: false, allMatchList: matchList);
+        }
       } else {
         state = state.copyWith(
           isLoading: false,
@@ -106,7 +108,7 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: 'An error occurred: $e',
+        error: 'No Matches Available',
       );
     }
   }

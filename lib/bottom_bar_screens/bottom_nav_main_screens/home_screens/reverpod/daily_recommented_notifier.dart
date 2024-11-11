@@ -80,7 +80,7 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final int userId = await SharedPrefHelper.getUserId() ?? 1;
+      final int? userId = await SharedPrefHelper.getUserId();
 
       final response = await http.post(
         Uri.parse(Api.dailyRecommented),
@@ -89,7 +89,7 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
           'AppId': '1',
         },
         body: jsonEncode({
-          "userId": 3,
+          "userId": userId,
         }),
       );
 
@@ -98,9 +98,15 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
         final List<DailyRecomment> dailyRecommentList = data.map((item) {
           return DailyRecomment.fromJson(item as Map<String, dynamic>);
         }).toList();
-
-        state = state.copyWith(
-            isLoading: false, dailyRecommentList: dailyRecommentList);
+        if (dailyRecommentList.isEmpty) {
+          state = state.copyWith(
+            isLoading: false,
+            error: 'No Daily Recommendation Available',
+          );
+        } else {
+          state = state.copyWith(
+              isLoading: false, dailyRecommentList: dailyRecommentList);
+        }
       } else {
         state = state.copyWith(
           isLoading: false,
@@ -110,7 +116,7 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: 'An error occurred: $e',
+        error: 'No Daily Recommendation Available',
       );
     }
   }
