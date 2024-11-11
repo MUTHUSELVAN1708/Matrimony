@@ -45,6 +45,7 @@ dependencies:
   fluttertoast: ^8.2.4
   equatable:
   cached_network_image: ^3.4.1
+  country_picker: ^2.0.25
 
 dev_dependencies:
   flutter_test:
