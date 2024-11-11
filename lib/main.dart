@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
                 snapshot.data != null &&
                 snapshot.data!.isNotEmpty) {
               // Token is present, navigate to BottomNavScreen
-              return const MaterialApp(
+              return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: RegisterPartnerBasicPreferenceScreen(),
+                home: InitialScreen(),
               );
             } else {
               return const MaterialApp(

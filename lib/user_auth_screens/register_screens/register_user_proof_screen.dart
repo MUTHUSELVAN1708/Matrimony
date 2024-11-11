@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
-import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_add_success_screen';
+import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_add_success_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_government_proof_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/proof_image_picker_notifier.dart';
 
@@ -170,7 +170,7 @@ class _RegisterUserGovernmentProofState
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                RegisterUserGovernmentProofSuccessScreen()),
+                                const RegisterUserGovernmentProofSuccessScreen()),
                         (Route<dynamic> route) =>
                             false, // Removes all previous routes
                       );
