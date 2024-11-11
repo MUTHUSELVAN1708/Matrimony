@@ -136,7 +136,7 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
                       height: 155,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             currentProfile['name']!,

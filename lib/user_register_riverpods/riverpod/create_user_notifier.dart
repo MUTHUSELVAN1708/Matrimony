@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/user_register_riverpods/service/register_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,7 +82,9 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
 
     try {
       final response = await _service.otpVerificationApi(otp!, phoneNo!);
-
+      if (!response) {
+        return false;
+      }
       state = RegisterState(
           isLoading: false,
           error: null,

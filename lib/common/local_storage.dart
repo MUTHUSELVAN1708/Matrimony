@@ -35,4 +35,10 @@ class SharedPrefHelper {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('education');
   }
+
+  static Future<void> removeUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('userId');
+    prefs.remove('token');
+  }
 }
