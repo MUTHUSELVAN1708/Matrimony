@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
-import 'package:matrimony/common/widget/prefarence_height_comment_box.dart';
-import 'package:matrimony/common/widget/preference_age_dialogBox.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/common/widget/show_toastdialog.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/common_custom_optional_dropDown.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/partner_religous_preference_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
@@ -159,7 +160,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  CustomPreferenceDropdownField(
+                  AnyCustomPreferenceDropdown(
                     value: selectedMotherTongue,
                     hint: 'Mother Tongue',
                     items: PartnerPreferenceConstData.motherTongueOptions,
@@ -170,7 +171,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  AnyCustomPreferenceDropdown(
+                  PreferenceOptionalCustomDropdown(
                     value: selectedPhysicalStatus,
                     hint: 'Physical Status',
                     items: PartnerPreferenceConstData.physicalStatusOptions,
@@ -181,7 +182,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  AnyCustomPreferenceDropdown(
+                  PreferenceOptionalCustomDropdown(
                     value: selectedEatingHabits,
                     hint: 'Eating Habits(Optional)',
                     items: PartnerPreferenceConstData.eatingHabitsOptions,
@@ -192,7 +193,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  AnyCustomPreferenceDropdown(
+                  PreferenceOptionalCustomDropdown(
                     value: selectedDrinkingHabits,
                     hint: 'Drinking Habits(Optional)',
                     items: PartnerPreferenceConstData.drinkingHabitsOptions,
@@ -203,7 +204,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  AnyCustomPreferenceDropdown(
+                  PreferenceOptionalCustomDropdown(
                     value: selectedSmokingHabits,
                     hint: 'Smoking Habits(Optional)',
                     items: PartnerPreferenceConstData.smokingHabitsOptions,

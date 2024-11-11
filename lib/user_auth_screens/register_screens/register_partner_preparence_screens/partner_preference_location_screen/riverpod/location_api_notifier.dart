@@ -6,60 +6,59 @@ import 'package:matrimony/common/api_list.dart';
 
 class Country {
   final int id;
-  final String name;
+  final String countrys;
 
-  Country({required this.id, required this.name});
+  Country({required this.id, required this.countrys});
 
   factory Country.fromJson(Map<String, dynamic> json) {
     return Country(
       id: json['id'],
-      name: json['name'],
+      countrys: json['country'],
     );
   }
 }
 
 class StateModel {
   final int id;
-  final String name;
+  final String states;
+  final int countryId;
 
-  StateModel({required this.id, required this.name});
+  StateModel({required this.id, required this.states, required this.countryId});
 
   factory StateModel.fromJson(Map<String, dynamic> json) {
     return StateModel(
-      id: json['id'],
-      name: json['name'],
-    );
+        id: json['id'], states: json['state'], countryId: json['countryId']);
   }
 }
 
 class City {
   final int id;
-  final String name;
+  final String citys;
+  final int stateId;
 
-  City({required this.id, required this.name});
+  City({required this.id, required this.citys, required this.stateId});
 
   factory City.fromJson(Map<String, dynamic> json) {
-    return City(
-      id: json['id'],
-      name: json['name'],
-    );
+    return City(id: json['id'], citys: json['city'], stateId: json['stateId']);
   }
 }
 
 class CountryState extends Equatable {
   final bool isLoading;
-  final List<Country>? countryList;
-  final List<StateModel>? stateList;
-  final List<City>? cityList;
+  final List<Country> countryList;
+  final List<StateModel> stateList;
+  final List<City> cityList;
   final String? errorMessage;
 
-  const CountryState({
+  CountryState({
     this.isLoading = false,
-    this.countryList,
-    this.stateList,
-    this.cityList,
+    List<Country>? countryList,
+    List<StateModel>? stateList,
+    List<City>? cityList,
     this.errorMessage,
-  });
+  })  : countryList = countryList ?? [],
+        stateList = stateList ?? [],
+        cityList = cityList ?? [];
 
   CountryState copyWith({
     bool? isLoading,
@@ -78,12 +77,17 @@ class CountryState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [isLoading, countryList, errorMessage, stateList, cityList];
+  List<Object?> get props => [
+        isLoading,
+        countryList,
+        stateList,
+        cityList,
+        errorMessage,
+      ];
 }
 
 class CountryNotifier extends StateNotifier<CountryState> {
-  CountryNotifier() : super(const CountryState());
+  CountryNotifier() : super(CountryState());
 
   Future<void> getallCountryData() async {
     state = state.copyWith(isLoading: true);
@@ -122,7 +126,7 @@ class CountryNotifier extends StateNotifier<CountryState> {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'casteId': countryId}),
+        body: jsonEncode({'countryId': countryId}),
       );
       print(response.statusCode);
 
@@ -147,7 +151,7 @@ class CountryNotifier extends StateNotifier<CountryState> {
     }
   }
 
-  Future<void> getCityData(int cityId) async {
+  Future<void> getCityData(int stateId) async {
     state = state.copyWith(isLoading: true);
 
     try {
@@ -156,7 +160,7 @@ class CountryNotifier extends StateNotifier<CountryState> {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'casteId': cityId}),
+        body: jsonEncode({'stateId': stateId}),
       );
       print(response.statusCode);
 

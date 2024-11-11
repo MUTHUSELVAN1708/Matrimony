@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:matrimony/common/widget/common_dialog_box.dart';
-import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
-import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
-import 'package:matrimony/common/widget/preference_location_common_dialogBox.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/location_widget/common_location_dropdown.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_star_details/user_star_details.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
@@ -19,24 +16,9 @@ class PartnerLocationScreen extends ConsumerStatefulWidget {
 }
 
 class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
-  List<String>? selectedCountry;
-  List<String>? selectedState;
-  List<String>? selectedCity;
-
-  final List<String> countries = ['India', 'Pakistan', 'USA', 'UK'];
-  final Map<String, List<String>> states = {
-    'India': ['Maharashtra', 'Karnataka', 'Delhi'],
-    'Pakistan': ['Punjab', 'Sindh', 'Khyber Pakhtunkhwa'],
-    'USA': ['California', 'New York', 'Texas'],
-    'UK': ['England', 'Scotland', 'Wales'],
-  };
-  final Map<String, List<String>> cities = {
-    'Maharashtra': ['Mumbai', 'Pune', 'Nagpur'],
-    'Karnataka': ['Bangalore', 'Mysore', 'Mangalore'],
-    'Delhi': ['New Delhi', 'Dwarka', 'Connaught Place'],
-    'Punjab': ['Lahore', 'Faisalabad', 'Multan'],
-    'California': ['Los Angeles', 'San Francisco', 'San Diego'],
-  };
+  List<String>? selectedCountry = [];
+  List<String>? selectedState = [];
+  List<String>? selectedCity = [];
 
   @override
   initState() {
@@ -52,6 +34,7 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
   @override
   Widget build(BuildContext context) {
     final userRegisterState = ref.watch(partnerPreferenceProvider);
+    final countryState = ref.watch(locationProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -112,48 +95,96 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            PreferenceLocationDropdown(
+                showSearch: true,
+                value: selectedCountry != null ? selectedCountry! : [],
+                hint: "Country",
+                // items: countries,
+                items: countryState.countryList.map((e) => e.countrys).toList(),
+                onChanged: (value) async {
+                  // Update the selected country first
+                  setState(() {
+                    selectedCountry = value;
+                    selectedState!.clear();
+                    selectedCity!.clear();
+                  });
 
-            // Country Dropdown
-            AnyCustomPreferenceDropdown(
-              value: selectedCountry != null ? selectedCountry! : [],
-              hint: "Country",
-              items: countries,
-              onChanged: (value) {
-                setState(() {
-                  selectedCountry = value;
-                  selectedState = null; // Reset state when country changes
-                  selectedCity = null; // Reset city when country changes
-                });
-              },
-            ),
-            const SizedBox(height: 10),
+                  int? stateId;
+                  for (var e in countryState.countryList) {
+                    if (e.countrys == selectedCountry![0]) {
+                      stateId = e.id;
+                      break;
+                    }
+                  }
+
+                  print("Selected State ID: $stateId");
+
+                  // Ensure stateId is not null before calling getStateData
+                  if (stateId != null) {
+                    await ref
+                        .read(locationProvider.notifier)
+                        .getStateData(stateId);
+                  } else {
+                    print("No state ID found for the selected country.");
+                  }
+                }),
+            selectedCountry!.isEmpty ||
+                    countryState.stateList.isEmpty ||
+                    selectedCountry?[0] == 'Any'
+                ? SizedBox()
+                : const SizedBox(height: 10),
 
             // State Dropdown
-            AnyCustomPreferenceDropdown(
-              value: selectedState != null ? selectedState! : [],
-              hint: "State",
-              items:
-                  selectedCountry != null ? states[selectedCountry!] ?? [] : [],
-              onChanged: (value) {
-                setState(() {
-                  selectedState = value;
-                  selectedCity = null; // Reset city when state changes
-                });
-              },
-            ),
-            const SizedBox(height: 10),
+            selectedCountry!.isEmpty ||
+                    countryState.stateList.isEmpty ||
+                    selectedCountry?[0] == 'Any'
+                ? SizedBox()
+                : PreferenceLocationDropdown(
+                    showSearch: true,
+                    value: selectedState != null ? selectedState! : [],
+                    hint: "State",
+                    items: countryState.stateList.map((e) => e.states).toList(),
+                    onChanged: (value) async {
+                      setState(() {
+                        selectedState = value;
+                        print(selectedState);
+                        selectedCity!.clear();
+                      });
+                      int? stateId;
+                      for (var e in countryState.stateList) {
+                        if (e.states == selectedState![0]) {
+                          stateId = e.id;
+                          break;
+                        }
+                      }
 
-            // City Dropdown
-            AnyCustomPreferenceDropdown(
-              value: selectedCity != null ? selectedCity! : [],
-              hint: "City",
-              items: selectedState != null ? cities[selectedState!] ?? [] : [],
-              onChanged: (value) {
-                setState(() {
-                  selectedCity = value;
-                });
-              },
-            ),
+                      print("Selected State ID: $stateId");
+                      if (stateId != null) {
+                        await ref
+                            .read(locationProvider.notifier)
+                            .getCityData(stateId);
+                      } else {
+                        print("No state ID found for the selected country.");
+                      }
+                    },
+                  ),
+            selectedState!.isEmpty || countryState.cityList.isEmpty
+                ? SizedBox()
+                : SizedBox(height: 10),
+
+            selectedState!.isEmpty || countryState.cityList.isEmpty
+                ? SizedBox()
+                : PreferenceLocationDropdown(
+                    showSearch: true,
+                    value: selectedCity != null ? selectedCity! : [],
+                    hint: "City",
+                    items: countryState.cityList.map((e) => e.citys).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCity = value;
+                      });
+                    },
+                  ),
             const SizedBox(height: 25),
 
             // Next Button
@@ -162,15 +193,18 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  if (selectedCountry != null &&
-                      selectedState != null &&
-                      selectedCity != null) {
+                  if (selectedCountry != null && selectedCountry!.isNotEmpty) {
                     ref
                         .read(preferenceInputProvider.notifier)
                         .updatePreferenceInput(
-                          country: selectedCountry![0],
-                          states: selectedState![0],
-                          city: selectedCity![0],
+                          country: selectedCountry!.isNotEmpty
+                              ? selectedCountry![0]
+                              : '',
+                          states: selectedState!.isNotEmpty
+                              ? selectedState![0]
+                              : '',
+                          city:
+                              selectedCity!.isNotEmpty ? selectedCity![0] : '',
                         );
                     Navigator.push(
                       context,
@@ -179,7 +213,6 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                       ),
                     );
                   } else {
-                    // Show a dialog or snackbar to alert the user to select all fields
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Please select country, state, and city'),

@@ -78,19 +78,18 @@ class SubCasteModel extends Equatable {
   List<Object?> get props => [id, subCaste, casteId];
 }
 
-// Modify ReligiousState to use a list of ReligiousModel
 class ReligiousState extends Equatable {
   final bool isLoading;
-  final List<ReligiousModel>? data;
-  final List<CasteModel>? casteList;
-  final List<SubCasteModel>? subCasteList;
+  final List<ReligiousModel> data;
+  final List<CasteModel> casteList;
+  final List<SubCasteModel> subCasteList;
   final String? errorMessage;
 
-  const ReligiousState({
+  ReligiousState({
     this.isLoading = false,
-    this.data,
-    this.casteList,
-    this.subCasteList,
+    this.data = const [],
+    this.casteList = const [],
+    this.subCasteList = const [],
     this.errorMessage,
   });
 
@@ -116,7 +115,7 @@ class ReligiousState extends Equatable {
 }
 
 class ReligiousNotifier extends StateNotifier<ReligiousState> {
-  ReligiousNotifier() : super(const ReligiousState());
+  ReligiousNotifier() : super(ReligiousState());
 
   Future<void> getReligiousData() async {
     state = state.copyWith(isLoading: true);
