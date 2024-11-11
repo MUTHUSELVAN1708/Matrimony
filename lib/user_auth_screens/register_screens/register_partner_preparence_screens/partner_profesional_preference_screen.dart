@@ -6,7 +6,8 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
 import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
-import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/partner_location_preference_screen.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/location_widget/partner_location_preference_screen.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/riverpod/religious_api_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
@@ -27,21 +28,19 @@ class _PartnerProfessionalScreenState
   List<String> selectedIncome = [];
 
   List<String> educationList = [
-    'High School',
+    '10th',
+    '12th',
     'Bachelor\'s Degree',
     'Master\'s Degree',
     'PhD',
     'Associate Degree',
     'Diploma',
-    'Certificate',
     'Postdoctoral',
     'Vocational Training',
     'Online Courses',
     'Technical Certification',
     'Secondary School',
-    'Undergraduate',
     'Graduate',
-    'Postgraduate',
   ];
 
   List<String> employedInList = [

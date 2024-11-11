@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/colors.dart';
 
-class LocationDropdown extends StatefulWidget {
+class PreferenceLocationDropdown extends StatefulWidget {
   final List<String> value;
   final String hint;
   final List<String>? items;
@@ -9,7 +9,7 @@ class LocationDropdown extends StatefulWidget {
   final bool isRequired;
   final bool showSearch;
 
-  LocationDropdown({
+  PreferenceLocationDropdown({
     Key? key,
     required this.value,
     required this.hint,
@@ -20,24 +20,15 @@ class LocationDropdown extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<LocationDropdown> createState() => _LocationDropdownState();
+  State<PreferenceLocationDropdown> createState() =>
+      _PreferenceLocationDropdownState();
 }
 
-class _LocationDropdownState extends State<LocationDropdown> {
+class _PreferenceLocationDropdownState
+    extends State<PreferenceLocationDropdown> {
   late List<String> selectedValues;
-  List<String> filteredItems = [];
+  late List<String> filteredItems;
   String searchQuery = '';
-  bool isSelectAll = false;
-
-  // List of hints that should only allow single selection
-  final List<String> singleSelectionHints = [
-    'To Age',
-    'From Height',
-    'From Age',
-    'To Height'
-  ];
-
-  bool get isSingleSelection => singleSelectionHints.contains(widget.hint);
 
   @override
   void initState() {
@@ -95,7 +86,7 @@ class _LocationDropdownState extends State<LocationDropdown> {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 height: MediaQuery.of(context).size.height * 0.7,
-                width: MediaQuery.of(context).size.width * 0.6,
+                width: MediaQuery.of(context).size.width * 0.8,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -119,11 +110,15 @@ class _LocationDropdownState extends State<LocationDropdown> {
                           onChanged: (value) {
                             setState(() {
                               searchQuery = value;
-                              filteredItems = widget.items!
-                                  .where((item) => item
-                                      .toLowerCase()
-                                      .contains(searchQuery.toLowerCase()))
-                                  .toList();
+                              if (searchQuery.isEmpty) {
+                                filteredItems = widget.items ?? [];
+                              } else {
+                                filteredItems = widget.items!
+                                    .where((item) => item
+                                        .toLowerCase()
+                                        .contains(searchQuery.toLowerCase()))
+                                    .toList();
+                              }
                             });
                           },
                         ),
@@ -138,80 +133,49 @@ class _LocationDropdownState extends State<LocationDropdown> {
                       ),
                       const SizedBox(height: 10),
                       Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: (widget.showSearch
-                                  ? filteredItems.length
-                                  : widget.items!.length) +
-                              (isSingleSelection ? 0 : 1),
-                          itemBuilder: (context, index) {
-                            if (!isSingleSelection && index == 0) {
-                              return ListTile(
-                                onTap: () {
-                                  setState(() {
-                                    isSelectAll = !isSelectAll;
-                                    selectedValues = isSelectAll
-                                        ? List.from(widget.items!)
-                                        : [];
-                                  });
-                                },
-                                leading: isSelectAll
-                                    ? const Icon(
-                                        Icons.radio_button_checked_outlined,
-                                        color: Colors.red,
-                                      )
-                                    : const Icon(Icons.circle_outlined),
-                                title: const Text("Select All"),
-                              );
-                            }
+                        child: SingleChildScrollView(
+                          child: Scrollbar(
+                            thumbVisibility: true,
+                            // thumbVisibility: true,
+                            controller: ScrollController(),
+                            radius: Radius.circular(8),
+                            thickness: 8.0,
+                            notificationPredicate: (notification) {
+                              return notification.depth == 1;
+                            },
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: searchQuery.isEmpty
+                                  ? widget.items!.length + 1
+                                  : filteredItems.length + 1,
+                              itemBuilder: (context, index) {
+                                String currentItem;
+                                if (index == 0) {
+                                  currentItem = 'Any';
+                                } else {
+                                  currentItem = searchQuery.isEmpty
+                                      ? widget.items![index - 1]
+                                      : filteredItems[index - 1];
+                                }
 
-                            final itemIndex =
-                                isSingleSelection ? index : index - 1;
-                            final currentItem = widget.showSearch
-                                ? filteredItems[itemIndex]
-                                : widget.items![itemIndex];
-
-                            if (isSingleSelection) {
-                              return RadioListTile<String>(
-                                title: Text(currentItem),
-                                value: currentItem,
-                                groupValue: selectedValues.isNotEmpty
-                                    ? selectedValues.first
-                                    : null,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    selectedValues =
-                                        value != null ? [value] : [];
-                                  });
-                                },
-                                activeColor: Colors.red,
-                              );
-                            } else {
-                              return ListTile(
-                                leading: selectedValues.contains(currentItem)
-                                    ? const Icon(
-                                        Icons.radio_button_checked,
-                                        color: Colors.red,
-                                      )
-                                    : const Icon(Icons.circle_outlined),
-                                title: Text(currentItem),
-                                onTap: () {
-                                  setState(() {
-                                    if (selectedValues.contains(currentItem)) {
-                                      selectedValues.remove(currentItem);
-                                      isSelectAll = false;
-                                    } else {
+                                return ListTile(
+                                  leading: selectedValues.contains(currentItem)
+                                      ? const Icon(
+                                          Icons.radio_button_checked,
+                                          color: Colors.red,
+                                        )
+                                      : const Icon(Icons.circle_outlined),
+                                  title: Text(currentItem),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedValues.clear();
                                       selectedValues.add(currentItem);
-                                      if (selectedValues.length ==
-                                          widget.items!.length) {
-                                        isSelectAll = true;
-                                      }
-                                    }
-                                  });
-                                },
-                              );
-                            }
-                          },
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
@@ -222,6 +186,11 @@ class _LocationDropdownState extends State<LocationDropdown> {
                           child: ElevatedButton(
                             onPressed: () {
                               widget.onChanged(selectedValues);
+                              if (mounted) {
+                                setState(() {
+                                  searchQuery = '';
+                                });
+                              }
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
