@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
-import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/request_user_list_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/user_auth_screens/forget_password_screen.dart';
+import 'package:matrimony/user_auth_screens/login_screens/loginscreen_with_otp.dart';
 import 'package:matrimony/user_auth_screens/login_screens/reverpod/login_password_notifier.dart';
-import 'package:matrimony/user_auth_screens/otp_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_select_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -164,8 +163,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  OtpScreen(phoneNumber: '+91 9567879868')),
+                              builder: (context) => const LoginScreenWithOtp()),
                         );
                       },
                       child: const Text(

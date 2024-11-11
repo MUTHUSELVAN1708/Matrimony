@@ -1,15 +1,24 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/profile/profile.dart';
+import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
 import '../helper/nav_helper.dart';
 import 'model/menu_item_profile.dart';
 
-class ProfileMainScreen extends StatelessWidget {
+class ProfileMainScreen extends ConsumerStatefulWidget {
   const ProfileMainScreen({super.key});
 
+  @override
+  ConsumerState<ProfileMainScreen> createState() => _ProfileMainScreenState();
+}
+
+class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -31,36 +40,45 @@ class ProfileMainScreen extends StatelessWidget {
   }
 
   Widget _buildProfileHeader() {
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(25),
-            child: CachedNetworkImage(
-              imageUrl:
-                  "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?q=80&w=1687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.person),
-            ),
+            child: getImageApiProviderState.error != null ||
+                    getImageApiProviderState.data == null ||
+                    getImageApiProviderState.data!.images.isEmpty
+                ? const CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/image/emptyProfile.png'),
+                  )
+                : CircleAvatar(
+                    backgroundImage: MemoryImage(
+                      base64Decode(
+                        getImageApiProviderState.data!.images[0]
+                            .toString()
+                            .replaceAll('\n', '')
+                            .replaceAll('\r', ''),
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(width: 12),
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Priyanka',
-                style: TextStyle(
+                getImageApiProviderState.data?.name ?? '',
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                'M11063971',
-                style: TextStyle(
+                getImageApiProviderState.data?.uniqueId ?? '',
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
                 ),
@@ -121,7 +139,7 @@ class ProfileMainScreen extends StatelessWidget {
   List<Widget> _buildMenuItems(BuildContext context) {
     final menuItems = [
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/editprofile.svg',
         title: 'Edit Profile',
         onTap: () {
           NavigationHelper.slideNavigateTo(
@@ -131,59 +149,67 @@ class ProfileMainScreen extends StatelessWidget {
         },
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/editpreference.svg',
         title: 'Edit Preference',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/verifyprofile.svg',
         title: 'Verify Your Profile',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/dailyrecommend.svg',
         title: 'Daily Recommendations',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/yourchats.svg',
         title: 'Your Chats',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/yourcalls.svg',
         title: 'Your Calls',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/settings.svg',
         title: 'Settings',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/help.svg',
         title: 'Help',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/feedback.svg',
         title: 'Feedback',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/successstories.svg',
         title: 'Success Stories',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/more.svg',
         title: 'More',
         onTap: () {},
       ),
       MenuItem(
-        icon: 'assets/add_icon.svg',
+        icon: 'assets/logout.svg',
         title: 'Logout',
-        onTap: () {},
+        onTap: () async {
+          final navigator = Navigator.of(context);
+          await SharedPrefHelper.removeUser();
+          if (!context.mounted) return;
+          navigator.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+            (Route<dynamic> route) => false,
+          );
+        },
       ),
     ];
 

@@ -89,7 +89,7 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
           'AppId': '1',
         },
         body: jsonEncode({
-          "userId": userId,
+          "userId": 3,
         }),
       );
 

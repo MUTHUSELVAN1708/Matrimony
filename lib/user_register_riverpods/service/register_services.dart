@@ -32,7 +32,7 @@ class RegisterService {
     }
   }
 
-  Future<Map<String, dynamic>?> otpVerificationApi(
+  Future<bool> otpVerificationApi(
     String otp,
     String phoneNo,
   ) async {
@@ -53,9 +53,10 @@ class RegisterService {
     print("$otp,$phoneNo");
     print(response.statusCode);
     if (response.statusCode == 200) {
+      return true;
       print(response.statusCode);
     } else {
-      throw Exception('Failed to verify OTP: ${response.body}');
+      return false;
     }
   }
 

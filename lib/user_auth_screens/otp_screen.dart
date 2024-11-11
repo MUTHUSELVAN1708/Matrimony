@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/common/widget/show_toastdialog.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_personal_details_screen.dart';
 
 class OtpScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
-
-  OtpScreen({required this.phoneNumber});
+  final bool isUserLogin;
+  const OtpScreen(
+      {super.key, required this.phoneNumber, required this.isUserLogin});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -68,7 +72,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 const SizedBox(height: 20),
                 // OTP Input Fields
                 Container(
-                  margin: EdgeInsets.all(24),
+                  margin: const EdgeInsets.all(24),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: List.generate(
@@ -83,8 +87,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           keyboardType: TextInputType.number,
                           maxLength: 1,
                           inputFormatters: [
-                            FilteringTextInputFormatter
-                                .digitsOnly, // This restricts to digits only
+                            FilteringTextInputFormatter.digitsOnly,
                           ],
                           decoration: InputDecoration(
                             filled: true,
@@ -162,11 +165,35 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           .read(registerProvider.notifier)
                           .otpVerification();
                       if (success) {
-                        Navigator.push(
+                        if (widget.isUserLogin) {
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const RegisterUserPersonalDetailsScreen()));
+                                    const BottomNavBarScreen()),
+                            (Route<dynamic> route) => false,
+                          );
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RegisterUserPersonalDetailsScreen()));
+                        }
+                      } else {
+                        CustomSnackBar.show(
+                          context: context,
+                          message: 'Invalid OTP. Please try again.',
+                          isError: true,
+                        );
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   const SnackBar(
+                        //     content: Text('Invalid OTP. Please try again.'),
+                        //     backgroundColor: Colors.red, // Use red color for error indication
+                        //     behavior: SnackBarBehavior.floating, // Optional: makes it float above content
+                        //     duration: Duration(seconds: 2),
+                        //   ),
+                        // );
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,

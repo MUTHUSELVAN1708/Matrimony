@@ -25,8 +25,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   bool isAllMatchesLoading = true;
   bool isImageLoading = true;
   bool isDailyRecommendLoading = true;
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>(); // Add this line
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -78,16 +77,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(context),
-            const SizedBox(height: 200),
             _buildAllMatches(ref),
             _buildCompleteProfile(),
             _buildSuccessStory(context),
             _buildUpgradeNow(context),
-            // _buildUpgradeCard(),
             const ProfileCardStack(),
             _buildAssistanceService(),
-            // _buildWaitingResponse(),
-            // _buildAssistedService(context),
           ],
         ),
       ),
@@ -98,7 +93,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Stack(
       clipBehavior: Clip.none,
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.topCenter,
       children: [
         if (getImageApiProviderState.isLoading || isImageLoading)
           const SizedBox(
@@ -116,7 +111,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       image: getImageApiProviderState.error != null ||
                               getImageApiProviderState.data == null ||
                               getImageApiProviderState.data!.images.isEmpty
-                          ? const AssetImage('assets/image/user1.png')
+                          ? const AssetImage('assets/image/emptyProfile.png')
                               as ImageProvider<Object>
                           : MemoryImage(
                               base64Decode(
@@ -165,10 +160,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
               ),
             ),
           ),
-        Positioned(
-            bottom: -200,
-            left: 0,
-            right: 0,
+        Container(
+            margin: const EdgeInsets.only(top: 150),
             child: _buildDailyRecommendations(context, ref))
       ],
     );
@@ -240,6 +233,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             ),
             color: Colors.white,
           ),
+          height: 300,
           margin: const EdgeInsets.only(top: 50, bottom: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -295,6 +289,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           padding: const EdgeInsets.only(right: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -673,80 +668,6 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             )
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildUpgradeCard() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.orange[50],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Upgrade now to find your\nperfect life partner\nfaster than Ever!',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.orange,
-            ),
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-            ),
-            child: const Text('Upgrade Now'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWaitingResponse() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          const Text(
-            'Waiting For Your Response',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  color: Colors.pink[100], // Placeholder color
-                ),
-              ),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Text(
-                  'User is waiting for your response. Please check their profile and respond.',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

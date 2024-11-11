@@ -276,8 +276,8 @@ class _RegisterUserDetailsScreenState
                             context,
                             MaterialPageRoute(
                               builder: (context) => OtpScreen(
-                                phoneNumber: _phoneController.text,
-                              ),
+                                  phoneNumber: _phoneController.text,
+                                  isUserLogin: false),
                             ),
                           );
                         }
@@ -292,7 +292,6 @@ class _RegisterUserDetailsScreenState
                           ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
