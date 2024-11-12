@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_additional_info_screen.dart';
 
@@ -21,6 +22,7 @@ class _RegisterUserLocationScreenState
   @override
   Widget build(BuildContext context) {
     final registerStateNotifier = ref.watch(registerProvider);
+    final locationState = ref.watch(locationProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -57,8 +59,7 @@ class _RegisterUserLocationScreenState
                 decoration: const InputDecoration(
                   labelText: 'Your Residing Country',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(12)), // BorderRadius 12
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                 ),
                 onSaved: (value) => country = value,

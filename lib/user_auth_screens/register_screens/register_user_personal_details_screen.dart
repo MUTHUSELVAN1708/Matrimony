@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/patner_preference_const_data.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_religious_screen.dart';
@@ -40,7 +41,17 @@ class _RegisterUserPersonalDetailsScreenState
     'Widowed',
     'Separated'
   ];
-  final List<String> childrenStatus = ['1', '2', '3', '3+'];
+  final List<String> childrenStatus = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8'
+  ];
 
   int calculateAge(DateTime? dateOfBirth) {
     if (dateOfBirth != null) {
@@ -87,17 +98,14 @@ class _RegisterUserPersonalDetailsScreenState
   }
 
   void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Validation Error'),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
         content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
+        backgroundColor: Colors.black,
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: () {},
+        ),
       ),
     );
   }
@@ -176,52 +184,80 @@ class _RegisterUserPersonalDetailsScreenState
                   ),
                   const SizedBox(height: 16),
 
-                  // Height and Weight
-                  // Height and Weight
                   Row(
                     children: [
-                      // Height field
                       Expanded(
-                        child: TextFormField(
-                          decoration: _buildInputDecoration('Height'),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter
-                                .digitsOnly, // Only allows digits
-                            LengthLimitingTextInputFormatter(
-                                3), // Restrict to 3 digits
-                          ],
-                          onChanged: (value) => height = value,
-                          validator: (value) {
-                            if (value?.isEmpty ?? true) {
-                              return 'Required';
-                            }
-                            return null;
-                          },
+                        child: _buildCustomField(
+                          label: 'Height',
+                          selectedValue: height,
+                          onTap: () => _showSelectionDialog(
+                            title: 'Select Height',
+                            options: PartnerPreferenceConstData
+                                .myHeightOptions.values
+                                .toList(),
+                            selectedValue: height,
+                            onSelect: (value) => setState(() => height = value),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 10),
 
-                      // Weight field
+                      // Marital Status
                       Expanded(
-                        child: TextFormField(
-                          decoration: _buildInputDecoration('Weight'),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter
-                                .digitsOnly, // Only allows digits
-                            LengthLimitingTextInputFormatter(
-                                3), // Restrict to 3 digits
-                          ],
-                          onChanged: (value) => weight = value,
-                          validator: (value) {
-                            if (value?.isEmpty ?? true) {
-                              return 'Required';
-                            }
-                            return null;
-                          },
+                        child: _buildCustomField(
+                          label: 'Weight',
+                          selectedValue: weight,
+                          onTap: () => _showSelectionDialog(
+                            title: 'Select Weight',
+                            options: PartnerPreferenceConstData.weightList,
+                            selectedValue: weight,
+                            onSelect: (value) => setState(() => weight = value),
+                          ),
                         ),
                       ),
+                      // Height field
+                      // Expanded(
+                      //   child: TextFormField(
+                      //     decoration: _buildInputDecoration('Height'),
+                      //     keyboardType: TextInputType.number,
+                      //     inputFormatters: [
+                      //       FilteringTextInputFormatter
+                      //           .digitsOnly,
+                      //       LengthLimitingTextInputFormatter(
+                      //           3),
+                      //     ],
+                      //     onChanged: (value) => height = value,
+                      //     validator: (value) {
+                      //       if (value?.isEmpty ?? true) {
+                      //         return 'Required';
+                      //       }
+                      //       return null;
+                      //     },
+                      //   ),
+                      // ),
+
+                      // const SizedBox(width: 16),
+
+                      // // Weight field
+                      // Expanded(
+                      //   child: TextFormField(
+                      //     decoration: _buildInputDecoration('Weight'),
+                      //     keyboardType: TextInputType.number,
+                      //     inputFormatters: [
+                      //       FilteringTextInputFormatter
+                      //           .digitsOnly, // Only allows digits
+                      //       LengthLimitingTextInputFormatter(
+                      //           3), // Restrict to 3 digits
+                      //     ],
+                      //     onChanged: (value) => weight = value,
+                      //     validator: (value) {
+                      //       if (value?.isEmpty ?? true) {
+                      //         return 'Required';
+                      //       }
+                      //       return null;
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
 
@@ -259,7 +295,7 @@ class _RegisterUserPersonalDetailsScreenState
                           label: 'Childrens',
                           selectedValue: childrens,
                           onTap: () => _showSelectionDialog(
-                            title: 'Select Childrens',
+                            title: 'Select Childrens ',
                             options: childrenStatus,
                             selectedValue: childrens,
                             onSelect: (value) =>
@@ -554,49 +590,157 @@ class _SelectionDialogState extends State<SelectionDialog> {
                       );
                     }).toList(),
                   )
-                : Column(
-                    children: widget.options.map((option) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _currentSelectedValue = option;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          decoration: BoxDecoration(
-                            color: _currentSelectedValue == option
-                                ? AppColors.selectedWrapBacgroundColor
-                                : Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: _currentSelectedValue == option
-                                  ? AppColors.selectedWrapBacgroundColor
-                                  : Colors.grey.shade300,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                option,
-                                style: TextStyle(
+                : widget.title == "Select Childrens"
+                    ? Wrap(
+                        alignment:
+                            WrapAlignment.center, // Center the wrapped items
+                        spacing: 8.0, // Horizontal space between items
+                        runSpacing: 4.0, // Vertical space between rows
+                        children: widget.options.map((option) {
+                          // Take only the first 3 items
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _currentSelectedValue = option;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              decoration: BoxDecoration(
+                                color: _currentSelectedValue == option
+                                    ? AppColors.selectedWrapBacgroundColor
+                                    : Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
                                   color: _currentSelectedValue == option
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                      ? AppColors.selectedWrapBacgroundColor
+                                      : Colors.grey.shade300,
                                 ),
                               ),
-                              if (_currentSelectedValue == option)
-                                const Icon(Icons.check, color: Colors.white),
-                            ],
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    option,
+                                    style: TextStyle(
+                                      color: _currentSelectedValue == option
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  if (_currentSelectedValue == option)
+                                    const Icon(Icons.check,
+                                        color: Colors.white),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      )
+                    : widget.options.length > 6
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: widget.options.map((option) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _currentSelectedValue = option;
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 16),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: _currentSelectedValue == option
+                                            ? AppColors
+                                                .selectedWrapBacgroundColor
+                                            : Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: _currentSelectedValue == option
+                                              ? AppColors
+                                                  .selectedWrapBacgroundColor
+                                              : Colors.grey.shade300,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            option,
+                                            style: TextStyle(
+                                              color: _currentSelectedValue ==
+                                                      option
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          if (_currentSelectedValue == option)
+                                            const Icon(Icons.check,
+                                                color: Colors.white),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          )
+                        : Column(
+                            children: widget.options.map((option) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _currentSelectedValue = option;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 16),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: _currentSelectedValue == option
+                                        ? AppColors.selectedWrapBacgroundColor
+                                        : Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: _currentSelectedValue == option
+                                          ? AppColors.selectedWrapBacgroundColor
+                                          : Colors.grey.shade300,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        option,
+                                        style: TextStyle(
+                                          color: _currentSelectedValue == option
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      if (_currentSelectedValue == option)
+                                        const Icon(Icons.check,
+                                            color: Colors.white),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,

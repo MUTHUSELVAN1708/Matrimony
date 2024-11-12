@@ -125,11 +125,17 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                       Expanded(
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: filteredItems.length,
+                          itemCount: filteredItems.isEmpty
+                              ? widget.items.length
+                              : filteredItems.length,
                           itemBuilder: (context, index) {
                             return RadioListTile<String>(
-                              title: Text(filteredItems[index]),
-                              value: filteredItems[index],
+                              title: Text(filteredItems.isEmpty
+                                  ? widget.items[index]
+                                  : filteredItems[index]),
+                              value: filteredItems.isEmpty
+                                  ? widget.items[index]
+                                  : filteredItems[index],
                               groupValue: selectedValue,
                               activeColor: Colors.red,
                               onChanged: (String? newValue) {
