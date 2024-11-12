@@ -194,7 +194,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
         showDialog(
           context: context,
           builder: (context) => CommonSelectionDialog(
-            title: 'Select Your Weight',
+            title: 'Select Your Weight Range',
             options: ProfileOptions.weight,
             selectedValue: profileState.selectedWeight,
             onSelect: (value) {
