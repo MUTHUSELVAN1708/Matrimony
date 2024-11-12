@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matrimony/common/colors.dart';
 
 class EnhancedLoadingWrapper extends StatelessWidget {
   const EnhancedLoadingWrapper({
@@ -13,7 +14,6 @@ class EnhancedLoadingWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(isLoading);
     return Stack(
       children: [
         child,
@@ -22,7 +22,7 @@ class EnhancedLoadingWrapper extends StatelessWidget {
             children: [
               ModalBarrier(
                 dismissible: false,
-                color: Colors.blue.withOpacity(0.5),
+                color: Colors.grey.withOpacity(0.5),
               ),
               const Center(
                 child: SizedBox(
@@ -34,7 +34,7 @@ class EnhancedLoadingWrapper extends StatelessWidget {
                       width: 30,
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.greenAccent,
+                          AppColors.primaryButtonColor,
                         ),
                       ),
                     ),

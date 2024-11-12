@@ -52,7 +52,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         password!,
         phoneNumber!,
       );
-
+      print(response);
       if (response != null && response['errorMessage'] == '') {
         await _saveUserData(response['userId']);
         state = RegisterState(
