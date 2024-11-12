@@ -206,32 +206,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildActionButton(
       String text, VoidCallback onTap, BuildContext context) {
-    return OutlinedButton(
-      onPressed: () {
-        if (text == 'Edit Contact') {
-          _updateProfileElementsVisibility(false);
-          NavigationHelper.slideNavigateTo(
-            context: context,
-            screen: EditContactScreen(onPop: (value) {
-              if (value as bool) {
-                _updateProfileElementsVisibility(true);
-              }
-            }),
-          );
-        } else {
-          onTap();
-        }
-      },
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(color: Colors.grey.shade200),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+    return Padding(
+      padding: const EdgeInsets.all(1.0),
+      child: OutlinedButton(
+        onPressed: () {
+          if (text == 'Edit Contact') {
+            _updateProfileElementsVisibility(false);
+            NavigationHelper.slideNavigateTo(
+              context: context,
+              screen: EditContactScreen(onPop: (value) {
+                if (value as bool) {
+                  _updateProfileElementsVisibility(true);
+                }
+              }),
+            );
+          } else {
+            onTap();
+          }
+        },
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: Colors.red[100]!),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.black45,
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.black54,
+          ),
         ),
       ),
     );
