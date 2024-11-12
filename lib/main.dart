@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
                 home: InitialScreen(),
               );
             } else {
-              return const MaterialApp(
+              return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: BottomNavBarScreen(),
+                home: InitialScreen(),
               );
             }
           }

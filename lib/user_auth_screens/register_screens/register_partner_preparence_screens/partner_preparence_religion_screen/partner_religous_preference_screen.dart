@@ -154,152 +154,104 @@ class _PartnerReligiousPreferenceScreenState
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                PreferenceLocationDropdown(
-                  showSearch: true,
-                  value: selectedReligion,
-                  hint: "Religion",
-                  items: religionState.data
-                      .map((religiousModel) => religiousModel.religion)
-                      .toList(),
-                  onChanged: (value) async {
-                    setState(() {
-                      selectedReligion = value;
-                    });
+                  PreferenceLocationDropdown(
+                    showSearch: true,
+                    value: selectedReligion,
+                    hint: "Religion",
+                    items: religionState.data
+                        .map((religiousModel) => religiousModel.religion)
+                        .toList(),
+                    onChanged: (value) async {
+                      setState(() {
+                        selectedReligion = value;
+                        selectedCaste.clear();
+                        selectedSubCaste.clear();
+                      });
 
-                    int? stateId;
-                    for (var e in religionState.data) {
-                      if (e.religion == selectedReligion[0]) {
-                        stateId = e.id;
-                        break;
+                      int? stateId;
+                      for (var e in religionState.data) {
+                        if (e.religion == selectedReligion[0]) {
+                          stateId = e.id;
+                          break;
+                        }
                       }
-                    }
 
-                    print("Selected State ID: $stateId");
-                    if (stateId != null) {
-                      await ref
-                          .read(religiousProvider.notifier)
-                          .getCasteData('$stateId');
-                    } else {
-                      print("No state ID found for the selected country.");
-                    }
-                  },
-                ),
+                      print("Selected State ID: $stateId");
+                      if (stateId != null) {
+                        await ref
+                            .read(religiousProvider.notifier)
+                            .getCasteData('$stateId');
+                      } else {
+                        print("No state ID found for the selected country.");
+                      }
+                    },
+                  ),
 
-                selectedReligion.isEmpty || religionState.casteList.isEmpty
-                    ? SizedBox()
-                    : const SizedBox(height: 10),
+                  selectedReligion.isEmpty ||
+                          religionState.casteList.isEmpty ||
+                          selectedReligion.first == 'Any'
+                      ? SizedBox()
+                      : const SizedBox(height: 10),
 
-                selectedReligion.isEmpty || religionState.casteList.isEmpty
-                    ? SizedBox()
-                    : PreferenceLocationDropdown(
-                        showSearch: true,
-                        value: selectedCaste,
-                        hint: "Caste",
-                        items: religionState.casteList
-                            .map((religiousModel) => religiousModel.caste)
-                            .toList(),
-                        onChanged: (value) async {
-                          setState(() {
-                            selectedCaste = value;
-                          });
+                  selectedReligion.isEmpty ||
+                          religionState.casteList.isEmpty ||
+                          selectedReligion.first == 'Any'
+                      ? SizedBox()
+                      : PreferenceLocationDropdown(
+                          showSearch: true,
+                          value: selectedCaste,
+                          hint: "Caste",
+                          items: religionState.casteList
+                              .map((religiousModel) => religiousModel.caste)
+                              .toList(),
+                          onChanged: (value) async {
+                            setState(() {
+                              selectedCaste = value;
+                              selectedSubCaste.clear();
+                            });
 
-                          int? stateId;
-                          for (var e in religionState.casteList) {
-                            if (e.caste == selectedCaste[0]) {
-                              stateId = e.id;
-                              break;
+                            int? stateId;
+                            for (var e in religionState.casteList) {
+                              if (e.caste == selectedCaste[0]) {
+                                stateId = e.id;
+                                break;
+                              }
                             }
-                          }
 
-                          print("Selected State ID: $stateId");
-                          if (stateId != null) {
-                            await ref
-                                .read(religiousProvider.notifier)
-                                .getSubCasteData("$stateId");
-                          } else {
-                            print(
-                                "No state ID found for the selected country.");
-                          }
-                        },
-                      ),
-                selectedCaste.isEmpty || religionState.subCasteList.isEmpty
-                    ? SizedBox()
-                    : const SizedBox(height: 10),
-                selectedCaste.isEmpty || religionState.subCasteList.isEmpty
-                    ? SizedBox()
-                    : PreferenceLocationDropdown(
-                        showSearch: true,
-                        value: selectedSubCaste,
-                        hint: "SubCaste",
-                        items: religionState.subCasteList
-                            .map((subCasteModel) => subCasteModel.subCaste)
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedSubCaste = value;
-                          });
-                        },
-                      ),
-                const SizedBox(height: 10),
-
-                AnyCustomPreferenceDropdown(
-                  value: selectedStar,
-                  hint: "Star(Optional)",
-                  items: starList,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedStar = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                AnyCustomPreferenceDropdown(
-                  value: selectedRassi,
-                  hint: "Rassi(Optional)",
-                  items: rassiList,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRassi = value;
-                    });
-                  },
-                ),
-                // const SizedBox(height: 10),
-                // // Dosham Dropdown
-                // AnyCustomPreferenceDropdown(
-                //   value: selectedDosham,
-                //   hint: "Dosham(Optional)",
-                //   items: doshamList,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedDosham = value;
-                //     });
-                //   },
-                // ),
-                const SizedBox(height: 16),
-
-                // Next Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ref
-                          .read(preferenceInputProvider.notifier)
-                          .updatePreferenceInput(
-                              religion: selectedReligion.toString(),
-                              caste: selectedCaste.toString(),
-                              subcaste: selectedSubCaste.toString(),
-                              star: selectedStar.toString(),
-                              rassi: selectedRassi.toString(),
-                              dosham: selectedDosham.toString());
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const PartnerProfessionalScreen(),
+                            print("Selected State ID: $stateId");
+                            if (stateId != null) {
+                              await ref
+                                  .read(religiousProvider.notifier)
+                                  .getSubCasteData("$stateId");
+                            } else {
+                              print(
+                                  "No state ID found for the selected country.");
+                            }
+                          },
+                        ),
+                  selectedCaste.isEmpty ||
+                          religionState.subCasteList.isEmpty ||
+                          selectedCaste.first == 'Any'
+                      ? SizedBox()
+                      : const SizedBox(height: 10),
+                  selectedCaste.isEmpty ||
+                          religionState.subCasteList.isEmpty ||
+                          selectedCaste.first == 'Any'
+                      ? SizedBox()
+                      : PreferenceLocationDropdown(
+                          showSearch: true,
+                          value: selectedSubCaste,
+                          hint: "SubCaste",
+                          items: religionState.subCasteList
+                              .map((subCasteModel) => subCasteModel.subCaste)
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedSubCaste = value;
+                            });
+                          },
                         ),
                   const SizedBox(height: 10),
 
