@@ -9,7 +9,7 @@ import 'package:matrimony/user_register_riverpods/riverpod/create_user_governmen
 import 'package:matrimony/user_register_riverpods/riverpod/proof_image_picker_notifier.dart';
 
 class RegisterUserGovernmentProof extends ConsumerStatefulWidget {
-  const RegisterUserGovernmentProof({Key? key}) : super(key: key);
+  const RegisterUserGovernmentProof({super.key});
 
   @override
   ConsumerState<RegisterUserGovernmentProof> createState() =>
@@ -158,9 +158,9 @@ class _RegisterUserGovernmentProofState
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (selectedProof != null && proofState.base64Image != null) {
-                    ref
+                    await ref
                         .read(governmentProofApiProvider.notifier)
                         .uploadGovernmentProofApi(
                             govtIdProof: selectedProof,

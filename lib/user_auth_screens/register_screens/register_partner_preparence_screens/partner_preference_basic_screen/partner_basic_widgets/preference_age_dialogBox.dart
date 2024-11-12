@@ -245,17 +245,22 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
                       width: double.infinity,
                       height: 45,
                       child: ElevatedButton(
-                        onPressed:fromItem.isNotEmpty && toItem.isEmpty? null: () {
-                          if (fromItem.isNotEmpty && toItem.isNotEmpty) {
-                            selectedValues = ["$fromItem $toItem"];
-                            widget.onChanged(selectedValues);
-                          } else {
-                            widget.onChanged(selectedValues);
-                          }
-                          Navigator.pop(context);
-                        },
+                        onPressed: fromItem.isNotEmpty && toItem.isEmpty
+                            ? null
+                            : () {
+                                if (fromItem.isNotEmpty && toItem.isNotEmpty) {
+                                  selectedValues = ["$fromItem $toItem"];
+                                  widget.onChanged(selectedValues);
+                                } else {
+                                  widget.onChanged(selectedValues);
+                                }
+                                Navigator.pop(context);
+                              },
                         style: ElevatedButton.styleFrom(
-                          disabledIconColor:fromItem.isNotEmpty && toItem.isEmpty? Colors.grey:Colors.red,
+                          disabledIconColor:
+                              fromItem.isNotEmpty && toItem.isEmpty
+                                  ? Colors.grey
+                                  : Colors.red,
                           backgroundColor: Colors.red,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

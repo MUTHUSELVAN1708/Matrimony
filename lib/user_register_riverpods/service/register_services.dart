@@ -26,6 +26,7 @@ class RegisterService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
+      print(data['id']);
       return {'userId': data['id'], 'errorMessage': ''};
     } else if (response.statusCode == 400) {
       return {'errorMessage': jsonDecode(response.body)['errorMessage']};

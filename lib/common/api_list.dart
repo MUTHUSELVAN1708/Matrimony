@@ -1,7 +1,7 @@
 class Api {
-  static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
-  // static const String baseUrl = 'http://192.168.29.15:8080/api/ahathirumanam';
-  // static const String baseUrl = 'http://192.168.1.16:8080/api/ahathirumanam';
+  // static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
+  // static const String baseUrl = 'http://192.168.29.14:8080/api/ahathirumanam';
+  static const String baseUrl = 'http://192.168.1.12:8080/api/ahathirumanam';
 
   static const String createUser = '$baseUrl/userCreate';
   static const String otpVerify = '$baseUrl/verifyOTP';
@@ -26,4 +26,5 @@ class Api {
   static const String getUserImage = '$baseUrl/userDetails';
   static const String passwordWithLogin = '$baseUrl/loginwithpassword';
   static const String otpWithLogin = '$baseUrl/login';
+  static const String getProfileDetails = '$baseUrl/getProfileDetails';
 }

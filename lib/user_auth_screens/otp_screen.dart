@@ -12,6 +12,7 @@ import 'package:matrimony/user_auth_screens/register_screens/register_user_perso
 class OtpScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
   final bool isUserLogin;
+
   const OtpScreen(
       {super.key, required this.phoneNumber, required this.isUserLogin});
 
@@ -44,9 +45,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 50,
-                ),
+                const SizedBox(height: 50),
                 Container(
                   width: 150,
                   height: 150,
@@ -105,12 +104,18 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                             ),
                           ),
                           onChanged: (value) {
-                            if (value.length == 1) {
+                            if (value.isNotEmpty) {
                               _otpDigits[index] = value;
                               if (index < 3) {
+                                _focusNodes[index].unfocus();
                                 FocusScope.of(context)
                                     .requestFocus(_focusNodes[index + 1]);
                               }
+                            }
+                            if (value.isEmpty && index > 0) {
+                              _focusNodes[index].unfocus();
+                              FocusScope.of(context)
+                                  .requestFocus(_focusNodes[index - 1]);
                             }
                           },
                         ),
@@ -119,27 +124,24 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      widget.phoneNumber, // Display the phone number
+                      widget.phoneNumber,
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                        width: 8), // Add some space between the text and icon
+                    const SizedBox(width: 8),
                     SvgPicture.asset(
-                      'assets/edit_icon.svg', // Correctly use SvgPicture to display SVG
-                      width: 24, // Set the desired width
-                      height: 24, // Set the desired height
+                      'assets/edit_icon.svg',
+                      width: 24,
+                      height: 24,
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
-                // Resend Option
                 SizedBox(
                   height: 45,
                   child: ElevatedButton(
@@ -186,14 +188,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           message: 'Invalid OTP. Please try again.',
                           isError: true,
                         );
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   const SnackBar(
-                        //     content: Text('Invalid OTP. Please try again.'),
-                        //     backgroundColor: Colors.red, // Use red color for error indication
-                        //     behavior: SnackBarBehavior.floating, // Optional: makes it float above content
-                        //     duration: Duration(seconds: 2),
-                        //   ),
-                        // );
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,

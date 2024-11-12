@@ -7,6 +7,8 @@ import 'package:matrimony/user_register_riverpods/riverpod/create_partner_prefer
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
 
 class InterestPageView extends ConsumerStatefulWidget {
+  const InterestPageView({super.key});
+
   @override
   _InterestPageViewState createState() => _InterestPageViewState();
 }
@@ -331,58 +333,70 @@ class _InterestPageViewState extends ConsumerState<InterestPageView> {
   ];
 
   int _selectedIndex = 0;
-  List<String> _selectedItems = [];
+  List<String> _selectedHobbies = [];
+  List<String> _selectedInterest = [];
+  List<String> _selectedSportsAndFitness = [];
+  List<String> _selectedMusic = [];
+  List<String> _selectedMoviesTvShows = [];
+  List<String> _selectedFood = [];
+  List<String> _selectedSpokenLanguages = [];
 
   void _onCategoryTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _selectedItems = [];
     });
   }
 
-  void _onNextCategory(BuildContext context) {
+  Future<void> _onNextCategory(BuildContext context) async {
     setState(() {
-      // Save current selections to the appropriate field
-      if (_selectedIndex == 0) {
-        ref
-            .read(preferenceInputProvider.notifier)
-            .updatePreferenceInput(hobbies: _selectedItems.toString());
-        _selectedItems = [];
-      } else if (_selectedIndex == 1) {
-        ref
-            .read(preferenceInputProvider.notifier)
-            .updatePreferenceInput(interest: _selectedItems.toString());
-        _selectedItems = [];
-      } else if (_selectedIndex == 2) {
-        ref
-            .read(preferenceInputProvider.notifier)
-            .updatePreferenceInput(sportsAndFitness: _selectedItems.toString());
-        _selectedItems = [];
-      } else if (_selectedIndex == 3) {
-        ref
-            .read(preferenceInputProvider.notifier)
-            .updatePreferenceInput(music: _selectedItems.toString());
-        _selectedItems = [];
-      } else if (_selectedIndex == 4) {
-        ref
-            .read(preferenceInputProvider.notifier)
-            .updatePreferenceInput(moviesTvShows: _selectedItems.toString());
-        _selectedItems = [];
-      } else if (_selectedIndex == 5) {
-        ref
-            .read(preferenceInputProvider.notifier)
-            .updatePreferenceInput(moviesTvShows: _selectedItems.toString());
-        _selectedItems = [];
-      } else if (_selectedIndex == 6) {
-        ref
-            .read(preferenceInputProvider.notifier)
-            .updatePreferenceInput(spokenLanguages: _selectedItems.toString());
+      switch (_selectedIndex) {
+        case 0:
+          _selectedHobbies = List.from(_selectedHobbies);
+          ref
+              .read(preferenceInputProvider.notifier)
+              .updatePreferenceInput(hobbies: _selectedHobbies.toString());
+          break;
+        case 1:
+          _selectedInterest = List.from(_selectedInterest);
+          ref
+              .read(preferenceInputProvider.notifier)
+              .updatePreferenceInput(interest: _selectedInterest.toString());
+          break;
+        case 2:
+          _selectedSportsAndFitness = List.from(_selectedSportsAndFitness);
+          ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
+              sportsAndFitness: _selectedSportsAndFitness.toString());
+          break;
+        case 3:
+          _selectedMusic = List.from(_selectedMusic);
+          ref
+              .read(preferenceInputProvider.notifier)
+              .updatePreferenceInput(music: _selectedMusic.toString());
+          break;
+        case 4:
+          _selectedMoviesTvShows = List.from(_selectedMoviesTvShows);
+          ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
+              moviesTvShows: _selectedMoviesTvShows.toString());
+          break;
+        case 5:
+          _selectedFood = List.from(_selectedFood);
+          ref
+              .read(preferenceInputProvider.notifier)
+              .updatePreferenceInput(food: _selectedFood.toString());
+          break;
+      }
+    });
 
-        _selectedItems = [];
-        final preference = ref.read(preferenceInputProvider);
+    if (_selectedIndex == 6) {
+      _selectedSpokenLanguages = List.from(_selectedSpokenLanguages);
+      ref.read(preferenceInputProvider.notifier).updatePreferenceInput(
+          spokenLanguages: _selectedSpokenLanguages.toString());
+      final preference = ref.read(preferenceInputProvider);
 
-        if (preference != null) {
-          ref.read(partnerPreferenceProvider.notifier).uploadPartnerPreference(
+      if (preference != null) {
+        await ref
+            .read(partnerPreferenceProvider.notifier)
+            .uploadPartnerPreference(
               userId: preference.userId,
               fromAge: preference.fromAge,
               toAge: preference.toAge,
@@ -414,16 +428,24 @@ class _InterestPageViewState extends ConsumerState<InterestPageView> {
               sportsAndFitness: preference.sportsAndFitness,
               food: preference.food,
               spokenLanguages: preference.spokenLanguages,
-              interest: preference.interest);
-        }
+              interest: preference.interest,
+            );
       }
+    }
 
-      // Move to the next category or finish
+    setState(() {
       if (_selectedIndex < categories.length - 1) {
         _selectedIndex++;
-        _selectedItems = [];
       } else {
-        if (ref.watch(partnerPreferenceProvider).successMessage!.isNotEmpty) {
+        if (ref.watch(partnerPreferenceProvider).successMessage?.isNotEmpty ??
+            false) {
+          _selectedHobbies = [];
+          _selectedInterest = [];
+          _selectedSportsAndFitness = [];
+          _selectedMusic = [];
+          _selectedMoviesTvShows = [];
+          _selectedFood = [];
+          _selectedSpokenLanguages = [];
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const BottomNavBarScreen()),
@@ -440,10 +462,17 @@ class _InterestPageViewState extends ConsumerState<InterestPageView> {
         title: const Text('Select Your Interests',
             style: AppTextStyles.headingTextstyle),
         centerTitle: true,
-        actions: [
-          const Text(
-            'Skip',
-            style: AppTextStyles.headingTextstyle,
+        actions: const [
+          Row(
+            children: [
+              Text(
+                'Skip',
+                style: AppTextStyles.headingTextstyle,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
           )
         ],
       ),
@@ -451,7 +480,7 @@ class _InterestPageViewState extends ConsumerState<InterestPageView> {
         children: [
           // Custom Scrollable Tab Bar
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -494,20 +523,56 @@ class _InterestPageViewState extends ConsumerState<InterestPageView> {
             child: InterestCategoryScreen(
               category: categories[_selectedIndex].keys.first,
               items: categories[_selectedIndex].values.first,
-              selectedItems: _selectedItems,
+              selectedItems: categories[_selectedIndex].keys.first == 'Hobbies'
+                  ? _selectedHobbies
+                  : categories[_selectedIndex].keys.first == 'Interest'
+                      ? _selectedInterest
+                      : categories[_selectedIndex].keys.first ==
+                              'Sports and Fitness'
+                          ? _selectedSportsAndFitness
+                          : categories[_selectedIndex].keys.first == 'Music'
+                              ? _selectedMusic
+                              : categories[_selectedIndex].keys.first ==
+                                      'Movies and TV Shows'
+                                  ? _selectedMoviesTvShows
+                                  : categories[_selectedIndex].keys.first ==
+                                          'Food'
+                                      ? _selectedFood
+                                      : categories[_selectedIndex].keys.first ==
+                                              'Spoken Languages'
+                                          ? _selectedSpokenLanguages
+                                          : [],
               onItemSelected: (item) {
                 setState(() {
-                  if (_selectedItems.contains(item)) {
-                    _selectedItems.remove(item); // Deselect if already selected
+                  final currentCategory = categories[_selectedIndex].keys.first;
+                  List<String> selectedList;
+                  if (currentCategory == 'Hobbies') {
+                    selectedList = _selectedHobbies;
+                  } else if (currentCategory == 'Interest') {
+                    selectedList = _selectedInterest;
+                  } else if (currentCategory == 'Sports and Fitness') {
+                    selectedList = _selectedSportsAndFitness;
+                  } else if (currentCategory == 'Music') {
+                    selectedList = _selectedMusic;
+                  } else if (currentCategory == 'Movies and TV Shows') {
+                    selectedList = _selectedMoviesTvShows;
+                  } else if (currentCategory == 'Food') {
+                    selectedList = _selectedFood;
+                  } else if (currentCategory == 'Spoken Languages') {
+                    selectedList = _selectedSpokenLanguages;
                   } else {
-                    _selectedItems.add(item); // Select if not already selected
+                    selectedList = [];
+                  }
+                  if (selectedList.contains(item)) {
+                    selectedList.remove(item);
+                  } else {
+                    selectedList.add(item);
                   }
                 });
               },
-              onNext: () => _onNextCategory(
-                  context), // Call the modified next category function
+              onNext: () => _onNextCategory(context),
             ),
-          ),
+          )
         ],
       ),
     );
@@ -588,8 +653,10 @@ class InterestCategoryScreen extends ConsumerWidget {
               style: AppTextStyles.primaryButtonstyle,
               child: partnerState.isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : const Text(
-                      'Save & Continue',
+                  : Text(
+                      category == 'Spoken Languages'
+                          ? 'Save & Continue'
+                          : 'Next',
                       style: AppTextStyles.primarybuttonText,
                     ),
             ),

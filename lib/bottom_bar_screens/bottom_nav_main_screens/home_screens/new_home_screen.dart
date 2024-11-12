@@ -108,22 +108,22 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
               image: getImageApiProviderState.isLoading || isImageLoading
                   ? null
                   : DecorationImage(
-                image: getImageApiProviderState.error != null ||
-                    getImageApiProviderState.data == null ||
-                    getImageApiProviderState.data!.images.isEmpty
-                    ? const AssetImage('assets/image/emptyProfile.png')
-                as ImageProvider<Object>
-                    : MemoryImage(
-                  base64Decode(
-                    getImageApiProviderState.data!.images[0]
-                        .toString()
-                        .replaceAll('\n', '')
-                        .replaceAll('\r', ''),
-                  ),
-                ) as ImageProvider<
-                    Object>, // Use MemoryImage for fetched image
-                fit: BoxFit.cover,
-              ),
+                      image: getImageApiProviderState.error != null ||
+                              getImageApiProviderState.data == null ||
+                              getImageApiProviderState.data!.images.isEmpty
+                          ? const AssetImage('assets/image/emptyProfile.png')
+                              as ImageProvider<Object>
+                          : MemoryImage(
+                              base64Decode(
+                                getImageApiProviderState.data!.images[0]
+                                    .toString()
+                                    .replaceAll('\n', '')
+                                    .replaceAll('\r', ''),
+                              ),
+                            ) as ImageProvider<
+                              Object>, // Use MemoryImage for fetched image
+                      fit: BoxFit.cover,
+                    ),
             ),
             child: SafeArea(
               child: Padding(
@@ -182,7 +182,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
         4,
-            (index) => Column(
+        (index) => Column(
           children: [
             Container(
               width: 60,
@@ -256,12 +256,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 width: MediaQuery.of(context).size.width - 20,
                 child: dailyRecommentsState.error != null
                     ? Center(
-                  child: Text(dailyRecommentsState.error.toString()),
-                )
+                        child: Text(dailyRecommentsState.error.toString()),
+                      )
                     : dailyRecommentsState.isLoading || isDailyRecommendLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _buildRecommendationsList(
-                    dailyRecommentsState, context),
+                        ? const Center(child: CircularProgressIndicator())
+                        : _buildRecommendationsList(
+                            dailyRecommentsState, context),
               ),
             ],
           ),
@@ -284,7 +284,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
       itemCount: dailyRecommentsState.dailyRecommentList!.length,
       itemBuilder: (context, index) {
         final dailyRecommentData =
-        dailyRecommentsState.dailyRecommentList![index];
+            dailyRecommentsState.dailyRecommentList![index];
         return Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Column(
@@ -377,12 +377,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const BottomNavBarScreen(
-                            index: 1,
-                          )));
+                                index: 1,
+                              )));
                 },
                 child: Container(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                   decoration: const BoxDecoration(
                     color: AppColors.primaryButtonColor,
                     borderRadius: BorderRadius.all(Radius.circular(6)),
@@ -390,7 +390,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   child: Text(
                     'View All',
                     style:
-                    AppTextStyles.primarybuttonText.copyWith(fontSize: 12),
+                        AppTextStyles.primarybuttonText.copyWith(fontSize: 12),
                   ),
                 ),
               ),
@@ -404,76 +404,76 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             child: matingData.error != null
                 ? Center(child: Text(matingData.error.toString()))
                 : matingData.isLoading || isAllMatchesLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: matingData.allMatchList!.length,
-              itemBuilder: (context, index) {
-                final matching = matingData.allMatchList![index];
-                return Container(
-                  width: 100,
-                  margin: const EdgeInsets.only(right: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: DecorationImage(
-                      image: MemoryImage(
-                        base64Decode(
-                          matching.photos![0]
-                              .toString()
-                              .replaceAll('\n', '')
-                              .replaceAll('\r', '')
-                              .replaceAll(' ', ''),
-                        ),
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12),
-                      ),
-                      child: BackdropFilter(
-                        filter:
-                        ImageFilter.blur(sigmaX: 5, sigmaY: 4),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.3),
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  topRight: Radius.circular(8))),
-                          width: double.infinity,
-                          padding:
-                          const EdgeInsets.symmetric(vertical: 4),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                matching.name.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: matingData.allMatchList!.length,
+                        itemBuilder: (context, index) {
+                          final matching = matingData.allMatchList![index];
+                          return Container(
+                            width: 100,
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              image: DecorationImage(
+                                image: MemoryImage(
+                                  base64Decode(
+                                    matching.photos![0]
+                                        .toString()
+                                        .replaceAll('\n', '')
+                                        .replaceAll('\r', '')
+                                        .replaceAll(' ', ''),
+                                  ),
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(12),
+                                  bottomRight: Radius.circular(12),
+                                ),
+                                child: BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 5, sigmaY: 4),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.3),
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8))),
+                                    width: double.infinity,
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          matching.name.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '${matching.age.toString()} Yrs',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                              Text(
-                                '${matching.age.toString()} Yrs',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
           ),
           const SizedBox(
             height: 10,
@@ -616,51 +616,51 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           children: [
             Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Upgrade now to find your\nperfect life partner\nfaster than ever!',
-                      style: TextStyle(color: Colors.red.shade700, fontSize: 20),
-                    ),
-                    const Text(
-                        'Take the Next Step Towards Your\nHappily Even After!',
-                        style: TextStyle(color: Colors.black, fontSize: 15)),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PlanUpgradeScreen()),
-                        );
-                      },
-                      child: Container(
-                        width: 100,
-                        decoration: BoxDecoration(
-                          // border: Border.all(color: Colors.black38,),
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: const Offset(
-                                  0, 2), // Add a slight shadow for a raised effect
-                            ),
-                          ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Upgrade now to find your\nperfect life partner\nfaster than ever!',
+                  style: TextStyle(color: Colors.red.shade700, fontSize: 20),
+                ),
+                const Text(
+                    'Take the Next Step Towards Your\nHappily Even After!',
+                    style: TextStyle(color: Colors.black, fontSize: 15)),
+                const SizedBox(
+                  height: 5,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PlanUpgradeScreen()),
+                    );
+                  },
+                  child: Container(
+                    width: 100,
+                    decoration: BoxDecoration(
+                      // border: Border.all(color: Colors.black38,),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: const Offset(
+                              0, 2), // Add a slight shadow for a raised effect
                         ),
-                        child: const Center(
-                          child: Text(
-                            'Upgrade Now',
-                            style: TextStyle(color: Colors.black54, fontSize: 12),
-                          ),
-                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Upgrade Now',
+                        style: TextStyle(color: Colors.black54, fontSize: 12),
                       ),
-                    )
-                  ],
-                )),
+                    ),
+                  ),
+                )
+              ],
+            )),
             const CircleAvatar(
               radius: 60,
               backgroundImage: AssetImage('assets/image/successimage.png'),
