@@ -144,7 +144,7 @@ class _RegisterUserDetailsScreenState
                           ),
                           child: Text(
                             mobileKey,
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
@@ -159,7 +159,7 @@ class _RegisterUserDetailsScreenState
                           decoration: InputDecoration(
                             hintText: 'Enter Phone Number',
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 16),
                             suffixIcon: Icon(Icons.check_circle,
                                 color: allowedmobileNumber
@@ -266,7 +266,7 @@ class _RegisterUserDetailsScreenState
                         registerNotifier.email = _emailController.text;
                         registerNotifier.name = _nameController.text;
                         registerNotifier.password = _passwordController.text;
-                        registerNotifier.phoneNumber = _phoneController.text;
+                        registerNotifier.phoneNumber = "$mobileKey${_phoneController.text}";
                         registerNotifier.profileFor = widget.registerFor;
 
                         bool success = await registerNotifier.register();

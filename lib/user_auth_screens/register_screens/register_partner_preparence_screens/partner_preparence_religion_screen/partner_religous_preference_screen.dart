@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/common/widget/show_toastdialog.dart';
@@ -153,7 +154,7 @@ class _PartnerReligiousPreferenceScreenState
                   ),
                 ),
                 const SizedBox(height: 16),
-
+            
                 PreferenceLocationDropdown(
                   showSearch: true,
                   value: selectedReligion,
@@ -165,7 +166,7 @@ class _PartnerReligiousPreferenceScreenState
                     setState(() {
                       selectedReligion = value;
                     });
-
+            
                     int? stateId;
                     for (var e in religionState.data) {
                       if (e.religion == selectedReligion[0]) {
@@ -173,7 +174,7 @@ class _PartnerReligiousPreferenceScreenState
                         break;
                       }
                     }
-
+            
                     print("Selected State ID: $stateId");
                     if (stateId != null) {
                       await ref
@@ -184,11 +185,11 @@ class _PartnerReligiousPreferenceScreenState
                     }
                   },
                 ),
-
+            
                 selectedReligion.isEmpty || religionState.casteList.isEmpty
                     ? SizedBox()
                     : const SizedBox(height: 10),
-
+            
                 selectedReligion.isEmpty || religionState.casteList.isEmpty
                     ? SizedBox()
                     : PreferenceLocationDropdown(
@@ -202,7 +203,7 @@ class _PartnerReligiousPreferenceScreenState
                           setState(() {
                             selectedCaste = value;
                           });
-
+            
                           int? stateId;
                           for (var e in religionState.casteList) {
                             if (e.caste == selectedCaste[0]) {
@@ -210,7 +211,7 @@ class _PartnerReligiousPreferenceScreenState
                               break;
                             }
                           }
-
+            
                           print("Selected State ID: $stateId");
                           if (stateId != null) {
                             await ref
@@ -241,7 +242,7 @@ class _PartnerReligiousPreferenceScreenState
                         },
                       ),
                 const SizedBox(height: 10),
-
+            
                 AnyCustomPreferenceDropdown(
                   value: selectedStar,
                   hint: "Star(Optional)",
@@ -276,7 +277,7 @@ class _PartnerReligiousPreferenceScreenState
                 //   },
                 // ),
                 const SizedBox(height: 16),
-
+            
                 // Next Button
                 SizedBox(
                   width: double.infinity,
@@ -291,7 +292,7 @@ class _PartnerReligiousPreferenceScreenState
                               star: selectedStar.toString(),
                               rassi: selectedRassi.toString(),
                               dosham: selectedDosham.toString());
-
+            
                       Navigator.push(
                         context,
                         MaterialPageRoute(
