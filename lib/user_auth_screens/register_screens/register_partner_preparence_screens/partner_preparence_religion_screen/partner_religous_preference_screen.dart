@@ -154,7 +154,7 @@ class _PartnerReligiousPreferenceScreenState
                   ),
                 ),
                 const SizedBox(height: 16),
-            
+
                 PreferenceLocationDropdown(
                   showSearch: true,
                   value: selectedReligion,
@@ -166,7 +166,7 @@ class _PartnerReligiousPreferenceScreenState
                     setState(() {
                       selectedReligion = value;
                     });
-            
+
                     int? stateId;
                     for (var e in religionState.data) {
                       if (e.religion == selectedReligion[0]) {
@@ -174,7 +174,7 @@ class _PartnerReligiousPreferenceScreenState
                         break;
                       }
                     }
-            
+
                     print("Selected State ID: $stateId");
                     if (stateId != null) {
                       await ref
@@ -185,11 +185,11 @@ class _PartnerReligiousPreferenceScreenState
                     }
                   },
                 ),
-            
+
                 selectedReligion.isEmpty || religionState.casteList.isEmpty
                     ? SizedBox()
                     : const SizedBox(height: 10),
-            
+
                 selectedReligion.isEmpty || religionState.casteList.isEmpty
                     ? SizedBox()
                     : PreferenceLocationDropdown(
@@ -203,7 +203,7 @@ class _PartnerReligiousPreferenceScreenState
                           setState(() {
                             selectedCaste = value;
                           });
-            
+
                           int? stateId;
                           for (var e in religionState.casteList) {
                             if (e.caste == selectedCaste[0]) {
@@ -211,7 +211,7 @@ class _PartnerReligiousPreferenceScreenState
                               break;
                             }
                           }
-            
+
                           print("Selected State ID: $stateId");
                           if (stateId != null) {
                             await ref
@@ -242,7 +242,7 @@ class _PartnerReligiousPreferenceScreenState
                         },
                       ),
                 const SizedBox(height: 10),
-            
+
                 AnyCustomPreferenceDropdown(
                   value: selectedStar,
                   hint: "Star(Optional)",
@@ -277,7 +277,7 @@ class _PartnerReligiousPreferenceScreenState
                 //   },
                 // ),
                 const SizedBox(height: 16),
-            
+
                 // Next Button
                 SizedBox(
                   width: double.infinity,
@@ -292,7 +292,7 @@ class _PartnerReligiousPreferenceScreenState
                               star: selectedStar.toString(),
                               rassi: selectedRassi.toString(),
                               dosham: selectedDosham.toString());
-            
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(

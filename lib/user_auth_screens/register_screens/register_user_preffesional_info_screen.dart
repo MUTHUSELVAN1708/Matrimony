@@ -18,17 +18,47 @@ class _RegisterUserProfessionalInfoScreenState
     extends ConsumerState<RegisterUserProfessionalInfoScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String? educationDetails;
-  String? employmentType;
-  String? occupation;
-  String? incomeCurrency;
-  String? annualIncome;
+  String educationDetails = '';
+  String employmentType = '';
+  String occupation = '';
+  String incomeCurrency = '';
+  String annualIncome = '';
 
   final Map<String, List<String>> educationData = {
-    'School': ['10th', '11th', '12th'],
-    'Engineering': ['Aeronautical Engineering', 'B.E', 'B.Tech'],
-    'Computer Science': ['BCA', 'B.Sc. IT/Computer Science', 'MCA'],
-    'Architecture': ['B.Arch'],
+    'School Education': [
+      '10th',
+      '12th',
+      'Secondary School',
+    ],
+    'Undergraduate Education': [
+      'Bachelor\'s Degree',
+      'BCA',
+      'B.Sc. IT/Computer Science',
+      'B.Tech',
+      'B.E',
+      'B.Arch',
+      'Aeronautical Engineering',
+      'BCA',
+    ],
+    'Postgraduate Education': [
+      'Master\'s Degree',
+      'MCA',
+      'M.Tech',
+      'M.Sc. IT/Computer Science',
+    ],
+    'Doctoral Education': [
+      'PhD',
+      'Postdoctoral',
+    ],
+    'Vocational Education': [
+      'Vocational Training',
+      'Technical Certification',
+      'Online Courses',
+    ],
+    'Diploma Education': [
+      'Diploma',
+      'Associate Degree',
+    ],
   };
 
   final List<String> employmentOptions = [
@@ -59,12 +89,18 @@ class _RegisterUserProfessionalInfoScreenState
 
   final Map<String, List<String>> incomeRangeOptions = {
     'INR (₹)': [
-      'Less than 3 LPA',
-      '3-5 LPA',
-      '5-7 LPA',
-      '7-10 LPA',
-      '10-15 LPA',
-      'More than 15 LPA',
+      '₹ 1 lakh & below',
+      '₹ 1 lakh - ₹ 2 lakh',
+      '₹ 2 lakh - ₹ 3 lakh',
+      '₹ 3 lakh - ₹ 5 lakh',
+      '₹ 5 lakh - ₹ 7 lakh',
+      '₹ 7 lakh - ₹ 10 lakh',
+      '₹ 10 lakh - ₹ 15 lakh',
+      '₹ 15 lakh - ₹ 20 lakh',
+      '₹ 20 lakh - ₹ 30 lakh',
+      '₹ 30 lakh - ₹ 40 lakh',
+      '₹ 40 lakh - ₹ 50 lakh',
+      '₹ 50 lakh & above',
     ],
     'USD (\$)': [
       'Less than 4,000',
@@ -283,7 +319,7 @@ class _RegisterUserProfessionalInfoScreenState
 
                 // Education Selection
                 _buildSelectionField(
-                  value: educationDetails ?? '',
+                  value: educationDetails,
                   hint: 'Select your education details',
                   onTap: () {
                     List<String> allEducationOptions = [];
@@ -299,7 +335,7 @@ class _RegisterUserProfessionalInfoScreenState
                 const SizedBox(height: 16),
 
                 _buildSelectionField(
-                  value: employmentType ?? '',
+                  value: employmentType,
                   hint: 'Select your employment type',
                   onTap: () {
                     _showSelectionDialog(
@@ -315,7 +351,7 @@ class _RegisterUserProfessionalInfoScreenState
                 employmentType == 'Not Working'
                     ? const SizedBox()
                     : _buildSelectionField(
-                        value: occupation ?? '',
+                        value: occupation,
                         hint: 'Select your occupation',
                         onTap: () {
                           _showSelectionDialog(
@@ -331,7 +367,7 @@ class _RegisterUserProfessionalInfoScreenState
                 employmentType == 'Not Working'
                     ? const SizedBox()
                     : _buildSelectionField(
-                        value: incomeCurrency ?? '',
+                        value: incomeCurrency,
                         hint: 'Select your income currency',
                         onTap: () {
                           _showSelectionDialog(
@@ -341,7 +377,7 @@ class _RegisterUserProfessionalInfoScreenState
                             (value) {
                               setState(() {
                                 incomeCurrency = value;
-                                annualIncome = null;
+                                annualIncome = '';
                               });
                             },
                           );
@@ -353,10 +389,10 @@ class _RegisterUserProfessionalInfoScreenState
                 employmentType == 'Not Working'
                     ? const SizedBox()
                     : _buildSelectionField(
-                        value: annualIncome ?? '',
+                        value: annualIncome,
                         hint: 'Select your annual income',
                         onTap: () {
-                          if (incomeCurrency != null) {
+                          if (incomeCurrency.isNotEmpty) {
                             _showSelectionDialog(
                               'Select Annual Income',
                               incomeRangeOptions[incomeCurrency]!,
@@ -379,7 +415,7 @@ class _RegisterUserProfessionalInfoScreenState
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
+                      if (educationDetails.isNotEmpty) {
                         bool success = await ref
                             .read(registerProvider.notifier)
                             .createProfessionalApi(
