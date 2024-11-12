@@ -137,9 +137,9 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                       });
                                     },
                                   ),
-                                  SizedBox(height: 10),
+                                  const SizedBox(height: 10),
                                   fromItem.isEmpty
-                                      ? SizedBox()
+                                      ? const SizedBox()
                                       : HeightDropdownField(
                                           value: toItem.isEmpty ? [] : toItem,
                                           hint: widget.hint3 ?? '',
@@ -169,12 +169,12 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                           });
                                         },
                                         leading: isSelectAll
-                                            ? Icon(
+                                            ? const Icon(
                                                 Icons
                                                     .radio_button_checked_outlined,
                                                 color: Colors.red,
                                               )
-                                            : Icon(Icons.circle_outlined),
+                                            : const Icon(Icons.circle_outlined),
                                         title: const Text("Select All"),
                                       );
                                     }
@@ -202,7 +202,7 @@ class _HeightDropdownFieldState extends State<HeightDropdownField> {
                                       return ListTile(
                                         leading: selectedValues
                                                 .contains(currentItem)
-                                            ? Icon(
+                                            ? const Icon(
                                                 Icons.radio_button_checked,
                                                 color: Colors.red,
                                               )

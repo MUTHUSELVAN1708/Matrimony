@@ -46,6 +46,7 @@ dependencies:
   equatable:
   cached_network_image: ^3.4.1
   country_picker: ^2.0.25
+  skeletonizer:
 
 dev_dependencies:
   flutter_test:
