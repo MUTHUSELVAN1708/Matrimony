@@ -133,49 +133,37 @@ class _PreferenceLocationDropdownState
                       ),
                       const SizedBox(height: 10),
                       Expanded(
-                        child: SingleChildScrollView(
-                          child: Scrollbar(
-                            thumbVisibility: true,
-                            // thumbVisibility: true,
-                            controller: ScrollController(),
-                            radius: Radius.circular(8),
-                            thickness: 8.0,
-                            notificationPredicate: (notification) {
-                              return notification.depth == 1;
-                            },
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: searchQuery.isEmpty
-                                  ? widget.items!.length + 1
-                                  : filteredItems.length + 1,
-                              itemBuilder: (context, index) {
-                                String currentItem;
-                                if (index == 0) {
-                                  currentItem = 'Any';
-                                } else {
-                                  currentItem = searchQuery.isEmpty
-                                      ? widget.items![index - 1]
-                                      : filteredItems[index - 1];
-                                }
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: searchQuery.isEmpty
+                              ? widget.items!.length + 1
+                              : filteredItems.length + 1,
+                          itemBuilder: (context, index) {
+                            String currentItem;
+                            if (index == 0) {
+                              currentItem = 'Any';
+                            } else {
+                              currentItem = searchQuery.isEmpty
+                                  ? widget.items![index - 1]
+                                  : filteredItems[index - 1];
+                            }
 
-                                return ListTile(
-                                  leading: selectedValues.contains(currentItem)
-                                      ? const Icon(
-                                          Icons.radio_button_checked,
-                                          color: Colors.red,
-                                        )
-                                      : const Icon(Icons.circle_outlined),
-                                  title: Text(currentItem),
-                                  onTap: () {
-                                    setState(() {
-                                      selectedValues.clear();
-                                      selectedValues.add(currentItem);
-                                    });
-                                  },
-                                );
+                            return ListTile(
+                              leading: selectedValues.contains(currentItem)
+                                  ? const Icon(
+                                      Icons.radio_button_checked,
+                                      color: Colors.red,
+                                    )
+                                  : const Icon(Icons.circle_outlined),
+                              title: Text(currentItem),
+                              onTap: () {
+                                setState(() {
+                                  selectedValues.clear();
+                                  selectedValues.add(currentItem);
+                                });
                               },
-                            ),
-                          ),
+                            );
+                          },
                         ),
                       ),
                       Padding(

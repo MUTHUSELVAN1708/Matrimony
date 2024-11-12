@@ -266,7 +266,8 @@ class _RegisterUserDetailsScreenState
                         registerNotifier.email = _emailController.text;
                         registerNotifier.name = _nameController.text;
                         registerNotifier.password = _passwordController.text;
-                        registerNotifier.phoneNumber = "$mobileKey${_phoneController.text}";
+                        registerNotifier.phoneNumber =
+                            "$mobileKey${_phoneController.text}";
                         registerNotifier.profileFor = widget.registerFor;
 
                         bool success = await registerNotifier.register();
@@ -276,7 +277,8 @@ class _RegisterUserDetailsScreenState
                             context,
                             MaterialPageRoute(
                               builder: (context) => OtpScreen(
-                                  phoneNumber: _phoneController.text,
+                                  phoneNumber:
+                                      "$mobileKey${_phoneController.text}",
                                   isUserLogin: false),
                             ),
                           );

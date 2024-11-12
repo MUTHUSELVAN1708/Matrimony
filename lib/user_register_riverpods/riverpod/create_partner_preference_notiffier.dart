@@ -69,7 +69,7 @@ class PartnerPreferenceNotifier<T>
   }) async {
     state = state.copyWith(isLoading: true, error: null, successMessage: null);
     try {
-      final int userIds = await SharedPrefHelper.getUserId() ?? 2;
+      final int? userIds = await SharedPrefHelper.getUserId();
       final response = await http.post(
         Uri.parse(Api.createpartnerPreference),
         headers: {
@@ -122,14 +122,13 @@ class PartnerPreferenceNotifier<T>
       } else {
         state = state.copyWith(
           isLoading: false,
-          error:
-              'Failed to upload partner preference: ${response.reasonPhrase}',
+          error: 'Failed to upload partner preference. Please Try Again!',
         );
       }
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: 'Failed to upload partner preference. Please Try Again!',
       );
     }
   }
