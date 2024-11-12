@@ -5,6 +5,8 @@ import 'package:matrimony/user_auth_screens/register_screens/register_user_photo
 import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_screen.dart';
 
 class RegisterUserPhotoUploadedSuccessScreen extends StatelessWidget {
+  const RegisterUserPhotoUploadedSuccessScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,19 +35,13 @@ class RegisterUserPhotoUploadedSuccessScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Congratulations',
+                'Upload Success',
                 style: AppTextStyles.headingTextstyle
-                    .copyWith(fontSize: 25, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Profile can be created',
-                style: AppTextStyles.headingTextstyle
-                    .copyWith(fontSize: 23, fontWeight: FontWeight.w700),
+                    .copyWith(fontSize: 30, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 16),
               const Text(
-                'your photos are gettingvalidated aswe speak. it may take up to 1 hour.we will notify you once it’s done.',
+                'your photos are getting validated as we speak. it may take up to 1 hour.we will notify you once it’s done.',
                 textAlign: TextAlign.center,
                 style: AppTextStyles.spanTextStyle,
               ),

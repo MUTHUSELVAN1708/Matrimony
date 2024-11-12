@@ -40,6 +40,7 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
     return EnhancedLoadingWrapper(
       isLoading: countryState.isLoading,
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
         appBar: AppBar(
           centerTitle: true,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_partner_preference_notiffier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
 
@@ -446,10 +447,11 @@ class _InterestPageViewState extends ConsumerState<InterestPageView> {
           _selectedMoviesTvShows = [];
           _selectedFood = [];
           _selectedSpokenLanguages = [];
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const BottomNavBarScreen()),
-          );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const BottomNavBarScreen()),
+              (route) => false);
         }
       }
     });
@@ -652,7 +654,7 @@ class InterestCategoryScreen extends ConsumerWidget {
               onPressed: onNext,
               style: AppTextStyles.primaryButtonstyle,
               child: partnerState.isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const LoadingIndicator()
                   : Text(
                       category == 'Spoken Languages'
                           ? 'Save & Continue'

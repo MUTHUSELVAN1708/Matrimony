@@ -18,37 +18,47 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
   @override
   Widget build(BuildContext context) {
     final allMatchProvider = ref.watch(allMatchesProvider);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '${allMatchProvider.allMatchList!.length} Matches',
-          textAlign: TextAlign.center,
-          style: AppTextStyles.headingTextstyle,
-        ),
-        Text(
-          'Based on your Partner preferences',
-          textAlign: TextAlign.center,
-          style: AppTextStyles.spanTextStyle.copyWith(color: Colors.black),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Expanded(
-          child: ScrollConfiguration(
-            behavior:
-                ScrollConfiguration.of(context).copyWith(scrollbars: false),
-            child: ListView.builder(
-              itemCount: allMatchProvider.allMatchList!.length,
-              itemBuilder: (context, index) {
-                final matchingData = allMatchProvider.allMatchList![index];
-                return MatchCard(match: matchingData);
-              },
+    return allMatchProvider.allMatchList != null &&
+            allMatchProvider.allMatchList!.isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '${allMatchProvider.allMatchList!.length} Matches',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.headingTextstyle,
+              ),
+              Text(
+                'Based on your Partner preferences',
+                textAlign: TextAlign.center,
+                style:
+                    AppTextStyles.spanTextStyle.copyWith(color: Colors.black),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context)
+                      .copyWith(scrollbars: false),
+                  child: ListView.builder(
+                    itemCount: allMatchProvider.allMatchList!.length,
+                    itemBuilder: (context, index) {
+                      final matchingData =
+                          allMatchProvider.allMatchList![index];
+                      return MatchCard(match: matchingData);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          )
+        : const Center(
+            child: Text(
+              'No Matches Available.',
+              style: TextStyle(fontSize: 20),
             ),
-          ),
-        ),
-      ],
-    );
+          );
   }
 }
 

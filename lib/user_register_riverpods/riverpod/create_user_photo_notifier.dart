@@ -31,7 +31,7 @@ class ImageApiState<T> {
 class UploadImageApiNotifier<T> extends StateNotifier<ImageApiState<T>> {
   UploadImageApiNotifier() : super(ImageApiState<T>());
 
-  Future<void> uploadPhoto(List<String> base64Image) async {
+  Future<bool> uploadPhoto(List<String> base64Image) async {
     state = state.copyWith(isLoading: true, error: null, successMessage: null);
     try {
       final int? userId = await SharedPrefHelper.getUserId();
@@ -49,17 +49,20 @@ class UploadImageApiNotifier<T> extends StateNotifier<ImageApiState<T>> {
           isLoading: false,
           successMessage: "Image uploaded successfully!",
         );
+        return true;
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: 'Failed to upload image: ${response.reasonPhrase}',
+          error: 'Failed to upload image. Please Try Again!',
         );
+        return false;
       }
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
       );
+      return false;
     }
   }
 }

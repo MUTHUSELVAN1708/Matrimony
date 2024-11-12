@@ -402,7 +402,11 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           SizedBox(
             height: 120,
             child: matingData.error != null
-                ? Center(child: Text(matingData.error.toString()))
+                ? Center(
+                    child: Text(
+                    matingData.error.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ))
                 : matingData.isLoading || isAllMatchesLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(

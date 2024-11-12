@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_religious_screen.dart';
@@ -310,7 +311,7 @@ class _RegisterUserPersonalDetailsScreenState
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (selectedGender == null) {
                           _showErrorDialog('Please select your gender');
                           return;
@@ -339,7 +340,7 @@ class _RegisterUserPersonalDetailsScreenState
 
                         final registerState =
                             ref.read(registerProvider.notifier);
-                        registerState.personalDetails(
+                        await registerState.personalDetails(
                           gender: selectedGender,
                           dateOfBirth: dateOfBirth.toString(),
                           age: calculateAge(dateOfBirth),
@@ -362,15 +363,7 @@ class _RegisterUserPersonalDetailsScreenState
                       },
                       style: AppTextStyles.primaryButtonstyle,
                       child: registerStatenotifier.isLoading
-                          ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 1,
-                                ),
-                              ),
-                            )
+                          ? const LoadingIndicator()
                           : const Text('Next',
                               style: AppTextStyles.primarybuttonText),
                     ),

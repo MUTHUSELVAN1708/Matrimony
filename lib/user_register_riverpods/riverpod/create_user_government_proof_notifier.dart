@@ -38,7 +38,7 @@ class GovernmentProofApiNotifier<T>
     await prefs.setString('token', token);
   }
 
-  Future<void> uploadGovernmentProofApi({
+  Future<bool> uploadGovernmentProofApi({
     String? govtIdProof,
     String? idImage,
   }) async {
@@ -57,25 +57,26 @@ class GovernmentProofApiNotifier<T>
           'idImage': idImage,
         }),
       );
-
       if (response.statusCode == 200) {
         state = state.copyWith(
           isLoading: false,
           successMessage: "Government proof uploaded successfully!",
         );
-        final responseData = jsonDecode(response.body);
-        _saveUserData(responseData.data['token']);
+        _saveUserData(response.body);
+        return true;
       } else {
         state = state.copyWith(
           isLoading: false,
           error: 'Failed to upload proof: ${response.reasonPhrase}',
         );
+        return false;
       }
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
       );
+      return false;
     }
   }
 }

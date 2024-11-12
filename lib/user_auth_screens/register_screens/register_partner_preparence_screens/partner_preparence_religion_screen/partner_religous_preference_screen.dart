@@ -96,6 +96,7 @@ class _PartnerReligiousPreferenceScreenState
     return EnhancedLoadingWrapper(
       isLoading: religionState.isLoading,
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0,

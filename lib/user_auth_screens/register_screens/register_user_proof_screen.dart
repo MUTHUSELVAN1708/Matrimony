@@ -160,12 +160,12 @@ class _RegisterUserGovernmentProofState
               child: ElevatedButton(
                 onPressed: () async {
                   if (selectedProof != null && proofState.base64Image != null) {
-                    await ref
+                    final value = await ref
                         .read(governmentProofApiProvider.notifier)
                         .uploadGovernmentProofApi(
                             govtIdProof: selectedProof,
                             idImage: proofState.base64Image);
-                    if (proofApiState.successMessage!.isNotEmpty) {
+                    if (value) {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(

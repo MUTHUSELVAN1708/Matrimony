@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
                 snapshot.data != null &&
                 snapshot.data!.isNotEmpty) {
               // Token is present, navigate to BottomNavScreen
-              return MaterialApp(
+              return const MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: InitialScreen(),
+                home: BottomNavBarScreen(),
               );
             } else {
               return MaterialApp(
@@ -57,6 +57,6 @@ class MyApp extends StatelessWidget {
   // Method to get the token from SharedPreferences
   static Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('Token'); // Make sure the key matches your saved key
+    return prefs.getString('token'); // Make sure the key matches your saved key
   }
 }

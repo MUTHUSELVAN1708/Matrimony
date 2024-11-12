@@ -207,7 +207,8 @@ class _RegisterReligiousDetailsScreenState
                       onPressed: motherTongue.isEmpty && religion.isEmpty
                           ? null
                           : () async {
-                              if (motherTongue.isEmpty && religion.isEmpty) {
+                              if (motherTongue.isNotEmpty &&
+                                  religion.isNotEmpty) {
                                 final registerState =
                                     ref.read(registerProvider.notifier);
                                 final success =

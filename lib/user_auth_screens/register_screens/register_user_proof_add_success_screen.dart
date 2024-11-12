@@ -34,15 +34,9 @@ class RegisterUserGovernmentProofSuccessScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Congratulations',
+                'Upload Success.',
                 style: AppTextStyles.headingTextstyle
-                    .copyWith(fontSize: 25, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Profile can be created',
-                style: AppTextStyles.headingTextstyle
-                    .copyWith(fontSize: 23, fontWeight: FontWeight.w700),
+                    .copyWith(fontSize: 30, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 16),
               const Text(
@@ -56,11 +50,13 @@ class RegisterUserGovernmentProofSuccessScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const RegisterPartnerBasicPreferenceScreen()));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const RegisterPartnerBasicPreferenceScreen()),
+                      (route) => false,
+                    );
                   },
                   style: AppTextStyles.primaryButtonstyle,
                   child: const Text(

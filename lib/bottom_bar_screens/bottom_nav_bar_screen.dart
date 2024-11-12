@@ -23,8 +23,9 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     const Notification2Screen(),
     const Inbox(),
     // const InboxScreen(),
-    const Text(
-        "Profile Screen"), // Replace with the actual Profile screen widget
+    const Center(
+      child: Text("Filter Screen Under construction!"),
+    ), // Replace with the actual Profile screen widget
   ];
 
   @override
@@ -78,7 +79,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
             BottomNavigationBarItem(
               icon:
                   SvgPicture.asset('assets/settingsicon.svg'), // Corrected here
-              label: 'Profile',
+              label: 'Filter',
             ),
           ],
         ),

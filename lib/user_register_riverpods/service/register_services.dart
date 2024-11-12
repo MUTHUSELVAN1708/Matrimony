@@ -61,7 +61,7 @@ class RegisterService {
     }
   }
 
-  Future<Map<String, dynamic>?> personalDetailsApi(
+  Future<bool> personalDetailsApi(
     String gender,
     String dateOfBirth,
     int age,
@@ -93,7 +93,9 @@ class RegisterService {
 
     if (response.statusCode == 200) {
       print(response.statusCode);
+      return true;
     } else {
+      return false;
       throw Exception('Failed to submit personal details: ${response.body}');
     }
   }
@@ -129,7 +131,7 @@ class RegisterService {
     }
   }
 
-  Future<void> professionalInformation({
+  Future<bool> professionalInformation({
     required String education,
     required String employedType,
     required String occupation,
@@ -155,14 +157,16 @@ class RegisterService {
     );
 
     if (response.statusCode == 200) {
+      return true;
       print(response.statusCode);
     } else {
+      return false;
       throw Exception(
           'Failed to submit professional information: ${response.body}');
     }
   }
 
-  Future<void> LocationInformation({
+  Future<bool> LocationInformation({
     String? country,
     String? state,
     String? pincode,
@@ -197,15 +201,16 @@ class RegisterService {
       prefs.setString('occupation', responseData['occupation']);
       prefs.setString('education', responseData['education']);
       prefs.setString('city', responseData['city']);
-
+      return true;
       print(response.statusCode);
     } else {
+      return false;
       throw Exception(
           'Failed to submit location information: ${response.body}');
     }
   }
 
-  Future<void> createAddtionalInformation({
+  Future<bool> createAddtionalInformation({
     String? familyStatus,
     String? aboutYourSelf,
   }) async {
@@ -225,8 +230,10 @@ class RegisterService {
     );
 
     if (response.statusCode == 200) {
+      return true;
       print('Successfully submitted information: ${response.statusCode}');
     } else {
+      return false;
       throw Exception(
           'Failed to submit professional information: ${response.body}');
     }

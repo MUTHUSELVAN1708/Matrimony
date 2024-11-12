@@ -53,6 +53,7 @@ class _RegisterPartnerBasicPreferenceScreenState
     final inputStates = ref.read(preferenceInputProvider.notifier);
     final userRegisterState = ref.watch(partnerPreferenceProvider);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,

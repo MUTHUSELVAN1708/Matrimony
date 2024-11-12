@@ -122,7 +122,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     }
 
     try {
-      await _service.personalDetailsApi(
+      final apiCall = await _service.personalDetailsApi(
         gender,
         dateOfBirth,
         age,
@@ -132,12 +132,17 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         maritalStatus,
         noOfChildren,
       );
-
-      state = RegisterState(
-          isLoading: false,
-          error: null,
-          success: 'Personal details saved successfully.');
-      return true;
+      if (apiCall) {
+        state = RegisterState(
+            isLoading: false,
+            error: null,
+            success: 'Personal details saved successfully.');
+        return true;
+      } else {
+        state = RegisterState(
+            isLoading: false, error: 'Error. Please Try Again!', success: null);
+        return true;
+      }
     } catch (e) {
       state =
           RegisterState(isLoading: false, error: e.toString(), success: null);
@@ -192,19 +197,24 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
-      await _service.professionalInformation(
+      final val = await _service.professionalInformation(
         education: education ?? '',
         employedType: employedType ?? '',
         occupation: occupation ?? '',
         annualIncomeCurrency: annualIncomeCurrency ?? '',
         annualIncome: annualIncome ?? '',
       );
-
-      state = RegisterState(
-          isLoading: false,
-          error: null,
-          success: 'Professional information saved successfully.');
-      return true;
+      if (val) {
+        state = RegisterState(
+            isLoading: false,
+            error: null,
+            success: 'Professional information saved successfully.');
+        return true;
+      } else {
+        state = RegisterState(
+            isLoading: false, error: 'Error. Please Try Again!', success: null);
+        return false;
+      }
     } catch (e) {
       state =
           RegisterState(isLoading: false, error: e.toString(), success: null);
@@ -223,7 +233,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
-      await _service.LocationInformation(
+      final val = await _service.LocationInformation(
         country: country,
         state: states,
         pincode: pincode,
@@ -231,12 +241,19 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         flatNumber: flatNumber,
         address: address,
       );
-
-      state = RegisterState(
-          isLoading: false,
-          error: null,
-          success: 'Location information saved successfully.');
-      return true;
+      if (val) {
+        state = RegisterState(
+            isLoading: false,
+            error: null,
+            success: 'Location information saved successfully.');
+        return true;
+      } else {
+        state = RegisterState(
+            isLoading: false,
+            error: 'Failed. Please Try Again!',
+            success: null);
+        return false;
+      }
     } catch (e) {
       state =
           RegisterState(isLoading: false, error: e.toString(), success: null);
@@ -251,15 +268,20 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
-      await _service.createAddtionalInformation(
+      final val = await _service.createAddtionalInformation(
           aboutYourSelf: aboutYourSelf.toString(),
           familyStatus: employefamilyStatus.toString());
-
-      state = RegisterState(
-          isLoading: false,
-          error: null,
-          success: 'Additional information saved successfully.');
-      return true;
+      if (val) {
+        state = RegisterState(
+            isLoading: false,
+            error: null,
+            success: 'Additional information saved successfully.');
+        return true;
+      } else {
+        state = RegisterState(
+            isLoading: false, error: 'Error. Please Try Again!', success: null);
+        return false;
+      }
     } catch (e) {
       state =
           RegisterState(isLoading: false, error: e.toString(), success: null);

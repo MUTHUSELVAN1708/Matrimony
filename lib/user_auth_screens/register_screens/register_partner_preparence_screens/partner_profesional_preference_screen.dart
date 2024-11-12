@@ -98,6 +98,7 @@ class _PartnerProfessionalScreenState
   Widget build(BuildContext context) {
     final userRegisterState = ref.watch(partnerPreferenceProvider);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
