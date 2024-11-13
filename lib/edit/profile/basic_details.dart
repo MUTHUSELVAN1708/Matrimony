@@ -10,7 +10,7 @@ import 'data/profile_options.dart';
 import 'notifier/profile_notifier.dart';
 
 class EditBasicDetailScreen extends ConsumerWidget {
-  final Function(bool? value) onPop;
+  final Function(String? value) onPop;
 
   const EditBasicDetailScreen({
     super.key,
@@ -41,7 +41,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () {
-              onPop(true);
+              onPop('true');
               Navigator.pop(context);
             },
             child: const Icon(
@@ -415,7 +415,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
           if (ref.read(profileProvider.notifier).validateProfile()) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              onPop(true);
+              onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,
@@ -427,7 +427,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
           } else {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              onPop(true);
+              onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,

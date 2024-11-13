@@ -5,6 +5,7 @@ import 'package:matrimony/profile/widgets/upload_photo.dart';
 import '../common/colors.dart';
 import '../edit/profile/basic_details.dart';
 import '../edit/profile/edit_contact_screen.dart';
+import '../edit/profile/religious_details_screen.dart';
 import '../helper/nav_helper.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -335,7 +336,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             NavigationHelper.slideNavigateTo(
               context: context,
               screen: EditBasicDetailScreen(onPop: (value) {
-                if (value as bool) {
+                if (value == 'true') {
+                  _updateProfileElementsVisibility(true);
+                }
+              }),
+            );
+          }else if (title == 'Religious Information') {
+            _updateProfileElementsVisibility(false);
+            NavigationHelper.slideNavigateTo(
+              context: context,
+              screen: ReligiousDetailsScreen(onPop: (value) {
+                if (value == 'true') {
                   _updateProfileElementsVisibility(true);
                 }
               }),
