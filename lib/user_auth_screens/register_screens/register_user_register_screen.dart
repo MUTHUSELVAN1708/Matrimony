@@ -260,28 +260,31 @@ class _RegisterUserDetailsScreenState
                   height: 55,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        final registerNotifier =
-                            ref.read(registerProvider.notifier);
-                        registerNotifier.email = _emailController.text;
-                        registerNotifier.name = _nameController.text;
-                        registerNotifier.password = _passwordController.text;
-                        registerNotifier.phoneNumber =
-                            "$mobileKey${_phoneController.text}";
-                        registerNotifier.profileFor = widget.registerFor;
+                      if (registerState.isLoading) {
+                      } else {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          final registerNotifier =
+                              ref.read(registerProvider.notifier);
+                          registerNotifier.email = _emailController.text;
+                          registerNotifier.name = _nameController.text;
+                          registerNotifier.password = _passwordController.text;
+                          registerNotifier.phoneNumber =
+                              "$mobileKey${_phoneController.text}";
+                          registerNotifier.profileFor = widget.registerFor;
 
-                        bool success = await registerNotifier.register();
-                        print(success);
-                        if (success) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OtpScreen(
-                                  phoneNumber:
-                                      "$mobileKey${_phoneController.text}",
-                                  isUserLogin: false),
-                            ),
-                          );
+                          bool success = await registerNotifier.register();
+                          print(success);
+                          if (success) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OtpScreen(
+                                    phoneNumber:
+                                        "$mobileKey${_phoneController.text}",
+                                    isUserLogin: false),
+                              ),
+                            );
+                          }
                         }
                       }
                     },

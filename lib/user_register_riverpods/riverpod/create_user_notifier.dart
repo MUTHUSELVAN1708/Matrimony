@@ -52,6 +52,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         password!,
         phoneNumber!,
       );
+      print('Ithan response');
       print(response);
       if (response != null && response['errorMessage'] == '') {
         await _saveUserData(response['userId']);
@@ -166,18 +167,14 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
           caste ?? '',
           subCaste ?? '',
           division ?? '');
-
-      if (response != null) {
+      if (response) {
         state = RegisterState(
             isLoading: false,
             error: null,
             success: 'Religious information saved successfully.');
         return true;
       } else {
-        state = RegisterState(
-            isLoading: false,
-            error: 'Invalid response from server.',
-            success: null);
+        state = RegisterState(isLoading: false, error: 'Failed', success: null);
         return false;
       }
     } catch (e) {

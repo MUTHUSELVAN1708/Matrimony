@@ -98,15 +98,16 @@ class dailyRecommentNotifier extends StateNotifier<dailyRecommentState> {
         final List<DailyRecomment> dailyRecommentList = data.map((item) {
           return DailyRecomment.fromJson(item as Map<String, dynamic>);
         }).toList();
-        if (dailyRecommentList.isEmpty) {
-          state = state.copyWith(
-            isLoading: false,
-            error: 'No Daily Recommendation Available',
-          );
-        } else {
-          state = state.copyWith(
-              isLoading: false, dailyRecommentList: dailyRecommentList);
-        }
+        print(dailyRecommentList.length);
+        // if (dailyRecommentList.isEmpty) {
+        //   state = state.copyWith(
+        //     isLoading: false,
+        //     error: 'No Daily Recommendation Available',
+        //   );
+        // } else {
+        state = state.copyWith(
+            isLoading: false, dailyRecommentList: dailyRecommentList);
+        // }
       } else {
         state = state.copyWith(
           isLoading: false,

@@ -26,10 +26,13 @@ class RegisterService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
+      print('Account Created');
       print(data['id']);
       return {'userId': data['id'], 'errorMessage': ''};
     } else if (response.statusCode == 400) {
       return {'errorMessage': jsonDecode(response.body)['errorMessage']};
+    } else {
+      return {'errorMessage': 'Something Went Wrong'};
     }
   }
 
@@ -100,7 +103,7 @@ class RegisterService {
     }
   }
 
-  Future<String> religiousInformationsApi(
+  Future<bool> religiousInformationsApi(
     String motherTongue,
     String religion,
     String caste,
@@ -125,9 +128,9 @@ class RegisterService {
     );
 
     if (response.statusCode == 200) {
-      return 'Successfully Added';
+      return true;
     } else {
-      throw Exception('Failed to submit personal details: ${response.body}');
+      return false;
     }
   }
 

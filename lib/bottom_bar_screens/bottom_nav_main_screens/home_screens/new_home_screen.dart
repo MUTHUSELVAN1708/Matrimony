@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profile_card_stack.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
@@ -194,7 +195,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
               child: Column(
                 children: [
                   Text(
-                    '02',
+                    '00',
                     style: TextStyle(
                       fontSize: 35,
                       color: Color(colors[index]),
@@ -260,8 +261,13 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       )
                     : dailyRecommentsState.isLoading || isDailyRecommendLoading
                         ? const Center(child: CircularProgressIndicator())
-                        : _buildRecommendationsList(
-                            dailyRecommentsState, context),
+                        : dailyRecommentsState.dailyRecommentList == null &&
+                                dailyRecommentsState.dailyRecommentList!.isEmpty
+                            ? const Center(
+                                child:
+                                    Text('No Daily Recommendation Available'))
+                            : _buildRecommendationsList(
+                                dailyRecommentsState, context),
               ),
             ],
           ),
@@ -409,75 +415,103 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   ))
                 : matingData.isLoading || isAllMatchesLoading
                     ? const Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: matingData.allMatchList!.length,
-                        itemBuilder: (context, index) {
-                          final matching = matingData.allMatchList![index];
-                          return Container(
-                            width: 100,
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: MemoryImage(
-                                  base64Decode(
-                                    matching.photos![0]
-                                        .toString()
-                                        .replaceAll('\n', '')
-                                        .replaceAll('\r', '')
-                                        .replaceAll(' ', ''),
+                    : matingData.allMatchList == null &&
+                            matingData.allMatchList!.isEmpty
+                        ? const Center(child: Text('No Matches Available'))
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: matingData.allMatchList!.length,
+                            itemBuilder: (context, index) {
+                              final matching = matingData.allMatchList![index];
+                              return GestureDetector(
+                                onTap: () {
+                                  final getImageApiProviderState =
+                                      ref.watch(getImageApiProvider);
+                                  if (getImageApiProviderState.data != null &&
+                                      getImageApiProviderState
+                                          .data!.paymentStatus) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AllMatchesDetailsScreen()));
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const PlanUpgradeScreen()));
+                                  }
+                                },
+                                child: Container(
+                                  width: 100,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    image: DecorationImage(
+                                      image: MemoryImage(
+                                        base64Decode(
+                                          matching.photos![0]
+                                              .toString()
+                                              .replaceAll('\n', '')
+                                              .replaceAll('\r', '')
+                                              .replaceAll(' ', ''),
+                                        ),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(12),
-                                  bottomRight: Radius.circular(12),
-                                ),
-                                child: BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 5, sigmaY: 4),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.3),
-                                        borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8))),
-                                    width: double.infinity,
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 4),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          matching.name.toString(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(12),
+                                        bottomRight: Radius.circular(12),
+                                      ),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 5, sigmaY: 4),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(8),
+                                                      topRight:
+                                                          Radius.circular(8))),
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                matching.name.toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${matching.age.toString()} Yrs',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        Text(
-                                          '${matching.age.toString()} Yrs',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                              );
+                            },
+                          ),
           ),
           const SizedBox(
             height: 10,

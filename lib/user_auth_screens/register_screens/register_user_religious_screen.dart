@@ -219,8 +219,7 @@ class _RegisterReligiousDetailsScreenState
                                   subCaste: subCaste,
                                   division: '',
                                 );
-                                if (registerStateNotifier.error == null &&
-                                    registerStateNotifier.success != null) {
+                                if (success) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

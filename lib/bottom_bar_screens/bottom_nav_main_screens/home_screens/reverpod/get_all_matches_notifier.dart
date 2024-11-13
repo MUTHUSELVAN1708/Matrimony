@@ -91,14 +91,14 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
         final List<Matches> matchList = data.map((item) {
           return Matches.fromJson(item as Map<String, dynamic>);
         }).toList();
-        if (matchList.isEmpty) {
-          state = state.copyWith(
-            isLoading: false,
-            error: 'No Matches Available',
-          );
-        } else {
-          state = state.copyWith(isLoading: false, allMatchList: matchList);
-        }
+        // if (matchList.isEmpty) {
+        //   state = state.copyWith(
+        //     isLoading: false,
+        //     error: 'No Matches Available',
+        //   );
+        // } else {
+        state = state.copyWith(isLoading: false, allMatchList: matchList);
+        // }
       } else {
         state = state.copyWith(
           isLoading: false,

@@ -125,18 +125,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: ElevatedButton(
                     focusNode: loginButton,
                     onPressed: () async {
-                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => const ExampleScreen()));
-                      final logUserModel = await ref
-                          .read(logApiProvider.notifier)
-                          .passwordWithLogin(
-                              passwordController.text, emailController.text);
+                      if (loginState.isLoading) {
+                      } else {
+                        final logUserModel = await ref
+                            .read(logApiProvider.notifier)
+                            .passwordWithLogin(
+                                passwordController.text, emailController.text);
 
-                      if (logUserModel.token != '') {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const BottomNavBarScreen()));
+                        if (logUserModel.token != '') {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const BottomNavBarScreen()));
+                        }
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,

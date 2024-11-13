@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
 class MatchesScreen extends ConsumerStatefulWidget {
   const MatchesScreen({Key? key}) : super(key: key);
@@ -62,7 +64,7 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
   }
 }
 
-class MatchCard extends StatelessWidget {
+class MatchCard extends ConsumerWidget {
   final Matches match;
 
   const MatchCard({
@@ -71,7 +73,7 @@ class MatchCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Stack(
@@ -132,10 +134,20 @@ class MatchCard extends StatelessWidget {
             top: 10,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AllMatchesDetailsScreen()));
+                final getImageApiProviderState = ref.watch(getImageApiProvider);
+                if (getImageApiProviderState.data != null &&
+                    getImageApiProviderState.data!.paymentStatus) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const AllMatchesDetailsScreen()));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PlanUpgradeScreen()));
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
