@@ -545,8 +545,6 @@ class _SelectionDialogState extends State<SelectionDialog> {
                           margin: const EdgeInsets.symmetric(
                               horizontal: 8), // Spacing between options
                           child: Column(
-                            mainAxisSize: MainAxisSize
-                                .min, // Minimize the size of the column
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               if (option == "Male" || option == "Female")
@@ -575,8 +573,6 @@ class _SelectionDialogState extends State<SelectionDialog> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              if (isSelected)
-                                const Icon(Icons.check, color: Colors.white),
                             ],
                           ),
                         ),
