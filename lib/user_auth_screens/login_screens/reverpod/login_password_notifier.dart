@@ -103,7 +103,7 @@ class LogStateNotifier extends StateNotifier<LoginState> {
         final userImageData = LogUserModel.fromJson(jsonResponse);
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('Token', userImageData.token);
+        await prefs.setString('token', userImageData.token);
         await prefs.setInt('userId', userImageData.id);
 
         print(userImageData.toJson());
@@ -159,7 +159,7 @@ class LogStateNotifier extends StateNotifier<LoginState> {
         final userImageData = LogUserModel.fromJson(jsonResponse);
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('Token', userImageData.token);
+        await prefs.setString('token', userImageData.token);
         await prefs.setInt('userId', userImageData.id);
 
         print(userImageData.toJson());

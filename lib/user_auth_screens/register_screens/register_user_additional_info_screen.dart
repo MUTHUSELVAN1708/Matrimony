@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/local_storage.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_initial_profile_success_screen.dart';
 
@@ -131,26 +132,27 @@ class _RegisterUserAdditionalInfoScreenState
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  final registerState = ref.read(registerProvider.notifier);
-                  bool success = await registerState.addAdditionalApi(
-                      aboutYourSelf: _aboutController.text,
-                      employefamilyStatus: selectedFamilyStatus);
-                  if (success) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RegisterUserInitialProfileSuccessScreen(),
-                      ),
-                      (Route<dynamic> route) => false,
-                    );
+                  if (registerState.isLoading) {
+                  } else {
+                    final registerState = ref.read(registerProvider.notifier);
+                    bool success = await registerState.addAdditionalApi(
+                        aboutYourSelf: _aboutController.text,
+                        employefamilyStatus: selectedFamilyStatus);
+                    if (success) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              RegisterUserInitialProfileSuccessScreen(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    }
                   }
                 },
                 style: AppTextStyles.primaryButtonstyle,
                 child: registerState.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                    ? const LoadingIndicator()
                     : const Text(
                         'Next',
                         style: AppTextStyles.primarybuttonText,

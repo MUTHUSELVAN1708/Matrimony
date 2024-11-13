@@ -135,24 +135,24 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                     ),
                     const SizedBox(width: 8),
                     SvgPicture.asset(
-                      'assets/edit_icon.svg',
+                      'assets/phone_calling.svg',
                       width: 24,
                       height: 24,
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  height: 45,
-                  child: ElevatedButton(
-                    style: AppTextStyles.secondaryButtonstyle,
-                    onPressed: () {},
-                    child: const Text(
-                      'Resend Again',
-                      style: AppTextStyles.secondaryButton,
-                    ),
-                  ),
-                ),
+                // SizedBox(
+                //   height: 45,
+                //   child: ElevatedButton(
+                //     style: AppTextStyles.secondaryButtonstyle,
+                //     onPressed: () {},
+                //     child: const Text(
+                //       'Resend Again',
+                //       style: AppTextStyles.secondaryButton,
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 40),
                 SizedBox(
                   height: 50,

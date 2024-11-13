@@ -96,24 +96,27 @@ class _LoginScreenState extends ConsumerState<LoginScreenWithOtp> {
                   child: ElevatedButton(
                     focusNode: loginButton,
                     onPressed: () async {
-                      final mobileNo = ref.read(logApiProvider).mobileNo;
-                      if (phoneNoController.text.isNotEmpty &&
-                          mobileNo != null) {
-                        final logUserModel = await ref
-                            .read(logApiProvider.notifier)
-                            .otpWithLogin(mobileNo, phoneNoController.text);
-                        if (logUserModel.token != '') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OtpScreen(
-                                      phoneNumber: logUserModel.phoneNumber,
-                                      isUserLogin: true)));
-                        } else {
-                          ToastDialog(
-                            isSuccess: false,
-                            message: loginState.error.toString(),
-                          );
+                      if (loginState.isLoading) {
+                      } else {
+                        final mobileNo = ref.read(logApiProvider).mobileNo;
+                        if (phoneNoController.text.isNotEmpty &&
+                            mobileNo != null) {
+                          final logUserModel = await ref
+                              .read(logApiProvider.notifier)
+                              .otpWithLogin(mobileNo, phoneNoController.text);
+                          if (logUserModel.token != '') {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OtpScreen(
+                                        phoneNumber: logUserModel.phoneNumber,
+                                        isUserLogin: true)));
+                          } else {
+                            ToastDialog(
+                              isSuccess: false,
+                              message: loginState.error.toString(),
+                            );
+                          }
                         }
                       }
                     },
