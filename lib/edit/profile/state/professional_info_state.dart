@@ -13,9 +13,9 @@ class ProfessionalInfoState {
     this.college,
     this.employedIn,
     this.occupation,
-    this.citizenship ='India',
+    this.citizenship = 'India',
     this.organization,
-    this.currencyType= 'RS.',
+    this.currencyType = 'RS.',
     this.annualIncome,
   });
 

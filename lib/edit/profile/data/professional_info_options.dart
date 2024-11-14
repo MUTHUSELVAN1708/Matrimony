@@ -55,7 +55,6 @@ class OccupationOptions {
   ];
 }
 
-
 class CitizenshipOptions {
   static const List<String> options = [
     'India',

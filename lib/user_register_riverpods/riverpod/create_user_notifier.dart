@@ -226,18 +226,19 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     String? city,
     String? flatNumber,
     String? address,
+    bool? ownHouse,
   }) async {
     state = RegisterState(isLoading: true, error: null, success: null);
 
     try {
       final val = await _service.LocationInformation(
-        country: country,
-        state: states,
-        pincode: pincode,
-        city: city,
-        flatNumber: flatNumber,
-        address: address,
-      );
+          country: country,
+          state: states,
+          pincode: pincode,
+          city: city,
+          flatNumber: flatNumber,
+          address: address,
+          ownHouse: ownHouse);
       if (val) {
         state = RegisterState(
             isLoading: false,

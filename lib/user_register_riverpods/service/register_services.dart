@@ -182,6 +182,7 @@ class RegisterService {
     String? city,
     String? flatNumber,
     String? address,
+    bool? ownHouse,
   }) async {
     final int? userId = await SharedPrefHelper.getUserId();
     final prefs = await SharedPreferences.getInstance();
@@ -200,6 +201,7 @@ class RegisterService {
         'city': city,
         'flatNumber': flatNumber,
         'address': address,
+        'ownHouse': ownHouse
       }),
     );
 

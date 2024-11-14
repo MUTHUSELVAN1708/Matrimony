@@ -383,6 +383,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const BottomNavBarScreen(
+                                isFetch: true,
                                 index: 1,
                               )));
                 },

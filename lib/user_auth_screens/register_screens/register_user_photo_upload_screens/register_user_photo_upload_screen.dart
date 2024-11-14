@@ -23,6 +23,11 @@ class _RegisterUserPhotoUploadScreenState
   @override
   void initState() {
     super.initState();
+    disposeState();
+  }
+
+  Future<void> disposeState() async {
+    await Future.delayed(Duration.zero);
     ref.read(imagePickerProvider.notifier).disposeState();
   }
 

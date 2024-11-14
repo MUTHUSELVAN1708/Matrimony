@@ -352,8 +352,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
               }),
             );
-          }
-          else if (title == 'Professional Information') {
+          } else if (title == 'Professional Information') {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,
@@ -363,9 +362,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
               }),
             );
-          }else{
-
-          }
+          } else {}
         },
       ),
     );

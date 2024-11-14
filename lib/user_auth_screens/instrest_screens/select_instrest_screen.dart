@@ -450,7 +450,9 @@ class _InterestPageViewState extends ConsumerState<InterestPageView> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => const BottomNavBarScreen()),
+                  builder: (context) => const BottomNavBarScreen(
+                        isFetch: true,
+                      )),
               (route) => false);
         }
       }

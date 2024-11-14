@@ -181,7 +181,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const BottomNavBarScreen()),
+                                      const BottomNavBarScreen(
+                                        isFetch: true,
+                                      )),
                               (Route<dynamic> route) => false,
                             );
                           } else {
