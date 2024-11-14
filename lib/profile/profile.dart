@@ -5,6 +5,7 @@ import 'package:matrimony/profile/widgets/upload_photo.dart';
 import '../common/colors.dart';
 import '../edit/profile/basic_details.dart';
 import '../edit/profile/edit_contact_screen.dart';
+import '../edit/profile/professional_information_edit.dart';
 import '../edit/profile/religious_details_screen.dart';
 import '../helper/nav_helper.dart';
 
@@ -351,6 +352,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
               }),
             );
+          }
+          else if (title == 'Professional Information') {
+            _updateProfileElementsVisibility(false);
+            NavigationHelper.slideNavigateTo(
+              context: context,
+              screen: ProfessionalInformationDetailsScreen(onPop: (value) {
+                if (value == 'true') {
+                  _updateProfileElementsVisibility(true);
+                }
+              }),
+            );
+          }else{
+
           }
         },
       ),
