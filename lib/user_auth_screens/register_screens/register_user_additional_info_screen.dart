@@ -4,6 +4,7 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_initial_profile_success_screen.dart';
 
@@ -146,6 +147,12 @@ class _RegisterUserAdditionalInfoScreenState
                               RegisterUserInitialProfileSuccessScreen(),
                         ),
                         (Route<dynamic> route) => false,
+                      );
+                    } else {
+                      CustomSnackBar.show(
+                        context: context,
+                        message: 'Something Went Wrong. Please Try Again!',
+                        isError: true,
                       );
                     }
                   }

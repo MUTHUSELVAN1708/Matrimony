@@ -11,10 +11,10 @@ class BottomNavBarScreen extends StatefulWidget {
   const BottomNavBarScreen({super.key, this.index});
 
   @override
-  _BottomNavBarScreenState createState() => _BottomNavBarScreenState();
+  BottomNavBarScreenState createState() => BottomNavBarScreenState();
 }
 
-class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
+class BottomNavBarScreenState extends State<BottomNavBarScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [

@@ -66,6 +66,11 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
   }
 
   void _showSelectionDialog(BuildContext context) {
+    setState(() {
+      filteredItems = widget.items;
+      searchQuery = '';
+    });
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -78,10 +83,8 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
             builder: (BuildContext context, StateSetter setState) {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                height: MediaQuery.of(context).size.height *
-                    0.6, // Adjust the height as needed
-                width: MediaQuery.of(context).size.width *
-                    0.8, // Adjust the width as needed
+                height: MediaQuery.of(context).size.height * 0.6,
+                width: MediaQuery.of(context).size.width * 0.8,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -98,8 +101,7 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                               color: AppColors.dialogboxSearchTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                BorderSide.none, // Remove default border lines
+                            borderSide: BorderSide.none,
                           ),
                         ),
                         onChanged: (value) {
@@ -122,33 +124,36 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: filteredItems.isEmpty
-                              ? widget.items.length
-                              : filteredItems.length,
-                          itemBuilder: (context, index) {
-                            return RadioListTile<String>(
-                              title: Text(filteredItems.isEmpty
-                                  ? widget.items[index]
-                                  : filteredItems[index]),
-                              value: filteredItems.isEmpty
-                                  ? widget.items[index]
-                                  : filteredItems[index],
-                              groupValue: selectedValue,
-                              activeColor: Colors.red,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  setState(() {
-                                    selectedValue = newValue;
-                                  });
-                                }
-                              },
-                            );
-                          },
+                      if (filteredItems.isEmpty)
+                        const Expanded(
+                            child: Center(
+                          child: Text(
+                            'No Result Found',
+                            style: TextStyle(color: Colors.black, fontSize: 14),
+                          ),
+                        ))
+                      else
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              return RadioListTile<String>(
+                                title: Text(filteredItems[index]),
+                                value: filteredItems[index],
+                                groupValue: selectedValue,
+                                activeColor: Colors.red,
+                                onChanged: (String? newValue) {
+                                  if (newValue != null) {
+                                    setState(() {
+                                      selectedValue = newValue;
+                                    });
+                                  }
+                                },
+                              );
+                            },
+                          ),
                         ),
-                      ),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: SizedBox(

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_location_screen.dart';
 
 class RegisterUserProfessionalInfoScreen extends ConsumerStatefulWidget {
-  const RegisterUserProfessionalInfoScreen({Key? key}) : super(key: key);
+  const RegisterUserProfessionalInfoScreen({super.key});
 
   @override
   ConsumerState<RegisterUserProfessionalInfoScreen> createState() =>
@@ -260,38 +262,48 @@ class _RegisterUserProfessionalInfoScreenState
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Expanded(
-                            child: ScrollbarTheme(
-                              data: ScrollbarThemeData(
-                                trackColor:
-                                    WidgetStateProperty.all(Colors.pink[100]),
-                                thumbColor:
-                                    WidgetStateProperty.all(Colors.pink),
-                                radius: const Radius.circular(12),
+                          if (filteredOptions.isEmpty)
+                            const Expanded(
+                                child: Center(
+                              child: Text(
+                                'No Result Found',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black),
                               ),
-                              child: Scrollbar(
-                                thumbVisibility: true,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: filteredOptions.map((option) {
-                                      return RadioListTile<String>(
-                                        title: Text(option),
-                                        value: option,
-                                        groupValue: selectedValue,
-                                        activeColor:
-                                            AppColors.primaryButtonColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedValue = value;
-                                          });
-                                        },
-                                      );
-                                    }).toList(),
+                            ))
+                          else
+                            Expanded(
+                              child: ScrollbarTheme(
+                                data: ScrollbarThemeData(
+                                  trackColor:
+                                      WidgetStateProperty.all(Colors.pink[100]),
+                                  thumbColor:
+                                      WidgetStateProperty.all(Colors.pink),
+                                  radius: const Radius.circular(12),
+                                ),
+                                child: Scrollbar(
+                                  thumbVisibility: true,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: filteredOptions.map((option) {
+                                        return RadioListTile<String>(
+                                          title: Text(option),
+                                          value: option,
+                                          groupValue: selectedValue,
+                                          activeColor:
+                                              AppColors.primaryButtonColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedValue = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
                           const SizedBox(height: 60),
                         ],
                       ),
@@ -483,38 +495,40 @@ class _RegisterUserProfessionalInfoScreenState
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (educationDetails.isNotEmpty) {
-                        bool success = await ref
-                            .read(registerProvider.notifier)
-                            .createProfessionalApi(
-                              education: educationDetails,
-                              annualIncome: annualIncome,
-                              employedType: employmentType,
-                              occupation: occupation,
-                              annualIncomeCurrency: incomeCurrency,
+                      if (registerStateNotifier.isLoading) {
+                      } else {
+                        if (educationDetails.isNotEmpty) {
+                          bool success = await ref
+                              .read(registerProvider.notifier)
+                              .createProfessionalApi(
+                                education: educationDetails,
+                                annualIncome: annualIncome,
+                                employedType: employmentType,
+                                occupation: occupation,
+                                annualIncomeCurrency: incomeCurrency,
+                              );
+                          if (success) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RegisterUserLocationScreen(),
+                              ),
                             );
-                        if (success) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  RegisterUserLocationScreen(),
-                            ),
-                          );
+                          } else {
+                            CustomSnackBar.show(
+                              context: context,
+                              message:
+                                  'Something Went Wrong. Please Try Again!',
+                              isError: true,
+                            );
+                          }
                         }
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
                     child: registerStateNotifier.isLoading
-                        ? const Center(
-                            child: SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                )),
-                          )
+                        ? const LoadingIndicator()
                         : const Text('Next',
                             style: AppTextStyles.primarybuttonText),
                   ),

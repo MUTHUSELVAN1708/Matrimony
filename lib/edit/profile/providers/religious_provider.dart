@@ -4,6 +4,6 @@ import '../state/religious_state.dart';
 import '../notifier/religious_notifier.dart';
 
 final religiousProvider =
-StateNotifierProvider<ReligiousNotifier, ReligiousState>((ref) {
+    StateNotifierProvider<ReligiousNotifier, ReligiousState>((ref) {
   return ReligiousNotifier();
 });

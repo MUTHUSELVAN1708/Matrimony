@@ -26,6 +26,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final registerProviderState = ref.watch(registerProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -158,36 +159,52 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      String otp = _otpDigits.join();
-                      print('Verifying OTP: $otp');
-                      final registerState = ref.read(registerProvider.notifier);
-                      registerState.otp = otp;
-                      registerState.phoneNo = widget.phoneNumber;
-                      bool success = await ref
-                          .read(registerProvider.notifier)
-                          .otpVerification();
-                      if (success) {
-                        if (widget.isUserLogin) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const BottomNavBarScreen()),
-                            (Route<dynamic> route) => false,
-                          );
-                        } else {
-                          Navigator.push(
+                      if (registerProviderState.isLoading) {
+                      } else {
+                        final registerState =
+                            ref.read(registerProvider.notifier);
+                        String otp = _otpDigits.join();
+                        print('Verifying OTP: $otp');
+                        registerState.otp = otp;
+                        registerState.phoneNo = widget.phoneNumber;
+                        bool success = await ref
+                            .read(registerProvider.notifier)
+                            .otpVerification();
+                        if (success) {
+                          if (widget.isUserLogin) {
+                            CustomSnackBar.show(
+                              context: context,
+                              message: 'Logged In Successfully',
+                              isError: false,
+                            );
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const RegisterUserPersonalDetailsScreen()));
+                                      const BottomNavBarScreen()),
+                              (Route<dynamic> route) => false,
+                            );
+                          } else {
+                            CustomSnackBar.show(
+                              context: context,
+                              message: 'OTP Verified Successfully.',
+                              isError: false,
+                            );
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RegisterUserPersonalDetailsScreen()),
+                              (route) => false,
+                            );
+                          }
+                        } else {
+                          CustomSnackBar.show(
+                            context: context,
+                            message: 'Invalid OTP. Please try again.',
+                            isError: true,
+                          );
                         }
-                      } else {
-                        CustomSnackBar.show(
-                          context: context,
-                          message: 'Invalid OTP. Please try again.',
-                          isError: true,
-                        );
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,

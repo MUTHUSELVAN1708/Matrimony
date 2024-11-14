@@ -220,19 +220,14 @@ class _RegisterPartnerBasicPreferenceScreenState
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        List<List<int>> originalList = [
-                          [19],
-                          [21]
-                        ];
-
-                        List<int> firstList =
-                            originalList.map((e) => e[0]).toList();
-                        List<int> secondList = originalList[1];
-
+                        int firstList =
+                            int.parse(selectedAge[0].substring(1, 3));
+                        int secondList =
+                            int.parse(selectedAge[0].substring(6, 8));
                         inputStates.updatePreferenceInput(
                             userId: userId,
-                            fromAge: firstList[0],
-                            toAge: secondList[0],
+                            fromAge: firstList,
+                            toAge: secondList,
                             height: selectedHeight.toString(),
                             motherTongue: selectedMotherTongue.toString(),
                             maritalStatus: selectedMaritalStatus.toString(),

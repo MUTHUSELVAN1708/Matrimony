@@ -12,26 +12,32 @@ class RegisterService {
     String password,
     String phoneNumber,
   ) async {
-    final response = await http.post(
-      Uri.parse(Api.createUser),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'profileFor': profileFor,
-        'name': name,
-        'email': email,
-        'password': password,
-        'phoneNumber': phoneNumber,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      print('Account Created');
-      print(data['id']);
-      return {'userId': data['id'], 'errorMessage': ''};
-    } else if (response.statusCode == 400) {
-      return {'errorMessage': jsonDecode(response.body)['errorMessage']};
-    } else {
+    try {
+      print('Api triggered');
+      final response = await http.post(
+        Uri.parse(Api.createUser),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'profileFor': profileFor,
+          'name': name,
+          'email': email,
+          'password': password,
+          'phoneNumber': phoneNumber,
+        }),
+      );
+      print(response.body);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        print('Account Created');
+        print(data['id']);
+        return {'userId': data['id'], 'errorMessage': ''};
+      } else if (response.statusCode == 400) {
+        return {'errorMessage': jsonDecode(response.body)['errorMessage']};
+      } else {
+        return {'errorMessage': 'Something Went Wrong'};
+      }
+    } catch (e) {
       return {'errorMessage': 'Something Went Wrong'};
     }
   }

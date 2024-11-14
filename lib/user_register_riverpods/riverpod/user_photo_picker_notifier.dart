@@ -58,6 +58,19 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
 
   final ImagePicker _imagePicker = ImagePicker();
 
+  void disposeState() {
+    state = ImagePickerState(
+        imageUrl1: null,
+        imageUrl2: null,
+        imageUrl3: null,
+        error1: null,
+        error2: null,
+        error3: null,
+        isLoading1: false,
+        isLoading2: false,
+        isLoading3: false);
+  }
+
   Future<void> pickImage1() async {
     state = state.copyWith(isLoading1: true);
     await _pickImageAndUpdateState(

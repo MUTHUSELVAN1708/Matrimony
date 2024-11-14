@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/user_auth_screens/instrest_screens/select_instrest_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/location_widget/common_location_dropdown.dart';
@@ -205,7 +206,7 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (selectedCountry.isNotEmpty &&
-                        selectedCountry.isNotEmpty) {
+                        selectedState.isNotEmpty) {
                       ref
                           .read(preferenceInputProvider.notifier)
                           .updatePreferenceInput(
@@ -221,15 +222,20 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => InterestPageView(),
+                          builder: (context) => const InterestPageView(),
                         ),
                       );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content:
-                              Text('Please select country, state, and city'),
-                        ),
+                    } else if (selectedCountry.isEmpty) {
+                      CustomSnackBar.show(
+                        context: context,
+                        message: 'Please Select Country.',
+                        isError: true,
+                      );
+                    } else if (selectedState.isEmpty) {
+                      CustomSnackBar.show(
+                        context: context,
+                        message: 'Please Select State.',
+                        isError: true,
                       );
                     }
                   },

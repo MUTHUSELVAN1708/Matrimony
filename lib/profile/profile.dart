@@ -341,7 +341,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
               }),
             );
-          }else if (title == 'Religious Information') {
+          } else if (title == 'Religious Information') {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,

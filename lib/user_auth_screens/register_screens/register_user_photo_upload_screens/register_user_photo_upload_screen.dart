@@ -3,14 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_photo_upload_screens/register_user_photo_uploaded_success_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_photo_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_photo_picker_notifier.dart'; // Riverpod image picker
 
-class RegisterUserPhotoUploadScreen extends ConsumerWidget {
+class RegisterUserPhotoUploadScreen extends ConsumerStatefulWidget {
+  const RegisterUserPhotoUploadScreen({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RegisterUserPhotoUploadScreen> createState() =>
+      _RegisterUserPhotoUploadScreenState();
+}
+
+class _RegisterUserPhotoUploadScreenState
+    extends ConsumerState<RegisterUserPhotoUploadScreen> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(imagePickerProvider.notifier).disposeState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final imagePickerState = ref.watch(imagePickerProvider);
     final imageApi = ref.watch(imageRegisterApiProvider);
 
@@ -106,35 +123,39 @@ class RegisterUserPhotoUploadScreen extends ConsumerWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: () async {
-                  final imagepicker = ref.watch(imagePickerProvider);
-                  final imageApi = ref.watch(imageRegisterApiProvider);
-                  final isImagesNotEmpty = [
-                    imagepicker.imageUrl1 ?? '',
-                    imagepicker.imageUrl2 ?? '',
-                    imagepicker.imageUrl3 ?? ''
-                  ];
-                  if (isImagesNotEmpty.where((url) => url.isNotEmpty).length >
-                      2) {
-                    final value = await ref
-                        .read(imageRegisterApiProvider.notifier)
-                        .uploadPhoto(isImagesNotEmpty);
-                    // if (imageApi.successMessage!.isNotEmpty ) {
-                    if (value) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              RegisterUserPhotoUploadedSuccessScreen(),
-                        ),
-                        // (route) => false,
-                      );
+                  if (imageApi.isLoading) {
+                  } else {
+                    final isImagesNotEmpty = [
+                      imagePickerState.imageUrl1 ?? '',
+                      imagePickerState.imageUrl2 ?? '',
+                      imagePickerState.imageUrl3 ?? ''
+                    ];
+                    if (isImagesNotEmpty.where((url) => url.isNotEmpty).length >
+                        1) {
+                      final value = await ref
+                          .read(imageRegisterApiProvider.notifier)
+                          .uploadPhoto(isImagesNotEmpty);
+                      if (value) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const RegisterUserPhotoUploadedSuccessScreen(),
+                          ),
+                          // (route) => false,
+                        );
+                      } else {
+                        CustomSnackBar.show(
+                          context: context,
+                          message: 'Something Went Wrong. Please Try Again!',
+                          isError: true,
+                        );
+                      }
                     }
-
-                    // }
                   }
                 },
                 style: AppTextStyles.primaryButtonstyle,
                 child: imageApi.isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const LoadingIndicator()
                     : const Text(
                         'Continue',
                         style: AppTextStyles.primarybuttonText,
