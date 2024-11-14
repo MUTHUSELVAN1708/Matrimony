@@ -6,6 +6,7 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_religious_screen.dart';
@@ -312,53 +313,64 @@ class _RegisterUserPersonalDetailsScreenState
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (selectedGender == null) {
-                          _showErrorDialog('Please select your gender');
-                          return;
-                        }
-                        if (dateOfBirth == null) {
-                          _showErrorDialog('Please select your date of birth');
-                          return;
-                        }
-                        if (height == null || height!.isEmpty) {
-                          _showErrorDialog('Please enter your height');
-                          return;
-                        }
-                        if (weight == null || weight!.isEmpty) {
-                          _showErrorDialog('Please enter your weight');
-                          return;
-                        }
-                        if (physicalStatus == null) {
-                          _showErrorDialog(
-                              'Please select your physical status');
-                          return;
-                        }
-                        if (maritalStatus == null) {
-                          _showErrorDialog('Please select your marital status');
-                          return;
-                        }
+                        if (registerStatenotifier.isLoading) {
+                        } else {
+                          if (selectedGender == null) {
+                            _showErrorDialog('Please select your gender');
+                            return;
+                          }
+                          if (dateOfBirth == null) {
+                            _showErrorDialog(
+                                'Please select your date of birth');
+                            return;
+                          }
+                          if (height == null || height!.isEmpty) {
+                            _showErrorDialog('Please enter your height');
+                            return;
+                          }
+                          if (weight == null || weight!.isEmpty) {
+                            _showErrorDialog('Please enter your weight');
+                            return;
+                          }
+                          if (physicalStatus == null) {
+                            _showErrorDialog(
+                                'Please select your physical status');
+                            return;
+                          }
+                          if (maritalStatus == null) {
+                            _showErrorDialog(
+                                'Please select your marital status');
+                            return;
+                          }
 
-                        final registerState =
-                            ref.read(registerProvider.notifier);
-                        await registerState.personalDetails(
-                          gender: selectedGender,
-                          dateOfBirth: dateOfBirth.toString(),
-                          age: calculateAge(dateOfBirth),
-                          height: height,
-                          weight: weight,
-                          anyDisability: physicalStatus,
-                          maritalStatus: maritalStatus,
-                        );
-
-                        if (ref.watch(registerProvider).error == null &&
-                            registerStatenotifier.success != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const RegisterReligiousDetailsScreen(),
-                            ),
+                          final registerState =
+                              ref.read(registerProvider.notifier);
+                          final result = await registerState.personalDetails(
+                            gender: selectedGender,
+                            dateOfBirth: dateOfBirth.toString(),
+                            age: calculateAge(dateOfBirth),
+                            height: height,
+                            weight: weight,
+                            anyDisability: physicalStatus,
+                            maritalStatus: maritalStatus,
                           );
+
+                          if (result) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegisterReligiousDetailsScreen(),
+                              ),
+                            );
+                          } else {
+                            CustomSnackBar.show(
+                              context: context,
+                              message:
+                                  'Something Went Wrong. Please Try Again!',
+                              isError: true,
+                            );
+                          }
                         }
                       },
                       style: AppTextStyles.primaryButtonstyle,

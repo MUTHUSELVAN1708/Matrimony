@@ -68,11 +68,11 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildForm(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      double heightQuery,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+    double heightQuery,
+  ) {
     return Positioned(
       top: heightQuery * 0.28,
       left: 0,
@@ -138,10 +138,10 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildReligionSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -164,10 +164,10 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildCasteSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -190,10 +190,10 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildSubCasteSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -216,10 +216,10 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildMotherTongueSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -242,9 +242,9 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildMarryFromOtherCommunitiesToggle(
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: const Text('Willing To Marry From Other Communities'),
@@ -259,10 +259,10 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildStarSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -285,10 +285,10 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildRaasiSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -311,10 +311,10 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildSaveButton(
-      BuildContext context,
-      WidgetRef ref,
-      ReligiousState religiousState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ReligiousState religiousState,
+  ) {
     return SizedBox(
       width: double.infinity,
       height: 48,

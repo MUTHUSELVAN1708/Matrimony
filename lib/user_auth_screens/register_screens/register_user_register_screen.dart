@@ -5,6 +5,7 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/common_mobile_picker.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
@@ -275,6 +276,11 @@ class _RegisterUserDetailsScreenState
                           bool success = await registerNotifier.register();
                           print(success);
                           if (success) {
+                            CustomSnackBar.show(
+                              context: context,
+                              message: 'OTP sent',
+                              isError: false,
+                            );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -284,6 +290,21 @@ class _RegisterUserDetailsScreenState
                                     isUserLogin: false),
                               ),
                             );
+                          } else {
+                            if (registerState.error != null) {
+                              CustomSnackBar.show(
+                                context: context,
+                                message: registerState.error!,
+                                isError: true,
+                              );
+                            } else {
+                              CustomSnackBar.show(
+                                context: context,
+                                message:
+                                    'Something Went Wrong. Please Try Again!',
+                                isError: true,
+                              );
+                            }
                           }
                         }
                       }

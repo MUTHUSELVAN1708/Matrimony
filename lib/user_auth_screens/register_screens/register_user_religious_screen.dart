@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/riverpod/religious_api_notifier.dart';
@@ -207,39 +209,41 @@ class _RegisterReligiousDetailsScreenState
                       onPressed: motherTongue.isEmpty && religion.isEmpty
                           ? null
                           : () async {
-                              if (motherTongue.isNotEmpty &&
-                                  religion.isNotEmpty) {
-                                final registerState =
-                                    ref.read(registerProvider.notifier);
-                                final success =
-                                    await registerState.createReligionsApi(
-                                  motherTongue: motherTongue,
-                                  religion: religion,
-                                  caste: caste,
-                                  subCaste: subCaste,
-                                  division: '',
-                                );
-                                if (success) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const RegisterUserProfessionalInfoScreen()),
+                              if (registerStateNotifier.isLoading) {
+                              } else {
+                                if (motherTongue.isNotEmpty &&
+                                    religion.isNotEmpty) {
+                                  final registerState =
+                                      ref.read(registerProvider.notifier);
+                                  final success =
+                                      await registerState.createReligionsApi(
+                                    motherTongue: motherTongue,
+                                    religion: religion,
+                                    caste: caste,
+                                    subCaste: subCaste,
+                                    division: '',
                                   );
+                                  if (success) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RegisterUserProfessionalInfoScreen()),
+                                    );
+                                  } else {
+                                    CustomSnackBar.show(
+                                      context: context,
+                                      message:
+                                          'Something Went Wrong. Please Try Again!',
+                                      isError: true,
+                                    );
+                                  }
                                 }
                               }
                             },
                       style: AppTextStyles.primaryButtonstyle,
                       child: registerStateNotifier.isLoading
-                          ? const Center(
-                              child: SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  )),
-                            )
+                          ? const LoadingIndicator()
                           : const Text(
                               'Next',
                               style: AppTextStyles.primarybuttonText,

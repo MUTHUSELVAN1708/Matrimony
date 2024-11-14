@@ -32,7 +32,7 @@ class ReligiousState {
       caste: caste ?? this.caste,
       subCaste: subCaste ?? this.subCaste,
       willingToMarryOtherCommunities:
-      willingToMarryOtherCommunities ?? this.willingToMarryOtherCommunities,
+          willingToMarryOtherCommunities ?? this.willingToMarryOtherCommunities,
       star: star ?? this.star,
       raasi: raasi ?? this.raasi,
     );
