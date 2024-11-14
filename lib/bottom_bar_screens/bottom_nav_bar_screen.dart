@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/filter_screens/ui/search_filter_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/inbox_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/matches_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/new_home_screen.dart';
@@ -23,9 +24,7 @@ class BottomNavBarScreenState extends State<BottomNavBarScreen> {
     const Notification2Screen(),
     const Inbox(),
     // const InboxScreen(),
-    const Center(
-      child: Text("Filter Screen Under construction!"),
-    ), // Replace with the actual Profile screen widget
+    PartnerSearchScreen() // Replace with the actual Profile screen widget
   ];
 
   @override
