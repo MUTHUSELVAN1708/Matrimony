@@ -35,11 +35,20 @@ class City {
   final int id;
   final String citys;
   final int stateId;
+  final int? pincode;
 
-  City({required this.id, required this.citys, required this.stateId});
+  City(
+      {required this.id,
+      required this.citys,
+      required this.stateId,
+      this.pincode});
 
   factory City.fromJson(Map<String, dynamic> json) {
-    return City(id: json['id'], citys: json['city'], stateId: json['stateId']);
+    return City(
+        id: json['id'],
+        citys: json['city'],
+        stateId: json['stateId'],
+        pincode: json['pincode']);
   }
 }
 

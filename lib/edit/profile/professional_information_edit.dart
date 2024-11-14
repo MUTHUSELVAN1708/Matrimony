@@ -64,11 +64,11 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildForm(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      double heightQuery,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+    double heightQuery,
+  ) {
     return Positioned(
       top: heightQuery * 0.28,
       left: 0,
@@ -97,36 +97,34 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
                 _buildTitle(),
                 const SizedBox(height: 16),
                 _buildEducationSelection(context, ref, professionalInfoState),
-                if (professionalInfoState.education != null && professionalInfoState.education?.toLowerCase() != "other") ...[
+                if (professionalInfoState.education != null &&
+                    professionalInfoState.education?.toLowerCase() !=
+                        "other") ...[
                   const SizedBox(height: 16),
-                  _buildTextField(
-                    'Enter College / Institution',
-                      professionalInfoState.college ?? '',true,
-                      (value){
-                        // ref.read(professionalInfoProvider.notifier).updateCollege(value);
-                      }
-                  ),
+                  _buildTextField('Enter College / Institution',
+                      professionalInfoState.college ?? '', true, (value) {
+                    // ref.read(professionalInfoProvider.notifier).updateCollege(value);
+                  }),
                 ],
                 const SizedBox(height: 16),
                 _buildOccupationSelection(context, ref, professionalInfoState),
                 if (professionalInfoState.occupation != null) ...[
                   const SizedBox(height: 16),
-                  _buildTextField(
-                      'Enter Organization Name',
-                      professionalInfoState.college ?? '',true,
-                          (value){
-                        // ref.read(professionalInfoProvider.notifier).updateCollege(value);
-                      }
-                  ),
+                  _buildTextField('Enter Organization Name',
+                      professionalInfoState.college ?? '', true, (value) {
+                    // ref.read(professionalInfoProvider.notifier).updateCollege(value);
+                  }),
                 ],
                 const SizedBox(height: 16),
                 _buildEmployedInSelection(context, ref, professionalInfoState),
                 const SizedBox(height: 16),
                 _buildCitizenshipSelection(context, ref, professionalInfoState),
                 const SizedBox(height: 16),
-                _buildCurrencyTypeSelection(context, ref, professionalInfoState),
+                _buildCurrencyTypeSelection(
+                    context, ref, professionalInfoState),
                 const SizedBox(height: 16),
-                _buildAnnualIncomeSelection(context, ref, professionalInfoState),
+                _buildAnnualIncomeSelection(
+                    context, ref, professionalInfoState),
                 const SizedBox(height: 24),
                 _buildSaveButton(context, ref, professionalInfoState),
                 const SizedBox(height: 16),
@@ -138,7 +136,8 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTextField(String hintText, String initialValue, bool isEnabled,Function(String)? onChanged) {
+  Widget _buildTextField(String hintText, String initialValue, bool isEnabled,
+      Function(String)? onChanged) {
     return CustomTextFieldWidget(
       hintText: hintText,
       initialValue: initialValue,
@@ -161,10 +160,10 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildEducationSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -174,7 +173,9 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
             options: EducationOptions.options,
             selectedValue: professionalInfoState.education ?? 'Select',
             onSelect: (value) {
-              ref.read(professionalInfoProvider.notifier).updateEducation(value);
+              ref
+                  .read(professionalInfoProvider.notifier)
+                  .updateEducation(value);
             },
           ),
         );
@@ -187,10 +188,10 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildEmployedInSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -200,7 +201,9 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
             options: EmploymentOptions.options,
             selectedValue: professionalInfoState.employedIn ?? 'Select',
             onSelect: (value) {
-              ref.read(professionalInfoProvider.notifier).updateEmployedIn(value);
+              ref
+                  .read(professionalInfoProvider.notifier)
+                  .updateEmployedIn(value);
             },
           ),
         );
@@ -213,10 +216,10 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildOccupationSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -226,7 +229,9 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
             options: OccupationOptions.options,
             selectedValue: professionalInfoState.occupation ?? 'Select',
             onSelect: (value) {
-              ref.read(professionalInfoProvider.notifier).updateOccupation(value);
+              ref
+                  .read(professionalInfoProvider.notifier)
+                  .updateOccupation(value);
             },
           ),
         );
@@ -239,10 +244,10 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildCitizenshipSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -252,7 +257,9 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
             options: CitizenshipOptions.options,
             selectedValue: professionalInfoState.citizenship ?? 'Select',
             onSelect: (value) {
-              ref.read(professionalInfoProvider.notifier).updateCitizenship(value);
+              ref
+                  .read(professionalInfoProvider.notifier)
+                  .updateCitizenship(value);
             },
           ),
         );
@@ -265,10 +272,10 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
   }
 
   Widget _buildCurrencyTypeSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -278,7 +285,9 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
             options: CurrencyOptions.options,
             selectedValue: professionalInfoState.currencyType ?? 'Select',
             onSelect: (value) {
-              ref.read(professionalInfoProvider.notifier).updateCurrencyType(value);
+              ref
+                  .read(professionalInfoProvider.notifier)
+                  .updateCurrencyType(value);
             },
           ),
         );
@@ -289,11 +298,12 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
       ),
     );
   }
+
   Widget _buildAnnualIncomeSelection(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -303,7 +313,9 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
             options: IncomeOptions.options,
             selectedValue: professionalInfoState.annualIncome ?? 'Select',
             onSelect: (value) {
-              ref.read(professionalInfoProvider.notifier).updateAnnualIncome(value);
+              ref
+                  .read(professionalInfoProvider.notifier)
+                  .updateAnnualIncome(value);
             },
           ),
         );
@@ -315,12 +327,11 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
     );
   }
 
-
   Widget _buildSaveButton(
-      BuildContext context,
-      WidgetRef ref,
-      ProfessionalInfoState professionalInfoState,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    ProfessionalInfoState professionalInfoState,
+  ) {
     return SizedBox(
       width: double.infinity,
       height: 48,

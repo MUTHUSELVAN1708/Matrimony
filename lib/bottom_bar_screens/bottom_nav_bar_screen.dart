@@ -9,7 +9,8 @@ import 'package:matrimony/common/colors.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
   final int? index;
-  const BottomNavBarScreen({super.key, this.index});
+  final bool isFetch;
+  const BottomNavBarScreen({super.key, this.index, required this.isFetch});
 
   @override
   BottomNavBarScreenState createState() => BottomNavBarScreenState();
@@ -24,7 +25,7 @@ class BottomNavBarScreenState extends State<BottomNavBarScreen> {
     const Notification2Screen(),
     const Inbox(),
     // const InboxScreen(),
-    PartnerSearchScreen() // Replace with the actual Profile screen widget
+    const PartnerSearchScreen(), // Replace with the actual Profile screen widget
   ];
 
   @override

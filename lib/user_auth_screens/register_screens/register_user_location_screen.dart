@@ -1,185 +1,10 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter/widgets.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:matrimony/common/app_text_style.dart';
-// import 'package:matrimony/common/colors.dart';
-// import 'package:matrimony/common/widget/circularprogressIndicator.dart';
-// import 'package:matrimony/common/widget/custom_snackbar.dart';
-// import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
-// import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
-// import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
-// import 'package:matrimony/user_auth_screens/register_screens/register_user_additional_info_screen.dart';
-//
-// class RegisterUserLocationScreen extends ConsumerStatefulWidget {
-//   @override
-//   _RegisterUserLocationScreenState createState() =>
-//       _RegisterUserLocationScreenState();
-// }
-//
-// class _RegisterUserLocationScreenState
-//     extends ConsumerState<RegisterUserLocationScreen> {
-//   final _formKey = GlobalKey<FormState>();
-//   String? country, state, city, pincode, flatNumber, address;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final registerStateNotifier = ref.watch(registerProvider);
-//     final locationState = ref.watch(locationProvider);
-//     return Scaffold(
-//       appBar: AppBar(
-//         centerTitle: true,
-//         title: ProgressIndicatorWidget(value: 0.8),
-//         backgroundColor: Colors.white,
-//         elevation: 0,
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back_ios,
-//               color: AppColors.primaryButtonColor),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               const Text(
-//                 'Location Information',
-//                 style: AppTextStyles.headingTextstyle,
-//               ),
-//               const SizedBox(height: 10),
-//               const Align(
-//                 alignment: Alignment.center,
-//                 child: Text(
-//                   'The Perfect Match for your Personal Preference...',
-//                   style: AppTextStyles.spanTextStyle,
-//                 ),
-//               ),
-//               const SizedBox(height: 20),
-//               TextFormField(
-//                 decoration: const InputDecoration(
-//                   labelText: 'Your Residing Country',
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.all(Radius.circular(12)),
-//                   ),
-//                 ),
-//                 onSaved: (value) => country = value,
-//               ),
-//               const SizedBox(height: 20),
-//               TextFormField(
-//                 decoration: const InputDecoration(
-//                   labelText: 'Your Residing State',
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.all(
-//                         Radius.circular(12)), // BorderRadius 12
-//                   ),
-//                 ),
-//                 onSaved: (value) => state = value,
-//               ),
-//               const SizedBox(height: 20),
-//               TextFormField(
-//                 decoration: const InputDecoration(
-//                   labelText: 'Your Residing City',
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.all(
-//                         Radius.circular(12)), // BorderRadius 12
-//                   ),
-//                 ),
-//                 onSaved: (value) => city = value,
-//               ),
-//               const SizedBox(height: 20),
-//               TextFormField(
-//                 decoration: const InputDecoration(
-//                   labelText: 'Pincode',
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.all(
-//                         Radius.circular(12)), // BorderRadius 12
-//                   ),
-//                 ),
-//                 onSaved: (value) => pincode = value,
-//               ),
-//               const SizedBox(height: 20),
-//               TextFormField(
-//                 decoration: const InputDecoration(
-//                   labelText: 'Flat Number',
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.all(
-//                         Radius.circular(12)), // BorderRadius 12
-//                   ),
-//                 ),
-//                 onSaved: (value) => flatNumber = value,
-//               ),
-//               const SizedBox(height: 20),
-//               TextFormField(
-//                 decoration: const InputDecoration(
-//                   labelText: 'Address',
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.all(
-//                         Radius.circular(12)), // BorderRadius 12
-//                   ),
-//                 ),
-//                 onSaved: (value) => address = value,
-//               ),
-//               const SizedBox(height: 20),
-//               SizedBox(
-//                 width: double.infinity,
-//                 height: 50,
-//                 child: ElevatedButton(
-//                   onPressed: () async {
-//                     if(registerStateNotifier.isLoading){}else {
-//                       if (_formKey.currentState!.validate()) {
-//                         _formKey.currentState!.save();
-//
-//                         final registerState = ref.read(
-//                             registerProvider.notifier);
-//                         bool success = await registerState.createLocationApi(
-//                             country: country ?? '',
-//                             states: state ?? '',
-//                             pincode: pincode ?? '',
-//                             city: city ?? '',
-//                             flatNumber: flatNumber ?? '',
-//                             address: address ?? '');
-//                         if (success) {
-//                           Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (context) =>
-//                                     RegisterUserAdditionalInfoScreen()),
-//                           );
-//                         }else {
-//                           CustomSnackBar.show(
-//                             context: context,
-//                             message: 'Something Went Wrong. Please Try Again!',
-//                             isError: true,
-//                           );
-//                         }
-//                       }
-//                     }
-//                   },
-//                   style: AppTextStyles.primaryButtonstyle,
-//                   child: registerStateNotifier.isLoading
-//                       ? const LoadingIndicator()
-//                       : const Text(
-//                           'Next',
-//                           style: AppTextStyles.primarybuttonText,
-//                         ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/common/widget/linear_Progress_indicator.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_additional_info_screen.dart';
@@ -194,150 +19,192 @@ class RegisterUserLocationScreen extends ConsumerStatefulWidget {
 class _RegisterUserLocationScreenState
     extends ConsumerState<RegisterUserLocationScreen> {
   final _formKey = GlobalKey<FormState>();
-  String? country, state, city, pincode, flatNumber, address;
+  String? country, state, city, flatNumber, address;
   final flatController = TextEditingController();
+  final pincodeController = TextEditingController();
   bool? isOwnHouse;
   final addressController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getCountryData();
+  }
+
+  Future<void> getCountryData() async {
+    await Future.delayed(Duration.zero);
+    await ref.read(locationProvider.notifier).getallCountryData();
+  }
 
   @override
   Widget build(BuildContext context) {
     final registerStateNotifier = ref.watch(registerProvider);
     final locationState = ref.watch(locationProvider);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: ProgressIndicatorWidget(value: 0.8),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppColors.primaryButtonColor),
-          onPressed: () => Navigator.pop(context),
+    return EnhancedLoadingWrapper(
+      isLoading: locationState.isLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: ProgressIndicatorWidget(value: 0.8),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios,
+                color: AppColors.primaryButtonColor),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Location Information',
-                  style: AppTextStyles.headingTextstyle,
-                ),
-                const SizedBox(height: 10),
-                const Center(
-                  child: Text(
-                    'The Perfect Match for your Personal Preference...',
-                    style: AppTextStyles.spanTextStyle,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Location Information',
+                    style: AppTextStyles.headingTextstyle,
                   ),
-                ),
-                const SizedBox(height: 10),
-                _buildSelectionField(
-                    hint: 'Select Country',
-                    onTap: () {
-                      _selectCountry();
-                    },
-                    value: country ?? ''),
-                const SizedBox(height: 10),
-                // if (country != null)...[
-                _buildSelectionField(
-                    hint: 'Select State',
-                    onTap: () {
-                      _selectState();
-                    },
-                    value: state ?? ''),
-                const SizedBox(height: 10),
-                // ],
-                // if (state != null)...[
-                _buildSelectionField(
-                    hint: 'Select City',
-                    onTap: () {
-                      _selectCity();
-                    },
-                    value: city ?? ''),
-                const SizedBox(height: 10),
-                // ],
-                // if (city != null)...[
-                CustomTextField(
-                    hintText: 'Pincode',
-                    onSaved: (value) => pincode = value,
-                    controller: flatController,
-                    readOnly: true),
-                const SizedBox(height: 10),
-                // ],\
-                _buildSelectionField(
-                    hint: 'Own House',
-                    onTap: () {
-                      _selectHouse(context, isOwnHouse);
-                    },
-                    value: state ?? ''),
-                const SizedBox(height: 10),
-                // if (pincode != null) ...[
-                CustomTextField(
-                    hintText: 'Flat Number',
-                    onSaved: (value) => flatNumber = value,
-                    controller: flatController,
-                    readOnly: false),
-                const SizedBox(height: 10),
-                CustomTextField(
-                  hintText: 'Address',
-                  onSaved: (value) => address = value,
-                  controller: addressController,
-                  readOnly: false,
-                  maxLine: 3,
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (registerStateNotifier.isLoading) {
-                      } else {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-
-                          final registerState =
-                              ref.read(registerProvider.notifier);
-                          bool success = await registerState.createLocationApi(
-                              country: country ?? '',
-                              states: state ?? '',
-                              pincode: pincode ?? '',
-                              city: city ?? '',
-                              flatNumber: flatNumber ?? '',
-                              address: address ?? '');
-                          if (success) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      RegisterUserAdditionalInfoScreen()),
-                            );
-                          } else {
+                  const SizedBox(height: 10),
+                  const Center(
+                    child: Text(
+                      'The Perfect Match for your Personal Preference...',
+                      style: AppTextStyles.spanTextStyle,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  _buildSelectionField(
+                      hint: 'Select Country',
+                      onTap: () {
+                        _selectCountry(locationState.countryList);
+                      },
+                      value: country ?? ''),
+                  const SizedBox(height: 10),
+                  if (country != null) ...[
+                    _buildSelectionField(
+                        hint: 'Select State',
+                        onTap: () {
+                          _selectState(
+                            locationState.stateList,
+                          );
+                        },
+                        value: state ?? ''),
+                    const SizedBox(height: 10),
+                  ],
+                  if (state != null) ...[
+                    _buildSelectionField(
+                        hint: 'Select City',
+                        onTap: () {
+                          _selectCity(locationState.cityList);
+                        },
+                        value: city ?? ''),
+                    const SizedBox(height: 10),
+                  ],
+                  if (city != null) ...[
+                    CustomTextField(
+                        hintText: 'Pincode',
+                        onSaved: (value) =>
+                            pincodeController.text = value ?? '',
+                        controller: pincodeController,
+                        readOnly: true),
+                    const SizedBox(height: 10),
+                    _buildSelectionField(
+                        hint: 'Own House',
+                        onTap: () {
+                          _selectHouse(context);
+                        },
+                        value: isOwnHouse == null
+                            ? ''
+                            : isOwnHouse!
+                                ? 'Yes'
+                                : 'No'),
+                    const SizedBox(height: 10),
+                    CustomTextField(
+                        hintText: 'Flat Number',
+                        onSaved: (value) => flatNumber = value,
+                        controller: flatController,
+                        readOnly: false),
+                    const SizedBox(height: 10),
+                    CustomTextField(
+                      hintText: 'Address',
+                      onSaved: (value) => address = value,
+                      controller: addressController,
+                      readOnly: false,
+                      maxLine: 3,
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (registerStateNotifier.isLoading) {
+                        } else {
+                          if (country == null) {
                             CustomSnackBar.show(
                               context: context,
-                              message:
-                                  'Something Went Wrong. Please Try Again!',
+                              message: 'Please Select Your Country.',
                               isError: true,
                             );
+                          } else if (state == null) {
+                            CustomSnackBar.show(
+                              context: context,
+                              message: 'Please Select Your State.',
+                              isError: true,
+                            );
+                          } else if (city == null) {
+                            CustomSnackBar.show(
+                              context: context,
+                              message: 'Please Select Your City.',
+                              isError: true,
+                            );
+                          } else {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+
+                              final registerState =
+                                  ref.read(registerProvider.notifier);
+                              bool success =
+                                  await registerState.createLocationApi(
+                                      country: country ?? '',
+                                      states: state ?? '',
+                                      pincode: pincodeController.text ?? '',
+                                      city: city ?? '',
+                                      flatNumber: flatNumber ?? '',
+                                      address: address ?? '',
+                                      ownHouse: isOwnHouse);
+                              if (success) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          RegisterUserAdditionalInfoScreen()),
+                                );
+                              } else {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message:
+                                      'Something Went Wrong. Please Try Again!',
+                                  isError: true,
+                                );
+                              }
+                            }
                           }
                         }
-                      }
-                    },
-                    style: AppTextStyles.primaryButtonstyle,
-                    child: registerStateNotifier.isLoading
-                        ? const LoadingIndicator()
-                        : const Text(
-                            'Next',
-                            style: AppTextStyles.primarybuttonText,
-                          ),
+                      },
+                      style: AppTextStyles.primaryButtonstyle,
+                      child: registerStateNotifier.isLoading
+                          ? const LoadingIndicator()
+                          : const Text(
+                              'Next',
+                              style: AppTextStyles.primarybuttonText,
+                            ),
+                    ),
                   ),
-                ),
-              ],
-              // ],
+                ],
+              ),
             ),
           ),
         ),
@@ -345,19 +212,27 @@ class _RegisterUserLocationScreenState
     );
   }
 
-  void _showSelectionDialog(String title, List<String> options,
-      String? currentValue, Function(String) onSelect) {
+  void _showSelectionDialog<T>(
+    String title,
+    List<T> options,
+    String? currentValue,
+    String Function(T) getDisplayName,
+    int Function(T) getId,
+    Function(String, T) onSelect,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         String searchQuery = '';
         String? selectedValue = currentValue;
+        T? selectedId;
 
         return StatefulBuilder(
           builder: (context, setState) {
-            List<String> filteredOptions = options
-                .where((option) =>
-                    option.toLowerCase().contains(searchQuery.toLowerCase()))
+            List<T> filteredOptions = options
+                .where((option) => getDisplayName(option)
+                    .toLowerCase()
+                    .contains(searchQuery.toLowerCase()))
                 .toList();
 
             return Dialog(
@@ -377,8 +252,6 @@ class _RegisterUserLocationScreenState
                               fillColor: AppColors.dialogboxSearchBackground,
                               filled: true,
                               hintText: 'Search...',
-                              hintStyle: const TextStyle(
-                                  color: AppColors.dialogboxSearchTextColor),
                               suffixIcon: const Icon(Icons.search,
                                   color: AppColors.dialogboxSearchTextColor),
                               border: OutlineInputBorder(
@@ -406,41 +279,27 @@ class _RegisterUserLocationScreenState
                                 child: Center(
                               child: Text(
                                 'No Result Found',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black),
+                                style: TextStyle(fontSize: 14),
                               ),
                             ))
                           else
                             Expanded(
-                              child: ScrollbarTheme(
-                                data: ScrollbarThemeData(
-                                  trackColor:
-                                      WidgetStateProperty.all(Colors.pink[100]),
-                                  thumbColor:
-                                      WidgetStateProperty.all(Colors.pink),
-                                  radius: const Radius.circular(12),
-                                ),
-                                child: Scrollbar(
-                                  thumbVisibility: true,
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: filteredOptions.map((option) {
-                                        return RadioListTile<String>(
-                                          title: Text(option),
-                                          value: option,
-                                          groupValue: selectedValue,
-                                          activeColor:
-                                              AppColors.primaryButtonColor,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              selectedValue = value;
-                                            });
-                                          },
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
+                              child: ListView(
+                                children: filteredOptions.map((option) {
+                                  String displayName = getDisplayName(option);
+                                  return RadioListTile<String>(
+                                    title: Text(displayName),
+                                    value: displayName,
+                                    activeColor: Colors.red,
+                                    groupValue: selectedValue,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedValue = displayName;
+                                        selectedId = option;
+                                      });
+                                    },
+                                  );
+                                }).toList(),
                               ),
                             ),
                           const SizedBox(height: 60),
@@ -452,9 +311,9 @@ class _RegisterUserLocationScreenState
                       left: 16,
                       right: 16,
                       child: ElevatedButton(
-                        onPressed: selectedValue != null
+                        onPressed: selectedId != null
                             ? () {
-                                onSelect(selectedValue!);
+                                onSelect(selectedValue!, selectedId as T);
                                 Navigator.pop(context);
                               }
                             : null,
@@ -473,38 +332,68 @@ class _RegisterUserLocationScreenState
     );
   }
 
-  void _selectCountry() {
-    _showSelectionDialog(
+  void _selectCountry(List<Country> countryList) {
+    _showSelectionDialog<Country>(
       'Select Country',
-      ['Country1', 'Country2', 'Country3'],
+      countryList,
       country,
-      (value) {
-        setState(() {
-          country = value;
-          state = null;
-          city = null;
-          pincode = null;
-        });
+      (Country country) => country.countrys,
+      (Country country) => country.id,
+      (selectedName, selectedId) {
+        if (selectedName != country) {
+          setState(() {
+            country = selectedName;
+            state = null;
+            city = null;
+            pincodeController.text = '';
+            isOwnHouse = null;
+          });
+          ref.read(locationProvider.notifier).getStateData(selectedId.id);
+        }
       },
     );
   }
 
-  void _selectState() {
-    _showSelectionDialog(
+  void _selectState(List<StateModel> stateList) {
+    _showSelectionDialog<StateModel>(
       'Select State',
-      ['State1', 'State2', 'State3'],
+      stateList,
       state,
-      (value) {
-        setState(() {
-          state = value;
-          city = null;
-          pincode = null;
-        });
+      (StateModel state) => state.states,
+      (StateModel state) => state.id,
+      (selectedName, selectedId) {
+        if (selectedName != state) {
+          setState(() {
+            state = selectedName;
+            city = null;
+            pincodeController.text = '';
+            isOwnHouse = null;
+          });
+          ref.read(locationProvider.notifier).getCityData(selectedId.id);
+        }
       },
     );
   }
 
-  void _selectHouse(BuildContext context, bool? isOwnHouse) {
+  void _selectCity(List<City> cityList) {
+    _showSelectionDialog<City>(
+      'Select City',
+      cityList,
+      city,
+      (City city) => city.citys,
+      (City city) => city.id,
+      (selectedName, selectedId) {
+        if (selectedName != city) {
+          setState(() {
+            city = selectedName;
+            pincodeController.text = selectedId.pincode.toString();
+          });
+        }
+      },
+    );
+  }
+
+  void _selectHouse(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -513,38 +402,73 @@ class _RegisterUserLocationScreenState
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isOwnHouse = true;
+                  });
+                  Navigator.pop(context, true);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink.shade100,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: isOwnHouse == true
+                        ? const Color(0xFFFFCBCC)
+                        : Colors.transparent,
+                    border: Border.all(
+                      color:
+                          isOwnHouse == true ? Colors.transparent : Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Yes',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color:
+                              isOwnHouse == true ? Colors.black : Colors.grey),
+                    ),
+                  ),
                 ),
-                child: const Text('Yes'),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isOwnHouse = false;
+                  });
+                  Navigator.pop(context, false);
                 },
-                child: const Text('No'),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: isOwnHouse == false
+                        ? const Color(0xFFFFCBCC)
+                        : Colors.transparent,
+                    border: Border.all(
+                      color: isOwnHouse == false
+                          ? Colors.transparent
+                          : Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'No',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color:
+                              isOwnHouse == false ? Colors.black : Colors.grey),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
         );
-      },
-    );
-  }
-
-  void _selectCity() {
-    _showSelectionDialog(
-      'Select City',
-      ['City1', 'City2', 'City3'],
-      city,
-      (value) {
-        setState(() {
-          city = value;
-          pincode = null;
-        });
       },
     );
   }
@@ -554,6 +478,8 @@ class _RegisterUserLocationScreenState
     required String hint,
     required VoidCallback onTap,
   }) {
+    print(hint);
+    print(value);
     return GestureDetector(
         onTap: onTap,
         child: Container(

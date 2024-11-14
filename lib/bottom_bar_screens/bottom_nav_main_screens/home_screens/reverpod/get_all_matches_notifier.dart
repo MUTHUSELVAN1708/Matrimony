@@ -97,6 +97,8 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
         //     error: 'No Matches Available',
         //   );
         // } else {
+        print('MatchList');
+        print(matchList);
         state = state.copyWith(isLoading: false, allMatchList: matchList);
         // }
       } else {
@@ -106,6 +108,7 @@ class AllMatchesNotifier extends StateNotifier<AllMatchState> {
         );
       }
     } catch (e) {
+      print(e);
       state = state.copyWith(
         isLoading: false,
         error: 'No Matches Available',

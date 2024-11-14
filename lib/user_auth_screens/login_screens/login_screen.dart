@@ -137,7 +137,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const BottomNavBarScreen()));
+                                      const BottomNavBarScreen(
+                                        isFetch: true,
+                                      )));
                         }
                       }
                     },

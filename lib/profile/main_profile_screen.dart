@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/profile/profile.dart';
@@ -113,7 +114,13 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
             const SizedBox(height: 8),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PlanUpgradeScreen()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryButtonColor,
                   shape: RoundedRectangleBorder(
