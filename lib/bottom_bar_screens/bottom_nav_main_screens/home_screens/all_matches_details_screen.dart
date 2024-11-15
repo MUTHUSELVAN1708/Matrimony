@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
+import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AllMatchesDetailsScreen extends StatefulWidget {
   const AllMatchesDetailsScreen({super.key});
@@ -14,18 +17,19 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.red),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: const Text('All Matches 1/15938',
-            style: TextStyle(color: Colors.black)),
+            style: AppTextStyles.headingTextstyle),
       ),
       body: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
@@ -57,126 +61,231 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                   alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
-                  color: Colors.blue,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage('assets/image/user1.png'))),
                 ),
-                const Positioned(
+                Positioned(
                   top: 0,
                   left: 0,
                   right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(Icons.three_g_mobiledata_outlined,
-                          color: Colors.white),
-                      Icon(Icons.three_g_mobiledata_outlined,
-                          color: Colors.white),
-                    ],
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.star_border_outlined,
+                                  color: Colors.black),
+                              Text(
+                                'Shortlist',
+                                style: AppTextStyles.spanTextStyle,
+                              )
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child:
+                              const Icon(Icons.more_vert, color: Colors.black),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Gautham',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          const Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: CustomSvg(name: 'blue_verify'),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              'ID Verified',
+              style: AppTextStyles.spanTextStyle
+                  .copyWith(color: const Color(0XFF1576F0)),
             ),
           ),
-          const SizedBox(height: 4),
-          const Text(
-            'MSE17920 | Last seen few hours ago',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(1, 2),
+                  blurRadius: 11.1,
+                  spreadRadius: 0,
+                  color: Color(
+                      0x0D000000), // Converting #0000000D to Flutter format
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Gowtham',
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'MSE17920 | Last seen few hours ago',
+                  style: AppTextStyles.secondrySpanTextStyle,
+                ),
+                const SizedBox(height: 10),
+                _buildBasicDetails('26 Yrs, 5\'9"', 'profileIcon'),
+                const SizedBox(height: 8),
+                _buildBasicDetails(
+                    'Church Of South India (Caste No Bar)', 'building_icon'),
+                const SizedBox(height: 8),
+                _buildBasicDetails(
+                    'BE, Software Professional', 'professional_icon'),
+                const SizedBox(height: 8),
+                _buildBasicDetails('Chennai, Tamil Nadu', 'location_icon'),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          // Wrap(
-          //   spacing: 8,
-          //   children: [
-          //     _buildInfoChip('26 Yrs, 5\'9"'),
-          //     _buildInfoChip('Chennai'),
-          //     _buildInfoChip('Software Professional'),
-          //   ],
-          // ),
-          _buildBasicDetails('26 Yrs, 5\'9"', 'profileIcon'),
-          const SizedBox(height: 8),
-          _buildBasicDetails(
-              'Church Of South India (Caste No Bar)', 'building_icon'),
-          const SizedBox(height: 8),
-          _buildBasicDetails('BE, Software Professional', 'professional_icon'),
-          const SizedBox(height: 8),
-          _buildBasicDetails('Chennai, Tamil Nadu', 'location_icon'),
           const SizedBox(height: 15),
-          const Text(
+          Text(
             'About Gowtham',
-            style: TextStyle(
-              fontSize: 20,
-            ),
+            style: AppTextStyles.spanTextStyle.copyWith(
+                color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'To describe about our family, we belong to the Christian Church of South India caste and looking for a match from other communities also. We are a nuclear family with traditional values. My son resides in Chennai.',
-            style: TextStyle(height: 1.5, fontSize: 14),
+          Text(
+            'To describe about our family, we belong to the Christian Church of South India caste and looking for a match from other communities also. We are nuclear family with traditional values. My son resides in Chennai.',
+            style: AppTextStyles.secondrySpanTextStyle
+                .copyWith(color: Colors.black),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'About his family',
-            style: TextStyle(
-              fontSize: 20,
-            ),
+            style: AppTextStyles.spanTextStyle.copyWith(
+                color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'My son is Gowtham and myself working in real estate. My wife is a homemaker and my daughter is a fashion designer.',
-            style: TextStyle(height: 1.5, fontSize: 14),
+            style: AppTextStyles.secondrySpanTextStyle
+                .copyWith(color: Colors.black),
           ),
           const SizedBox(height: 12),
           Center(
               child: Text(
-            'Profile verification score - 2/5',
-            style: TextStyle(color: Colors.red.shade700, fontSize: 20),
+            'Profile verification score - 3/5',
+            style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
           )),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(5, (index) {
-              final stringsVerified = [
-                'Mobile\nVerified',
-                'Govt.ID\nVerified',
-                'Photo\nVerified',
-                'Education\nVerified',
-                'Income\nVerified'
+              // Define the lists for the status labels, icon names, and SVG names.
+              final verificationStatus = [
+                'Mobile Verified',
+                'Govt. ID Verified',
+                'Photo Verified',
+                'Education Verified',
+                'Income Verified'
               ];
-              final stringsNotVerified = [
-                'Mobile Not\nVerified',
-                'Govt.ID Not\nVerified',
-                'Photo Not\nVerified',
-                'Education Not\nVerified',
-                'Income Not\nVerified'
+
+              final verificationStatusNot = [
+                'Mobile Not Verified',
+                'Govt. ID Not Verified',
+                'Photo Not Verified',
+                'Education Not Verified',
+                'Income Not Verified'
               ];
+
+              final svgNames = [
+                'mynaui_mobile',
+                'govrn_id',
+                'user_alt',
+                'mdi_account-graduation',
+                'income_verify',
+              ];
+
+              final iconForStatus = [
+                'Done_intrest',
+                'Close_round',
+              ];
+
+              final isVerified = [true, true, false, true, false];
+
               return Column(
                 children: [
-                  Container(
-                    height: 50,
-                    width: 50,
-                    color: Colors.red,
-                    // child: const CustomSvg(name: ''),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Main icon container
+                      Container(
+                        height: 60,
+                        width: 60,
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.red, // Adjust color as needed
+                        ),
+                        child: CustomSvg(
+                          name: svgNames[index], // Dynamically pass the name
+                          color: Colors.white,
+                        ),
+                      ),
+                      // Positioned status indicator
+                      Positioned(
+                        bottom: -5,
+                        right: -5,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: isVerified[index]
+                                ? Colors.green
+                                : AppColors.primaryButtonColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: CustomSvg(
+                            name: isVerified[index]
+                                ? iconForStatus[0]
+                                : iconForStatus[1], // Conditionally select icon
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 8),
+                  // Status Text
                   Text(
-                    stringsVerified[index],
-                    style: const TextStyle(
-                      color: Colors.black38,
-                      fontSize: 12,
+                    isVerified[index]
+                        ? verificationStatus[index]
+                        : verificationStatusNot[index],
+                    style: AppTextStyles.spanTextStyle.copyWith(
+                      color: const Color(0XFF5F5B5B),
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],
               );
             }),
-          ),
+          )
         ],
       ),
     );
@@ -203,36 +312,82 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
           _buildDetailItem(
               'Mobile Number', '+91 9560840637', 'Phone _Calling_icon'),
           ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  color: Colors.blue,
-                  height: 20,
-                  // width: 5,
-                  child: Row(
-                    children: [Text('verified')],
+            Container(
+              margin: EdgeInsets.all(24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    // decoration:  BoxDecoration(
+                    //     color: Colors.white,
+                    //     border: Border.all(color: AppColors.spanTextColor),
+                    //     borderRadius: BorderRadius.circular(8)
+                    // ),
+                    child: const Row(
+                      children: [
+                        CustomSvg(name: 'blue_verify'),
+                        Text('verified')
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  // color: Colors.blue,
-                  height: 20,
-                  //  width: 5,
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('assets/whatsapp_icon.svg'),
-                      Text('whatsapp')
-                    ],
+                  InkWell(
+                    onTap: () async {
+                      const phoneNumber = '6383266214';
+                      const whatsappUrl = 'https://wa.me/$phoneNumber';
+
+                      if (await canLaunch(whatsappUrl)) {
+                        await launch(whatsappUrl);
+                      } else {
+                        print('Could not launch WhatsApp');
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: AppColors.spanTextColor),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Center(
+                        child: Row(
+                          children: [
+                            const CustomSvg(name: 'whatsapp_icon'),
+                            Text(
+                              'whatsapp',
+                              style: AppTextStyles.spanTextStyle
+                                  .copyWith(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                Container(
-                    color: Colors.blue,
-                    height: 20,
-                    //  width: 5,
-                    child: Row(
-                      children: [Text('Call')],
-                    ))
-              ],
+                  InkWell(
+                    onTap: () async {
+                      const phoneNumber = 'tel:+6383266214';
+                      if (await canLaunch(phoneNumber)) {
+                        await launch(phoneNumber);
+                      } else {
+                        print('Could not launch phone call');
+                      }
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: AppColors.spanTextColor),
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Row(
+                          children: [
+                            const CustomSvg(name: 'call_now'),
+                            Text('Call Now',
+                                style: AppTextStyles.spanTextStyle
+                                    .copyWith(color: Colors.black))
+                          ],
+                        )),
+                  )
+                ],
+              ),
             )
           ]
         ]),
@@ -280,24 +435,37 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
               ),
             ],
           ),
         ),
-        ...children,
-        const Divider(height: 1),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: const [
+              BoxShadow(
+                offset: Offset(1, 2),
+                blurRadius: 11.1,
+                spreadRadius: 0,
+                color:
+                    Color(0x0D000000), // Converting #0000000D to Flutter format
+              ),
+            ],
+          ),
+          child: Column(
+            children: [...children],
+          ),
+        )
+
+        // const Divider(height: 1),
       ],
     );
   }
 
   Widget _buildDetailItem(String label, String value, String icon) {
-    print("icon");
-    print(icon);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -309,19 +477,17 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
-                  ),
+                  style: AppTextStyles.primarybuttonText
+                      .copyWith(color: Colors.black),
+                ),
+                const SizedBox(
+                  height: 5,
                 ),
                 Text(
                   value,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: AppTextStyles.spanTextStyle,
                 ),
               ],
             ),
@@ -358,21 +524,18 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
   Widget _buildPreferenceDetails() {
     return Column(
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
           child: Text(
             "Gowtham's Partner Preferences",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           decoration: BoxDecoration(
-            color: const Color(0xffdb85a2), // Set background color
+            color: const Color(0xffFBE8E8), // Set background color
             borderRadius: BorderRadius.circular(15),
             boxShadow: const [
               BoxShadow(
@@ -385,18 +548,34 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildCircleAvatar(),
-              const Expanded(
+              _buildCircleAvatar('assets/image/user1.png'),
+              Expanded(
                 child: Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    "Gowtham's Partner Preferences",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
+                  child: Column(
+                    children: [
+                      Text.rich(TextSpan(children: [
+                        TextSpan(
+                          text: "You Match",
+                          style: AppTextStyles.spanTextStyle
+                              .copyWith(color: Colors.black),
+                        ),
+                        TextSpan(
+                          text: "19/19",
+                          style: AppTextStyles.spanTextStyle
+                              .copyWith(color: AppColors.headingTextColor),
+                        ),
+                      ])),
+                      Text(
+                        "Of His Preferences",
+                        style: AppTextStyles.spanTextStyle
+                            .copyWith(color: Colors.black),
+                      )
+                    ],
                   ),
                 ),
               ),
-              _buildCircleAvatar(),
+              _buildCircleAvatar('assets/image/user2.png'),
             ],
           ),
         ),
@@ -425,11 +604,61 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
               "Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, Pondicherry", ''),
           _buildDetailItem('Preferred Residing City', 'Any', ''),
         ]),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                  height: 50,
+                  margin: const EdgeInsets.only(
+                      left: 24, right: 8, top: 8, bottom: 8),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: AppColors.spanTextColor),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const CustomSvg(name: 'Close_round'),
+                      Text(
+                        'don’t show',
+                        style: AppTextStyles.primarybuttonText
+                            .copyWith(color: AppColors.spanTextColor),
+                      ),
+                    ],
+                  )),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Container(
+                  height: 50,
+                  margin: const EdgeInsets.only(
+                      left: 8, right: 24, top: 8, bottom: 8),
+                  decoration: BoxDecoration(
+                      color: AppColors.primaryButtonColor,
+                      border: Border.all(color: AppColors.spanTextColor),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: const Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CustomSvg(name: 'Done_intrest'),
+                        Text('send interest',
+                            style: AppTextStyles.primarybuttonText),
+                      ],
+                    ),
+                  )),
+            ),
+          ],
+        )
       ],
     );
   }
 
-  Widget _buildCircleAvatar() {
+  Widget _buildCircleAvatar(String url) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -437,8 +666,8 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
       ),
       child: CircleAvatar(
         radius: 40,
-        backgroundColor: Colors.grey[200], // Background color for the avatar
-        // Optionally add an image or icon here
+        backgroundColor: Colors.grey[200],
+        backgroundImage: AssetImage(url),
       ),
     );
   }
@@ -450,7 +679,8 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(color: Colors.black, fontSize: 14),
+            style: AppTextStyles.secondrySpanTextStyle
+                .copyWith(color: Colors.black),
             overflow: TextOverflow.ellipsis,
           ),
         ),

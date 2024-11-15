@@ -47,6 +47,7 @@ dependencies:
   cached_network_image: ^3.4.1
   country_picker: ^2.0.25
   skeletonizer:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:
