@@ -71,7 +71,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
     double heightQuery,
   ) {
     return Positioned(
-      top: heightQuery * 0.28,
+      top: heightQuery * 0.2,
       left: 0,
       right: 0,
       bottom: 0,
