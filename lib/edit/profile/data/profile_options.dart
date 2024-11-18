@@ -211,13 +211,12 @@ class ProfileOptions {
 
   static List<String> weight = List.generate(
     30,
-        (index) {
+    (index) {
       final start = index * 10;
       final end = start + 10 - 1;
       return '$start - $end kg';
     },
   );
-
 
   static const List<String> skinTones = [
     'Dark',

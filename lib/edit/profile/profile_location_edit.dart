@@ -9,7 +9,6 @@ import '../../common/widget/custom_snackbar.dart';
 import '../location/presentation/widgets/location_form.dart';
 import '../profile/providers/location_provider.dart';
 
-
 class LocationDetailsScreen extends ConsumerStatefulWidget {
   final Function(String? value) onPop;
 
@@ -19,7 +18,8 @@ class LocationDetailsScreen extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<LocationDetailsScreen> createState() => _LocationDetailsScreenState();
+  ConsumerState<LocationDetailsScreen> createState() =>
+      _LocationDetailsScreenState();
 }
 
 class _LocationDetailsScreenState extends ConsumerState<LocationDetailsScreen> {
@@ -74,7 +74,8 @@ class _LocationDetailsScreenState extends ConsumerState<LocationDetailsScreen> {
     );
   }
 
-  Widget _buildBody(BuildContext context, double heightQuery, LocationState state) {
+  Widget _buildBody(
+      BuildContext context, double heightQuery, LocationState state) {
     return Positioned(
       top: heightQuery * 0.2,
       left: 0,
@@ -273,8 +274,6 @@ class _LocationDetailsScreenState extends ConsumerState<LocationDetailsScreen> {
       }
     }
   }
-
-
 
   void _handleSave(BuildContext context) {
     if (ref.read(locationProvider.notifier).validateForm()) {

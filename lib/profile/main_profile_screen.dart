@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/local_storage.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
 import 'package:matrimony/profile/profile.dart';
 import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
@@ -158,7 +160,12 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       MenuItem(
         icon: 'assets/editpreference.svg',
         title: 'Edit Preference',
-        onTap: () {},
+        onTap: () {
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: const EditPartnerPreferencesMainScreen(),
+          );
+        },
       ),
       MenuItem(
         icon: 'assets/verifyprofile.svg',
@@ -209,12 +216,80 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
         icon: 'assets/logout.svg',
         title: 'Logout',
         onTap: () async {
-          final navigator = Navigator.of(context);
-          await SharedPrefHelper.removeUser();
-          if (!context.mounted) return;
-          navigator.pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginScreen()),
-            (Route<dynamic> route) => false,
+          await showDialog<bool>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: const Text(
+                  'Are you sure you want to logout?',
+                  style: TextStyle(color: AppColors.black, fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+                actions: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: Colors.grey)),
+                            child: const Center(
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            final navigator = Navigator.of(context);
+                            await SharedPrefHelper.removeUser();
+                            if (!context.mounted) return;
+                            CustomSnackBar.show(
+                              context: context,
+                              message: 'Logged Out Successfully.',
+                              isError: false,
+                            );
+                            navigator.pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
+                              (Route<dynamic> route) => false,
+                            );
+                          },
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: AppColors.primaryButtonColor,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: Colors.grey)),
+                            child: const Center(
+                              child: Text(
+                                'Logout',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

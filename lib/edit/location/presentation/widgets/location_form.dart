@@ -57,7 +57,8 @@ class LocationForm extends ConsumerWidget {
           title: const Text('Own House'),
           value: state.ownHouse,
           onChanged: enabled
-              ? (value) => ref.read(locationProvider.notifier).updateOwnHouse(value)
+              ? (value) =>
+                  ref.read(locationProvider.notifier).updateOwnHouse(value)
               : null,
         ),
         const SizedBox(height: 16),
@@ -102,7 +103,6 @@ class LocationForm extends ConsumerWidget {
     );
   }
 }
-
 
 class CustomTextField extends StatelessWidget {
   final String label;

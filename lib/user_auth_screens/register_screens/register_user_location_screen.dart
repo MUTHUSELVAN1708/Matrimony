@@ -107,7 +107,7 @@ class _RegisterUserLocationScreenState
                         onSaved: (value) =>
                             pincodeController.text = value ?? '',
                         controller: pincodeController,
-                        readOnly: true),
+                        readOnly: pincodeController.text == '' ? false : true),
                     const SizedBox(height: 10),
                     _buildSelectionField(
                         hint: 'Own House',
@@ -218,7 +218,7 @@ class _RegisterUserLocationScreenState
     String? currentValue,
     String Function(T) getDisplayName,
     int Function(T) getId,
-    Function(String, T) onSelect,
+    Function(String, T?) onSelect,
   ) {
     showDialog(
       context: context,
@@ -226,6 +226,7 @@ class _RegisterUserLocationScreenState
         String searchQuery = '';
         String? selectedValue = currentValue;
         T? selectedId;
+        String otherValue = '';
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -240,7 +241,7 @@ class _RegisterUserLocationScreenState
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: Stack(
                   children: [
                     Padding(
@@ -266,6 +267,7 @@ class _RegisterUserLocationScreenState
                             },
                           ),
                           const SizedBox(height: 16),
+                          // Title
                           Text(
                             title,
                             style: const TextStyle(
@@ -274,49 +276,103 @@ class _RegisterUserLocationScreenState
                             ),
                           ),
                           const SizedBox(height: 16),
-                          if (filteredOptions.isEmpty)
-                            const Expanded(
-                                child: Center(
-                              child: Text(
-                                'No Result Found',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ))
-                          else
-                            Expanded(
-                              child: ListView(
-                                children: filteredOptions.map((option) {
-                                  String displayName = getDisplayName(option);
-                                  return RadioListTile<String>(
-                                    title: Text(displayName),
-                                    value: displayName,
-                                    activeColor: Colors.red,
-                                    groupValue: selectedValue,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedValue = displayName;
-                                        selectedId = option;
-                                      });
-                                    },
-                                  );
-                                }).toList(),
-                              ),
+                          Expanded(
+                            child: ListView(
+                              children: [
+                                if (filteredOptions.isNotEmpty)
+                                  ...filteredOptions.map((option) {
+                                    String displayName = getDisplayName(option);
+                                    return RadioListTile<String>(
+                                      title: Text(displayName),
+                                      value: displayName,
+                                      activeColor: Colors.red,
+                                      groupValue: selectedValue,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedValue = displayName;
+                                          selectedId = option;
+                                        });
+                                      },
+                                    );
+                                  }),
+                                RadioListTile<String>(
+                                  title: const Text("Other"),
+                                  value: "Other",
+                                  activeColor: Colors.red,
+                                  groupValue: selectedValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedValue = "Other";
+                                      selectedId = null;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (selectedValue == "Other")
+                            Column(
+                              children: [
+                                const SizedBox(height: 16),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 10),
+                                    hintText: 'Enter Other Value',
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      borderSide: BorderSide(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      borderSide: BorderSide(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      borderSide: BorderSide(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      otherValue = value;
+                                    });
+                                  },
+                                ),
+                              ],
                             ),
                           const SizedBox(height: 60),
                         ],
                       ),
                     ),
+
+                    // Apply button
                     Positioned(
                       bottom: 16,
                       left: 16,
                       right: 16,
                       child: ElevatedButton(
-                        onPressed: selectedId != null
-                            ? () {
-                                onSelect(selectedValue!, selectedId as T);
-                                Navigator.pop(context);
-                              }
-                            : null,
+                        onPressed:
+                            selectedValue != "Other" || otherValue.isNotEmpty
+                                ? () {
+                                    if (selectedValue == "Other") {
+                                      onSelect(otherValue, null);
+                                    } else {
+                                      onSelect(selectedValue!, selectedId as T);
+                                    }
+                                    Navigator.pop(context);
+                                  }
+                                : null,
                         style: AppTextStyles.primaryButtonstyle,
                         child: const Text('Apply',
                             style: AppTextStyles.primarybuttonText),
@@ -348,7 +404,7 @@ class _RegisterUserLocationScreenState
             pincodeController.text = '';
             isOwnHouse = null;
           });
-          ref.read(locationProvider.notifier).getStateData(selectedId.id);
+          ref.read(locationProvider.notifier).getStateData(selectedId.hashCode);
         }
       },
     );
@@ -369,7 +425,7 @@ class _RegisterUserLocationScreenState
             pincodeController.text = '';
             isOwnHouse = null;
           });
-          ref.read(locationProvider.notifier).getCityData(selectedId.id);
+          ref.read(locationProvider.notifier).getCityData(selectedId.hashCode);
         }
       },
     );
@@ -386,7 +442,10 @@ class _RegisterUserLocationScreenState
         if (selectedName != city) {
           setState(() {
             city = selectedName;
-            pincodeController.text = selectedId.pincode.toString();
+            pincodeController.text =
+                cityList.any((city) => city.citys == selectedName)
+                    ? selectedId.hashCode.toString()
+                    : '';
           });
         }
       },
@@ -521,6 +580,9 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('picocde');
+    print(controller?.text);
+    print(hintText);
     return TextFormField(
       controller: controller,
       readOnly: readOnly,
