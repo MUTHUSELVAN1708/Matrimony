@@ -3,7 +3,8 @@ import 'package:geocoding/geocoding.dart';
 
 import '../state/location_state.dart';
 
-final locationProvider = StateNotifierProvider<LocationNotifier, LocationState>((ref) {
+final locationProvider =
+    StateNotifierProvider<LocationNotifier, LocationState>((ref) {
   return LocationNotifier();
 });
 

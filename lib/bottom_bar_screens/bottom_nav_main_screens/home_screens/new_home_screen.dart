@@ -23,15 +23,15 @@ class NewHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
-  bool isAllMatchesLoading = true;
-  bool isImageLoading = true;
-  bool isDailyRecommendLoading = true;
+  bool isAllMatchesLoading = false;
+  bool isImageLoading = false;
+  bool isDailyRecommendLoading = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    getData();
+    // getData();
   }
 
   Future<void> getData() async {
@@ -261,8 +261,11 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       )
                     : dailyRecommentsState.isLoading || isDailyRecommendLoading
                         ? const Center(child: CircularProgressIndicator())
-                        : dailyRecommentsState.dailyRecommentList == null &&
-                                dailyRecommentsState.dailyRecommentList!.isEmpty
+                        : dailyRecommentsState.dailyRecommentList == null ||
+                                (dailyRecommentsState.dailyRecommentList !=
+                                        null &&
+                                    dailyRecommentsState
+                                        .dailyRecommentList!.isEmpty)
                             ? const Center(
                                 child:
                                     Text('No Daily Recommendation Available'))
@@ -416,9 +419,14 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   ))
                 : matingData.isLoading || isAllMatchesLoading
                     ? const Center(child: CircularProgressIndicator())
-                    : matingData.allMatchList == null &&
-                            matingData.allMatchList!.isEmpty
-                        ? const Center(child: Text('No Matches Available'))
+                    : matingData.allMatchList == null ||
+                            (matingData.allMatchList != null &&
+                                matingData.allMatchList!.isEmpty)
+                        ? const Center(
+                            child: Text(
+                            'No Matches Available',
+                            style: const TextStyle(color: Colors.white),
+                          ))
                         : ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: matingData.allMatchList!.length,

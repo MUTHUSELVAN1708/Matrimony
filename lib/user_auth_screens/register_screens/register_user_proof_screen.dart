@@ -6,6 +6,7 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/partner_basic_preference_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_add_success_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_government_proof_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/proof_image_picker_notifier.dart';
@@ -52,7 +53,14 @@ class _RegisterUserGovernmentProofState
             child: Text('Skip',
                 style: AppTextStyles.headingTextstyle
                     .copyWith(color: Colors.black)),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const RegisterPartnerBasicPreferenceScreen()),
+              );
+            },
           ),
         ],
       ),
