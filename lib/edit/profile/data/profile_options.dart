@@ -209,38 +209,15 @@ class ProfileOptions {
     '300 kg'
   ];
 
-  static const List<String> weight = [
-    '0 - 5 kg',
-    '6 - 10 kg',
-    '11 - 15 kg',
-    '16 - 20 kg',
-    '21 - 25 kg',
-    '26 - 30 kg',
-    '31 - 35 kg',
-    '36 - 40 kg',
-    '41 - 45 kg',
-    '46 - 50 kg',
-    '51 - 55 kg',
-    '56 - 60 kg',
-    '61 - 65 kg',
-    '66 - 70 kg',
-    '71 - 75 kg',
-    '76 - 80 kg',
-    '81 - 85 kg',
-    '86 - 90 kg',
-    '91 - 95 kg',
-    '96 - 100 kg',
-    '101 - 105 kg',
-    '106 - 110 kg',
-    '111 - 115 kg',
-    '116 - 120 kg',
-    '121 - 125 kg',
-    '126 - 130 kg',
-    '131 - 135 kg',
-    '136 - 140 kg',
-    '141 - 145 kg',
-    '146 - 150 kg'
-  ];
+  static List<String> weight = List.generate(
+    30,
+        (index) {
+      final start = index * 10;
+      final end = start + 10 - 1;
+      return '$start - $end kg';
+    },
+  );
+
 
   static const List<String> skinTones = [
     'Dark',

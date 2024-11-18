@@ -6,6 +6,7 @@ import '../common/colors.dart';
 import '../edit/profile/basic_details.dart';
 import '../edit/profile/edit_contact_screen.dart';
 import '../edit/profile/professional_information_edit.dart';
+import '../edit/profile/profile_location_edit.dart';
 import '../edit/profile/religious_details_screen.dart';
 import '../helper/nav_helper.dart';
 
@@ -50,7 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           if (_showProfileElements)
             Padding(
-              padding: const EdgeInsets.only(top: 40.0, left: 16),
+              padding: const EdgeInsets.only(top: 30.0, left: 16),
               child: Row(
                 children: [
                   GestureDetector(
@@ -71,7 +72,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 // Profile Card
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.only(top: heightQuery * 0.28),
+                    margin: EdgeInsets.only(top: heightQuery * 0.2),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -302,7 +303,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade100),
+        // border: Border.all(color: Colors.grey.shade100),
         // Gray border
         borderRadius: BorderRadius.circular(8),
         // Rounded corners for the border
@@ -357,6 +358,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             NavigationHelper.slideNavigateTo(
               context: context,
               screen: ProfessionalInformationDetailsScreen(onPop: (value) {
+                if (value == 'true') {
+                  _updateProfileElementsVisibility(true);
+                }
+              }),
+            );
+          } else if (title == 'Location') {
+            _updateProfileElementsVisibility(false);
+            NavigationHelper.slideNavigateTo(
+              context: context,
+              screen: LocationDetailsScreen(onPop: (value) {
                 if (value == 'true') {
                   _updateProfileElementsVisibility(true);
                 }
