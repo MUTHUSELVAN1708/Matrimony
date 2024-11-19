@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SearchFilterInput {
   int? userId;
   int? fromAge;
   int? toAge;
-  String? height;
+  String? fromHeight;
+  String? toHeight;
   String? maritalStatus;
   String? motherTongue;
   String? profileCreatedBy;
@@ -42,7 +42,8 @@ class SearchFilterInput {
     this.userId,
     this.fromAge = 0,
     this.toAge = 0,
-    this.height = "",
+    this.fromHeight = "",
+    this.toHeight = "",
     this.maritalStatus = "",
     this.motherTongue = "",
     this.profileCreatedBy = '',
@@ -80,7 +81,8 @@ class SearchFilterInput {
     int? userId,
     int? fromAge,
     int? toAge,
-    String? height,
+    String? fromHeight,
+    String? toHeight,
     String? maritalStatus,
     String? motherTongue,
     String? profileCreatedBy,
@@ -116,7 +118,8 @@ class SearchFilterInput {
       userId: userId ?? this.userId,
       fromAge: fromAge ?? this.fromAge,
       toAge: toAge ?? this.toAge,
-      height: height ?? this.height,
+      fromHeight: fromHeight ?? this.fromHeight,
+      toHeight: toHeight ?? this.toHeight,
       maritalStatus: maritalStatus ?? this.maritalStatus,
       motherTongue: motherTongue ?? this.motherTongue,
       profileCreatedBy: profileCreatedBy ?? this.profileCreatedBy,
@@ -152,7 +155,7 @@ class SearchFilterInput {
 
   @override
   String toString() {
-    return 'SearchFilterInput( fromAge: $fromAge, toAge: $toAge, height: $height, maritalStatus: $maritalStatus, motherTongue: $motherTongue, physicalStatus: $physicalStatus, eatingHabits: $eatingHabits, drinkingHabits: $drinkingHabits, smokingHabits: $smokingHabits, religion: $religion, caste: $caste, subcaste: $subcaste, star: $star, rassi: $rassi, dosham: $dosham, education: $education, employedIn: $employedIn, profession: $profession, annualIncome: $annualIncome, country: $country, states: $states, city: $city, lookingFor: $lookingFor, lifestyle: $lifestyle, hobbies: $hobbies, music: $music, reading: $reading, moviesTvShows: $moviesTvShows, sportsAndFitness: $sportsAndFitness, food: $food, spokenLanguages: $spokenLanguages, interest: $interest)';
+    return 'SearchFilterInput( fromAge: $fromAge, toAge: $toAge, height: ${'$fromHeight' '$toHeight'}, maritalStatus: $maritalStatus, motherTongue: $motherTongue, physicalStatus: $physicalStatus, eatingHabits: $eatingHabits, drinkingHabits: $drinkingHabits, smokingHabits: $smokingHabits, religion: $religion, caste: $caste, subcaste: $subcaste, star: $star, rassi: $rassi, dosham: $dosham, education: $education, employedIn: $employedIn, profession: $profession, annualIncome: $annualIncome, country: $country, states: $states, city: $city, lookingFor: $lookingFor, lifestyle: $lifestyle, hobbies: $hobbies, music: $music, reading: $reading, moviesTvShows: $moviesTvShows, sportsAndFitness: $sportsAndFitness, food: $food, spokenLanguages: $spokenLanguages, interest: $interest)';
   }
 }
 
@@ -163,7 +166,8 @@ class SearchFilterInputNotifier extends StateNotifier<SearchFilterInput?> {
   void updateSearchFilterInput({
     int? fromAge,
     int? toAge,
-    String? height,
+    String? fromHeight,
+    String? toHeight,
     String? maritalStatus,
     String? motherTongue,
     String? physicalStatus,
@@ -198,7 +202,8 @@ class SearchFilterInputNotifier extends StateNotifier<SearchFilterInput?> {
     state = SearchFilterInput(
       fromAge: fromAge ?? state?.fromAge,
       toAge: toAge ?? state?.toAge,
-      height: height ?? state?.height,
+      fromHeight: fromHeight ?? state?.fromHeight,
+      toHeight: toHeight ?? state?.toHeight,
       maritalStatus: maritalStatus ?? state?.maritalStatus,
       motherTongue: motherTongue ?? state?.motherTongue,
       profileCreatedBy: profileCreatedBy ?? state?.profileCreatedBy,
@@ -248,6 +253,22 @@ class SearchFilterInputNotifier extends StateNotifier<SearchFilterInput?> {
     print("Updated drinkingHabits: ${state?.smokingHabits}");
   }
 
+  void updateInputAgeValues(
+      String? key, List<String> fromAge, List<String> toAge) {
+    if (key == 'fromAge') {
+      state = state?.copyWith(
+          fromAge: int.parse(fromAge.first), toAge: int.parse(toAge.first));
+    }
+  }
+
+  void updateInputHeightValues(
+      String? key, List<String> fromItem, List<String> toItem) {
+    if (key == 'fromHeight') {
+      state =
+          state?.copyWith(fromHeight: fromItem.first, toHeight: toItem.first);
+    }
+  }
+
   void updateInputAnyValues(String? key, List<String> values) {
     if (key == 'Mother Tongue') {
       state = state?.copyWith(motherTongue: values.first);
@@ -263,6 +284,25 @@ class SearchFilterInputNotifier extends StateNotifier<SearchFilterInput?> {
       state = state?.copyWith(employedIn: values.first);
     } else if (key == 'Occupation') {
       state = state?.copyWith(profession: values.first);
+    }
+  }
+
+  void updateInputReligionValues(
+    String? key,
+    List<String> values,
+  ) {
+    if (key == 'religion') {
+      state = state?.copyWith(religion: values.first);
+    } else if (key == 'caste') {
+      state = state?.copyWith(caste: values.first);
+    } else if (key == 'subCaste') {
+      state = state?.copyWith(subcaste: values.first);
+    } else if (key == 'country') {
+      state = state?.copyWith(country: values.first);
+    } else if (key == 'state') {
+      state = state?.copyWith(states: values.first);
+    } else if (key == 'city') {
+      state = state?.copyWith(city: values.first);
     }
   }
 }
