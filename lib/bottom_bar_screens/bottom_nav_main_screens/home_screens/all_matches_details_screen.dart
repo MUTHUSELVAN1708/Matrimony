@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
@@ -94,7 +93,9 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            const MoreDetailsView();
+                          },
                           child:
                               const Icon(Icons.more_vert, color: Colors.black),
                         ),
@@ -195,97 +196,98 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
             style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
           )),
           const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(5, (index) {
-              // Define the lists for the status labels, icon names, and SVG names.
-              final verificationStatus = [
-                'Mobile Verified',
-                'Govt. ID Verified',
-                'Photo Verified',
-                'Education Verified',
-                'Income Verified'
-              ];
-
-              final verificationStatusNot = [
-                'Mobile Not Verified',
-                'Govt. ID Not Verified',
-                'Photo Not Verified',
-                'Education Not Verified',
-                'Income Not Verified'
-              ];
-
-              final svgNames = [
-                'mynaui_mobile',
-                'govrn_id',
-                'user_alt',
-                'mdi_account-graduation',
-                'income_verify',
-              ];
-
-              final iconForStatus = [
-                'Done_intrest',
-                'Close_round',
-              ];
-
-              final isVerified = [true, true, false, true, false];
-
-              return Column(
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // Main icon container
-                      Container(
-                        height: 60,
-                        width: 60,
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.red, // Adjust color as needed
-                        ),
-                        child: CustomSvg(
-                          name: svgNames[index], // Dynamically pass the name
-                          color: Colors.white,
-                        ),
-                      ),
-                      // Positioned status indicator
-                      Positioned(
-                        bottom: -5,
-                        right: -5,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: isVerified[index]
-                                ? Colors.green
-                                : AppColors.primaryButtonColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: CustomSvg(
-                            name: isVerified[index]
-                                ? iconForStatus[0]
-                                : iconForStatus[1], // Conditionally select icon
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Status Text
-                  Text(
-                    isVerified[index]
-                        ? verificationStatus[index]
-                        : verificationStatusNot[index],
-                    style: AppTextStyles.spanTextStyle.copyWith(
-                      color: const Color(0XFF5F5B5B),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              );
-            }),
-          )
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: List.generate(5, (index) {
+          //     // Define the lists for the status labels, icon names, and SVG names.
+          //     final verificationStatus = [
+          //       'Mobile Verified',
+          //       'Govt. ID Verified',
+          //       'Photo Verified',
+          //       'Education Verified',
+          //       'Income Verified'
+          //     ];
+          //
+          //     final verificationStatusNot = [
+          //       'Mobile Not Verified',
+          //       'Govt. ID Not Verified',
+          //       'Photo Not Verified',
+          //       'Education Not Verified',
+          //       'Income Not Verified'
+          //     ];
+          //
+          //     final svgNames = [
+          //       'mynaui_mobile',
+          //       'govrn_id',
+          //       'user_alt',
+          //       'mdi_account-graduation',
+          //       'income_verify',
+          //     ];
+          //
+          //     final iconForStatus = [
+          //       'Done_intrest',
+          //       'Close_round',
+          //     ];
+          //
+          //     final isVerified = [true, true, false, true, false];
+          //
+          //     return Column(
+          //       children: [
+          //         Stack(
+          //           clipBehavior: Clip.none,
+          //           children: [
+          //             // Main icon container
+          //             Container(
+          //               // height: 60,
+          //               // width: 60,
+          //               padding: const EdgeInsets.all(4),
+          //               decoration: BoxDecoration(
+          //                 borderRadius: BorderRadius.circular(15),
+          //                 color: Colors.red, // Adjust color as needed
+          //               ),
+          //               child: CustomSvg(
+          //                 name: svgNames[index], // Dynamically pass the name
+          //                 color: Colors.white,
+          //               ),
+          //             ),
+          //             // Positioned status indicator
+          //             Positioned(
+          //               bottom: -5,
+          //               right: -5,
+          //               child: Container(
+          //                 padding: const EdgeInsets.all(4),
+          //                 decoration: BoxDecoration(
+          //                   color: isVerified[index]
+          //                       ? Colors.green
+          //                       : AppColors.primaryButtonColor,
+          //                   borderRadius: BorderRadius.circular(8),
+          //                 ),
+          //                 child: CustomSvg(
+          //                   name: isVerified[index]
+          //                       ? iconForStatus[0]
+          //                       : iconForStatus[1], // Conditionally select icon
+          //                   color: Colors.white,
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //         const SizedBox(height: 8),
+          //         // Status Text
+          //         Text(
+          //           isVerified[index]
+          //               ? verificationStatus[index]
+          //               : verificationStatusNot[index],
+          //           style: AppTextStyles.spanTextStyle.copyWith(
+          //             color: const Color(0XFF5F5B5B),
+          //           ),
+          //           textAlign: TextAlign.center,
+          //         ),
+          //       ],
+          //     );
+          //   }),
+          // )
+          StatusRowWidget()
         ],
       ),
     );
@@ -351,7 +353,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                       child: Center(
                         child: Row(
                           children: [
-                            const CustomSvg(name: 'whatsapp_icon'),
+                            const CustomSvg(name: 'whatsapp-icon'),
                             Text(
                               'whatsapp',
                               style: AppTextStyles.spanTextStyle
@@ -688,6 +690,176 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
           name: icon,
         ),
       ],
+    );
+  }
+}
+
+class StatusRowWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Define the lists for the status labels, icon names, and SVG names.
+    final verificationStatus = [
+      'Mobile Verified',
+      'Govt. ID Verified',
+      'Photo Verified',
+      'Education Verified',
+      'Income Verified'
+    ];
+
+    final verificationStatusNot = [
+      'Mobile Not Verified',
+      'Govt. ID Not Verified',
+      'Photo Not Verified',
+      'Education Not Verified',
+      'Income Not Verified'
+    ];
+
+    final svgNames = [
+      'mynaui_mobile',
+      'govrn_id',
+      'user_alt',
+      'mdi_account-graduation',
+      'income_verify',
+    ];
+
+    final iconForStatus = [
+      'Done_intrest',
+      'Close_round',
+    ];
+
+    final isVerified = [true, true, false, true, false];
+
+    double iconSize = MediaQuery.of(context).size.width *
+        0.12; // Adjust icon size based on screen width
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(5, (index) {
+        return Flexible(
+          child: Column(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Main icon container
+                  Container(
+                    height: iconSize,
+                    width: iconSize,
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.red, // Adjust color as needed
+                    ),
+                    child: CustomSvg(
+                      name: svgNames[index], // Dynamically pass the name
+                      color: Colors.white,
+                    ),
+                  ),
+                  // Positioned status indicator
+                  Positioned(
+                    bottom: -5,
+                    right: -5,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: isVerified[index]
+                            ? Colors.green
+                            : AppColors.primaryButtonColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: CustomSvg(
+                        name: isVerified[index]
+                            ? iconForStatus[0]
+                            : iconForStatus[1], // Conditionally select icon
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              // Status Text
+              Text(
+                isVerified[index]
+                    ? verificationStatus[index]
+                    : verificationStatusNot[index],
+                style: AppTextStyles.spanTextStyle.copyWith(
+                  color: const Color(0XFF5F5B5B),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class MoreDetailsView extends StatelessWidget {
+  const MoreDetailsView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert),
+      onSelected: (String value) {
+        // Handle menu item selection
+        switch (value) {
+          case 'share':
+            break;
+          case 'shortlist':
+            break;
+          case 'dontShow':
+            break;
+          case 'block':
+            break;
+          case 'report':
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context) => [
+        const PopupMenuItem<String>(
+          value: 'share',
+          child: Text('Share Profile'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'shortlist',
+          child: Text('Shortlist'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'dontShow',
+          child: Text("Don't Show"),
+        ),
+        const PopupMenuItem<String>(
+          value: 'block',
+          child: Text('Block'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'report',
+          child: Text('Report Profile'),
+        ),
+      ],
+    );
+  }
+}
+
+// Example usage in another widget:
+class ExampleScreen extends StatelessWidget {
+  const ExampleScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        actions: const [
+          MoreDetailsView(),
+        ],
+      ),
+      body: const Center(
+        child: Text('Profile Content'),
+      ),
     );
   }
 }
