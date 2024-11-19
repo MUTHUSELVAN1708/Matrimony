@@ -5,6 +5,14 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/filter_scre
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
+
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
+
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preparence_religion_screen/riverpod/religious_api_notifier.dart';
+
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 
 class PartnerSearchScreen extends ConsumerStatefulWidget {
   const PartnerSearchScreen({Key? key}) : super(key: key);
@@ -15,528 +23,686 @@ class PartnerSearchScreen extends ConsumerStatefulWidget {
 }
 
 class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
-  // Selected values
-  RangeValues _ageRange = const RangeValues(22, 29);
-  RangeValues _heightRange = const RangeValues(4.9, 5.9);
-  final String _profileCreatedBy = 'Any';
-
-  // Time filter options
-  final List<String> timeFilters = [
-    'Any Time',
-    'Today',
-    'Last 3 Days',
-    'One Week',
-    'One Month'
-  ];
-
   @override
   Widget build(BuildContext context) {
     final searchInput = ref.watch(searchFilterInputProvider);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Stack(children: [
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Search",
-                      style: AppTextStyles.headingTextstyle,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      'search profile using the below criteria',
-                      style: AppTextStyles.spanTextStyle,
-                    ),
-                    const SizedBox(height: 16),
+    final religionState = ref.watch(religiousProvider);
+    final countryState = ref.watch(locationProvider);
 
-                    // Basic Details Section
-                    _buildExpandableSection(
-                      title: 'Basic Details',
-                      icon: SvgPicture.asset('assets/image/basic_filter.svg'),
-                      children: [
-                        _buildListTile(
-                          'Age',
-                          '${_ageRange.start.round()} yrs - ${_ageRange.end.round()} yrs',
-                          // onTap: () => _showAgeRangeDialog(),
-                        ),
-                        _buildListTile(
-                          'Height',
-                          "${_heightRange.start}' - ${_heightRange.end}'",
-                          // onTap: () => _showHeightRangeDialog(),
-                        ),
-                        InkWell(
-                            onTap: () {
-                              showSelectionHabitsDialog(
-                                  context, 'Profile created by', [
-                                'MySelf',
-                                'Son',
-                                'Daughter',
-                                'Sister',
-                                'Relative',
-                                'Friend',
-                                'Other'
-                              ]);
-                            },
-                            child: _buildListTile('Profile created by',
-                                "${searchInput?.profileCreatedBy}")),
-                        InkWell(
-                            onTap: () {
-                              showAnySelectionDialog(
-                                  context,
-                                  'Marital Status',
-                                  PartnerPreferenceConstData
-                                      .maritalStatusOptions);
-                            },
-                            child: _buildListTile('Marital Status',
-                                '${searchInput?.maritalStatus}')),
-                        InkWell(
-                            onTap: () {
-                              showAnySelectionDialog(
-                                  context,
-                                  'Mother Tongue',
-                                  PartnerPreferenceConstData
-                                      .motherTongueOptions);
-                            },
-                            child: _buildListTile('Mother Tongue',
-                                '${searchInput?.motherTongue}')),
-                        InkWell(
-                            onTap: () {
-                              showAnySelectionDialog(
-                                  context,
-                                  'Physical Status',
-                                  PartnerPreferenceConstData
-                                      .physicalStatusOptions);
-                            },
-                            child: _buildListTile('Physical Status',
-                                '${searchInput?.physicalStatus}')),
-                      ],
-                    ),
+    return EnhancedLoadingWrapper(
+      isLoading: religionState.isLoading,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Stack(children: [
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Search",
+                        style: AppTextStyles.headingTextstyle,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        'search profile using the below criteria',
+                        style: AppTextStyles.spanTextStyle,
+                      ),
+                      const SizedBox(height: 16),
 
-                    _buildExpandableSection(
-                      title: 'Religious Information',
-                      icon: SvgPicture.asset('assets/image/basic_filter.svg'),
-                      children: [
-                        _buildListTile('Religion', 'Hindu'),
-                        _buildListTile('division', 'Any'),
-                        _buildListTile('Sub-Caste', 'Any'),
-                      ],
-                    ),
-
-                    // Professional Information Section
-                    _buildExpandableSection(
-                      title: 'Professional Information',
-                      icon:
-                          SvgPicture.asset('assets/image/filter_religion.svg'),
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              showAnySelectionDialog(context, 'Occupation',
-                                  PartnerPreferenceConstData.occupationList);
-                            },
-                            child: _buildListTile(
-                                'Occupation', '${searchInput?.profession}')),
-                        InkWell(
-                            onTap: () {
-                              showAnySelectionDialog(context, 'annual income',
-                                  PartnerPreferenceConstData.incomeList);
-                            },
-                            child: _buildListTile('annual income',
-                                '${searchInput?.annualIncome}')),
-                        InkWell(
-                            onTap: () {
-                              showAnySelectionDialog(context, 'employment type',
-                                  PartnerPreferenceConstData.employedInList);
-                            },
-                            child: _buildListTile('employment type',
-                                '${searchInput?.employedIn}')),
-                        InkWell(
-                            onTap: () {
-                              showAnySelectionDialog(context, 'Education',
-                                  PartnerPreferenceConstData.educationList);
-                            },
-                            child: _buildListTile(
-                                'Education', '${searchInput?.education}')),
-                      ],
-                    ),
-
-                    // Location Section
-                    _buildExpandableSection(
-                      title: 'Location',
-                      icon:
-                          SvgPicture.asset('assets/image/filter_location.svg'),
-                      children: [
-                        _buildListTile('country', 'Any'),
-                        _buildListTile('citizenship', 'Any'),
-                      ],
-                    ),
-
-                    // // Family Details Section
-                    // _buildExpandableSection(
-                    //   title: 'Family Details',
-                    //   icon: SvgPicture.asset('assets/image/filter_family.svg'),
-                    //   children: [
-                    //     _buildListTile('family status', 'Any'),
-                    //     _buildListTile('family type', 'Any'),
-                    //   ],
-                    // ),
-
-                    // Hobbies & Lifestyle Section
-                    _buildExpandableSection(
-                      title: 'Hobbies & Lifestyle',
-                      icon: SvgPicture.asset('assets/image/filter_hobbie.svg'),
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            showSelectionHabitsDialog(
-                              context,
-                              'eating habits',
-                              PartnerPreferenceConstData.eatingHabitsOptions,
-                            );
-                          },
-                          child: _buildListTile(
-                            'eating habits',
-                            '${searchInput?.eatingHabits}',
+                      // Basic Details Section
+                      _buildExpandableSection(
+                        title: 'Basic Details',
+                        icon: SvgPicture.asset('assets/image/basic_filter.svg'),
+                        children: [
+                          _buildListTile(
+                            'Age',
+                            '${searchInput?.fromAge} yrs - ${searchInput?.toAge} yrs',
+                            onTap: () => showAgeSelectionDialog(
+                                context,
+                                'Age',
+                                'from Age',
+                                'To Age',
+                                PartnerPreferenceConstData.toAgeList,
+                                true),
                           ),
-                        ),
-                        InkWell(
+                          _buildListTile(
+                            'Height',
+                            "${searchInput?.fromHeight}' - ${searchInput?.toHeight}'",
+                            onTap: () => showHeightSelectionDialog(
+                                context,
+                                true,
+                                'Height',
+                                'from height',
+                                'To height',
+                                PartnerPreferenceConstData
+                                    .myHeightOptions.values
+                                    .toList()),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                showSelectionHabitsDialog(
+                                    context, 'Profile created by', [
+                                  'MySelf',
+                                  'Son',
+                                  'Daughter',
+                                  'Sister',
+                                  'Relative',
+                                  'Friend',
+                                  'Other'
+                                ]);
+                              },
+                              child: _buildListTile('Profile created by',
+                                  "${searchInput?.profileCreatedBy}")),
+                          InkWell(
+                              onTap: () {
+                                showAnySelectionDialog(
+                                    context,
+                                    'Marital Status',
+                                    PartnerPreferenceConstData
+                                        .maritalStatusOptions);
+                              },
+                              child: _buildListTile('Marital Status',
+                                  '${searchInput?.maritalStatus}')),
+                          InkWell(
+                              onTap: () {
+                                showAnySelectionDialog(
+                                    context,
+                                    'Mother Tongue',
+                                    PartnerPreferenceConstData
+                                        .motherTongueOptions);
+                              },
+                              child: _buildListTile('Mother Tongue',
+                                  '${searchInput?.motherTongue}')),
+                          InkWell(
+                              onTap: () {
+                                showAnySelectionDialog(
+                                    context,
+                                    'Physical Status',
+                                    PartnerPreferenceConstData
+                                        .physicalStatusOptions);
+                              },
+                              child: _buildListTile('Physical Status',
+                                  '${searchInput?.physicalStatus}')),
+                        ],
+                      ),
+
+                      _buildExpandableSection(
+                        title: 'Religious Information',
+                        icon: SvgPicture.asset('assets/image/basic_filter.svg'),
+                        children: [
+                          _buildListTile('Religion', '${searchInput?.religion}',
+                              onTap: () async {
+                            showLocationSelectionDialog(
+                                context,
+                                'Religion',
+                                religionState.data
+                                    .map((subCasteModel) =>
+                                        subCasteModel.religion)
+                                    .toList());
+                            int? stateId;
+                            for (var e in religionState.data) {
+                              if (e.religion == searchInput?.religion) {
+                                stateId = e.id;
+                                break;
+                              }
+                            }
+
+                            print("Selected State ID: $stateId");
+                            if (stateId != null) {
+                              await ref
+                                  .read(religiousProvider.notifier)
+                                  .getCasteData('$stateId');
+                            } else {
+                              print(
+                                  "No state ID found for the selected country.");
+                            }
+                          }),
+                          searchInput!.religion!.isEmpty ||
+                                  religionState.casteList.isEmpty ||
+                                  searchInput.religion == 'Any'
+                              ? SizedBox()
+                              : _buildListTile('Caste', '${searchInput.caste}',
+                                  onTap: () async {
+                                  showLocationSelectionDialog(
+                                      context,
+                                      'Caste',
+                                      religionState.casteList
+                                          .map((subCasteModel) =>
+                                              subCasteModel.caste)
+                                          .toList());
+
+                                  int? stateId;
+                                  for (var e in religionState.casteList) {
+                                    if (e.caste == searchInput.caste) {
+                                      stateId = e.id;
+                                      break;
+                                    }
+                                  }
+
+                                  print("Selected State ID: $stateId");
+                                  if (stateId != null) {
+                                    await ref
+                                        .read(religiousProvider.notifier)
+                                        .getSubCasteData("$stateId");
+                                  } else {
+                                    print(
+                                        "No state ID found for the selected country.");
+                                  }
+                                }),
+                          searchInput.caste!.isEmpty ||
+                                  religionState.subCasteList.isEmpty ||
+                                  searchInput.caste == 'Any'
+                              ? const SizedBox()
+                              : _buildListTile(
+                                  'Sub Caste', '${searchInput.subcaste}',
+                                  onTap: () {
+                                  showLocationSelectionDialog(
+                                      context,
+                                      'Sub Caste',
+                                      religionState.subCasteList
+                                          .map((subCasteModel) =>
+                                              subCasteModel.subCaste)
+                                          .toList());
+                                }),
+                        ],
+                      ),
+
+                      // Professional Information Section
+                      _buildExpandableSection(
+                        title: 'Professional Information',
+                        icon: SvgPicture.asset(
+                            'assets/image/filter_religion.svg'),
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                showAnySelectionDialog(context, 'Occupation',
+                                    PartnerPreferenceConstData.occupationList);
+                              },
+                              child: _buildListTile(
+                                  'Occupation', '${searchInput.profession}')),
+                          InkWell(
+                              onTap: () {
+                                showAnySelectionDialog(context, 'annual income',
+                                    PartnerPreferenceConstData.incomeList);
+                              },
+                              child: _buildListTile('annual income',
+                                  '${searchInput.annualIncome}')),
+                          InkWell(
+                              onTap: () {
+                                showAnySelectionDialog(
+                                    context,
+                                    'employment type',
+                                    PartnerPreferenceConstData.employedInList);
+                              },
+                              child: _buildListTile('employment type',
+                                  '${searchInput.employedIn}')),
+                          InkWell(
+                              onTap: () {
+                                showAnySelectionDialog(context, 'Education',
+                                    PartnerPreferenceConstData.educationList);
+                              },
+                              child: _buildListTile(
+                                  'Education', '${searchInput.education}')),
+                        ],
+                      ),
+
+                      // Location Section
+                      _buildExpandableSection(
+                        title: 'Location',
+                        icon: SvgPicture.asset(
+                            'assets/image/filter_location.svg'),
+                        children: [
+                          _buildListTile('Country', '${searchInput.country}',
+                              onTap: () async {
+                            showLocationSelectionDialog(
+                                context,
+                                'Country',
+                                countryState.countryList
+                                    .map((e) => e.countrys)
+                                    .toList());
+
+                            int? stateId;
+                            for (var e in countryState.countryList) {
+                              if (searchInput.country!.isNotEmpty) {
+                                if (e.countrys == searchInput.country) {
+                                  stateId = e.id;
+                                  break;
+                                }
+                              }
+                            }
+
+                            print("Selected State ID: $stateId");
+
+                            // Ensure stateId is not null before calling getStateData
+                            if (stateId != null) {
+                              await ref
+                                  .read(locationProvider.notifier)
+                                  .getStateData(stateId);
+                            } else {
+                              print(
+                                  "No state ID found for the selected country.");
+                            }
+                          }),
+                          countryState.countryList.isEmpty ||
+                                  countryState.stateList.isEmpty ||
+                                  searchInput.country == 'Any'
+                              ? const SizedBox()
+                              : _buildListTile('State', '${searchInput.states}',
+                                  onTap: () async {
+                                  showLocationSelectionDialog(
+                                      context,
+                                      'State',
+                                      countryState.stateList
+                                          .map((e) => e.states)
+                                          .toList());
+
+                                  int? stateId;
+                                  for (var e in countryState.stateList) {
+                                    if (searchInput.states!.isNotEmpty) {
+                                      if (e.states == searchInput.states) {
+                                        stateId = e.id;
+                                        break;
+                                      }
+                                    }
+                                  }
+
+                                  print("Selected State ID: $stateId");
+                                  if (stateId != null) {
+                                    await ref
+                                        .read(locationProvider.notifier)
+                                        .getCityData(stateId);
+                                  } else {
+                                    print(
+                                        "No state ID found for the selected country.");
+                                  }
+                                }),
+                          countryState.stateList.isEmpty ||
+                                  countryState.cityList.isEmpty
+                              ? const SizedBox()
+                              : _buildListTile('City', '${searchInput.city}',
+                                  onTap: () {
+                                  showLocationSelectionDialog(
+                                      context,
+                                      'City',
+                                      countryState.cityList
+                                          .map((e) => e.citys)
+                                          .toList());
+                                }),
+                          // _buildListTile('citizenship', 'Any'),
+                        ],
+                      ),
+
+                      // // Family Details Section
+                      // _buildExpandableSection(
+                      //   title: 'Family Details',
+                      //   icon: SvgPicture.asset('assets/image/filter_family.svg'),
+                      //   children: [
+                      //     _buildListTile('family status', 'Any'),
+                      //     _buildListTile('family type', 'Any'),
+                      //   ],
+                      // ),
+
+                      // Hobbies & Lifestyle Section
+                      _buildExpandableSection(
+                        title: 'Hobbies & Lifestyle',
+                        icon:
+                            SvgPicture.asset('assets/image/filter_hobbie.svg'),
+                        children: [
+                          InkWell(
                             onTap: () {
                               showSelectionHabitsDialog(
                                 context,
-                                'smoking habits',
-                                PartnerPreferenceConstData.smokingHabitsOptions,
+                                'eating habits',
+                                PartnerPreferenceConstData.eatingHabitsOptions,
                               );
                             },
-                            child: _buildListTile('smoking habits',
-                                '${searchInput?.smokingHabits}')),
-                        InkWell(
-                          onTap: () async {
-                            showSelectionHabitsDialog(
-                              context,
+                            child: _buildListTile(
+                              'eating habits',
+                              '${searchInput.eatingHabits}',
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {
+                                showSelectionHabitsDialog(
+                                  context,
+                                  'smoking habits',
+                                  PartnerPreferenceConstData
+                                      .smokingHabitsOptions,
+                                );
+                              },
+                              child: _buildListTile('smoking habits',
+                                  '${searchInput.smokingHabits}')),
+                          InkWell(
+                            onTap: () async {
+                              showSelectionHabitsDialog(
+                                context,
+                                'drinking habits',
+                                PartnerPreferenceConstData
+                                    .drinkingHabitsOptions,
+                              );
+                            },
+                            child: _buildListTile(
                               'drinking habits',
-                              PartnerPreferenceConstData.drinkingHabitsOptions,
-                            );
-                          },
-                          child: _buildListTile(
-                            'drinking habits',
-                            '${searchInput?.drinkingHabits}',
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 24),
-                    // Container(
-                    //   width: double.infinity,
-                    //   height: 50,
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(30),
-                    //     gradient: const LinearGradient(
-                    //       begin: Alignment.topCenter,
-                    //       end: Alignment.bottomCenter,
-                    //       colors: [
-                    //         Color(0xFFFFF4F4), // #FFF4F4 color
-                    //         Color(0xFFFDFDFD), // #FDFDFD color
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   child: const Center(
-                    //     child: Text(
-                    //       'Recently Created Profiles',
-                    //       style: AppTextStyles.headingTextstyle,
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
-                    // Align(
-                    //   alignment: Alignment.centerLeft,
-                    //   child: Text(
-                    //     'Profile Created',
-                    //     style: AppTextStyles.spanTextStyle
-                    //         .copyWith(color: Colors.black),
-                    //   ),
-                    // ),
-                    // Align(
-                    //     alignment: Alignment.centerLeft,
-                    //     child: Text('Profiles Based On Created Date',
-                    //         style: AppTextStyles.spanTextStyle
-                    //             .copyWith(color: Colors.black))),
-                    // const SizedBox(height: 15),
-                    //
-                    // Wrap(
-                    //   alignment: WrapAlignment.center,
-                    //   spacing: 15, // Horizontal space between the chips
-                    //   runSpacing: 8, // Vertical space between rows of chips
-                    //   children: timeFilters.map((filter) {
-                    //     bool isSelected = _selectedTimeFilter == filter;
-                    //
-                    //     return GestureDetector(
-                    //       onTap: () {
-                    //         setState(() {
-                    //           _selectedTimeFilter =
-                    //               filter; // Toggle selected filter
-                    //         });
-                    //       },
-                    //       child: Container(
-                    //         padding: const EdgeInsets.symmetric(
-                    //             horizontal: 16.0,
-                    //             vertical: 8.0), // Padding inside the container
-                    //         decoration: BoxDecoration(
-                    //           color: isSelected
-                    //               ? Colors.red
-                    //               : Colors
-                    //                   .white, // Red background when selected, white when unselected
-                    //           border: Border.all(
-                    //             color:
-                    //                 Colors.grey, // Grey border when unselected
-                    //             width: 1.0, // Border width
-                    //           ),
-                    //           borderRadius: BorderRadius.circular(
-                    //               20), // Border radius of 20
-                    //         ),
-                    //         child: Text(
-                    //           filter,
-                    //           style: TextStyle(
-                    //             fontFamily:
-                    //                 'Helvetica', // Set font-family to Helvetica
-                    //             fontSize: 12, // Font size
-                    //             fontWeight: FontWeight.w400, // Font weight
-                    //             height: 13.8 /
-                    //                 12, // Line height (line-height / font-size)
-                    //             color: isSelected
-                    //                 ? Colors.white
-                    //                 : Colors.black, // Center align the text
-                    //             decoration:
-                    //                 TextDecoration.none, // No text decoration
-                    //             decorationStyle: TextDecorationStyle
-                    //                 .solid, // No text decoration (for clarity)
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     );
-                    //   }).toList(),
-                    // ),
-                    //
-                    // const SizedBox(height: 24),
-
-                    // Profile Type Section
-                    // Container(
-                    //   width: double.infinity,
-                    //   height: 50,
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(30),
-                    //     gradient: const LinearGradient(
-                    //       begin: Alignment.topCenter,
-                    //       end: Alignment.bottomCenter,
-                    //       colors: [
-                    //         Color(0xFFFFF4F4), // #FFF4F4 color
-                    //         Color(0xFFFDFDFD), // #FDFDFD color
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   child: const Center(
-                    //     child: Text(
-                    //       'Profile Type',
-                    //       style: AppTextStyles.headingTextstyle,
-                    //     ),
-                    //   ),
-                    // ),
-                    //
-                    // const SizedBox(
-                    //   height: 15,
-                    // ),
-                    //
-                    // Container(
-                    //   width: double.infinity, // Set the height of the container
-                    //   padding: const EdgeInsets.fromLTRB(
-                    //       20, 7, 22, 7), // Set the padding for the container
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(20),
-                    //     color: Colors.white, // Set the background color
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.black
-                    //             .withOpacity(0.08), // Shadow color with opacity
-                    //         offset: const Offset(
-                    //             1, 2), // Shadow offset (horizontal, vertical)
-                    //         blurRadius: 11.1, // Blur radius of the shadow
-                    //       ),
-                    //     ],
-                    //   ),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment
-                    //         .spaceBetween, // Distribute the children evenly
-                    //     children: [
-                    //       // The text part
-                    //       const Expanded(
-                    //         child: Text.rich(
-                    //           TextSpan(
-                    //             children: [
-                    //               TextSpan(
-                    //                 text: 'Profiles with photo ',
-                    //                 style: TextStyle(
-                    //                   fontFamily: 'Source Sans Pro',
-                    //                   color: Colors.black,
-                    //                   fontWeight: FontWeight.w400,
-                    //                 ),
-                    //               ),
-                    //               TextSpan(
-                    //                 text: 'Matches who have added photos',
-                    //                 style: TextStyle(
-                    //                   fontFamily: 'Source Sans Pro',
-                    //                   color: Color(
-                    //                       0xFF514D4D), // Correct color code
-                    //                   fontWeight: FontWeight.w400,
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //           maxLines: 3,
-                    //           overflow: TextOverflow
-                    //               .ellipsis, // To prevent text from overflowing
-                    //         ),
-                    //       ),
-                    //
-                    //       // The checkbox part
-                    //       Checkbox(
-                    //         value: _showProfilesWithPhoto,
-                    //         onChanged: (bool? value) {
-                    //           setState(() {
-                    //             _showProfilesWithPhoto = value ?? false;
-                    //           });
-                    //         },
-                    //         activeColor: Colors
-                    //             .green, // Checkbox will be green when checked
-                    //         checkColor: Colors.white, // White check mark
-                    //         side: const BorderSide(
-                    //           color: Colors.red,
-                    //           width: 2.0, // Border width
-                    //         ),
-                    //         materialTapTargetSize: MaterialTapTargetSize
-                    //             .shrinkWrap, // Shrink the tap area for a compact look
-                    //         shape: RoundedRectangleBorder(
-                    //           borderRadius: BorderRadius.circular(5.0),
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                    //
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
-                    //
-                    // Container(
-                    //   height: 50,
-                    //   width: double.infinity, // Set the height of the container
-                    //   alignment: Alignment.center,
-                    //   padding: EdgeInsets.only(
-                    //       left: 10,
-                    //       right: 10), // Set the padding for the container
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(20),
-                    //     color: Colors.white, // Set the background color
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.black
-                    //             .withOpacity(0.08), // Shadow color with opacity
-                    //         offset: const Offset(
-                    //             1, 2), // Shadow offset (horizontal, vertical)
-                    //         blurRadius: 11.1, // Blur radius of the shadow
-                    //       ),
-                    //     ],
-                    //   ),
-                    //   child: const Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text(
-                    //         "Don't Show Profiles",
-                    //         style: TextStyle(
-                    //             fontFamily: 'Source Sans Pro',
-                    //             color: Colors.black,
-                    //             fontWeight: FontWeight.w700),
-                    //       ),
-                    //       Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           Text(
-                    //             "Ignored, Shortlisted",
-                    //             style: TextStyle(
-                    //                 fontFamily: 'Source Sans Pro',
-                    //                 color: Colors.black,
-                    //                 fontWeight: FontWeight.w700),
-                    //           ),
-                    //           Icon(Icons.chevron_right)
-                    //         ],
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    //
-                    // const SizedBox(height: 16),
-
-                    // Matches Count
-                    const Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '2,634',
-                            style: TextStyle(
-                                fontFamily: 'Source Sans Pro',
-                                color: AppColors.headingTextColor,
-                                fontWeight:
-                                    FontWeight.w700), // red color for 634
-                          ),
-                          TextSpan(
-                            text: ' Matches Based On Your Preferences',
-                            style: TextStyle(
-                                fontFamily: 'Source Sans Pro',
-                                color: Colors.black,
-                                fontWeight: FontWeight
-                                    .w700), // black color for the rest
+                              '${searchInput.drinkingHabits}',
+                            ),
                           ),
                         ],
                       ),
-                    ),
 
-                    const SizedBox(height: 60),
+                      const SizedBox(height: 24),
+                      // Container(
+                      //   width: double.infinity,
+                      //   height: 50,
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(30),
+                      //     gradient: const LinearGradient(
+                      //       begin: Alignment.topCenter,
+                      //       end: Alignment.bottomCenter,
+                      //       colors: [
+                      //         Color(0xFFFFF4F4), // #FFF4F4 color
+                      //         Color(0xFFFDFDFD), // #FDFDFD color
+                      //       ],
+                      //     ),
+                      //   ),
+                      //   child: const Center(
+                      //     child: Text(
+                      //       'Recently Created Profiles',
+                      //       style: AppTextStyles.headingTextstyle,
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   height: 10,
+                      // ),
+                      // Align(
+                      //   alignment: Alignment.centerLeft,
+                      //   child: Text(
+                      //     'Profile Created',
+                      //     style: AppTextStyles.spanTextStyle
+                      //         .copyWith(color: Colors.black),
+                      //   ),
+                      // ),
+                      // Align(
+                      //     alignment: Alignment.centerLeft,
+                      //     child: Text('Profiles Based On Created Date',
+                      //         style: AppTextStyles.spanTextStyle
+                      //             .copyWith(color: Colors.black))),
+                      // const SizedBox(height: 15),
+                      //
+                      // Wrap(
+                      //   alignment: WrapAlignment.center,
+                      //   spacing: 15, // Horizontal space between the chips
+                      //   runSpacing: 8, // Vertical space between rows of chips
+                      //   children: timeFilters.map((filter) {
+                      //     bool isSelected = _selectedTimeFilter == filter;
+                      //
+                      //     return GestureDetector(
+                      //       onTap: () {
+                      //         setState(() {
+                      //           _selectedTimeFilter =
+                      //               filter; // Toggle selected filter
+                      //         });
+                      //       },
+                      //       child: Container(
+                      //         padding: const EdgeInsets.symmetric(
+                      //             horizontal: 16.0,
+                      //             vertical: 8.0), // Padding inside the container
+                      //         decoration: BoxDecoration(
+                      //           color: isSelected
+                      //               ? Colors.red
+                      //               : Colors
+                      //                   .white, // Red background when selected, white when unselected
+                      //           border: Border.all(
+                      //             color:
+                      //                 Colors.grey, // Grey border when unselected
+                      //             width: 1.0, // Border width
+                      //           ),
+                      //           borderRadius: BorderRadius.circular(
+                      //               20), // Border radius of 20
+                      //         ),
+                      //         child: Text(
+                      //           filter,
+                      //           style: TextStyle(
+                      //             fontFamily:
+                      //                 'Helvetica', // Set font-family to Helvetica
+                      //             fontSize: 12, // Font size
+                      //             fontWeight: FontWeight.w400, // Font weight
+                      //             height: 13.8 /
+                      //                 12, // Line height (line-height / font-size)
+                      //             color: isSelected
+                      //                 ? Colors.white
+                      //                 : Colors.black, // Center align the text
+                      //             decoration:
+                      //                 TextDecoration.none, // No text decoration
+                      //             decorationStyle: TextDecorationStyle
+                      //                 .solid, // No text decoration (for clarity)
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   }).toList(),
+                      // ),
+                      //
+                      // const SizedBox(height: 24),
 
-                    // Search Button
-                  ],
+                      // Profile Type Section
+                      // Container(
+                      //   width: double.infinity,
+                      //   height: 50,
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(30),
+                      //     gradient: const LinearGradient(
+                      //       begin: Alignment.topCenter,
+                      //       end: Alignment.bottomCenter,
+                      //       colors: [
+                      //         Color(0xFFFFF4F4), // #FFF4F4 color
+                      //         Color(0xFFFDFDFD), // #FDFDFD color
+                      //       ],
+                      //     ),
+                      //   ),
+                      //   child: const Center(
+                      //     child: Text(
+                      //       'Profile Type',
+                      //       style: AppTextStyles.headingTextstyle,
+                      //     ),
+                      //   ),
+                      // ),
+                      //
+                      // const SizedBox(
+                      //   height: 15,
+                      // ),
+                      //
+                      // Container(
+                      //   width: double.infinity, // Set the height of the container
+                      //   padding: const EdgeInsets.fromLTRB(
+                      //       20, 7, 22, 7), // Set the padding for the container
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(20),
+                      //     color: Colors.white, // Set the background color
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Colors.black
+                      //             .withOpacity(0.08), // Shadow color with opacity
+                      //         offset: const Offset(
+                      //             1, 2), // Shadow offset (horizontal, vertical)
+                      //         blurRadius: 11.1, // Blur radius of the shadow
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment
+                      //         .spaceBetween, // Distribute the children evenly
+                      //     children: [
+                      //       // The text part
+                      //       const Expanded(
+                      //         child: Text.rich(
+                      //           TextSpan(
+                      //             children: [
+                      //               TextSpan(
+                      //                 text: 'Profiles with photo ',
+                      //                 style: TextStyle(
+                      //                   fontFamily: 'Source Sans Pro',
+                      //                   color: Colors.black,
+                      //                   fontWeight: FontWeight.w400,
+                      //                 ),
+                      //               ),
+                      //               TextSpan(
+                      //                 text: 'Matches who have added photos',
+                      //                 style: TextStyle(
+                      //                   fontFamily: 'Source Sans Pro',
+                      //                   color: Color(
+                      //                       0xFF514D4D), // Correct color code
+                      //                   fontWeight: FontWeight.w400,
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //           maxLines: 3,
+                      //           overflow: TextOverflow
+                      //               .ellipsis, // To prevent text from overflowing
+                      //         ),
+                      //       ),
+                      //
+                      //       // The checkbox part
+                      //       Checkbox(
+                      //         value: _showProfilesWithPhoto,
+                      //         onChanged: (bool? value) {
+                      //           setState(() {
+                      //             _showProfilesWithPhoto = value ?? false;
+                      //           });
+                      //         },
+                      //         activeColor: Colors
+                      //             .green, // Checkbox will be green when checked
+                      //         checkColor: Colors.white, // White check mark
+                      //         side: const BorderSide(
+                      //           color: Colors.red,
+                      //           width: 2.0, // Border width
+                      //         ),
+                      //         materialTapTargetSize: MaterialTapTargetSize
+                      //             .shrinkWrap, // Shrink the tap area for a compact look
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(5.0),
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
+                      //
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
+                      //
+                      // Container(
+                      //   height: 50,
+                      //   width: double.infinity, // Set the height of the container
+                      //   alignment: Alignment.center,
+                      //   padding: EdgeInsets.only(
+                      //       left: 10,
+                      //       right: 10), // Set the padding for the container
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(20),
+                      //     color: Colors.white, // Set the background color
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Colors.black
+                      //             .withOpacity(0.08), // Shadow color with opacity
+                      //         offset: const Offset(
+                      //             1, 2), // Shadow offset (horizontal, vertical)
+                      //         blurRadius: 11.1, // Blur radius of the shadow
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   child: const Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text(
+                      //         "Don't Show Profiles",
+                      //         style: TextStyle(
+                      //             fontFamily: 'Source Sans Pro',
+                      //             color: Colors.black,
+                      //             fontWeight: FontWeight.w700),
+                      //       ),
+                      //       Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //         children: [
+                      //           Text(
+                      //             "Ignored, Shortlisted",
+                      //             style: TextStyle(
+                      //                 fontFamily: 'Source Sans Pro',
+                      //                 color: Colors.black,
+                      //                 fontWeight: FontWeight.w700),
+                      //           ),
+                      //           Icon(Icons.chevron_right)
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      //
+                      // const SizedBox(height: 16),
+
+                      // Matches Count
+                      const Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '2,634',
+                              style: TextStyle(
+                                  fontFamily: 'Source Sans Pro',
+                                  color: AppColors.headingTextColor,
+                                  fontWeight:
+                                      FontWeight.w700), // red color for 634
+                            ),
+                            TextSpan(
+                              text: ' Matches Based On Your Preferences',
+                              style: TextStyle(
+                                  fontFamily: 'Source Sans Pro',
+                                  color: Colors.black,
+                                  fontWeight: FontWeight
+                                      .w700), // black color for the rest
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 60),
+
+                      // Search Button
+                    ],
+                  ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ref
-                          .read(searchFilterInputProvider.notifier)
-                          .updateSearchFilterInput();
-                    },
-                    style: AppTextStyles.primaryButtonstyle,
-                    child: const Text(
-                      'Search',
-                      style: AppTextStyles.primarybuttonText,
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        ref
+                            .read(searchFilterInputProvider.notifier)
+                            .updateSearchFilterInput();
+                      },
+                      style: AppTextStyles.primaryButtonstyle,
+                      child: const Text(
+                        'Search',
+                        style: AppTextStyles.primarybuttonText,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+              ]),
+            ),
           ),
         ),
       ),
@@ -576,11 +742,13 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
             style: AppTextStyles.spanTextStyle
                 .copyWith(color: const Color(0xFF272727)),
           ),
-          subtitle: Text(
-            subtitle,
-            style: AppTextStyles.spanTextStyle
-                .copyWith(color: const Color(0xFF898989)),
-          ),
+          subtitle: subtitle.isEmpty
+              ? const SizedBox()
+              : Text(
+                  subtitle,
+                  style: AppTextStyles.spanTextStyle
+                      .copyWith(color: const Color(0xFF898989)),
+                ),
           trailing: const Icon(Icons.chevron_right),
           onTap: onTap,
         ),
@@ -896,6 +1064,571 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     .read(searchFilterInputProvider.notifier)
                                     .updateInputAnyValues(
                                         'Occupation', [selectedValues]);
+                              }
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Apply',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showAgeSelectionDialog(BuildContext context, String hint, String hint1,
+      String hint2, List<String> items, bool ageheight) {
+    List<String> fromItem = [];
+    List<String> toItem = [];
+    late List<String> selectedValues;
+    bool isSelectAll = false;
+    bool isSingleSelection = false;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          contentPadding: EdgeInsets.zero,
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Stack(children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  height:
+                      // widget.ageheight
+                      //     ?
+                      MediaQuery.of(context).size.height * 0.30,
+                  // : MediaQuery.of(context).size.height * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Select $hint',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        ageheight
+                            ? SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    AgeCustomDialogBox(
+                                      value: fromItem,
+                                      hint: hint2 ?? '',
+                                      items: items,
+                                      onChanged: (data) {
+                                        setState(() {
+                                          fromItem = data;
+                                          toItem.clear();
+                                        });
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                    if (fromItem.isNotEmpty)
+                                      AgeCustomDialogBox(
+                                        value: toItem,
+                                        hint: hint2 ?? '',
+                                        items: items
+                                            .where((item) =>
+                                                int.parse(item) >
+                                                int.parse(fromItem[0]))
+                                            .toList(),
+                                        onChanged: (data) {
+                                          setState(() {
+                                            toItem = data;
+                                          });
+                                        },
+                                      ),
+                                  ],
+                                ),
+                              )
+                            : Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: (isSingleSelection
+                                      ? items.length
+                                      : items.length + 1),
+                                  itemBuilder: (context, index) {
+                                    if (!isSingleSelection && index == 0) {
+                                      return ListTile(
+                                        onTap: () {
+                                          setState(() {
+                                            isSelectAll = !isSelectAll;
+                                            if (isSelectAll) {
+                                              selectedValues = List.from(items);
+                                            } else {
+                                              selectedValues.clear();
+                                            }
+                                          });
+                                        },
+                                        leading: isSelectAll
+                                            ? const Icon(
+                                                Icons
+                                                    .radio_button_checked_outlined,
+                                                color: Colors.red,
+                                              )
+                                            : const Icon(Icons.circle_outlined),
+                                        title: const Text("Select All"),
+                                      );
+                                    }
+                                    final itemIndex =
+                                        // isSingleSelection ? index :
+                                        index - 1;
+                                    final currentItem = items[itemIndex];
+                                    //
+                                    // if (isSingleSelection) {
+                                    //   return RadioListTile<String>(
+                                    //     title: Text(currentItem),
+                                    //     value: currentItem,
+                                    //     groupValue: selectedValues.isNotEmpty
+                                    //         ? selectedValues.first
+                                    //         : null,
+                                    //     onChanged: (String? value) {
+                                    //       setState(() {
+                                    //         selectedValues =
+                                    //         value != null ? [value] : [];
+                                    //       });
+                                    //     },
+                                    //     activeColor: Colors.red,
+                                    //   );
+                                    // } else {
+                                    return ListTile(
+                                      leading: selectedValues
+                                              .contains(currentItem)
+                                          ? const Icon(
+                                              Icons.radio_button_checked,
+                                              color: Colors.red,
+                                            )
+                                          : const Icon(Icons.circle_outlined),
+                                      title: Text(currentItem),
+                                      onTap: () {
+                                        setState(() {
+                                          if (selectedValues
+                                              .contains(currentItem)) {
+                                            selectedValues.remove(currentItem);
+                                            isSelectAll = false;
+                                          } else {
+                                            selectedValues.add(currentItem);
+                                            if (selectedValues.length ==
+                                                items.length) {
+                                              isSelectAll = true;
+                                            }
+                                          }
+                                        });
+                                      },
+                                    );
+                                    // }
+                                  },
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 45,
+                      child: ElevatedButton(
+                        onPressed: fromItem.isNotEmpty && toItem.isEmpty
+                            ? null
+                            : () {
+                                if (hint == 'Age') {
+                                  ref
+                                      .read(searchFilterInputProvider.notifier)
+                                      .updateInputAgeValues(
+                                          'fromAge', fromItem, toItem);
+                                }
+                                Navigator.pop(context);
+                              },
+                        style: ElevatedButton.styleFrom(
+                          disabledIconColor:
+                              fromItem.isNotEmpty && toItem.isEmpty
+                                  ? Colors.grey
+                                  : Colors.red,
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Apply',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ]);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showHeightSelectionDialog(BuildContext context, bool ageHeight,
+      String hint, String hint2, String hint3, List<String> items) {
+    late List<String> selectedValues;
+    List<String> filteredItems = [];
+    bool isSingleSelection = false;
+    bool isSelectAll = false;
+    List<String> toItem = [];
+    List<String> fromItem = [];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        bool select = false;
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          contentPadding: EdgeInsets.zero,
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Stack(children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  height: ageHeight
+                      ? MediaQuery.of(context).size.height * 0.35
+                      : MediaQuery.of(context).size.height * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Select $hint',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        ageHeight
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  HeightDropdownField(
+                                    value: fromItem,
+                                    hint: hint2 ?? '',
+                                    items: items,
+                                    onChanged: (data) {
+                                      setState(() {
+                                        fromItem = data;
+                                        toItem.clear();
+                                        if (fromItem.isNotEmpty) {
+                                          int fromIndex =
+                                              items.indexOf(fromItem.first);
+                                          filteredItems =
+                                              items.sublist(fromIndex + 1);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  fromItem.isEmpty
+                                      ? const SizedBox()
+                                      : HeightDropdownField(
+                                          value: toItem.isEmpty ? [] : toItem,
+                                          hint: hint3 ?? '',
+                                          items: filteredItems,
+                                          onChanged: (data) {
+                                            setState(() {
+                                              toItem = data;
+                                            });
+                                          },
+                                        ),
+                                ],
+                              )
+                            : Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: items.length +
+                                      (isSingleSelection ? 0 : 1),
+                                  itemBuilder: (context, index) {
+                                    if (!isSingleSelection && index == 0) {
+                                      return ListTile(
+                                        onTap: () {
+                                          setState(() {
+                                            isSelectAll = !isSelectAll;
+                                            selectedValues = isSelectAll
+                                                ? List.from(items)
+                                                : [];
+                                          });
+                                        },
+                                        leading: isSelectAll
+                                            ? const Icon(
+                                                Icons
+                                                    .radio_button_checked_outlined,
+                                                color: Colors.red,
+                                              )
+                                            : const Icon(Icons.circle_outlined),
+                                        title: const Text("Select All"),
+                                      );
+                                    }
+                                    final itemIndex =
+                                        isSingleSelection ? index : index - 1;
+                                    final currentItem = items[itemIndex];
+
+                                    if (isSingleSelection) {
+                                    } else {
+                                      return ListTile(
+                                        leading: selectedValues
+                                                .contains(currentItem)
+                                            ? const Icon(
+                                                Icons.radio_button_checked,
+                                                color: Colors.red,
+                                              )
+                                            : const Icon(Icons.circle_outlined),
+                                        title: Text(currentItem),
+                                        onTap: () {
+                                          setState(() {
+                                            select = !select;
+                                            if (select) {
+                                              selectedValues.add(currentItem);
+                                              if (selectedValues.length ==
+                                                  items.length) {
+                                                isSelectAll = true;
+                                              }
+                                            } else {
+                                              selectedValues
+                                                  .remove(currentItem);
+                                              isSelectAll = false;
+                                            }
+                                          });
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 45,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (hint == 'Height') {
+                            ref
+                                .read(searchFilterInputProvider.notifier)
+                                .updateInputHeightValues(
+                                    'fromHeight', fromItem, toItem);
+                          }
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Apply',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ]);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showLocationSelectionDialog(
+      BuildContext context, String hint, List<String> items) {
+    List<String> selectedValues = [];
+    List<String> filteredItems = [];
+    String searchQuery = '';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          contentPadding: EdgeInsets.zero,
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                height: MediaQuery.of(context).size.height * 0.7,
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        decoration: InputDecoration(
+                          fillColor: AppColors.dialogboxSearchBackground,
+                          filled: true,
+                          hintText: 'Search...',
+                          hintStyle: const TextStyle(
+                              color: AppColors.dialogboxSearchTextColor),
+                          suffixIcon: const Icon(Icons.search,
+                              color: AppColors.dialogboxSearchTextColor),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                            if (searchQuery.isEmpty) {
+                              filteredItems = items;
+                            } else {
+                              filteredItems = items
+                                  .where((item) => item
+                                      .toLowerCase()
+                                      .contains(searchQuery.toLowerCase()))
+                                  .toList();
+                            }
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Select $hint',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: searchQuery.isEmpty
+                              ? items.length + 1
+                              : filteredItems.length + 1,
+                          itemBuilder: (context, index) {
+                            String currentItem;
+                            if (index == 0) {
+                              currentItem = 'Any';
+                            } else {
+                              currentItem = searchQuery.isEmpty
+                                  ? items[index - 1]
+                                  : filteredItems[index - 1];
+                            }
+
+                            return ListTile(
+                              leading: selectedValues.contains(currentItem)
+                                  ? const Icon(
+                                      Icons.radio_button_checked,
+                                      color: Colors.red,
+                                    )
+                                  : const Icon(Icons.circle_outlined),
+                              title: Text(currentItem),
+                              onTap: () {
+                                setState(() {
+                                  selectedValues.clear();
+                                  selectedValues.add(currentItem);
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // widget.onChanged(selectedValues);
+                              if (hint == 'Religion') {
+                                ref
+                                    .read(searchFilterInputProvider.notifier)
+                                    .updateInputReligionValues(
+                                        'religion', selectedValues);
+                              } else if (hint == 'Caste') {
+                                ref
+                                    .read(searchFilterInputProvider.notifier)
+                                    .updateInputReligionValues(
+                                        'caste', selectedValues);
+                              } else if (hint == 'Sub Caste') {
+                                ref
+                                    .read(searchFilterInputProvider.notifier)
+                                    .updateInputReligionValues(
+                                        'subCaste', selectedValues);
+                              } else if (hint == 'Country') {
+                                ref
+                                    .read(searchFilterInputProvider.notifier)
+                                    .updateInputReligionValues(
+                                        'country', selectedValues);
+                              } else if (hint == 'State') {
+                                ref
+                                    .read(searchFilterInputProvider.notifier)
+                                    .updateInputReligionValues(
+                                        'state', selectedValues);
+                              } else if (hint == 'City') {
+                                ref
+                                    .read(searchFilterInputProvider.notifier)
+                                    .updateInputReligionValues(
+                                        'city', selectedValues);
+                              }
+                              if (mounted) {
+                                setState(() {
+                                  searchQuery = '';
+                                });
                               }
                               Navigator.pop(context);
                             },
