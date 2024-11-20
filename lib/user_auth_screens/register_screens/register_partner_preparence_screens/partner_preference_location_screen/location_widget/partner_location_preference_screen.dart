@@ -34,6 +34,13 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
     ref.read(locationProvider.notifier).getallCountryData();
   }
 
+  bool countryOther = false;
+  bool stateOther = false;
+  bool cityOther = false;
+  final countryCtrl = TextEditingController();
+  final stateCtrl = TextEditingController();
+  final cityCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final userRegisterState = ref.watch(partnerPreferenceProvider);
@@ -101,42 +108,68 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              PreferenceLocationDropdown(
-                  showSearch: true,
-                  value: selectedCountry.isNotEmpty ? selectedCountry : [],
-                  hint: "Country",
-                  // items: countries,
-                  items:
-                      countryState.countryList.map((e) => e.countrys).toList(),
-                  onChanged: (value) async {
-                    // Update the selected country first
-                    setState(() {
-                      selectedCountry = value;
-                      selectedState.clear();
-                      selectedCity.clear();
-                    });
+              countryOther
+                  ? TextFormField(
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCountry.clear();
+                          selectedCountry.add(countryCtrl.text);
+                        });
+                      },
+                      controller: countryCtrl,
+                      decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  countryOther = false;
+                                });
+                              },
+                              icon: const Icon(Icons.close)),
+                          hintText: 'Country',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15))),
+                    )
+                  : PreferenceLocationDropdown(
+                      other: true,
+                      showSearch: true,
+                      value: selectedCountry.isNotEmpty ? selectedCountry : [],
+                      hint: "Country",
+                      // items: countries,
+                      items: countryState.countryList
+                          .map((e) => e.countrys)
+                          .toList(),
+                      onChanged: (value) async {
+                        // Update the selected country first
+                        setState(() {
+                          selectedCountry = value;
+                          selectedState.clear();
+                          selectedCity.clear();
+                          if (value[0] == 'Other') {
+                            countryOther = true;
+                          }
+                        });
 
-                    int? stateId;
-                    for (var e in countryState.countryList) {
-                      if (selectedCountry.isNotEmpty) {
-                        if (e.countrys == selectedCountry[0]) {
-                          stateId = e.id;
-                          break;
+                        int? stateId;
+                        for (var e in countryState.countryList) {
+                          if (selectedCountry.isNotEmpty) {
+                            if (e.countrys == selectedCountry[0]) {
+                              stateId = e.id;
+                              break;
+                            }
+                          }
                         }
-                      }
-                    }
 
-                    print("Selected State ID: $stateId");
+                        print("Selected State ID: $stateId");
 
-                    // Ensure stateId is not null before calling getStateData
-                    if (stateId != null) {
-                      await ref
-                          .read(locationProvider.notifier)
-                          .getStateData(stateId);
-                    } else {
-                      print("No state ID found for the selected country.");
-                    }
-                  }),
+                        // Ensure stateId is not null before calling getStateData
+                        if (stateId != null) {
+                          await ref
+                              .read(locationProvider.notifier)
+                              .getStateData(stateId);
+                        } else {
+                          print("No state ID found for the selected country.");
+                        }
+                      }),
               selectedCountry.isEmpty ||
                       countryState.stateList.isEmpty ||
                       selectedCountry[0] == 'Any'
@@ -148,55 +181,109 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                       countryState.stateList.isEmpty ||
                       selectedCountry[0] == 'Any'
                   ? SizedBox()
-                  : PreferenceLocationDropdown(
-                      showSearch: true,
-                      value: selectedState.isEmpty ? selectedState : [],
-                      hint: "State",
-                      items:
-                          countryState.stateList.map((e) => e.states).toList(),
-                      onChanged: (value) async {
-                        setState(() {
-                          selectedState = value;
-                          print(selectedState);
-                          selectedCity.clear();
-                        });
-                        int? stateId;
-                        for (var e in countryState.stateList) {
-                          if (selectedState.isNotEmpty) {
-                            if (e.states == selectedState[0]) {
-                              stateId = e.id;
-                              break;
+                  : stateOther
+                      ? TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              selectedState.clear();
+                              selectedState.add(stateCtrl.text);
+                            });
+                          },
+                          controller: stateCtrl,
+                          decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      stateOther = false;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.close)),
+                              hintText: 'State',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                        )
+                      : PreferenceLocationDropdown(
+                          other: true,
+                          showSearch: true,
+                          value: selectedState.isEmpty ? selectedState : [],
+                          hint: "State",
+                          items: countryState.stateList
+                              .map((e) => e.states)
+                              .toList(),
+                          onChanged: (value) async {
+                            setState(() {
+                              selectedState = value;
+                              print(selectedState);
+                              selectedCity.clear();
+                              if (value[0] == 'Other') {
+                                stateOther = true;
+                              }
+                            });
+                            int? stateId;
+                            for (var e in countryState.stateList) {
+                              if (selectedState.isNotEmpty) {
+                                if (e.states == selectedState[0]) {
+                                  stateId = e.id;
+                                  break;
+                                }
+                              }
                             }
-                          }
-                        }
 
-                        print("Selected State ID: $stateId");
-                        if (stateId != null) {
-                          await ref
-                              .read(locationProvider.notifier)
-                              .getCityData(stateId);
-                        } else {
-                          print("No state ID found for the selected country.");
-                        }
-                      },
-                    ),
+                            print("Selected State ID: $stateId");
+                            if (stateId != null) {
+                              await ref
+                                  .read(locationProvider.notifier)
+                                  .getCityData(stateId);
+                            } else {
+                              print(
+                                  "No state ID found for the selected country.");
+                            }
+                          },
+                        ),
               selectedState.isEmpty || countryState.cityList.isEmpty
                   ? SizedBox()
                   : SizedBox(height: 10),
 
               selectedState.isEmpty || countryState.cityList.isEmpty
                   ? SizedBox()
-                  : PreferenceLocationDropdown(
-                      showSearch: true,
-                      value: selectedCity.isNotEmpty ? selectedCity : [],
-                      hint: "City",
-                      items: countryState.cityList.map((e) => e.citys).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCity = value;
-                        });
-                      },
-                    ),
+                  : cityOther
+                      ? TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCity.clear();
+                              selectedCity.add(cityCtrl.text);
+                            });
+                          },
+                          controller: cityCtrl,
+                          decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      cityOther = false;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.close)),
+                              hintText: 'Country',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                        )
+                      : PreferenceLocationDropdown(
+                          other: true,
+                          showSearch: true,
+                          value: selectedCity.isNotEmpty ? selectedCity : [],
+                          hint: "City",
+                          items: countryState.cityList
+                              .map((e) => e.citys)
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCity = value;
+                              if (value[0] == 'Other') {
+                                cityOther = true;
+                              }
+                            });
+                          },
+                        ),
               const SizedBox(height: 25),
 
               // Next Button

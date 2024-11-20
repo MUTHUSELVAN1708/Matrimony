@@ -8,6 +8,7 @@ class PreferenceLocationDropdown extends StatefulWidget {
   final Function(List<String>) onChanged;
   final bool isRequired;
   final bool showSearch;
+  bool? other = false;
 
   PreferenceLocationDropdown({
     Key? key,
@@ -17,6 +18,7 @@ class PreferenceLocationDropdown extends StatefulWidget {
     this.items,
     this.isRequired = true,
     this.showSearch = false,
+    this.other,
   }) : super(key: key);
 
   @override
@@ -29,6 +31,7 @@ class _PreferenceLocationDropdownState
   late List<String> selectedValues;
   late List<String> filteredItems;
   String searchQuery = '';
+  String? customLocation;
 
   @override
   void initState() {
@@ -83,6 +86,14 @@ class _PreferenceLocationDropdownState
           contentPadding: EdgeInsets.zero,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
+              // Add the "Other" item conditionally
+              List<String> itemsWithOther = List.from(widget.items ?? []);
+              if (widget.other == true) {
+                setState(() {
+                  itemsWithOther.add('Other');
+                });
+              }
+
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 height: MediaQuery.of(context).size.height * 0.7,
@@ -111,9 +122,9 @@ class _PreferenceLocationDropdownState
                             setState(() {
                               searchQuery = value;
                               if (searchQuery.isEmpty) {
-                                filteredItems = widget.items ?? [];
+                                filteredItems = itemsWithOther;
                               } else {
-                                filteredItems = widget.items!
+                                filteredItems = itemsWithOther
                                     .where((item) => item
                                         .toLowerCase()
                                         .contains(searchQuery.toLowerCase()))
@@ -136,7 +147,7 @@ class _PreferenceLocationDropdownState
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: searchQuery.isEmpty
-                              ? widget.items!.length + 1
+                              ? itemsWithOther.length
                               : filteredItems.length + 1,
                           itemBuilder: (context, index) {
                             String currentItem;
@@ -144,7 +155,7 @@ class _PreferenceLocationDropdownState
                               currentItem = 'Any';
                             } else {
                               currentItem = searchQuery.isEmpty
-                                  ? widget.items![index - 1]
+                                  ? itemsWithOther[index - 1]
                                   : filteredItems[index - 1];
                             }
 
