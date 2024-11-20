@@ -54,7 +54,7 @@ class _HeightDropdownFieldState
     return GestureDetector(
       onTap: () => _showSelectionDialog(context, widget.ageheight),
       child: Container(
-        height: 60,
+        height: 70,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: const BoxDecoration(
           color: Colors.white,

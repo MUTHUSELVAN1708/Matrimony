@@ -7,6 +7,7 @@ import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_state.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preference_dialog.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_height_dialog.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
 import '../../common/widget/custom_snackbar.dart';
@@ -42,6 +43,7 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
+    ref.read(userManagementProvider.notifier).getUserDetails(1);
     // editPartnerPreferenceProviderState.setValuesInitial('20 - 25',
     //     '4 ft 7 in(139 cm)', '49 - 55', 'widowed', 'Normal', 'karnadaka');
   }

@@ -267,7 +267,8 @@ class ProfileOptions {
     'Halal',
     'Kosher',
     'Raw Food',
-    'Intermittent Fasting'
+    'Intermittent Fasting',
+    'Doesn\'t matter'
   ];
 
   static const List<String> drinkingHabits = [
@@ -275,7 +276,8 @@ class ProfileOptions {
     'Occasional Drinker',
     'Social Drinker',
     'Regular Drinker',
-    'Heavy Drinker'
+    'Heavy Drinker',
+    'Doesn\'t matter'
   ];
 
   static const List<String> smokingHabits = [
@@ -283,7 +285,8 @@ class ProfileOptions {
     'Occasional Smoker',
     'Former Smoker',
     'Regular Smoker',
-    'Heavy Smoker'
+    'Heavy Smoker',
+    'Doesn\'t matter'
   ];
 
 // Add more option lists as needed

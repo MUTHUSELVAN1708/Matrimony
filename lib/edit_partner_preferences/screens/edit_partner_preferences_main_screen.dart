@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_hobbies_lifestyle.dart';
+import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_location.dart';
+import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_religious_information.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_preferences_basic_details.dart';
+import 'package:matrimony/edit_partner_preferences/screens/edit_preferences_professional_information.dart';
 import 'package:matrimony/helper/nav_helper.dart';
 
 class EditPartnerPreferencesMainScreen extends StatefulWidget {
@@ -155,45 +159,32 @@ class _EditPartnerPreferencesMainScreenState
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        const EditPartnerPreferenceBasicDetailScreen(
-                            // onPop: (value) {
-                            //   if (value == 'true') {
-                            //     _updateProfileElementsVisibility(true);
-                            //   }
-                            // },
-                            )));
-            // NavigationHelper.slideNavigateTo(
-            //   context: context,
-            //   screen: PartnerPreferenceBasicDetailScreen(
-            //     onPop: (value) {
-            //       if (value == 'true') {
-            //         _updateProfileElementsVisibility(true);
-            //       }
-            //     },
-            //   ),
-            // );
+                        const EditPartnerPreferenceBasicDetailScreen()));
           } else if (title == 'Religious Information') {
-            // _updateProfileElementsVisibility(false);
-            // NavigationHelper.slideNavigateTo(
-            //   context: context,
-            //   screen: ReligiousDetailsScreen(onPop: (value) {
-            //     if (value == 'true') {
-            //       _updateProfileElementsVisibility(true);
-            //     }
-            //   }),
-            // );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const EditPartnerPreferencesReligiousInformation()));
           } else if (title == 'Professional Information') {
-            // _updateProfileElementsVisibility(false);
-            // NavigationHelper.slideNavigateTo(
-            //   context: context,
-            //   screen: ProfessionalInformationDetailsScreen(onPop: (value) {
-            //     if (value == 'true') {
-            //       _updateProfileElementsVisibility(true);
-            //     }
-            //   }),
-            // );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const EditPreferencesProfessionalInformation()));
           } else if (title == 'Location') {
-          } else {}
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const EditPartnerPreferencesLocation()));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const EditPartnerPreferencesHobbiesLifestyle()));
+          }
         },
       ),
     );

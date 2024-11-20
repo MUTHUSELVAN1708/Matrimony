@@ -15,18 +15,18 @@ import '../../service/date_picker.dart';
 import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
 import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
 
-class EditPartnerPreferencesLocation extends ConsumerStatefulWidget {
-  const EditPartnerPreferencesLocation({
+class EditPartnerPreferencesHobbiesLifestyle extends ConsumerStatefulWidget {
+  const EditPartnerPreferencesHobbiesLifestyle({
     super.key,
   });
 
   @override
-  ConsumerState<EditPartnerPreferencesLocation> createState() =>
+  ConsumerState<EditPartnerPreferencesHobbiesLifestyle> createState() =>
       _PartnerPreferenceBasicDetailScreenState();
 }
 
 class _PartnerPreferenceBasicDetailScreenState
-    extends ConsumerState<EditPartnerPreferencesLocation> {
+    extends ConsumerState<EditPartnerPreferencesHobbiesLifestyle> {
   @override
   void initState() {
     super.initState();
@@ -95,7 +95,7 @@ class _PartnerPreferenceBasicDetailScreenState
           ),
           SizedBox(width: heightQuery * 0.20),
           const Text(
-            'Edit Location',
+            'Edit Hobbies & Life Style',
             style: TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -143,23 +143,21 @@ class _PartnerPreferenceBasicDetailScreenState
                 const SizedBox(
                   height: 4,
                 ),
-                _buildCountrySelection(
+                _buildEatingHabitsSelection(
                     context, ref, editPartnerPreferenceProviderState),
                 const SizedBox(
                   height: 4,
                 ),
-                _buildStateSelection(
+                _buildDrinkingHabitsSelection(
                     context, ref, editPartnerPreferenceProviderState),
                 const SizedBox(
                   height: 4,
                 ),
-                _buildCitySelection(
+                _buildSmokingHabitsSelection(
                     context, ref, editPartnerPreferenceProviderState),
                 const SizedBox(
                   height: 4,
                 ),
-                _buildOwnHouseSelection(
-                    context, ref, editPartnerPreferenceProviderState),
                 const SizedBox(height: 24),
                 _buildSaveButton(
                     context, ref, editPartnerPreferenceProviderState),
@@ -175,7 +173,7 @@ class _PartnerPreferenceBasicDetailScreenState
   Widget _buildTitle() {
     return const Center(
       child: Text(
-        'Location',
+        'Hobbies & Life Style',
         style: TextStyle(
           color: AppColors.primaryButtonColor,
           fontWeight: FontWeight.bold,
@@ -185,7 +183,7 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildCountrySelection(
+  Widget _buildEatingHabitsSelection(
     BuildContext context,
     WidgetRef ref,
     EditPartnerPreferenceState editPartnerPreferenceProviderState,
@@ -195,221 +193,21 @@ class _PartnerPreferenceBasicDetailScreenState
         showDialog(
           context: context,
           builder: (context) => CommonSelectionDialog(
-            title: 'Select Country',
-            options: PartnerPreferenceConstData.countries,
-            selectedValue: editPartnerPreferenceProviderState.country,
+            title: 'Select Eating Habit',
+            options: ProfileOptions.eatingHabits,
+            selectedValue: editPartnerPreferenceProviderState.eatingHabits,
             onSelect: (value) {
               ref
                   .read(editPartnerPreferenceProvider.notifier)
-                  .updateCountry(value);
+                  .updateEatingHabits(value);
             },
           ),
         );
       },
       child: _buildListTile(
-        'Country',
-        editPartnerPreferenceProviderState.country,
+        'Eating Habits',
+        editPartnerPreferenceProviderState.eatingHabits,
       ),
-    );
-  }
-
-  Widget _buildStateSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select State',
-            options: PartnerPreferenceConstData
-                .states[editPartnerPreferenceProviderState.country]!,
-            selectedValue: editPartnerPreferenceProviderState.state,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateState(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'State',
-        editPartnerPreferenceProviderState.state,
-      ),
-    );
-  }
-
-  Widget _buildCitySelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select City',
-            options: PartnerPreferenceConstData
-                .cities[editPartnerPreferenceProviderState.state]!,
-            selectedValue: editPartnerPreferenceProviderState.city,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateCity(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'City',
-        editPartnerPreferenceProviderState.city,
-      ),
-    );
-  }
-
-  Widget _buildOwnHouseSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        _selectHouse(context);
-      },
-      child: _buildListTile(
-        'Own House',
-        editPartnerPreferenceProviderState.isOwnHouse != null &&
-                editPartnerPreferenceProviderState.isOwnHouse!
-            ? 'Yes'
-            : editPartnerPreferenceProviderState.isOwnHouse != null &&
-                    !editPartnerPreferenceProviderState.isOwnHouse!
-                ? 'No'
-                : '',
-      ),
-    );
-  }
-
-  Widget _buildStarSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Star',
-            options: PartnerPreferenceConstData.starList,
-            selectedValue: editPartnerPreferenceProviderState.star,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateStar(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'Star',
-        editPartnerPreferenceProviderState.star,
-      ),
-    );
-  }
-
-  void _selectHouse(BuildContext context) {
-    final editPartnerPreferenceProviderState =
-        ref.watch(editPartnerPreferenceProvider);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(child: Text('Own House')),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  ref
-                      .read(editPartnerPreferenceProvider.notifier)
-                      .updateIsOwnHouse(true);
-                  Navigator.pop(context, true);
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: editPartnerPreferenceProviderState.isOwnHouse == true
-                        ? const Color(0xFFFFCBCC)
-                        : Colors.transparent,
-                    border: Border.all(
-                      color:
-                          editPartnerPreferenceProviderState.isOwnHouse == true
-                              ? Colors.transparent
-                              : Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Yes',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color:
-                              editPartnerPreferenceProviderState.isOwnHouse ==
-                                      true
-                                  ? Colors.black
-                                  : Colors.grey),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              GestureDetector(
-                onTap: () {
-                  ref
-                      .read(editPartnerPreferenceProvider.notifier)
-                      .updateIsOwnHouse(false);
-                  Navigator.pop(context, false);
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color:
-                        editPartnerPreferenceProviderState.isOwnHouse == false
-                            ? const Color(0xFFFFCBCC)
-                            : Colors.transparent,
-                    border: Border.all(
-                      color:
-                          editPartnerPreferenceProviderState.isOwnHouse == false
-                              ? Colors.transparent
-                              : Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'No',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color:
-                              editPartnerPreferenceProviderState.isOwnHouse ==
-                                      false
-                                  ? Colors.black
-                                  : Colors.grey),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 
@@ -423,7 +221,7 @@ class _PartnerPreferenceBasicDetailScreenState
         showDialog(
           context: context,
           builder: (context) => CommonSelectionDialog(
-            title: 'Select Your Drinking Habit',
+            title: 'Select Drinking Habit',
             options: ProfileOptions.drinkingHabits,
             selectedValue: editPartnerPreferenceProviderState.drinkingHabits,
             onSelect: (value) {
@@ -444,27 +242,27 @@ class _PartnerPreferenceBasicDetailScreenState
   Widget _buildSmokingHabitsSelection(
     BuildContext context,
     WidgetRef ref,
-    ProfileState profileState,
+    EditPartnerPreferenceState editPartnerPreferenceProviderState,
   ) {
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
           builder: (context) => CommonSelectionDialog(
-            title: 'Select Your Smoking Habit',
+            title: 'Select Smoking Habit',
             options: ProfileOptions.smokingHabits,
-            selectedValue: profileState.smokingHabits,
+            selectedValue: editPartnerPreferenceProviderState.smokingHabits,
             onSelect: (value) {
               ref
-                  .read(profileProvider.notifier)
-                  .updateSmokingHabitsStatus(value);
+                  .read(editPartnerPreferenceProvider.notifier)
+                  .updateSmokingHabits(value);
             },
           ),
         );
       },
       child: _buildListTile(
         'Smoking Habits',
-        profileState.smokingHabits,
+        editPartnerPreferenceProviderState.smokingHabits,
       ),
     );
   }
