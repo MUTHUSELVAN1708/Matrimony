@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
 
-class AgeCustomDialogBox extends StatefulWidget {
+class EditPartnerPreferencesHeightDialog extends StatefulWidget {
   final List<String> value;
   final String hint;
   List<String>? items;
@@ -11,7 +12,7 @@ class AgeCustomDialogBox extends StatefulWidget {
   final bool isRequired;
   final bool ageheight;
 
-  AgeCustomDialogBox({
+  EditPartnerPreferencesHeightDialog({
     super.key,
     required this.value,
     required this.hint,
@@ -24,20 +25,17 @@ class AgeCustomDialogBox extends StatefulWidget {
   });
 
   @override
-  State<AgeCustomDialogBox> createState() => _AgeCustomDialogBoxState();
+  State<EditPartnerPreferencesHeightDialog> createState() =>
+      _HeightDropdownFieldState();
 }
 
-class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
+class _HeightDropdownFieldState
+    extends State<EditPartnerPreferencesHeightDialog> {
   late List<String> selectedValues;
+  List<String> filteredItems = [];
   bool isSelectAll = false;
-  final List<String> singleSelectionHints = [
-    'To Age',
-    'From Height',
-    'From Age',
-    'To Height',
-    'From Weight',
-    'To Weight'
-  ];
+
+  final List<String> singleSelectionHints = ['From Height', 'To Height'];
 
   bool get isSingleSelection => singleSelectionHints.contains(widget.hint);
 
@@ -45,6 +43,7 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
   void initState() {
     super.initState();
     selectedValues = List.from(widget.value);
+    filteredItems = widget.items!;
   }
 
   List<String> toItem = [];
@@ -53,44 +52,55 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showSelectionDialog(context),
+      onTap: () => _showSelectionDialog(context, widget.ageheight),
       child: Container(
         height: 60,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: const BoxDecoration(
           color: Colors.white,
         ),
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                selectedValues.isEmpty
-                    ? widget.hint
-                    : widget.hint == 'Age' || widget.hint == 'Height'
-                        ? "${fromItem.isNotEmpty ? fromItem[0] : ''} - ${toItem.isNotEmpty ? toItem[0] : ''}"
-                        : selectedValues.join(', '),
-                style: TextStyle(
-                  overflow: TextOverflow.ellipsis,
-                  color: selectedValues.isEmpty
-                      ? Colors.grey.shade600
-                      : Colors.black,
-                  fontSize: 16,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Height',
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    selectedValues.isEmpty
+                        ? 'Select'
+                        : widget.hint == 'Age' || widget.hint == 'Height'
+                            ? "${fromItem.isNotEmpty ? fromItem[0] : ''} - ${toItem.isNotEmpty ? toItem[0] : ''}"
+                            : selectedValues.join(', ').toString(),
+                    style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: selectedValues.isEmpty
+                          ? Colors.grey.shade600
+                          : Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+            Icon(Icons.chevron_right, color: Colors.grey.shade600),
           ],
         ),
       ),
     );
   }
 
-  void _showSelectionDialog(BuildContext context) {
+  void _showSelectionDialog(BuildContext context, bool ageHeight) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        bool select = false;
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -102,13 +112,13 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   height: widget.ageheight
-                      ? MediaQuery.of(context).size.height * 0.30
-                      : MediaQuery.of(context).size.height * 0.7,
-                  width: MediaQuery.of(context).size.width * 0.85,
+                      ? MediaQuery.of(context).size.height * 0.35
+                      : MediaQuery.of(context).size.height * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.6,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           'Select ${widget.hint}',
@@ -119,57 +129,56 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
                         ),
                         const SizedBox(height: 10),
                         widget.ageheight
-                            ? SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    AgeCustomDialogBox(
-                                      value: fromItem,
-                                      hint: widget.hint2 ?? '',
-                                      items: widget.items,
-                                      onChanged: (data) {
-                                        setState(() {
-                                          fromItem = data;
-                                          toItem.clear();
-                                        });
-                                      },
-                                    ),
-                                    const SizedBox(height: 10),
-                                    if (fromItem.isNotEmpty)
-                                      AgeCustomDialogBox(
-                                        value: toItem,
-                                        hint: widget.hint3 ?? '',
-                                        items: widget.items!
-                                            .where((item) =>
-                                                int.parse(item) >
-                                                int.parse(fromItem[0]))
-                                            .toList(),
-                                        onChanged: (data) {
-                                          setState(() {
-                                            toItem = data;
-                                          });
-                                        },
-                                      ),
-                                  ],
-                                ),
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  HeightDropdownField(
+                                    value: fromItem,
+                                    hint: widget.hint2 ?? '',
+                                    items: widget.items,
+                                    onChanged: (data) {
+                                      setState(() {
+                                        fromItem = data;
+                                        toItem.clear();
+                                        if (fromItem.isNotEmpty) {
+                                          int fromIndex = widget.items!
+                                              .indexOf(fromItem.first);
+                                          filteredItems = widget.items!
+                                              .sublist(fromIndex + 1);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  fromItem.isEmpty
+                                      ? const SizedBox()
+                                      : HeightDropdownField(
+                                          value: toItem.isEmpty ? [] : toItem,
+                                          hint: widget.hint3 ?? '',
+                                          items: filteredItems,
+                                          onChanged: (data) {
+                                            setState(() {
+                                              toItem = data;
+                                            });
+                                          },
+                                        ),
+                                ],
                               )
                             : Expanded(
                                 child: ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: (isSingleSelection
-                                      ? widget.items!.length
-                                      : widget.items!.length + 1),
+                                  itemCount: widget.items!.length +
+                                      (isSingleSelection ? 0 : 1),
                                   itemBuilder: (context, index) {
                                     if (!isSingleSelection && index == 0) {
                                       return ListTile(
                                         onTap: () {
                                           setState(() {
                                             isSelectAll = !isSelectAll;
-                                            if (isSelectAll) {
-                                              selectedValues =
-                                                  List.from(widget.items!);
-                                            } else {
-                                              selectedValues.clear();
-                                            }
+                                            selectedValues = isSelectAll
+                                                ? List.from(widget.items!)
+                                                : [];
                                           });
                                         },
                                         leading: isSelectAll
@@ -214,17 +223,17 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
                                         title: Text(currentItem),
                                         onTap: () {
                                           setState(() {
-                                            if (selectedValues
-                                                .contains(currentItem)) {
-                                              selectedValues
-                                                  .remove(currentItem);
-                                              isSelectAll = false;
-                                            } else {
+                                            select = !select;
+                                            if (select) {
                                               selectedValues.add(currentItem);
                                               if (selectedValues.length ==
                                                   widget.items!.length) {
                                                 isSelectAll = true;
                                               }
+                                            } else {
+                                              selectedValues
+                                                  .remove(currentItem);
+                                              isSelectAll = false;
                                             }
                                           });
                                         },
@@ -247,22 +256,16 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
                       width: double.infinity,
                       height: 45,
                       child: ElevatedButton(
-                        onPressed: fromItem.isNotEmpty && toItem.isEmpty
-                            ? null
-                            : () {
-                                if (fromItem.isNotEmpty && toItem.isNotEmpty) {
-                                  selectedValues = ["$fromItem $toItem"];
-                                  widget.onChanged(selectedValues);
-                                } else {
-                                  widget.onChanged(selectedValues);
-                                }
-                                Navigator.pop(context);
-                              },
+                        onPressed: () {
+                          if (fromItem.isNotEmpty && toItem.isNotEmpty) {
+                            selectedValues = ["${fromItem[0]} - ${toItem[0]}"];
+                            widget.onChanged(selectedValues);
+                          } else {
+                            widget.onChanged(selectedValues);
+                          }
+                          Navigator.pop(context);
+                        },
                         style: ElevatedButton.styleFrom(
-                          disabledIconColor:
-                              fromItem.isNotEmpty && toItem.isEmpty
-                                  ? Colors.grey
-                                  : Colors.red,
                           backgroundColor: Colors.red,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

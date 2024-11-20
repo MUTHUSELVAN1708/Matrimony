@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/colors.dart';
 
-class AgeCustomDialogBox extends StatefulWidget {
+import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
+
+class EditPartnerPreferenceDialog extends StatefulWidget {
   final List<String> value;
   final String hint;
   List<String>? items;
@@ -11,7 +13,7 @@ class AgeCustomDialogBox extends StatefulWidget {
   final bool isRequired;
   final bool ageheight;
 
-  AgeCustomDialogBox({
+  EditPartnerPreferenceDialog({
     super.key,
     required this.value,
     required this.hint,
@@ -24,10 +26,11 @@ class AgeCustomDialogBox extends StatefulWidget {
   });
 
   @override
-  State<AgeCustomDialogBox> createState() => _AgeCustomDialogBoxState();
+  State<EditPartnerPreferenceDialog> createState() =>
+      _AgeCustomDialogBoxState();
 }
 
-class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
+class _AgeCustomDialogBoxState extends State<EditPartnerPreferenceDialog> {
   late List<String> selectedValues;
   bool isSelectAll = false;
   final List<String> singleSelectionHints = [
@@ -56,31 +59,43 @@ class _AgeCustomDialogBoxState extends State<AgeCustomDialogBox> {
       onTap: () => _showSelectionDialog(context),
       child: Container(
         height: 60,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: const BoxDecoration(
           color: Colors.white,
         ),
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                selectedValues.isEmpty
-                    ? widget.hint
-                    : widget.hint == 'Age' || widget.hint == 'Height'
-                        ? "${fromItem.isNotEmpty ? fromItem[0] : ''} - ${toItem.isNotEmpty ? toItem[0] : ''}"
-                        : selectedValues.join(', '),
-                style: TextStyle(
-                  overflow: TextOverflow.ellipsis,
-                  color: selectedValues.isEmpty
-                      ? Colors.grey.shade600
-                      : Colors.black,
-                  fontSize: 16,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.hint,
+                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    selectedValues.isEmpty
+                        ? 'Select'
+                        : widget.hint == 'Age' ||
+                                widget.hint == 'Height' ||
+                                widget.hint == 'Weight'
+                            ? "${fromItem.isNotEmpty ? '${fromItem[0]} ' '${widget.hint == 'Age' ? 'Yrs' : 'Kg'}' : ''} - ${toItem.isNotEmpty ? '${toItem[0]} ' '${widget.hint == 'Age' ? 'Yrs' : 'Kg'}' : ''}"
+                            : selectedValues.join(', '),
+                    style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: selectedValues.isEmpty
+                          ? Colors.grey.shade600
+                          : Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+            Icon(Icons.chevron_right, color: Colors.grey.shade600),
           ],
         ),
       ),

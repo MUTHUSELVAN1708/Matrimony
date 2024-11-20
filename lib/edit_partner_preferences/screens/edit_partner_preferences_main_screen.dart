@@ -154,13 +154,14 @@ class _EditPartnerPreferencesMainScreenState
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PartnerPreferenceBasicDetailScreen(
-                          onPop: (value) {
-                            if (value == 'true') {
-                              _updateProfileElementsVisibility(true);
-                            }
-                          },
-                        )));
+                    builder: (context) =>
+                        const EditPartnerPreferenceBasicDetailScreen(
+                            // onPop: (value) {
+                            //   if (value == 'true') {
+                            //     _updateProfileElementsVisibility(true);
+                            //   }
+                            // },
+                            )));
             // NavigationHelper.slideNavigateTo(
             //   context: context,
             //   screen: PartnerPreferenceBasicDetailScreen(
