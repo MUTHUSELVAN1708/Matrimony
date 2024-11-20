@@ -15,22 +15,18 @@ import '../../service/date_picker.dart';
 import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
 import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
 
-class EditPartnerPreferenceBasicDetailScreen extends ConsumerStatefulWidget {
-  const EditPartnerPreferenceBasicDetailScreen({
+class EditPreferencesProfessionalInformation extends ConsumerStatefulWidget {
+  const EditPreferencesProfessionalInformation({
     super.key,
   });
 
   @override
-  ConsumerState<EditPartnerPreferenceBasicDetailScreen> createState() =>
+  ConsumerState<EditPreferencesProfessionalInformation> createState() =>
       _PartnerPreferenceBasicDetailScreenState();
 }
 
 class _PartnerPreferenceBasicDetailScreenState
-    extends ConsumerState<EditPartnerPreferenceBasicDetailScreen> {
-  List<String> selectedAge = [];
-  List<String> selectWeight = [];
-  List<String> selectedHeight = [];
-
+    extends ConsumerState<EditPreferencesProfessionalInformation> {
   @override
   void initState() {
     super.initState();
@@ -51,7 +47,7 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.watch(editPartnerPreferenceProvider);
     final heightQuery = MediaQuery.of(context).size.height;
-
+    final width = MediaQuery.of(context).size.width;
     return Material(
       color: Colors.transparent,
       child: Scaffold(
@@ -71,7 +67,7 @@ class _PartnerPreferenceBasicDetailScreenState
                 color: Colors.black.withOpacity(0.4),
               ),
             ),
-            _buildHeader(context, heightQuery),
+            _buildHeader(context, width),
             _buildForm(
                 context, ref, editPartnerPreferenceProviderState, heightQuery),
           ],
@@ -97,9 +93,9 @@ class _PartnerPreferenceBasicDetailScreenState
               color: Colors.white,
             ),
           ),
-          SizedBox(width: heightQuery * 0.15),
+          SizedBox(width: heightQuery * 0.20),
           const Text(
-            'Edit Basic Details',
+            'Edit Professional Information',
             style: TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -144,58 +140,25 @@ class _PartnerPreferenceBasicDetailScreenState
               children: [
                 _buildTitle(),
                 const SizedBox(height: 16),
-                EditPartnerPreferenceDialog(
-                  value: selectedAge,
-                  hint: 'Age',
-                  hint2: 'From Age',
-                  hint3: 'To Age',
-                  items: PartnerPreferenceConstData.toAgeList,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAge = value;
-                    });
-                  },
-                  ageheight: true,
-                ),
                 const SizedBox(
                   height: 4,
                 ),
-                EditPartnerPreferencesHeightDialog(
-                  value: selectedHeight,
-                  hint: 'Height',
-                  hint2: 'From Height',
-                  hint3: 'To Height',
-                  items: PartnerPreferenceConstData.myHeightOptions.values
-                      .toList(),
-                  ageheight: true,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedHeight = value;
-                    });
-                  },
-                ),
+                _buildOccupationSelection(
+                    context, ref, editPartnerPreferenceProviderState),
                 const SizedBox(
                   height: 4,
                 ),
-                EditPartnerPreferenceDialog(
-                  value: selectWeight,
-                  hint: 'Weight',
-                  hint2: 'From Weight',
-                  hint3: 'To Weight',
-                  items: PartnerPreferenceConstData.weightListPartner,
-                  onChanged: (value) {
-                    setState(() {
-                      selectWeight = value;
-                      // selectToAge = selectedAge[1];
-                    });
-                  },
-                  ageheight: true,
+                _buildAnnualIncomeSelection(
+                    context, ref, editPartnerPreferenceProviderState),
+                const SizedBox(
+                  height: 4,
                 ),
-                _buildMaritalStatusSelection(
+                _buildEmploymentTypeSelection(
                     context, ref, editPartnerPreferenceProviderState),
-                _buildPhysicalStatusSelection(
-                    context, ref, editPartnerPreferenceProviderState),
-                _buildMotherTongueSelection(
+                const SizedBox(
+                  height: 4,
+                ),
+                _buildEducationSelection(
                     context, ref, editPartnerPreferenceProviderState),
                 const SizedBox(height: 24),
                 _buildSaveButton(
@@ -212,7 +175,7 @@ class _PartnerPreferenceBasicDetailScreenState
   Widget _buildTitle() {
     return const Center(
       child: Text(
-        'Basic Details',
+        'Professional Information',
         style: TextStyle(
           color: AppColors.primaryButtonColor,
           fontWeight: FontWeight.bold,
@@ -222,7 +185,7 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildMaritalStatusSelection(
+  Widget _buildOccupationSelection(
     BuildContext context,
     WidgetRef ref,
     EditPartnerPreferenceState editPartnerPreferenceProviderState,
@@ -232,25 +195,25 @@ class _PartnerPreferenceBasicDetailScreenState
         showDialog(
           context: context,
           builder: (context) => CommonSelectionDialog(
-            title: 'Select Marital Status',
-            options: ProfileOptions.maritalStatus,
-            selectedValue: editPartnerPreferenceProviderState.maritalStatus,
+            title: 'Select Occupation',
+            options: PartnerPreferenceConstData.occupationList,
+            selectedValue: editPartnerPreferenceProviderState.occupation,
             onSelect: (value) {
               ref
                   .read(editPartnerPreferenceProvider.notifier)
-                  .updateMaritalStatus(value);
+                  .updateOccupation(value);
             },
           ),
         );
       },
       child: _buildListTile(
-        'Marital Status',
-        editPartnerPreferenceProviderState.maritalStatus,
+        'Occupation',
+        editPartnerPreferenceProviderState.occupation,
       ),
     );
   }
 
-  Widget _buildPhysicalStatusSelection(
+  Widget _buildAnnualIncomeSelection(
     BuildContext context,
     WidgetRef ref,
     EditPartnerPreferenceState editPartnerPreferenceProviderState,
@@ -260,25 +223,25 @@ class _PartnerPreferenceBasicDetailScreenState
         showDialog(
           context: context,
           builder: (context) => CommonSelectionDialog(
-            title: 'Select Physical Status',
-            options: ProfileOptions.physicalStatus,
-            selectedValue: editPartnerPreferenceProviderState.physicalStatus,
+            title: 'Select Annul Income',
+            options: PartnerPreferenceConstData.incomeList,
+            selectedValue: editPartnerPreferenceProviderState.annulIncome,
             onSelect: (value) {
               ref
                   .read(editPartnerPreferenceProvider.notifier)
-                  .updatePhysicalStatus(value);
+                  .updateAnnulIncome(value);
             },
           ),
         );
       },
       child: _buildListTile(
-        'Physical Status',
-        editPartnerPreferenceProviderState.physicalStatus,
+        'Annual Income',
+        editPartnerPreferenceProviderState.annulIncome,
       ),
     );
   }
 
-  Widget _buildMotherTongueSelection(
+  Widget _buildEmploymentTypeSelection(
     BuildContext context,
     WidgetRef ref,
     EditPartnerPreferenceState editPartnerPreferenceProviderState,
@@ -288,20 +251,76 @@ class _PartnerPreferenceBasicDetailScreenState
         showDialog(
           context: context,
           builder: (context) => CommonSelectionDialog(
-            title: 'Select Mother Tongue',
-            options: PartnerPreferenceConstData.motherTongueOptions,
-            selectedValue: editPartnerPreferenceProviderState.eatingHabits,
+            title: 'Select Employment Type',
+            options: PartnerPreferenceConstData.employedInList,
+            selectedValue: editPartnerPreferenceProviderState.employmentType,
             onSelect: (value) {
               ref
                   .read(editPartnerPreferenceProvider.notifier)
-                  .updateMotherTongue(value);
+                  .updateEmploymentType(value);
             },
           ),
         );
       },
       child: _buildListTile(
-        'Mother Tongue',
-        editPartnerPreferenceProviderState.eatingHabits,
+        'Employment Type',
+        editPartnerPreferenceProviderState.employmentType,
+      ),
+    );
+  }
+
+  Widget _buildEducationSelection(
+    BuildContext context,
+    WidgetRef ref,
+    EditPartnerPreferenceState editPartnerPreferenceProviderState,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Education',
+            options: PartnerPreferenceConstData.educationList,
+            selectedValue: editPartnerPreferenceProviderState.education,
+            onSelect: (value) {
+              ref
+                  .read(editPartnerPreferenceProvider.notifier)
+                  .updateEducation(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Education',
+        editPartnerPreferenceProviderState.education,
+      ),
+    );
+  }
+
+  Widget _buildStarSelection(
+    BuildContext context,
+    WidgetRef ref,
+    EditPartnerPreferenceState editPartnerPreferenceProviderState,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => CommonSelectionDialog(
+            title: 'Star',
+            options: PartnerPreferenceConstData.starList,
+            selectedValue: editPartnerPreferenceProviderState.star,
+            onSelect: (value) {
+              ref
+                  .read(editPartnerPreferenceProvider.notifier)
+                  .updateStar(value);
+            },
+          ),
+        );
+      },
+      child: _buildListTile(
+        'Star',
+        editPartnerPreferenceProviderState.star,
       ),
     );
   }
@@ -372,22 +391,13 @@ class _PartnerPreferenceBasicDetailScreenState
       height: 48,
       child: ElevatedButton(
         onPressed: () async {
-          final age = selectedAge.isNotEmpty
-              ? selectedAge[0]
-                  .replaceAll(RegExp(r'[\[\]]'), '')
-                  .split(' ')
-                  .join(' - ')
-              : '';
-          final height = selectedHeight[0];
-          final weight = selectWeight.isNotEmpty
-              ? selectWeight[0]
-                  .replaceAll(RegExp(r'[\[\]]'), '')
-                  .split(' ')
-                  .join(' - ')
-              : '';
-          ref
-              .read(editPartnerPreferenceProvider.notifier)
-              .setValues(age, height, weight);
+          final va = ref.read(editPartnerPreferenceProvider);
+          print(va.star);
+          print(va.caste);
+          print(va.division);
+          print(va.raasi);
+          print(va.religion);
+
           if (true) {
             Future.delayed(const Duration(microseconds: 50), () {
               // Navigator.pop(context);
