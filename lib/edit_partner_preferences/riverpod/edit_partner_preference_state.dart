@@ -20,7 +20,7 @@ class EditPartnerPreferenceState {
   final String country;
   final String state;
   final String city;
-  final bool isOwnHouse;
+  final bool? isOwnHouse;
   final String eatingHabits;
   final String smokingHabits;
   final String drinkingHabits;
@@ -44,7 +44,7 @@ class EditPartnerPreferenceState {
     this.country = '',
     this.state = '',
     this.city = '',
-    this.isOwnHouse = false,
+    this.isOwnHouse,
     this.eatingHabits = '',
     this.smokingHabits = '',
     this.drinkingHabits = '',
