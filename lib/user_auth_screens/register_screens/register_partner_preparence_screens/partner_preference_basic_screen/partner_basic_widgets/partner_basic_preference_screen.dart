@@ -48,6 +48,9 @@ class _RegisterPartnerBasicPreferenceScreenState
   List<String> selectedDrinkingHabits = [];
   List<String> selectedSmokingHabits = [];
 
+  bool motherTongueOther = false;
+  final motherTongueCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final inputStates = ref.read(preferenceInputProvider.notifier);
@@ -161,16 +164,41 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  AnyCustomPreferenceDropdown(
-                    value: selectedMotherTongue,
-                    hint: 'Mother Tongue',
-                    items: PartnerPreferenceConstData.motherTongueOptions,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedMotherTongue = value;
-                      });
-                    },
-                  ),
+                  motherTongueOther
+                      ? TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              selectedMotherTongue.clear();
+                              selectedMotherTongue.add(motherTongueCtrl.text);
+                            });
+                          },
+                          controller: motherTongueCtrl,
+                          decoration: InputDecoration(
+                              hintText: 'Mother Tongue',
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      motherTongueOther = false;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.close)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                        )
+                      : AnyCustomPreferenceDropdown(
+                          other: true,
+                          value: selectedMotherTongue,
+                          hint: 'Mother Tongue',
+                          items: PartnerPreferenceConstData.motherTongueOptions,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedMotherTongue = value;
+                              if (value[0] == 'Other') {
+                                motherTongueOther = true;
+                              }
+                            });
+                          },
+                        ),
                   const SizedBox(height: 10),
                   PreferenceOptionalCustomDropdown(
                     value: selectedPhysicalStatus,

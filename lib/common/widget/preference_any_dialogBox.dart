@@ -5,6 +5,7 @@ class AnyCustomPreferenceDropdown extends StatefulWidget {
   final String hint;
   final List<String>? items;
   final Function(List<String>) onChanged;
+  bool? other = false;
 
   AnyCustomPreferenceDropdown({
     Key? key,
@@ -12,6 +13,7 @@ class AnyCustomPreferenceDropdown extends StatefulWidget {
     required this.hint,
     required this.onChanged,
     this.items,
+    this.other,
   }) : super(key: key);
 
   @override
@@ -76,6 +78,12 @@ class _AnyCustomDropdownFieldState extends State<AnyCustomPreferenceDropdown> {
           contentPadding: EdgeInsets.zero,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
+              // Add the "Other" item conditionally
+              List<String> itemsWithOther = List.from(widget.items ?? []);
+              if (widget.other == true) {
+                itemsWithOther.add('Other');
+              }
+
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -95,15 +103,9 @@ class _AnyCustomDropdownFieldState extends State<AnyCustomPreferenceDropdown> {
                       const SizedBox(height: 10),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: widget.items!.length + 1,
+                          itemCount: itemsWithOther.length,
                           itemBuilder: (context, index) {
-                            String currentItem;
-
-                            if (index == 0) {
-                              currentItem = 'Any';
-                            } else {
-                              currentItem = widget.items![index - 1];
-                            }
+                            String currentItem = itemsWithOther[index];
 
                             return ListTile(
                               leading: selectedValues.contains(currentItem)
@@ -115,7 +117,9 @@ class _AnyCustomDropdownFieldState extends State<AnyCustomPreferenceDropdown> {
                               title: Text(currentItem),
                               onTap: () {
                                 setState(() {
-                                  if (currentItem == 'Any') {
+                                  if (currentItem == 'Other') {
+                                    selectedValues = ['Other'];
+                                  } else if (currentItem == 'Any') {
                                     selectedValues = ['Any'];
                                   } else {
                                     selectedValues.clear();
