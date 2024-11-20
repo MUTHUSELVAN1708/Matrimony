@@ -8,7 +8,9 @@ import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
 import 'package:matrimony/profile/profile.dart';
+import 'package:matrimony/profile/setting_screens/ui/setting_screen.dart';
 import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
 import '../helper/nav_helper.dart';
@@ -170,7 +172,14 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       MenuItem(
         icon: 'assets/verifyprofile.svg',
         title: 'Verify Your Profile',
-        onTap: () {},
+        onTap: () {
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: RegisterUserGovernmentProof(
+              title: 'update',
+            ),
+          );
+        },
       ),
       MenuItem(
         icon: 'assets/dailyrecommend.svg',
@@ -190,7 +199,12 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       MenuItem(
         icon: 'assets/settings.svg',
         title: 'Settings',
-        onTap: () {},
+        onTap: () {
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: const SettingScreen(),
+          );
+        },
       ),
       MenuItem(
         icon: 'assets/help.svg',
