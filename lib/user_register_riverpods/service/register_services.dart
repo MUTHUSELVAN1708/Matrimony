@@ -76,7 +76,7 @@ class RegisterService {
     int age,
     String height,
     String weight,
-    String anyDisability,
+    String physicalStatus,
     String maritalStatus,
     String? noOfChildren,
   ) async {
@@ -94,7 +94,7 @@ class RegisterService {
         'age': age,
         'height': height,
         'weight': weight,
-        'anyDisability': anyDisability,
+        'physicalStatus': physicalStatus,
         'maritalStatus': maritalStatus,
         'noOfChildren': noOfChildren,
       }),

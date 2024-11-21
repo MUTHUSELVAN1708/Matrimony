@@ -384,12 +384,12 @@ class _PartnerReligiousPreferenceScreenState
                         ref
                             .read(preferenceInputProvider.notifier)
                             .updatePreferenceInput(
-                                religion: selectedReligion.toString(),
-                                caste: selectedCaste.toString(),
-                                subcaste: selectedSubCaste.toString(),
-                                star: selectedStar.toString(),
-                                rassi: selectedRassi.toString(),
-                                dosham: selectedDosham.toString());
+                                religion: selectedReligion.firstOrNull,
+                                caste: selectedCaste.firstOrNull,
+                                subcaste: selectedSubCaste.firstOrNull,
+                                star: selectedStar.firstOrNull,
+                                rassi: selectedRassi.firstOrNull,
+                                dosham: selectedDosham.firstOrNull);
 
                         Navigator.push(
                           context,

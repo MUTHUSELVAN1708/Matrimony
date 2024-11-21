@@ -103,16 +103,12 @@ class CountryNotifier extends StateNotifier<CountryState> {
 
     try {
       final response = await http.get(Uri.parse(Api.getallCountry));
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
-        print(jsonData);
 
         final countryData =
             jsonData.map((item) => Country.fromJson(item)).toList();
-        print('_________');
-        print(countryData);
 
         state = state.copyWith(isLoading: false, countryList: countryData);
       } else {
@@ -141,22 +137,18 @@ class CountryNotifier extends StateNotifier<CountryState> {
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
-        print(jsonData);
 
         final stateData =
             jsonData.map((item) => StateModel.fromJson(item)).toList();
-        print('_________');
-        print(stateData);
 
         state = state.copyWith(isLoading: false, stateList: stateData);
       } else {
+        state = state.copyWith(isLoading: false, stateList: []);
         throw Exception('Failed to load countrys data');
       }
     } catch (error) {
       state = state.copyWith(
-        isLoading: false,
-        errorMessage: error.toString(),
-      );
+          isLoading: false, errorMessage: error.toString(), stateList: []);
     }
   }
 
@@ -171,25 +163,20 @@ class CountryNotifier extends StateNotifier<CountryState> {
         },
         body: jsonEncode({'stateId': stateId}),
       );
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
-        print(jsonData);
 
         final cityData = jsonData.map((item) => City.fromJson(item)).toList();
-        print('_________');
-        print(cityData);
 
         state = state.copyWith(isLoading: false, cityList: cityData);
       } else {
+        state = state.copyWith(isLoading: false, cityList: []);
         throw Exception('Failed to load countrys data');
       }
     } catch (error) {
       state = state.copyWith(
-        isLoading: false,
-        errorMessage: error.toString(),
-      );
+          isLoading: false, errorMessage: error.toString(), cityList: []);
     }
   }
 }

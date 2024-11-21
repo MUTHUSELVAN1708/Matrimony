@@ -85,7 +85,7 @@ class PartnerDetailsModel extends Equatable {
     return PartnerDetailsModel(
       partnerFromAge: partnerPreference['fromAge'],
       partnerToAge: partnerPreference['toAge'],
-      partnerHeight: partnerPreference['height'],
+      partnerHeight: partnerPreference['hight'],
       partnerWeight: partnerPreference['weight'],
       partnerMaritalStatus: partnerPreference['maritalStatus'],
       partnerMotherTongue: partnerPreference['motherTongue'],
@@ -128,7 +128,7 @@ class PartnerDetailsModel extends Equatable {
     return {
       'fromAge': partnerFromAge,
       'toAge': partnerToAge,
-      'height': partnerHeight,
+      'hight': partnerHeight,
       'weight': partnerWeight,
       'maritalStatus': partnerMaritalStatus,
       'motherTongue': partnerMotherTongue,

@@ -22,6 +22,7 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
   List<String> selectedCountry = [];
   List<String> selectedState = [];
   List<String> selectedCity = [];
+  bool? ownHouse;
 
   @override
   initState() {
@@ -284,6 +285,17 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                             });
                           },
                         ),
+              const SizedBox(height: 10),
+              _buildSelectionField(
+                  hint: 'Own House',
+                  onTap: () {
+                    _selectHouse(context);
+                  },
+                  value: ownHouse == null
+                      ? ''
+                      : ownHouse!
+                          ? 'Yes'
+                          : 'No'),
               const SizedBox(height: 25),
 
               // Next Button
@@ -292,39 +304,34 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (selectedCountry.isNotEmpty &&
-                        selectedState.isNotEmpty) {
-                      ref
-                          .read(preferenceInputProvider.notifier)
-                          .updatePreferenceInput(
-                            country: selectedCountry.isNotEmpty
-                                ? selectedCountry[0]
-                                : '',
-                            states: selectedState.isNotEmpty
-                                ? selectedState[0]
-                                : '',
-                            city:
-                                selectedCity.isNotEmpty ? selectedCity[0] : '',
-                          );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const InterestPageView(),
-                        ),
-                      );
-                    } else if (selectedCountry.isEmpty) {
-                      CustomSnackBar.show(
-                        context: context,
-                        message: 'Please Select Country.',
-                        isError: true,
-                      );
-                    } else if (selectedState.isEmpty) {
-                      CustomSnackBar.show(
-                        context: context,
-                        message: 'Please Select State.',
-                        isError: true,
-                      );
-                    }
+                    // if (selectedCountry.isNotEmpty &&
+                    //     selectedState.isNotEmpty) {
+                    ref
+                        .read(preferenceInputProvider.notifier)
+                        .updatePreferenceInput(
+                            country: selectedCountry.firstOrNull,
+                            states: selectedState.firstOrNull,
+                            city: selectedCity.firstOrNull,
+                            ownHouse: ownHouse);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InterestPageView(),
+                      ),
+                    );
+                    // } else if (selectedCountry.isEmpty) {
+                    //   CustomSnackBar.show(
+                    //     context: context,
+                    //     message: 'Please Select Country.',
+                    //     isError: true,
+                    //   );
+                    // } else if (selectedState.isEmpty) {
+                    //   CustomSnackBar.show(
+                    //     context: context,
+                    //     message: 'Please Select State.',
+                    //     isError: true,
+                    //   );
+                    // }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
@@ -348,6 +355,112 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSelectionField({
+    required String value,
+    required String hint,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                value.isEmpty ? hint : value,
+                style: TextStyle(
+                    color: value.isEmpty ? Colors.grey.shade600 : Colors.black,
+                    fontSize: 16),
+              ),
+              Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+            ],
+          ),
+        ));
+  }
+
+  void _selectHouse(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(child: Text('Own House')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    ownHouse = true;
+                  });
+                  Navigator.pop(context, true);
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: ownHouse == true
+                        ? const Color(0xFFFFCBCC)
+                        : Colors.transparent,
+                    border: Border.all(
+                      color:
+                          ownHouse == true ? Colors.transparent : Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Yes',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: ownHouse == true ? Colors.black : Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    ownHouse = false;
+                  });
+                  Navigator.pop(context, false);
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: ownHouse == false
+                        ? const Color(0xFFFFCBCC)
+                        : Colors.transparent,
+                    border: Border.all(
+                      color:
+                          ownHouse == false ? Colors.transparent : Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'No',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color:
+                              ownHouse == false ? Colors.black : Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -11,6 +11,8 @@ import 'package:matrimony/user_auth_screens/register_screens/register_user_addit
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 
 class RegisterUserLocationScreen extends ConsumerStatefulWidget {
+  const RegisterUserLocationScreen({super.key});
+
   @override
   _RegisterUserLocationScreenState createState() =>
       _RegisterUserLocationScreenState();
@@ -404,7 +406,9 @@ class _RegisterUserLocationScreenState
             pincodeController.text = '';
             isOwnHouse = null;
           });
-          ref.read(locationProvider.notifier).getStateData(selectedId.hashCode);
+          ref
+              .read(locationProvider.notifier)
+              .getStateData(selectedId?.id ?? selectedId.hashCode);
         }
       },
     );
@@ -425,7 +429,9 @@ class _RegisterUserLocationScreenState
             pincodeController.text = '';
             isOwnHouse = null;
           });
-          ref.read(locationProvider.notifier).getCityData(selectedId.hashCode);
+          ref
+              .read(locationProvider.notifier)
+              .getCityData(selectedId?.id ?? selectedId.hashCode);
         }
       },
     );
@@ -444,7 +450,7 @@ class _RegisterUserLocationScreenState
             city = selectedName;
             pincodeController.text =
                 cityList.any((city) => city.citys == selectedName)
-                    ? selectedId.hashCode.toString()
+                    ? selectedId?.pincode.toString() ?? ''
                     : '';
           });
         }
@@ -537,8 +543,6 @@ class _RegisterUserLocationScreenState
     required String hint,
     required VoidCallback onTap,
   }) {
-    print(hint);
-    print(value);
     return GestureDetector(
         onTap: onTap,
         child: Container(

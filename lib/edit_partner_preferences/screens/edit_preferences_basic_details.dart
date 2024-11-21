@@ -43,7 +43,7 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    ref.read(userManagementProvider.notifier).getUserDetails(1);
+    ref.read(userManagementProvider.notifier).getUserDetails(2);
     // editPartnerPreferenceProviderState.setValuesInitial('20 - 25',
     //     '4 ft 7 in(139 cm)', '49 - 55', 'widowed', 'Normal', 'karnadaka');
   }

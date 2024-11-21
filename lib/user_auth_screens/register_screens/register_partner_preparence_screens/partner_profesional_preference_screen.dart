@@ -114,42 +114,38 @@ class _PartnerProfessionalScreenState
     'B.Sc. Nursing',
     'M.Pharm',
     'MPT',
+    'Other'
   ];
 
   List<String> employedInList = [
-    'Government',
     'Private',
+    'Government',
     'Business',
-    'Self-employed',
+    'Self Employed',
     'Freelancer',
-    'Non-profit Organization',
-    'NGO',
-    'Start-up',
-    'Multinational Corporation',
-    'Startup',
-    'Public Sector',
-    'Healthcare',
-    'Educational Institution',
-    'Research Organization',
-    'Consultancy',
+    'Retired',
+    'Student',
+    'Housewife',
+    'Not Working',
+    'Other',
   ];
 
   final List<String> occupationList = [
+    'Software Professional',
     'Engineer',
     'Doctor',
     'Teacher',
-    'Business Analyst',
-    'Software Developer',
-    'Nurse',
-    'Architect',
-    'Scientist',
+    'Business Owner',
     'Accountant',
     'Lawyer',
-    'Teacher',
-    'Marketing Manager',
-    'Data Analyst',
-    'HR Manager',
-    'Project Manager',
+    'Architect',
+    'Consultant',
+    'Artist',
+    'Writer',
+    'Sales Professional',
+    'Marketing Professional',
+    'Healthcare Worker',
+    'Other',
   ];
 
   final List<String> incomeList = [
@@ -380,10 +376,10 @@ class _PartnerProfessionalScreenState
                   ref
                       .read(preferenceInputProvider.notifier)
                       .updatePreferenceInput(
-                          education: selectedEdication.toString(),
-                          employedIn: selectedEmployed.toString(),
-                          annualIncome: selectedIncome.toString(),
-                          profession: selectedOccupation.toString());
+                          education: selectedEdication.firstOrNull,
+                          employedIn: selectedEmployed.firstOrNull,
+                          annualIncome: selectedIncome.firstOrNull,
+                          profession: selectedOccupation.firstOrNull);
                   Navigator.push(
                       context,
                       MaterialPageRoute(

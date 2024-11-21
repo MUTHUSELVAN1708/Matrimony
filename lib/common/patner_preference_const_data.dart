@@ -86,6 +86,7 @@ class PartnerPreferenceConstData {
     'B.Sc. Nursing',
     'M.Pharm',
     'MPT',
+    'Other'
   ];
 
   static const List<String> employedInList = [
@@ -169,48 +170,36 @@ class PartnerPreferenceConstData {
   ];
 
   static const List<String> starList = [
-    'Ashwini',
-    'Bharani',
-    'Krittika',
-    'Rohini',
-    'Mrigashirsha',
-    'Ardra',
-    'Punarvasu',
-    'Pushya',
-    'Ashlesha',
-    'Magha',
-    'Purva Phalguni',
-    'Uttara Phalguni',
-    'Hasta',
-    'Chitra',
-    'Swati',
-    'Vishakha',
-    'Anuradha',
-    'Jyeshtha',
-    'Mula',
-    'Purva Ashadha',
-    'Uttara Ashadha',
-    'Shravana',
-    'Dhanishta',
-    'Shatabhisha',
-    'Purva Bhadrapada',
-    'Uttara Bhadrapada',
-    'Revati'
+    'Ashwini (அஸ்வினி)',
+    'Bharani (பரணி)',
+    'Krittika (கிருத்திகை)',
+    'Rohini (ரோகிணி)',
+    'Mrigashira (மிருகசீரிடம்)',
+    'Ardra (திருவாதிரை)',
+    'Punarvasu (புனர்பூசம்)',
+    'Pushya (பூசம்)',
+    'Ashlesha (ஆயில்யம்)',
+    'Magha (மகம்)',
+    'Purva Phalguni (பூரம்)',
+    'Uttara Phalguni (உத்திரம்)',
+    'Hasta (அஸ்தம்)',
+    'Chitra (சித்திரை)',
+    'Swati (ஸ்வாதி)',
   ];
 
   static const List<String> raasiList = [
-    'Mesha',
-    'Vrishabha',
-    'Mithuna',
-    'Karka',
-    'Simha',
-    'Kanya',
-    'Tula',
-    'Vrishchika',
-    'Dhanu',
-    'Makara',
-    'Kumbha',
-    'Meena'
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces"
   ];
 
   static const List<String> weightList = [
@@ -257,6 +246,7 @@ class PartnerPreferenceConstData {
     25: '6 ft 8 in (203 cm)',
     26: '6 ft 9 in (206 cm)',
   };
+
   static const List<String> maritalStatusOptions = [
     'Never Married',
     'Widow',
@@ -275,12 +265,14 @@ class PartnerPreferenceConstData {
     'Non - Vegetarian',
     'Eggetarian'
   ];
+
   static const List<String> drinkingHabitsOptions = [
     'Doesn’t Matter',
     'Never Drinks',
     'Drinks Socially',
     'Drinks Regularly'
   ];
+
   static const List<String> smokingHabitsOptions = [
     'Doesn’t Matter',
     'Never Smokes',
@@ -326,7 +318,8 @@ class PartnerPreferenceConstData {
     'Khandeshi',
     'Khasi',
     'Lepcha',
-    'Sikkimese'
+    'Sikkimese',
+    'Other'
   ];
 
   static const List<String> religionOptions = [
@@ -507,6 +500,7 @@ class PartnerPreferenceConstData {
     'B.Sc. Nursing',
     'M.Pharm',
     'MPT',
+    'Other'
   ];
 
   static const List<String> employmentOptions = [
