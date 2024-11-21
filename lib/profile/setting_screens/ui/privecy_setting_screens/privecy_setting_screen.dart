@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/helper/nav_helper.dart';
+import 'package:matrimony/profile/setting_screens/ui/privecy_setting_screens/privercy_heroscope_screen.dart';
+import 'package:matrimony/profile/setting_screens/ui/privecy_setting_screens/privercy_mobile_screen.dart';
+import 'package:matrimony/profile/setting_screens/ui/privecy_setting_screens/privercy_photo_screen.dart';
+import 'package:matrimony/profile/setting_screens/ui/privecy_setting_screens/privercy_videochat_setting_screen.dart';
 
 class PrivacySettingScreen extends StatefulWidget {
   @override
@@ -63,18 +68,30 @@ class _PrivacySettingScreenState extends State<PrivacySettingScreen> {
   }
 
   void _handleMobileNumberTap() {
-    // Handle mobile number setting
+    NavigationHelper.slideNavigateTo(
+      context: context,
+      screen: PrivacyMobileScreen(),
+    );
   }
 
   void _handlePhotoTap() {
-    // Handle photo setting
+    NavigationHelper.slideNavigateTo(
+      context: context,
+      screen: PrivacyPhotoScreen(),
+    );
   }
 
   void _handleVideoProfileTap() {
-    // Handle video profile setting
+    NavigationHelper.slideNavigateTo(
+      context: context,
+      screen: PrivacyVideoChatScreen(),
+    );
   }
 
   void _handleHoroscopeTap() {
-    // Handle horoscope setting
+    NavigationHelper.slideNavigateTo(
+      context: context,
+      screen: PrivacyHeroScopeScreen(),
+    );
   }
 }

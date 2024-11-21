@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/helper/nav_helper.dart';
+import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/change_password_screen.dart';
+import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/deactivate_account_screen.dart';
+import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/delete_profile_screen.dart';
 
 class AccountSettingScreen extends StatefulWidget {
   @override
@@ -37,10 +41,10 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                // NavigationHelper.slideNavigateTo(
-                //   context: context,
-                //   screen: const NotificationSettingScreen(),
-                // );
+                NavigationHelper.slideNavigateTo(
+                  context: context,
+                  screen: const ChangePasswordScreen(),
+                );
               },
               child: Container(
                   alignment: Alignment.centerLeft,
@@ -77,10 +81,7 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
             ),
             GestureDetector(
               onTap: () {
-                // NavigationHelper.slideNavigateTo(
-                //   context: context,
-                //   screen: const NotificationSettingScreen(),
-                // );
+                _showLogOutConfirmationDialog(context);
               },
               child: Container(
                   alignment: Alignment.centerLeft,
@@ -117,10 +118,10 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
             ),
             GestureDetector(
               onTap: () {
-                // NavigationHelper.slideNavigateTo(
-                //   context: context,
-                //   screen: const NotificationSettingScreen(),
-                // );
+                NavigationHelper.slideNavigateTo(
+                  context: context,
+                  screen: DeactivateAccountScreen(),
+                );
               },
               child: Container(
                   alignment: Alignment.centerLeft,
@@ -157,10 +158,10 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
             ),
             GestureDetector(
               onTap: () {
-                // NavigationHelper.slideNavigateTo(
-                //   context: context,
-                //   screen: const NotificationSettingScreen(),
-                // );
+                NavigationHelper.slideNavigateTo(
+                  context: context,
+                  screen: DeleteProfileScreen(),
+                );
               },
               child: Container(
                   alignment: Alignment.centerLeft,
@@ -198,14 +199,70 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
     );
   }
 
-  Widget _buildListTile({
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      title: Text(title),
-      onTap: onTap,
-      trailing: Icon(Icons.chevron_right),
+  void _showLogOutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const CustomSvg(
+                name: 'successcircle',
+                height: 85,
+                width: 85,
+              ),
+              const SizedBox(width: 15),
+              Text(
+                'Do You Want To Log Out?',
+                style: AppTextStyles.headingTextstyle
+                    .copyWith(color: Colors.black),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Are You Sure You Want To Log Out From My App?',
+            style: AppTextStyles.spanTextStyle,
+          ),
+          actions: <Widget>[
+            Column(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: 100,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: AppTextStyles.primaryButtonstyle,
+                      child: const Text(
+                        'Yes',
+                        style: AppTextStyles.primarybuttonText,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: AppTextStyles.primaryButtonstyle,
+                    child: const Text('No',
+                        style: AppTextStyles.primarybuttonText),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }
