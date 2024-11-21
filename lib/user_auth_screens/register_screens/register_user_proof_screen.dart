@@ -12,7 +12,8 @@ import 'package:matrimony/user_register_riverpods/riverpod/create_user_governmen
 import 'package:matrimony/user_register_riverpods/riverpod/proof_image_picker_notifier.dart';
 
 class RegisterUserGovernmentProof extends ConsumerStatefulWidget {
-  const RegisterUserGovernmentProof({super.key});
+  String? title = '';
+  RegisterUserGovernmentProof({super.key, this.title});
 
   @override
   ConsumerState<RegisterUserGovernmentProof> createState() =>
@@ -49,19 +50,21 @@ class _RegisterUserGovernmentProofState
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          TextButton(
-            child: Text('Skip',
-                style: AppTextStyles.headingTextstyle
-                    .copyWith(color: Colors.black)),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const RegisterPartnerBasicPreferenceScreen()),
-              );
-            },
-          ),
+          widget.title!.isNotEmpty
+              ? const SizedBox()
+              : TextButton(
+                  child: Text('Skip',
+                      style: AppTextStyles.headingTextstyle
+                          .copyWith(color: Colors.black)),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const RegisterPartnerBasicPreferenceScreen()),
+                    );
+                  },
+                ),
         ],
       ),
       body: Padding(
@@ -206,9 +209,9 @@ class _RegisterUserGovernmentProofState
                 ),
                 child: proofApiState.isLoading
                     ? const LoadingIndicator()
-                    : const Text(
-                        'Continue',
-                        style: TextStyle(
+                    : Text(
+                        widget.title!.isNotEmpty ? "verify" : 'Continue',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                         ),

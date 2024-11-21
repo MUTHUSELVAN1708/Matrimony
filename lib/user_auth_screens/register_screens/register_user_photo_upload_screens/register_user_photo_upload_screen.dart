@@ -54,7 +54,7 @@ class _RegisterUserPhotoUploadScreenState
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const RegisterUserGovernmentProof(),
+                  builder: (context) => RegisterUserGovernmentProof(),
                 ),
               );
             },
