@@ -128,24 +128,38 @@ class _RegisterUserProfessionalInfoScreenState
       'B.Sc. Nursing',
       'M.Pharm',
       'MPT',
+      'Other'
     ],
   };
 
   final List<String> employmentOptions = [
-    'Private Sector',
-    'Public Sector',
-    'Business Owner',
+    'Private',
+    'Government',
+    'Business',
     'Self Employed',
     'Freelancer',
+    'Retired',
+    'Student',
+    'Housewife',
     'Not Working',
+    'Other',
   ];
 
   final List<String> occupationOptions = [
-    'Software Engineer',
+    'Software Professional',
+    'Engineer',
     'Doctor',
     'Teacher',
+    'Business Owner',
+    'Accountant',
     'Lawyer',
-    'Business Person',
+    'Architect',
+    'Consultant',
+    'Artist',
+    'Writer',
+    'Sales Professional',
+    'Marketing Professional',
+    'Healthcare Worker',
     'Other',
   ];
 

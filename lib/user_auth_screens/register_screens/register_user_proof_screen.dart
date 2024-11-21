@@ -12,7 +12,7 @@ import 'package:matrimony/user_register_riverpods/riverpod/create_user_governmen
 import 'package:matrimony/user_register_riverpods/riverpod/proof_image_picker_notifier.dart';
 
 class RegisterUserGovernmentProof extends ConsumerStatefulWidget {
-  String? title = '';
+  String? title;
   RegisterUserGovernmentProof({super.key, this.title});
 
   @override
@@ -50,7 +50,7 @@ class _RegisterUserGovernmentProofState
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          widget.title!.isNotEmpty
+          widget.title != null
               ? const SizedBox()
               : TextButton(
                   child: Text('Skip',
@@ -210,7 +210,7 @@ class _RegisterUserGovernmentProofState
                 child: proofApiState.isLoading
                     ? const LoadingIndicator()
                     : Text(
-                        widget.title!.isNotEmpty ? "verify" : 'Continue',
+                        widget.title != null ? "verify" : 'Continue',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,

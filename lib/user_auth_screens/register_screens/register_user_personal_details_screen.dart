@@ -351,7 +351,7 @@ class _RegisterUserPersonalDetailsScreenState
                             age: calculateAge(dateOfBirth),
                             height: height,
                             weight: weight,
-                            anyDisability: physicalStatus,
+                            physicalStatus: physicalStatus,
                             maritalStatus: maritalStatus,
                           );
 

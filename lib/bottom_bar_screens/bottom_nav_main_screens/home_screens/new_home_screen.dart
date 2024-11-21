@@ -31,7 +31,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   @override
   void initState() {
     super.initState();
-    // getData();
+    getData();
   }
 
   Future<void> getData() async {
@@ -133,22 +133,30 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          getImageApiProviderState.data?.name ?? '',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                    Container(
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            getImageApiProviderState.data?.name ?? '',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
                           ),
-                        ),
-                        Text(
-                          '#${getImageApiProviderState.data?.uniqueId ?? ''}',
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                      ],
+                          Text(
+                            '#${getImageApiProviderState.data?.uniqueId ?? ''}',
+                            style: const TextStyle(color: Colors.white70),
+                          ),
+                        ],
+                      ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.menu, color: Colors.white),
@@ -304,7 +312,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
                   width: 120,
-                  height: MediaQuery.of(context).size.height * 0.25 / 2,
+                  height: MediaQuery.of(context).size.height * 0.24 / 2,
                   decoration: BoxDecoration(
                     color: Colors.pink[200],
                   ),

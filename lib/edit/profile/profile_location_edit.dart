@@ -216,13 +216,23 @@ class _LocationDetailsScreenState extends ConsumerState<LocationDetailsScreen> {
 
   Future<void> _getCurrentLocation() async {
     print("Requesting location permission...");
-    final status = await Permission.location.request();
+    var status = await Permission.location.status;
+    // final status = await Permission.location.request();
     print("Permission status: $status");
-
+    if (status.isDenied || status.isRestricted) {
+      // Request permission if denied
+      status = await Permission.location.request();
+      if (!status.isGranted) {
+        // Permission is denied or permanently denied
+        print("Location permission denied");
+        return;
+      }
+    }
     if (status.isGranted) {
       try {
         print("Fetching current position...");
-        final position = await Geolocator.getCurrentPosition();
+        final position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
         print("Position: ${position.latitude}, ${position.longitude}");
 
         print("Fetching placemarks...");

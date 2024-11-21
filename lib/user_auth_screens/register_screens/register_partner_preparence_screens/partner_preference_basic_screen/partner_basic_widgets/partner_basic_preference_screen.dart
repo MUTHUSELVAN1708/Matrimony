@@ -248,20 +248,26 @@ class _RegisterPartnerBasicPreferenceScreenState
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        int firstList =
-                            int.parse(selectedAge[0].substring(1, 3));
-                        int secondList =
-                            int.parse(selectedAge[0].substring(6, 8));
+                        final age = selectedAge.firstOrNull
+                            ?.replaceAll('[', '')
+                            .replaceAll(']', '')
+                            .split(' ');
+                        final height = selectedHeight.firstOrNull
+                            ?.replaceAll('[', '')
+                            .replaceAll(']', '')
+                            .split('-');
                         inputStates.updatePreferenceInput(
                             userId: userId,
-                            fromAge: firstList,
-                            toAge: secondList,
-                            height: selectedHeight.toString(),
-                            motherTongue: selectedMotherTongue.toString(),
-                            maritalStatus: selectedMaritalStatus.toString(),
-                            drinkingHabits: selectedDrinkingHabits.toString(),
-                            eatingHabits: selectedEatingHabits.toString(),
-                            smokingHabits: selectedSmokingHabits.toString());
+                            fromAge: age != null ? int.tryParse(age[0]) : null,
+                            toAge: age != null ? int.tryParse(age[1]) : null,
+                            fromHeight: height != null ? height[0] : null,
+                            toHeight: height != null ? height[1] : null,
+                            motherTongue: selectedMotherTongue.firstOrNull,
+                            maritalStatus: selectedMaritalStatus.firstOrNull,
+                            physicalStatus: selectedPhysicalStatus.firstOrNull,
+                            drinkingHabits: selectedDrinkingHabits.firstOrNull,
+                            eatingHabits: selectedEatingHabits.firstOrNull,
+                            smokingHabits: selectedSmokingHabits.firstOrNull);
 
                         Navigator.push(
                           context,

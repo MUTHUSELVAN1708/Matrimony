@@ -310,7 +310,8 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Annual Income',
-            options: IncomeOptions.options,
+            options: IncomeOptions
+                .options[professionalInfoState.currencyType ?? 'INR (₹)']!,
             selectedValue: professionalInfoState.annualIncome ?? 'Select',
             onSelect: (value) {
               ref

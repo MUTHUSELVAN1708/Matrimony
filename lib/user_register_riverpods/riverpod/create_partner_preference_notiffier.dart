@@ -36,7 +36,8 @@ class PartnerPreferenceNotifier<T>
     int? userId,
     int? fromAge,
     int? toAge,
-    String? height,
+    String? fromHeight,
+    String? toHeight,
     String? maritalStatus,
     String? motherTongue,
     String? physicalStatus,
@@ -66,6 +67,7 @@ class PartnerPreferenceNotifier<T>
     String? food,
     String? spokenLanguages,
     String? interest,
+    bool? ownHouse,
   }) async {
     state = state.copyWith(isLoading: true, error: null, successMessage: null);
     try {
@@ -80,7 +82,8 @@ class PartnerPreferenceNotifier<T>
           'userId': userIds,
           'fromAge': fromAge,
           'toAge': toAge,
-          'height': height,
+          'fromHeight': fromHeight,
+          'toHeight': toHeight,
           'maritalStatus': maritalStatus,
           'motherTongue': motherTongue,
           'physicalStatus': physicalStatus,
@@ -89,7 +92,7 @@ class PartnerPreferenceNotifier<T>
           'smokingHabits': smokingHabits,
           'religion': religion,
           'caste': caste,
-          'subCaste': subCaste,
+          'subcaste': subCaste,
           'star': star,
           'rassi': rassi,
           'dosham': dosham,
@@ -110,6 +113,7 @@ class PartnerPreferenceNotifier<T>
           'food': food,
           'spokenLanguages': spokenLanguages,
           'interest': interest,
+          'ownHouse': ownHouse
         }),
       );
 

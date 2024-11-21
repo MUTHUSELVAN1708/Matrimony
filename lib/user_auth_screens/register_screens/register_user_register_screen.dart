@@ -273,9 +273,9 @@ class _RegisterUserDetailsScreenState
                               "$mobileKey${_phoneController.text}";
                           registerNotifier.profileFor = widget.registerFor;
 
-                          bool success = await registerNotifier.register();
+                          String success = await registerNotifier.register();
                           print(success);
-                          if (success) {
+                          if (success == 'Success') {
                             CustomSnackBar.show(
                               context: context,
                               message: 'OTP sent',
@@ -291,10 +291,10 @@ class _RegisterUserDetailsScreenState
                               ),
                             );
                           } else {
-                            if (registerState.error != null) {
+                            if (success != '') {
                               CustomSnackBar.show(
                                 context: context,
-                                message: registerState.error!,
+                                message: success,
                                 isError: true,
                               );
                             } else {

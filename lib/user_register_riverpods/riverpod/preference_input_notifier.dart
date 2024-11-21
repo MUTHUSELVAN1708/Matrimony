@@ -4,7 +4,8 @@ class PreferenceInput {
   int? userId;
   int? fromAge;
   int? toAge;
-  String? height;
+  String? fromHeight;
+  String? toHeight;
   String? maritalStatus;
   String? motherTongue;
   String? physicalStatus;
@@ -34,12 +35,14 @@ class PreferenceInput {
   String? food;
   String? spokenLanguages;
   String? interest;
+  bool? ownHouse;
 
   PreferenceInput({
     this.userId,
     this.fromAge,
     this.toAge,
-    this.height,
+    this.fromHeight,
+    this.toHeight,
     this.maritalStatus,
     this.motherTongue,
     this.physicalStatus,
@@ -69,6 +72,7 @@ class PreferenceInput {
     this.food,
     this.spokenLanguages,
     this.interest,
+    this.ownHouse,
   });
 }
 
@@ -79,7 +83,8 @@ class PreferenceInputNotifier extends StateNotifier<PreferenceInput?> {
     int? userId,
     int? fromAge,
     int? toAge,
-    String? height,
+    String? fromHeight,
+    String? toHeight,
     String? maritalStatus,
     String? motherTongue,
     String? physicalStatus,
@@ -109,12 +114,14 @@ class PreferenceInputNotifier extends StateNotifier<PreferenceInput?> {
     String? food,
     String? spokenLanguages,
     String? interest,
+    bool? ownHouse,
   }) {
     state = PreferenceInput(
       userId: userId ?? state?.userId,
       fromAge: fromAge ?? state?.fromAge,
       toAge: toAge ?? state?.toAge,
-      height: height ?? state?.height,
+      fromHeight: fromHeight ?? state?.fromHeight,
+      toHeight: toHeight ?? state?.toHeight,
       maritalStatus: maritalStatus ?? state?.maritalStatus,
       motherTongue: motherTongue ?? state?.motherTongue,
       physicalStatus: physicalStatus ?? state?.physicalStatus,
@@ -144,6 +151,7 @@ class PreferenceInputNotifier extends StateNotifier<PreferenceInput?> {
       food: food ?? state?.food,
       spokenLanguages: spokenLanguages ?? state?.spokenLanguages,
       interest: interest ?? state?.interest,
+      ownHouse: ownHouse ?? state?.ownHouse,
     );
   }
 }

@@ -31,7 +31,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
   String? otp;
   String? phoneNo;
 
-  Future<bool> register() async {
+  Future<String> register() async {
     state = RegisterState(isLoading: true, error: null, success: null);
 
     if (profileFor == null ||
@@ -41,7 +41,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         phoneNumber == null) {
       state = RegisterState(
           isLoading: false, error: 'Please fill all fields.', success: null);
-      return false;
+      return 'Please fill all fields.';
     }
 
     try {
@@ -58,17 +58,17 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         await _saveUserData(response['userId']);
         state = RegisterState(
             isLoading: false, error: null, success: 'Registration successful.');
-        return true;
+        return 'Success';
       } else {
         print(response?['errorMessage']);
         state = RegisterState(
             isLoading: false, error: response?['errorMessage'], success: null);
-        return false;
+        return response?['errorMessage'];
       }
     } catch (e) {
       state =
           RegisterState(isLoading: false, error: e.toString(), success: null);
-      return false;
+      return '';
     }
   }
 
@@ -104,7 +104,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     int? age,
     String? height,
     String? weight,
-    String? anyDisability,
+    String? physicalStatus,
     String? maritalStatus,
     String? noOfChildren,
   }) async {
@@ -115,7 +115,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         age == null ||
         height == null ||
         weight == null ||
-        anyDisability == null ||
+        physicalStatus == null ||
         maritalStatus == null) {
       state = RegisterState(
           isLoading: false, error: 'Please fill all fields.', success: null);
@@ -129,7 +129,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
         age,
         height,
         weight,
-        anyDisability,
+        physicalStatus,
         maritalStatus,
         noOfChildren,
       );
