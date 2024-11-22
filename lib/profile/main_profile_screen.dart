@@ -7,6 +7,8 @@ import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
+import 'package:matrimony/profile/faq_screen/faq_screen.dart';
+import 'package:matrimony/profile/help_screens/ui/help_screen.dart';
 import 'package:matrimony/profile/profile.dart';
 import 'package:matrimony/profile/setting_screens/ui/setting_screen.dart';
 import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
@@ -213,7 +215,12 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       MenuItem(
         icon: 'assets/help.svg',
         title: 'Help',
-        onTap: () {},
+        onTap: () {
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: HelpScreen(),
+          );
+        },
       ),
       MenuItem(
         icon: 'assets/feedback.svg',
@@ -228,7 +235,12 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       MenuItem(
         icon: 'assets/more.svg',
         title: 'More',
-        onTap: () {},
+        onTap: () {
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: FAQScreen(),
+          );
+        },
       ),
       MenuItem(
         icon: 'assets/logout.svg',
