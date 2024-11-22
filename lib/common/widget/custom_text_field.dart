@@ -5,7 +5,7 @@ class CustomTextFieldWidget extends StatelessWidget {
   final String? hintText;
   final String? labelText;
   final String? initialValue;
-  final bool isEnabled;
+  final bool? isEnabled;
   final bool filled;
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -52,11 +52,11 @@ class CustomTextFieldWidget extends StatelessWidget {
   final bool autocorrect;
 
   const CustomTextFieldWidget({
-    Key? key,
+    super.key,
     this.hintText,
     this.labelText,
     this.initialValue,
-    this.isEnabled = true,
+    this.isEnabled,
     this.filled = false,
     this.controller,
     this.focusNode,
@@ -101,7 +101,7 @@ class CustomTextFieldWidget extends StatelessWidget {
     this.counterText,
     this.enableSuggestions = true,
     this.autocorrect = true,
-  }) : super(key: key);
+  });
 
   Widget? _getDefaultPrefixIcon() {
     if (hintText == null) return null;
@@ -139,7 +139,9 @@ class CustomTextFieldWidget extends StatelessWidget {
         controller ?? TextEditingController(text: initialValue);
 
     return Padding(
-      padding: isEnabled ? const EdgeInsets.only(bottom: 8.0) : EdgeInsets.zero,
+      padding: isEnabled ?? true
+          ? const EdgeInsets.only(bottom: 8.0)
+          : EdgeInsets.zero,
       child: TextFormField(
         controller: effectiveController,
         enabled: isEnabled,
@@ -210,7 +212,7 @@ class CustomTextFieldWidget extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide.none,
           ),
         ),
         autovalidateMode: autovalidateMode,

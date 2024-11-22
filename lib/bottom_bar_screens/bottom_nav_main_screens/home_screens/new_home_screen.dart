@@ -10,6 +10,7 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/main_profile_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
@@ -36,6 +37,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   Future<void> getData() async {
     await Future.delayed(Duration.zero);
+    ref.read(userManagementProvider.notifier).getUserDetails();
+    ref.read(userManagementProvider.notifier).getLocalData();
     fetchAllMatches();
     fetchImage();
     fetchDailyRecommendations();

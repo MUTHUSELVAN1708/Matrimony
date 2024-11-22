@@ -260,8 +260,9 @@ class _RegisterPartnerBasicPreferenceScreenState
                             userId: userId,
                             fromAge: age != null ? int.tryParse(age[0]) : null,
                             toAge: age != null ? int.tryParse(age[1]) : null,
-                            fromHeight: height != null ? height[0] : null,
-                            toHeight: height != null ? height[1] : null,
+                            fromHeight:
+                                height != null ? height[0].trim() : null,
+                            toHeight: height != null ? height[1].trim() : null,
                             motherTongue: selectedMotherTongue.firstOrNull,
                             maritalStatus: selectedMaritalStatus.firstOrNull,
                             physicalStatus: selectedPhysicalStatus.firstOrNull,

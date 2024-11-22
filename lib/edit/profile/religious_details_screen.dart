@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
 import '../../common/widget/custom_snackbar.dart';
@@ -12,7 +14,7 @@ import 'notifier/profile_notifier.dart';
 import 'state/religious_state.dart';
 import 'providers/religious_provider.dart';
 
-class ReligiousDetailsScreen extends ConsumerWidget {
+class ReligiousDetailsScreen extends ConsumerStatefulWidget {
   final Function(String? value) onPop;
 
   const ReligiousDetailsScreen({
@@ -21,17 +23,41 @@ class ReligiousDetailsScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ReligiousDetailsScreen> createState() =>
+      _ReligiousDetailsScreenState();
+}
+
+class _ReligiousDetailsScreenState
+    extends ConsumerState<ReligiousDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getValues();
+  }
+
+  Future<void> getValues() async {
+    await Future.delayed(Duration.zero);
+    ref.read(religiousProvider.notifier).disposeState();
+    ref
+        .read(religiousProvider.notifier)
+        .setReligiousDetails(ref.read(userManagementProvider).userDetails);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final religiousState = ref.watch(religiousProvider);
     final heightQuery = MediaQuery.of(context).size.height;
 
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        children: [
-          _buildHeader(context, heightQuery),
-          _buildForm(context, ref, religiousState, heightQuery),
-        ],
+    return EnhancedLoadingWrapper(
+      isLoading: religiousState.isLoading,
+      child: Material(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            _buildHeader(context, heightQuery),
+            _buildForm(context, ref, religiousState, heightQuery),
+          ],
+        ),
       ),
     );
   }
@@ -44,7 +70,7 @@ class ReligiousDetailsScreen extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () {
-              onPop('true');
+              widget.onPop('true');
               Navigator.pop(context);
             },
             child: const Icon(
@@ -175,7 +201,7 @@ class ReligiousDetailsScreen extends ConsumerWidget {
           builder: (context) => CommonSelectionDialog(
             title: 'Select Caste',
             options: ReligiousOptions.castes,
-            selectedValue: religiousState.caste ?? "don't wish to specify",
+            selectedValue: religiousState.caste ?? "Select",
             onSelect: (value) {
               ref.read(religiousProvider.notifier).updateCaste(value);
             },
@@ -184,7 +210,7 @@ class ReligiousDetailsScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Caste',
-        religiousState.caste ?? "don't wish to specify",
+        religiousState.caste ?? "Select",
       ),
     );
   }
@@ -201,7 +227,7 @@ class ReligiousDetailsScreen extends ConsumerWidget {
           builder: (context) => CommonSelectionDialog(
             title: 'Select Sub Caste',
             options: ReligiousOptions.subCastes,
-            selectedValue: religiousState.subCaste ?? "don't wish to specify",
+            selectedValue: religiousState.subCaste ?? "Select",
             onSelect: (value) {
               ref.read(religiousProvider.notifier).updateSubCaste(value);
             },
@@ -210,7 +236,7 @@ class ReligiousDetailsScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Sub Caste',
-        religiousState.subCaste ?? "don't wish to specify",
+        religiousState.subCaste ?? "Select",
       ),
     );
   }
@@ -227,7 +253,7 @@ class ReligiousDetailsScreen extends ConsumerWidget {
           builder: (context) => CommonSelectionDialog(
             title: 'Select Mother Tongue',
             options: ReligiousOptions.motherTongues,
-            selectedValue: religiousState.motherTongue ?? '-',
+            selectedValue: religiousState.motherTongue ?? 'Select',
             onSelect: (value) {
               ref.read(religiousProvider.notifier).updateMotherTongue(value);
             },
@@ -236,7 +262,7 @@ class ReligiousDetailsScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Mother Tongue',
-        religiousState.motherTongue ?? '-',
+        religiousState.motherTongue ?? 'Select',
       ),
     );
   }
@@ -319,11 +345,17 @@ class ReligiousDetailsScreen extends ConsumerWidget {
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        onPressed: () {
-          if (ref.read(profileProvider.notifier).validateProfile()) {
+        onPressed: () async {
+          final result = await ref
+              .read(religiousProvider.notifier)
+              .updateReligiousDetails();
+          ref
+              .read(userManagementProvider.notifier)
+              .updateReligiousDetails(religiousState);
+          if (result) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              onPop('true');
+              widget.onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,
@@ -332,16 +364,11 @@ class ReligiousDetailsScreen extends ConsumerWidget {
               );
             });
           } else {
-            Future.delayed(const Duration(microseconds: 50), () {
-              Navigator.pop(context);
-              onPop('true');
-            }).then((_) {
-              CustomSnackBar.show(
-                isError: false,
-                context: context,
-                message: 'Profile updated successfully!',
-              );
-            });
+            CustomSnackBar.show(
+              isError: false,
+              context: context,
+              message: 'Something Went wrong. Please Try Again!',
+            );
           }
         },
         style: ElevatedButton.styleFrom(

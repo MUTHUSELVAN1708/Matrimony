@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
 import '../../common/widget/custom_snackbar.dart';
@@ -9,7 +11,7 @@ import '../../service/date_picker.dart';
 import 'data/profile_options.dart';
 import 'notifier/profile_notifier.dart';
 
-class EditBasicDetailScreen extends ConsumerWidget {
+class EditBasicDetailScreen extends ConsumerStatefulWidget {
   final Function(String? value) onPop;
 
   const EditBasicDetailScreen({
@@ -18,17 +20,40 @@ class EditBasicDetailScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<EditBasicDetailScreen> createState() =>
+      _EditBasicDetailScreenState();
+}
+
+class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getValues();
+  }
+
+  Future<void> getValues() async {
+    await Future.delayed(Duration.zero);
+    ref.read(profileProvider.notifier).disposeState();
+    ref
+        .read(profileProvider.notifier)
+        .setBasicDetails(ref.read(userManagementProvider).userDetails);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final profileState = ref.watch(profileProvider);
     final heightQuery = MediaQuery.of(context).size.height;
 
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        children: [
-          _buildHeader(context, heightQuery),
-          _buildForm(context, ref, profileState, heightQuery),
-        ],
+    return EnhancedLoadingWrapper(
+      isLoading: profileState.isLoading,
+      child: Material(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            _buildHeader(context, heightQuery),
+            _buildForm(context, ref, profileState, heightQuery),
+          ],
+        ),
       ),
     );
   }
@@ -41,7 +66,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () {
-              onPop('true');
+              widget.onPop('true');
               Navigator.pop(context);
             },
             child: const Icon(
@@ -153,7 +178,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Profile Created For',
-        profileState.selectedProfile,
+        profileState.selectedProfile ?? 'Select',
       ),
     );
   }
@@ -179,7 +204,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Height',
-        profileState.selectedHeight,
+        profileState.selectedHeight ?? 'Select',
       ),
     );
   }
@@ -205,7 +230,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Weight',
-        profileState.selectedWeight,
+        profileState.selectedWeight ?? 'Select',
       ),
     );
   }
@@ -231,7 +256,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Skin Tone',
-        profileState.skinTone,
+        profileState.skinTone ?? 'Select',
       ),
     );
   }
@@ -257,7 +282,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Marital Status',
-        profileState.maritalStatus,
+        profileState.maritalStatus ?? 'Select',
       ),
     );
   }
@@ -283,7 +308,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Physical Status',
-        profileState.physicalStatus,
+        profileState.physicalStatus ?? 'Select',
       ),
     );
   }
@@ -311,7 +336,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Eating Habit',
-        profileState.eatingHabits,
+        profileState.eatingHabits ?? 'Select',
       ),
     );
   }
@@ -339,7 +364,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Drinking Habits',
-        profileState.drinkingHabits,
+        profileState.drinkingHabits ?? 'Select',
       ),
     );
   }
@@ -367,7 +392,7 @@ class EditBasicDetailScreen extends ConsumerWidget {
       },
       child: _buildListTile(
         'Smoking Habits',
-        profileState.smokingHabits,
+        profileState.smokingHabits ?? 'Select',
       ),
     );
   }
@@ -378,12 +403,13 @@ class EditBasicDetailScreen extends ConsumerWidget {
     ProfileState profileState,
   ) {
     return GestureDetector(
-      onTap: () => _showNameDialog(context, ref, profileState.selectedName),
+      onTap: () =>
+          _showNameDialog(context, ref, profileState.selectedName ?? '-'),
       child: _buildListTile(
         'Name',
-        profileState.selectedName.isEmpty
+        profileState.selectedName == null || profileState.selectedName!.isEmpty
             ? 'Enter Name'
-            : profileState.selectedName,
+            : profileState.selectedName!,
       ),
     );
   }
@@ -411,31 +437,37 @@ class EditBasicDetailScreen extends ConsumerWidget {
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
           if (ref.read(profileProvider.notifier).validateProfile()) {
-            Future.delayed(const Duration(microseconds: 50), () {
-              Navigator.pop(context);
-              onPop('true');
-            }).then((_) {
+            final result =
+                await ref.read(profileProvider.notifier).updateBasicDetails();
+            ref
+                .read(userManagementProvider.notifier)
+                .updateBasicDetails(profileState);
+            if (result) {
+              Future.delayed(const Duration(microseconds: 50), () {
+                Navigator.pop(context);
+                widget.onPop('true');
+              }).then((_) {
+                CustomSnackBar.show(
+                  isError: false,
+                  context: context,
+                  message: 'Profile updated successfully!',
+                );
+              });
+            } else {
               CustomSnackBar.show(
                 isError: false,
                 context: context,
-                message: 'Profile updated successfully!',
+                message: 'Something Went wrong. Please Try Again!',
               );
-            });
-            // Handle save logic
+            }
           } else {
-            Future.delayed(const Duration(microseconds: 50), () {
-              Navigator.pop(context);
-              onPop('true');
-            }).then((_) {
-              CustomSnackBar.show(
-                isError: false,
-                context: context,
-                message: 'Profile updated successfully!',
-              );
-            });
-
+            CustomSnackBar.show(
+              isError: false,
+              context: context,
+              message: 'Name, Date of Birth and ProfileFor must Not be Empty!',
+            );
             // CustomSnackBar.show(
             //   context: context,
             //   message: 'Please fill all required fields and ensure age is 18+',

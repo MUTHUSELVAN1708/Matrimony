@@ -178,5 +178,14 @@ class ProfileOptions {
     'Smokes Regularly'
   ];
 
-// Add more option lists as needed
+  static const List<String> whomToContact = [
+    'Myself',
+    'Daughter',
+    'Son',
+    'Brother',
+    'Sister',
+    'Friend',
+    'Relative',
+    'Others'
+  ];
 }
