@@ -5,14 +5,14 @@ import 'package:matrimony/common/colors.dart';
 class CommonSelectionDialog extends ConsumerStatefulWidget {
   final String title;
   final List<String> options;
-  final String selectedValue;
+  final String? selectedValue; // Nullable type
   final Function(String) onSelect;
 
   const CommonSelectionDialog({
     super.key,
     required this.title,
     required this.options,
-    required this.selectedValue,
+    this.selectedValue,
     required this.onSelect,
   });
 
@@ -22,7 +22,7 @@ class CommonSelectionDialog extends ConsumerStatefulWidget {
 }
 
 class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
-  late String tempSelected;
+  late String? tempSelected; // Nullable type
   late TextEditingController searchController;
   late List<String> filteredOptions;
   final ScrollController _scrollController = ScrollController();
@@ -30,7 +30,7 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
   @override
   void initState() {
     super.initState();
-    tempSelected = widget.selectedValue;
+    tempSelected = widget.selectedValue; // Handle nullable value
     searchController = TextEditingController();
     filteredOptions = widget.options;
   }
@@ -136,8 +136,7 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                                 fontSize: 16,
                                 color: filteredOptions[index] == tempSelected
                                     ? AppColors.primaryButtonColor
-                                    : Colors
-                                        .black, // Change color based on selection
+                                    : Colors.black,
                               ),
                             ),
                             value: filteredOptions[index],
@@ -145,7 +144,7 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                             activeColor: Colors.red[400],
                             onChanged: (value) {
                               setState(() {
-                                tempSelected = value!;
+                                tempSelected = value;
                               });
                             },
                           ),
@@ -155,11 +154,8 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
             ),
             Container(
               padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.transparent,
-                // border: Border(
-                //   top: BorderSide(color: Colors.grey[200]!),
-                // ),
               ),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -172,8 +168,8 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                   ),
                 ),
                 onPressed: () {
-                  if (tempSelected.isNotEmpty) {
-                    widget.onSelect(tempSelected);
+                  if (tempSelected != null && tempSelected!.isNotEmpty) {
+                    widget.onSelect(tempSelected!);
                     Navigator.pop(context);
                   }
                 },

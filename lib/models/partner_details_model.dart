@@ -3,8 +3,10 @@ import 'package:equatable/equatable.dart';
 class PartnerDetailsModel extends Equatable {
   final int? partnerFromAge;
   final int? partnerToAge;
-  final int? partnerHeight;
-  final int? partnerWeight;
+  final String? partnerFromHeight;
+  final String? partnerToHeight;
+  final int? partnerFromWeight;
+  final int? partnerToWeight;
   final String? partnerMaritalStatus;
   final String? partnerMotherTongue;
   final String? partnerPhysicalStatus;
@@ -42,8 +44,10 @@ class PartnerDetailsModel extends Equatable {
   const PartnerDetailsModel({
     this.partnerFromAge,
     this.partnerToAge,
-    this.partnerHeight,
-    this.partnerWeight,
+    this.partnerFromHeight,
+    this.partnerToHeight,
+    this.partnerFromWeight,
+    this.partnerToWeight,
     this.partnerMaritalStatus,
     this.partnerMotherTongue,
     this.partnerPhysicalStatus,
@@ -85,8 +89,10 @@ class PartnerDetailsModel extends Equatable {
     return PartnerDetailsModel(
       partnerFromAge: partnerPreference['fromAge'],
       partnerToAge: partnerPreference['toAge'],
-      partnerHeight: partnerPreference['hight'],
-      partnerWeight: partnerPreference['weight'],
+      partnerFromHeight: partnerPreference['fromHeight'],
+      partnerToHeight: partnerPreference['toHeight'],
+      partnerFromWeight: partnerPreference['fromWeight'],
+      partnerToWeight: partnerPreference['toWeight'],
       partnerMaritalStatus: partnerPreference['maritalStatus'],
       partnerMotherTongue: partnerPreference['motherTongue'],
       partnerPhysicalStatus: partnerPreference['physicalStatus'],
@@ -128,8 +134,10 @@ class PartnerDetailsModel extends Equatable {
     return {
       'fromAge': partnerFromAge,
       'toAge': partnerToAge,
-      'hight': partnerHeight,
-      'weight': partnerWeight,
+      'fromHeight': partnerFromHeight,
+      'toHeight': partnerToHeight,
+      'fromWeight': partnerFromWeight,
+      'toWeight': partnerToWeight,
       'maritalStatus': partnerMaritalStatus,
       'motherTongue': partnerMotherTongue,
       'physicalStatus': partnerPhysicalStatus,
@@ -170,8 +178,10 @@ class PartnerDetailsModel extends Equatable {
   PartnerDetailsModel copyWith({
     int? partnerFromAge,
     int? partnerToAge,
-    int? partnerHeight,
-    int? partnerWeight,
+    String? partnerFromHeight,
+    String? partnerToHeight,
+    int? partnerFromWeight,
+    int? partnerToWeight,
     String? partnerMaritalStatus,
     String? partnerMotherTongue,
     String? partnerPhysicalStatus,
@@ -209,8 +219,10 @@ class PartnerDetailsModel extends Equatable {
     return PartnerDetailsModel(
       partnerFromAge: partnerFromAge ?? this.partnerFromAge,
       partnerToAge: partnerToAge ?? this.partnerToAge,
-      partnerHeight: partnerHeight ?? this.partnerHeight,
-      partnerWeight: partnerWeight ?? this.partnerWeight,
+      partnerToWeight: partnerToWeight ?? this.partnerToWeight,
+      partnerFromWeight: partnerFromWeight ?? this.partnerFromWeight,
+      partnerFromHeight: partnerFromHeight ?? this.partnerFromHeight,
+      partnerToHeight: partnerToHeight ?? this.partnerToHeight,
       partnerMaritalStatus: partnerMaritalStatus ?? this.partnerMaritalStatus,
       partnerMotherTongue: partnerMotherTongue ?? this.partnerMotherTongue,
       partnerPhysicalStatus:
@@ -255,8 +267,10 @@ class PartnerDetailsModel extends Equatable {
   List<Object?> get props => [
         partnerFromAge,
         partnerToAge,
-        partnerHeight,
-        partnerWeight,
+        partnerToHeight,
+        partnerFromHeight,
+        partnerFromWeight,
+        partnerToWeight,
         partnerMaritalStatus,
         partnerMotherTongue,
         partnerPhysicalStatus,

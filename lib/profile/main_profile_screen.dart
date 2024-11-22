@@ -26,6 +26,7 @@ class ProfileMainScreen extends ConsumerStatefulWidget {
 class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
   @override
   Widget build(BuildContext context) {
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Drawer(
       child: Column(
         children: [
@@ -33,7 +34,10 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
             height: 10,
           ),
           _buildProfileHeader(),
-          _buildUpgradeCard(),
+          if (getImageApiProviderState.data != null &&
+              !getImageApiProviderState.data!.paymentStatus) ...[
+            _buildUpgradeCard(),
+          ],
           Expanded(
             child: ListView(
               children: _buildMenuItems(context),

@@ -331,62 +331,6 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildDrinkingHabitsSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Your Drinking Habit',
-            options: ProfileOptions.drinkingHabits,
-            selectedValue: editPartnerPreferenceProviderState.drinkingHabits,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateDrinkingHabits(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'Drinking Habits',
-        editPartnerPreferenceProviderState.drinkingHabits,
-      ),
-    );
-  }
-
-  Widget _buildSmokingHabitsSelection(
-    BuildContext context,
-    WidgetRef ref,
-    ProfileState profileState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Your Smoking Habit',
-            options: ProfileOptions.smokingHabits,
-            selectedValue: profileState.smokingHabits,
-            onSelect: (value) {
-              ref
-                  .read(profileProvider.notifier)
-                  .updateSmokingHabitsStatus(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'Smoking Habits',
-        profileState.smokingHabits,
-      ),
-    );
-  }
-
   Widget _buildSaveButton(
     BuildContext context,
     WidgetRef ref,

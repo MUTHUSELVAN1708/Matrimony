@@ -464,7 +464,7 @@ class _PartnerPreferenceBasicDetailScreenState
       },
       child: _buildListTile(
         'Smoking Habits',
-        profileState.smokingHabits,
+        profileState.smokingHabits ?? '',
       ),
     );
   }

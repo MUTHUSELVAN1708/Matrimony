@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/widgets/upload_photo.dart';
 
 import '../common/colors.dart';
@@ -10,20 +12,32 @@ import '../edit/profile/profile_location_edit.dart';
 import '../edit/profile/religious_details_screen.dart';
 import '../helper/nav_helper.dart';
 
-class EditProfileScreen extends StatefulWidget {
+class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  ConsumerState<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   bool _showProfileElements = true;
 
   void _updateProfileElementsVisibility(bool show) {
     setState(() {
       _showProfileElements = show;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    await Future.delayed(Duration.zero);
+    ref.read(userManagementProvider.notifier).getUserDetails();
   }
 
   @override
@@ -34,7 +48,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image with fade effect
           Container(
             height: double.infinity,
             margin: EdgeInsets.only(bottom: heightQuery * 0.2),
@@ -88,7 +101,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       clipBehavior: Clip.none,
                       children: [
                         if (_showProfileElements)
-                          // Profile Image and Title
                           Positioned(
                             top: -(widthQuery * 0.17),
                             left: 0,
@@ -219,7 +231,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               NavigationHelper.slideNavigateTo(
                 context: context,
                 screen: EditContactScreen(onPop: (value) {
-                  if (value as bool) {
+                  if (value) {
                     _updateProfileElementsVisibility(true);
                   }
                 }),

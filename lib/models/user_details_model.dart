@@ -57,6 +57,7 @@ class UserDetails extends Equatable {
   final String? division;
   final String? star;
   final String? raasi;
+  final bool? willingToMarryFromOtherCommunities;
   final List<String>? images;
 
   const UserDetails({
@@ -116,6 +117,7 @@ class UserDetails extends Equatable {
     this.division,
     this.star,
     this.raasi,
+    this.willingToMarryFromOtherCommunities,
     this.images,
   });
 
@@ -176,6 +178,7 @@ class UserDetails extends Equatable {
     String? division,
     String? star,
     String? raasi,
+    bool? willingToMarryFromOtherCommunities,
     List<String>? images,
   }) {
     return UserDetails(
@@ -235,84 +238,150 @@ class UserDetails extends Equatable {
       division: division ?? this.division,
       star: star ?? this.star,
       raasi: raasi ?? this.raasi,
+      willingToMarryFromOtherCommunities: willingToMarryFromOtherCommunities ??
+          this.willingToMarryFromOtherCommunities,
       images: images ?? this.images,
     );
   }
 
   factory UserDetails.fromJson(Map<String, dynamic> json) {
-    final registrationDetails = json['registrationDetails'] ?? {};
-    final additionalInformation = json['additionalInformation'] ?? {};
-    final locationInformation = json['locationInformation'] ?? {};
-    final personalDetails = json['personalDetails'] ?? {};
-    final religiousInformation = json['religiousInformation'] ?? {};
-    final professionalInformation = json['professionalInformation'] ?? {};
-    final photo = json['photo'] ?? {};
-    final govtIdProof = json['govtIdProof'] ?? {};
+    try {
+      final registrationDetails = json['registrationDetails'] ?? {};
+      final additionalInformation = json['additionalInformation'] ?? {};
+      final locationInformation = json['locationInformation'] ?? {};
+      final personalDetails = json['personalDetails'] ?? {};
+      final religiousInformation = json['religiousInformation'] ?? {};
+      final professionalInformation = json['professionalInformation'] ?? {};
+      final photo = json['photo'] ?? {};
+      final govtIdProof = json['govtIdProof'] ?? {};
 
-    return UserDetails(
-      id: registrationDetails['id'],
-      userId: registrationDetails['userId'],
-      profileFor: registrationDetails['profileFor'],
-      name: registrationDetails['name'],
-      email: registrationDetails['email'],
-      phoneNumber: registrationDetails['phoneNumber'],
-      role: registrationDetails['role'],
-      uniqueId: registrationDetails['uniqueId'],
-      amount: (registrationDetails['amount'] as num?)?.toDouble(),
-      password: registrationDetails['password'],
-      typeOfUser: registrationDetails['typeOfUser'],
-      otp: registrationDetails['otp'],
-      createdAt: registrationDetails['createdAt'] != null
-          ? DateTime.parse(registrationDetails['createdAt'])
-          : null,
-      paymentStatus: registrationDetails['paymentStatus'],
-      paymentMethod: registrationDetails['paymentMethod'],
-      whomToContact: registrationDetails['whomToContact'],
-      contactPersonName: registrationDetails['contactPersonName'],
-      availableTimeToCall: registrationDetails['availableTimeToCall'],
-      comments: registrationDetails['comments'],
-      familyStatus: additionalInformation['familyStatus'],
-      aboutYourSelf: additionalInformation['aboutYourSelf'],
-      govtIdProof: govtIdProof['govtIdProof'],
-      idImage: govtIdProof['idImage'],
-      country: locationInformation['country'],
-      state: locationInformation['state'],
-      pincode: locationInformation['pincode'],
-      city: locationInformation['city'],
-      flatNumber: locationInformation['flatNumber'],
-      address: locationInformation['address'],
-      ownHouse: locationInformation['ownHouse'],
-      currentLocation: locationInformation['currentLocation'],
-      gender: personalDetails['gender'],
-      dateOfBirth: personalDetails['dateOfBirth'],
-      age: personalDetails['age'],
-      height: personalDetails['height'],
-      weight: personalDetails['weight'],
-      physicalStatus: personalDetails['physicalStatus'],
-      maritalStatus: personalDetails['maritalStatus'],
-      noOfChildren: personalDetails['noOfChildren'],
-      skinTone: personalDetails['skinTone'],
-      eatingHabits: personalDetails['eatingHabits'] ??
-          religiousInformation['eatingHabits'],
-      drinkingHabits: personalDetails['drinkingHabits'] ??
-          religiousInformation['drinkingHabits'],
-      smokingHabits: personalDetails['smokingHabits'] ??
-          religiousInformation['smokingHabits'],
-      education: professionalInformation['education'],
-      employedType: professionalInformation['employedType'],
-      occupation: professionalInformation['occupation'],
-      annualIncomeCurrency: professionalInformation['annualIncomeCurrency'],
-      annualIncome: professionalInformation['annualIncome'],
-      citizenShip: professionalInformation['citizenShip'],
-      motherTongue: religiousInformation['motherTongue'],
-      religion: religiousInformation['religion'],
-      caste: religiousInformation['caste'],
-      subcaste: religiousInformation['subcaste'],
-      division: religiousInformation['division'],
-      star: religiousInformation['star'],
-      raasi: religiousInformation['raasi'],
-      images: (photo['images'] as List?)?.whereType<String>().toList() ?? [],
-    );
+      return UserDetails(
+        id: registrationDetails['id'],
+        userId: registrationDetails['userId'],
+        profileFor: registrationDetails['profileFor'],
+        name: registrationDetails['name'],
+        email: registrationDetails['email'],
+        phoneNumber: registrationDetails['phoneNumber'],
+        role: registrationDetails['role'],
+        uniqueId: registrationDetails['uniqueId'],
+        amount: (registrationDetails['amount'] as num?)?.toDouble(),
+        password: registrationDetails['password'],
+        typeOfUser: registrationDetails['typeOfUser'],
+        otp: registrationDetails['otp'],
+        createdAt: registrationDetails['createdAt'] != null
+            ? DateTime.parse(registrationDetails['createdAt'])
+            : null,
+        paymentStatus: registrationDetails['paymentStatus'],
+        paymentMethod: registrationDetails['paymentMethod'],
+        whomToContact: registrationDetails['whomToContact'],
+        contactPersonName: registrationDetails['contactPersonName'],
+        availableTimeToCall: registrationDetails['availableTimeToCall'],
+        comments: registrationDetails['comments'],
+        familyStatus: additionalInformation['familyStatus'],
+        aboutYourSelf: additionalInformation['aboutYourSelf'],
+        govtIdProof: govtIdProof['govtIdProof'],
+        idImage: govtIdProof['idImage'],
+        country: locationInformation['country'],
+        state: locationInformation['state'],
+        pincode: locationInformation['pincode'],
+        city: locationInformation['city'],
+        flatNumber: locationInformation['flatNumber'],
+        address: locationInformation['address'],
+        ownHouse: locationInformation['ownHouse'],
+        currentLocation: locationInformation['currentLocation'],
+        gender: personalDetails['gender'],
+        dateOfBirth: personalDetails['dateOfBirth'],
+        age: personalDetails['age'],
+        height: personalDetails['height'],
+        weight: personalDetails['weight'],
+        physicalStatus: personalDetails['physicalStatus'],
+        maritalStatus: personalDetails['maritalStatus'],
+        noOfChildren: personalDetails['noOfChildren'],
+        skinTone: personalDetails['skinTone'],
+        eatingHabits: personalDetails['eatingHabits'],
+        drinkingHabits: personalDetails['drinkingHabits'],
+        smokingHabits: personalDetails['smokingHabits'],
+        education: professionalInformation['education'],
+        employedType: professionalInformation['employedType'],
+        occupation: professionalInformation['occupation'],
+        annualIncomeCurrency: professionalInformation['annualIncomeCurrency'],
+        annualIncome: professionalInformation['annualIncome'],
+        citizenShip: professionalInformation['citizenShip'],
+        motherTongue: religiousInformation['motherTongue'],
+        religion: religiousInformation['religion'],
+        caste: religiousInformation['caste'],
+        subcaste: religiousInformation['subcaste'],
+        division: religiousInformation['division'],
+        star: religiousInformation['star'],
+        raasi: religiousInformation['raasi'],
+        willingToMarryFromOtherCommunities:
+            religiousInformation['willingToMarryFromOtherCommunities'],
+        images: (photo['images'] as List?)?.whereType<String>().toList() ?? [],
+      );
+    } catch (e, stackTrace) {
+      print('Error parsing UserDetails: $e');
+      print(stackTrace);
+      return const UserDetails(
+        id: null,
+        userId: null,
+        profileFor: null,
+        name: null,
+        email: null,
+        phoneNumber: null,
+        role: null,
+        uniqueId: null,
+        amount: null,
+        password: null,
+        typeOfUser: null,
+        otp: null,
+        createdAt: null,
+        paymentStatus: null,
+        paymentMethod: null,
+        whomToContact: null,
+        contactPersonName: null,
+        availableTimeToCall: null,
+        comments: null,
+        familyStatus: null,
+        aboutYourSelf: null,
+        govtIdProof: null,
+        idImage: null,
+        country: null,
+        state: null,
+        pincode: null,
+        city: null,
+        flatNumber: null,
+        address: null,
+        ownHouse: null,
+        currentLocation: null,
+        gender: null,
+        dateOfBirth: null,
+        age: null,
+        height: null,
+        weight: null,
+        physicalStatus: null,
+        maritalStatus: null,
+        noOfChildren: null,
+        skinTone: null,
+        eatingHabits: null,
+        drinkingHabits: null,
+        smokingHabits: null,
+        education: null,
+        employedType: null,
+        occupation: null,
+        annualIncomeCurrency: null,
+        annualIncome: null,
+        citizenShip: null,
+        motherTongue: null,
+        religion: null,
+        caste: null,
+        subcaste: null,
+        division: null,
+        star: null,
+        raasi: null,
+        willingToMarryFromOtherCommunities: null,
+        images: [],
+      );
+    }
   }
 
   Map<String, dynamic> toJson() {
