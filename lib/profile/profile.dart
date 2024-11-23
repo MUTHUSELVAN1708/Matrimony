@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:matrimony/edit/profile/partner_family_details.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/widgets/upload_photo.dart';
@@ -413,13 +414,27 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,
-              screen: LocationDetailsScreen(onPop: (value) {
-                if (value == 'true') {
-                  _updateProfileElementsVisibility(true);
-                }
-              }),
+              screen: LocationDetailsScreen(
+                  //     onPop: (value) {
+                  //   if (value == 'true') {
+                  //     _updateProfileElementsVisibility(true);
+                  //   }
+                  // }
+                  ),
             );
-          } else {}
+          } else {
+            _updateProfileElementsVisibility(false);
+            NavigationHelper.slideNavigateTo(
+              context: context,
+              screen: UpdateFamilyDetail(
+                  //     onPop: (value) {
+                  //   if (value == 'true') {
+                  //     _updateProfileElementsVisibility(true);
+                  //   }
+                  // }
+                  ),
+            );
+          }
         },
       ),
     );

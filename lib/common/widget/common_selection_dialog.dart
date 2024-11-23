@@ -7,14 +7,15 @@ class CommonSelectionDialog extends ConsumerStatefulWidget {
   final List<String> options;
   final String? selectedValue; // Nullable type
   final Function(String) onSelect;
+  final bool removeSearching;
 
-  const CommonSelectionDialog({
-    super.key,
-    required this.title,
-    required this.options,
-    this.selectedValue,
-    required this.onSelect,
-  });
+  CommonSelectionDialog(
+      {super.key,
+      required this.title,
+      required this.options,
+      this.selectedValue,
+      required this.onSelect,
+      this.removeSearching = false});
 
   @override
   ConsumerState<CommonSelectionDialog> createState() =>
@@ -76,33 +77,36 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: searchController,
-                    onChanged: filterOptions,
-                    decoration: InputDecoration(
-                      hintText: 'Search...',
-                      hintStyle: TextStyle(color: Colors.grey[400]),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
-                      filled: true,
-                      fillColor: Colors.grey[50],
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[200]!),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[200]!),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.red[100]!),
-                      ),
-                    ),
-                  ),
+                  widget.removeSearching
+                      ? const SizedBox()
+                      : TextField(
+                          controller: searchController,
+                          onChanged: filterOptions,
+                          decoration: InputDecoration(
+                            hintText: 'Search...',
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            prefixIcon:
+                                Icon(Icons.search, color: Colors.grey[400]),
+                            filled: true,
+                            fillColor: Colors.grey[50],
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey[200]!),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey[200]!),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.red[100]!),
+                            ),
+                          ),
+                        ),
                 ],
               ),
             ),
