@@ -14,7 +14,7 @@ class PhoneNumberField extends ConsumerStatefulWidget {
 
 class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
   FocusNode phoneNo = FocusNode();
-  String countryCode = '+91';
+  String countryCode = '91';
   String countryFlag = '🇮🇳';
 
   @override
@@ -50,8 +50,10 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
               showCountryPicker(
                 context: context,
                 onSelect: (Country country) {
+                  ref.read(logApiProvider.notifier).updatePhoneNo(
+                      '+${country.phoneCode}${widget.phoneNoController.text}');
                   setState(() {
-                    countryCode = '+${country.phoneCode}';
+                    countryCode = country.phoneCode;
                     countryFlag = country.flagEmoji;
                   });
                 },
@@ -67,7 +69,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    countryCode,
+                    '+$countryCode',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey.withOpacity(0.5),
@@ -93,7 +95,7 @@ class _PhoneNumberFieldState extends ConsumerState<PhoneNumberField> {
               focusNode: phoneNo,
               onChanged: (value) {
                 ref.read(logApiProvider.notifier).updatePhoneNo(
-                    '$countryCode${widget.phoneNoController.text}');
+                    '+$countryCode${widget.phoneNoController.text}');
               },
               keyboardType: TextInputType.phone,
               inputFormatters: [

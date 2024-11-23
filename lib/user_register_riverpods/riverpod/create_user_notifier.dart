@@ -55,7 +55,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
       print('Ithan response');
       print(response);
       if (response != null && response['errorMessage'] == '') {
-        await _saveUserData(response['userId']);
+        // await _saveUserData(response['userId']);
         state = RegisterState(
             isLoading: false, error: null, success: 'Registration successful.');
         return 'Success';
@@ -72,7 +72,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     }
   }
 
-  Future<bool> otpVerification() async {
+  Future<bool> otpRegisterVerification() async {
     state = RegisterState(isLoading: true, error: null, success: null);
 
     if (otp == null || phoneNo == null) {
@@ -82,8 +82,39 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     }
 
     try {
-      final response = await _service.otpVerificationApi(otp!, phoneNo!);
+      final response =
+          await _service.otpRegisterVerificationApi(otp!, phoneNo!);
       if (!response) {
+        return false;
+      }
+      state = RegisterState(
+          isLoading: false,
+          error: null,
+          success: 'OTP verification successful.');
+      return true;
+    } catch (e) {
+      state =
+          RegisterState(isLoading: false, error: e.toString(), success: null);
+      return false;
+    }
+  }
+
+  Future<bool> otpLoginVerification(String phoneNumber) async {
+    state = RegisterState(isLoading: true, error: null, success: null);
+
+    if (otp == null || phoneNumber == '') {
+      state = RegisterState(
+          isLoading: false, error: 'Please fill all fields.', success: null);
+      return false;
+    }
+
+    try {
+      print(phoneNumber);
+      final response =
+          await _service.otpLoginVerificationApi(otp!, phoneNumber);
+      if (!response) {
+        state = RegisterState(
+            isLoading: false, error: 'Invalid OTP.', success: null);
         return false;
       }
       state = RegisterState(

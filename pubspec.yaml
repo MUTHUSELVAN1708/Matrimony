@@ -48,8 +48,9 @@ dependencies:
   country_picker: ^2.0.25
   skeletonizer:
   url_launcher:
-  geolocator: ^13.0.2
-  geocoding: ^3.0.0
+  geolocator:
+  geocoding:
+  intl:
 
 dev_dependencies:
   flutter_test:

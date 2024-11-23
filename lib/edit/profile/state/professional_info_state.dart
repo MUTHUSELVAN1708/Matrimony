@@ -7,16 +7,18 @@ class ProfessionalInfoState {
   final String? organization;
   final String? currencyType;
   final String? annualIncome;
+  final bool isLoading;
 
   ProfessionalInfoState({
     this.education,
     this.college,
     this.employedIn,
     this.occupation,
-    this.citizenship = 'India',
+    this.citizenship,
     this.organization,
-    this.currencyType = 'RS.',
+    this.currencyType,
     this.annualIncome,
+    this.isLoading = false,
   });
 
   ProfessionalInfoState copyWith({
@@ -28,6 +30,7 @@ class ProfessionalInfoState {
     String? organization,
     String? currencyType,
     String? annualIncome,
+    bool? isLoading,
   }) {
     return ProfessionalInfoState(
       education: education ?? this.education,
@@ -38,6 +41,7 @@ class ProfessionalInfoState {
       organization: organization ?? this.organization,
       currencyType: currencyType ?? this.currencyType,
       annualIncome: annualIncome ?? this.annualIncome,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/edit/profile/notifier/profile_notifier.dart';
 import 'package:matrimony/edit/profile/providers/professional_info_provider.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
 import '../../common/widget/custom_snackbar.dart';
@@ -8,7 +10,7 @@ import '../../common/widget/custom_text_field.dart';
 import 'data/professional_info_options.dart';
 import 'state/professional_info_state.dart';
 
-class ProfessionalInformationDetailsScreen extends ConsumerWidget {
+class ProfessionalInformationDetailsScreen extends ConsumerStatefulWidget {
   final Function(String? value) onPop;
 
   const ProfessionalInformationDetailsScreen({
@@ -17,7 +19,28 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfessionalInformationDetailsScreen> createState() =>
+      _ProfessionalInformationDetailsScreenState();
+}
+
+class _ProfessionalInformationDetailsScreenState
+    extends ConsumerState<ProfessionalInformationDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    await Future.delayed(Duration.zero);
+    ref.read(professionalInfoProvider.notifier).disposeState();
+    ref
+        .read(professionalInfoProvider.notifier)
+        .setProfessionalDetails(ref.read(userManagementProvider).userDetails);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final professionalInfoState = ref.watch(professionalInfoProvider);
     final heightQuery = MediaQuery.of(context).size.height;
 
@@ -40,7 +63,7 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () {
-              onPop('true');
+              widget.onPop('true');
               Navigator.pop(context);
             },
             child: const Icon(
@@ -341,7 +364,7 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
           if (ref.read(professionalInfoProvider.notifier).validateForm()) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              onPop('true');
+              widget.onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,
@@ -352,7 +375,7 @@ class ProfessionalInformationDetailsScreen extends ConsumerWidget {
           } else {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              onPop('true');
+              widget.onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,

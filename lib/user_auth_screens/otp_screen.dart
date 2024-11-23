@@ -1,20 +1,29 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/show_toastdialog.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_personal_details_screen.dart';
 
+import 'login_screens/reverpod/login_password_notifier.dart';
+
 class OtpScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
   final bool isUserLogin;
+  final String? mobile;
 
   const OtpScreen(
-      {super.key, required this.phoneNumber, required this.isUserLogin});
+      {super.key,
+      required this.phoneNumber,
+      required this.isUserLogin,
+      this.mobile});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -23,6 +32,71 @@ class OtpScreen extends ConsumerStatefulWidget {
 class _OtpScreenState extends ConsumerState<OtpScreen> {
   final List<String> _otpDigits = List.filled(4, '');
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
+  int _secondsRemaining = 60;
+  bool _isResendEnabled = false;
+  bool _isResending = false;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startResendCountdown();
+  }
+
+  void _startResendCountdown() {
+    _secondsRemaining = 60;
+    _isResendEnabled = false;
+    _isResending = false;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _secondsRemaining--;
+        if (_secondsRemaining <= 0) {
+          _timer?.cancel();
+          _isResendEnabled = true;
+        }
+      });
+    });
+  }
+
+  Future<void> _resendOtp() async {
+    setState(() {
+      _isResendEnabled = false;
+      _isResending = true;
+    });
+    final result = widget.isUserLogin
+        ? await ref
+            .read(logApiProvider.notifier)
+            .otpWithLogin(widget.phoneNumber, widget.mobile ?? '')
+        : await ref.read(registerProvider.notifier).register();
+
+    if (result == 'Success') {
+      CustomSnackBar.show(
+        context: context,
+        message: 'OTP Resent Successfully',
+        isError: false,
+      );
+      _startResendCountdown();
+    } else {
+      setState(() {
+        _isResendEnabled = true;
+        _isResending = false;
+      });
+      CustomSnackBar.show(
+        context: context,
+        message: 'Failed to resend OTP. Please try again.',
+        isError: true,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +104,16 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-          leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.red,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              })),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.red,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 30),
@@ -143,17 +219,25 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // SizedBox(
-                //   height: 45,
-                //   child: ElevatedButton(
-                //     style: AppTextStyles.secondaryButtonstyle,
-                //     onPressed: () {},
-                //     child: const Text(
-                //       'Resend Again',
-                //       style: AppTextStyles.secondaryButton,
-                //     ),
-                //   ),
-                // ),
+                SizedBox(
+                  height: 45,
+                  child: ElevatedButton(
+                    style: AppTextStyles.secondaryButtonstyle,
+                    onPressed: _isResendEnabled
+                        ? () {
+                            _resendOtp();
+                          }
+                        : null,
+                    child: Text(
+                      _isResendEnabled
+                          ? 'Resend OTP'
+                          : _isResending
+                              ? 'Resending OTP...'
+                              : 'Resend in $_secondsRemaining seconds',
+                      style: AppTextStyles.secondaryButton,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 40),
                 SizedBox(
                   height: 50,
@@ -167,11 +251,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                         print('Verifying OTP: $otp');
                         registerState.otp = otp;
                         registerState.phoneNo = widget.phoneNumber;
-                        bool success = await ref
-                            .read(registerProvider.notifier)
-                            .otpVerification();
-                        if (success) {
-                          if (widget.isUserLogin) {
+                        if (widget.isUserLogin) {
+                          bool success = await ref
+                              .read(registerProvider.notifier)
+                              .otpLoginVerification(widget.phoneNumber);
+                          if (success) {
                             CustomSnackBar.show(
                               context: context,
                               message: 'Logged In Successfully',
@@ -189,6 +273,17 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                           } else {
                             CustomSnackBar.show(
                               context: context,
+                              message: 'Invalid OTP. Please try again.',
+                              isError: true,
+                            );
+                          }
+                        } else {
+                          bool success = await ref
+                              .read(registerProvider.notifier)
+                              .otpRegisterVerification();
+                          if (success) {
+                            CustomSnackBar.show(
+                              context: context,
                               message: 'OTP Verified Successfully.',
                               isError: false,
                             );
@@ -199,21 +294,25 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                       const RegisterUserPersonalDetailsScreen()),
                               (route) => false,
                             );
+                          } else {
+                            CustomSnackBar.show(
+                              context: context,
+                              message: 'Invalid OTP. Please try again.',
+                              isError: true,
+                            );
                           }
-                        } else {
-                          CustomSnackBar.show(
-                            context: context,
-                            message: 'Invalid OTP. Please try again.',
-                            isError: true,
-                          );
                         }
                       }
                     },
                     style: AppTextStyles.primaryButtonstyle,
-                    child: const Text(
-                      'Verify',
-                      style: AppTextStyles.primarybuttonText,
-                    ),
+                    child: registerProviderState.isLoading
+                        ? const Center(
+                            child: LoadingIndicator(),
+                          )
+                        : const Text(
+                            'Verify',
+                            style: AppTextStyles.primarybuttonText,
+                          ),
                   ),
                 ),
               ],
@@ -222,13 +321,5 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
-    super.dispose();
   }
 }

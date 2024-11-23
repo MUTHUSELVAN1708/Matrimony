@@ -11,6 +11,7 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+import 'package:matrimony/models/user_partner_data.dart';
 import 'package:matrimony/profile/main_profile_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
@@ -138,6 +139,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   children: [
                     Container(
                       height: 70,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(10),
@@ -444,24 +446,33 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                             itemBuilder: (context, index) {
                               final matching = matingData.allMatchList![index];
                               return GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   final getImageApiProviderState =
                                       ref.watch(getImageApiProvider);
-                                  if (getImageApiProviderState.data != null &&
-                                      getImageApiProviderState
-                                          .data!.paymentStatus) {
+                                  final partnerDetails = await ref
+                                      .read(userManagementProvider.notifier)
+                                      .getPartnerDetails(matching.id ?? 0);
+                                  // if (getImageApiProviderState.data != null &&
+                                  //     getImageApiProviderState
+                                  //         .data!.paymentStatus) {
+                                  if (mounted) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const AllMatchesDetailsScreen()));
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const PlanUpgradeScreen()));
+                                                AllMatchesDetailsScreen(
+                                                  userPartnerData:
+                                                      partnerDetails ??
+                                                          UserPartnerData(),
+                                                )));
                                   }
+                                  // } else {
+                                  //   Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //           builder: (context) =>
+                                  //               const PlanUpgradeScreen()));
+                                  // }
                                 },
                                 child: Container(
                                   width: 100,

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/models/user_details_model.dart';
 import '../state/professional_info_state.dart';
 
 class ProfessionalInfoNotifier extends StateNotifier<ProfessionalInfoState> {
@@ -35,6 +36,18 @@ class ProfessionalInfoNotifier extends StateNotifier<ProfessionalInfoState> {
   void updateAnnualIncome(String value) {
     state = state.copyWith(annualIncome: value);
   }
+
+  void setProfessionalDetails(UserDetails userDetails) {
+    state = state.copyWith(
+        education: userDetails.education,
+        annualIncome: userDetails.annualIncome,
+        citizenship: userDetails.citizenShip,
+        currencyType: userDetails.annualIncomeCurrency,
+        employedIn: userDetails.employedType,
+        occupation: userDetails.occupation);
+  }
+
+  void disposeState() => state = ProfessionalInfoState();
 
   bool validateForm() {
     return state.education != null &&

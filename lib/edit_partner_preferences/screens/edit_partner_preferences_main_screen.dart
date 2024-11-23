@@ -29,6 +29,7 @@ class _EditPartnerPreferencesMainScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           'Partner Preferences',
@@ -52,23 +53,33 @@ class _EditPartnerPreferencesMainScreenState
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichText(
-              text: const TextSpan(
-                text:
-                    'Matches Are Recommended To You Based On Your Preferences And Profile Information. To See Matches Exactly Based On Your Preferences, Turn On ',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
-                ),
-                children: [
-                  TextSpan(
-                    text: '\'Compulsory\'',
-                    style: TextStyle(
-                      color: AppColors.primaryButtonColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+            Align(
+              alignment: Alignment.center,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: const TextSpan(
+                  style: TextStyle(
+                    fontSize: 12,
+                    height: 1.5,
                   ),
-                ],
+                  children: [
+                    TextSpan(
+                      text:
+                          'Matches Are Recommended To You Based On Your Preferences And Profile Information. To See Matches Exactly Based On Your Preferences, Turn On ',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '\'Compulsory\'',
+                      style: TextStyle(
+                        color: AppColors.primaryButtonColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),

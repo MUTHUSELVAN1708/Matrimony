@@ -196,10 +196,10 @@ class CustomTextFieldWidget extends StatelessWidget {
         // ),
         decoration: InputDecoration(
           hintText: hintText,
-          filled: filled,
-          fillColor: fillColor ?? Colors.white,
+          filled: true,
+          fillColor: fillColor ?? Colors.grey.withOpacity(0.05),
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+              const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
           hintStyle: const TextStyle(color: Colors.grey),
           prefixIcon: _getDefaultPrefixIcon(),
           enabledBorder: OutlineInputBorder(

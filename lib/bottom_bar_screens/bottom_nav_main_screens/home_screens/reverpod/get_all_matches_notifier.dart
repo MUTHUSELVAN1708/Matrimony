@@ -16,7 +16,7 @@ class Matches extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'userId': id,
       'name': name,
       'age': age,
       'photos': photos,
@@ -25,7 +25,7 @@ class Matches extends Equatable {
 
   factory Matches.fromJson(Map<String, dynamic> json) {
     return Matches(
-      id: json['id'] as int?,
+      id: json['userId'] as int?,
       name: json['name'] as String?,
       age: json['age'] as int?,
       photos: (json['photos'] as List<dynamic>?)

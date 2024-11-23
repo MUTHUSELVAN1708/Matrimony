@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/show_toastdialog.dart';
 import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
 import 'package:matrimony/user_auth_screens/login_screens/loginscreen_phoneNo_field.dart';
@@ -101,21 +102,27 @@ class _LoginScreenState extends ConsumerState<LoginScreenWithOtp> {
                         final mobileNo = ref.read(logApiProvider).mobileNo;
                         if (phoneNoController.text.isNotEmpty &&
                             mobileNo != null) {
-                          final logUserModel = await ref
+                          final success = await ref
                               .read(logApiProvider.notifier)
                               .otpWithLogin(mobileNo, phoneNoController.text);
-                          if (logUserModel.token != '') {
+                          if (success == 'Success') {
+                            CustomSnackBar.show(
+                                context: context,
+                                message: 'OTP sent Sucessfully.',
+                                isError: false);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => OtpScreen(
-                                        phoneNumber: logUserModel.phoneNumber,
-                                        isUserLogin: true)));
+                                          phoneNumber: mobileNo,
+                                          isUserLogin: true,
+                                          mobile: phoneNoController.text,
+                                        )));
                           } else {
-                            ToastDialog(
-                              isSuccess: false,
-                              message: loginState.error.toString(),
-                            );
+                            CustomSnackBar.show(
+                                context: context,
+                                message: success,
+                                isError: true);
                           }
                         }
                       }
