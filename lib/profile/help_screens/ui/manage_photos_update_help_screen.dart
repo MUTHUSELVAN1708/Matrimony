@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/colors.dart';
 
 class ManagePhotosUpdateScreen extends StatelessWidget {
   const ManagePhotosUpdateScreen({Key? key}) : super(key: key);
@@ -9,21 +11,19 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        centerTitle: true,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.red,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: const Text(
           'My Profile And Photos',
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+          style: AppTextStyles.headingTextstyle,
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.headingTextColor,
           ),
+          color: Colors.red,
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
@@ -111,19 +111,10 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
+                      style: AppTextStyles.primaryButtonstyle,
                       child: const Text(
                         'Manage Photos',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: AppTextStyles.primarybuttonText,
                       ),
                     ),
                   ),
@@ -133,75 +124,62 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
 
             // Related Questions Section
             Container(
-              margin: const EdgeInsets.only(top: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+              padding: const EdgeInsets.all(16.0),
+              decoration: const BoxDecoration(
+                color: Color(0XffF2F2F2),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Related Questions',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyles.spanTextStyle.copyWith(
+                        color: AppColors.black, fontWeight: FontWeight.w500),
                   ),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('I Want To Edit My Profile'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {},
+                  SizedBox(height: 16),
+                  _buildListTile('I Want To Edit My Profile'),
+                  _buildListTile('I Want To Update My Contact Details'),
+                  SizedBox(height: 16),
+                  Text(
+                    "Still Can't Find What You're Looking For? Don't Worry We're Here To Help",
+                    style: AppTextStyles.spanTextStyle.copyWith(
+                        fontWeight: FontWeight.w500, color: AppColors.black),
                   ),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('I Want To Update My Contact Details'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Still Can\'t Find What You\'re Looking For? Don\'t Worry We\'re Here To Help',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.phone, color: Colors.red),
+                          onPressed: () {
+                            // Add call functionality
+                          },
+                          icon: Icon(Icons.phone, color: Colors.red),
                           label: const Text(
                             'Call Us',
                             style: TextStyle(color: Colors.red),
                           ),
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.red),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                         ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.chat_bubble_outline,
-                              color: Colors.red),
+                          onPressed: () {
+                            // Add chat functionality
+                          },
+                          icon: const Icon(Icons.chat, color: Colors.red),
                           label: const Text(
                             'Chat Now',
                             style: TextStyle(color: Colors.red),
                           ),
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.red),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                         ),
                       ),
@@ -213,6 +191,21 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildListTile(String title) {
+    return ListTile(
+      title: Text(title, style: AppTextStyles.spanTextStyle
+          //     .copyWith(
+          //     color: AppColors.black
+          // ),
+          ),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      contentPadding: EdgeInsets.zero,
+      onTap: () {
+        // Add navigation functionality
+      },
     );
   }
 

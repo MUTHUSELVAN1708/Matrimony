@@ -1,64 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/colors.dart';
 
 class ProfileUpdateHelpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 0,
+        title: const Text(
           'My Profile And Photos',
-          style: TextStyle(
-            color: Colors.red,
-          ),
+          style: AppTextStyles.headingTextstyle,
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.headingTextColor,
+          ),
           color: Colors.red,
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'To Edit/ Update Profile',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyles.spanTextStyle.copyWith(
+                        color: AppColors.black, fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Please Tap On The Button Below To Edit/Update Your Profile',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Please tap on the button below to edit/update your profile',
+                    style: AppTextStyles.spanTextStyle,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      // Add edit profile functionality
-                    },
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.red,
-                      minimumSize: Size(120, 40),
+                      minimumSize: const Size(120, 40),
                     ),
-                    child: Text('Edit Profile'),
+                    child: const Text('Edit Profile'),
                   ),
                 ],
               ),
             ),
           ),
           Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
+            padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(
+              color: Color(0XffF2F2F2),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
@@ -69,10 +71,8 @@ class ProfileUpdateHelpScreen extends StatelessWidget {
               children: [
                 Text(
                   'Related Questions',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                      color: AppColors.black, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 16),
                 _buildListTile('I Want To Edit My Profile'),
@@ -80,7 +80,8 @@ class ProfileUpdateHelpScreen extends StatelessWidget {
                 SizedBox(height: 16),
                 Text(
                   "Still Can't Find What You're Looking For? Don't Worry We're Here To Help",
-                  style: TextStyle(fontSize: 16),
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                      fontWeight: FontWeight.w500, color: AppColors.black),
                 ),
                 SizedBox(height: 16),
                 Row(
@@ -128,8 +129,12 @@ class ProfileUpdateHelpScreen extends StatelessWidget {
 
   Widget _buildListTile(String title) {
     return ListTile(
-      title: Text(title),
-      trailing: Icon(Icons.arrow_forward_ios, size: 16),
+      title: Text(title, style: AppTextStyles.spanTextStyle
+          //     .copyWith(
+          //     color: AppColors.black
+          // ),
+          ),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       contentPadding: EdgeInsets.zero,
       onTap: () {
         // Add navigation functionality

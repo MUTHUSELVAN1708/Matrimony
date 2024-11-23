@@ -62,27 +62,40 @@ class FAQScreen extends StatelessWidget {
                 height: 10,
               ),
               _buildFAQItem(
-                'How do i log in if i forget my password?',
-                [
-                  'If you forgot your login password or want to change it, follow these steps: Access the Forgot Password link. Enter your mobile number or email ID associated with your account. You will receive a SMS & email ID with a link to reset your password. Follow the link to reset your password securely.',
-                ],
-              ),
+                  'How do i log in if i forget my password?',
+                  [
+                    'If you forgot your login password or want to change it, follow these steps:',
+                    'Access the Forgot Password link.',
+                    'Enter your mobile number or email ID associated with your account.',
+                    'You will receive a SMS & email ID with a link to reset your password.',
+                    'Follow the link to reset your password securely.',
+                  ],
+                  heading: true),
               SizedBox(
                 height: 10,
               ),
               _buildFAQItem(
-                'Can i change the mobile number, email address associated with my matrimony account?',
-                [
-                  'Yes, you can change your mobile number or email address. If you are using your account via app, Go to the "Edit contact" section. Select "Edit contact info" tab. Follow the steps provided to edit your email ID, mobile number, or both. If you are using via Web Go to the "Profile settings" -> Privacy -> Mobile Privacy section to change your mobile number. Go to the "Profile settings" -> Edit email address section to change your email address. Please ensure that these details are accurate as they are essential for login and communication.'
-                ],
-              ),
+                  'Can i change the mobile number, email address associated with my matrimony account?',
+                  [
+                    'Yes, you can change your mobile number or email address.',
+                    'If you are using your account via app,',
+                    'Go to the "Edit contact" section.',
+                    'Select "Edit contact info" tab.',
+                    'Follow the steps provided to edit your email ID, mobile number, or both.',
+                    'If you are using via Web Go to the "Profile settings" -> Privacy -> Mobile Privacy section to change your mobile number.',
+                    'Go to the "Profile settings" -> Edit email address section to change your email address.',
+                    'Please ensure that these details are accurate as they are essential for login and communication.'
+                  ],
+                  heading: true),
               SizedBox(
                 height: 10,
               ),
               _buildFAQItem(
                 'I didn\'t receive the otp for login. what should i do?',
                 [
-                  'If you haven\'t received the OTP for login, please ensure your mobile number is entered correctly. Also check if your mobile device has a stable network connection, your mobile number is active and capable of receiving SMS. If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
+                  'If you haven\'t received the OTP for login,please ensure your mobile number is entered correctly.',
+                  'Also check if your mobile device has a stable network connection, your mobile number is active and capable of receiving SMS.',
+                  'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
                 ],
               ),
               SizedBox(
@@ -91,7 +104,9 @@ class FAQScreen extends StatelessWidget {
               _buildFAQItem(
                 'I didn\'t receive the password reset email, what should i do?',
                 [
-                  'If you haven\'t received the password reset email, please ensure that your email address is correct. Also, check your spam or junk folders for the email. You can also try requesting another password reset email. If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
+                  'If you haven\'t received the password reset email, please ensure that your email address is correct.',
+                  'Also, check your spam or junk folders for the email. You can also try requesting another password reset email.',
+                  'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
                 ],
               ),
               SizedBox(
@@ -109,7 +124,8 @@ class FAQScreen extends StatelessWidget {
               _buildFAQItem(
                 'Why is the message invalid e-mail id/mobile number or incorrect password being displayed when i try to login?',
                 [
-                  'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect. Please recheck your credentials and ensure that the details are accurate.'
+                  'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
+                  'Please recheck your credentials and ensure that the details are accurate.'
                 ],
               ),
               const SizedBox(
@@ -118,7 +134,8 @@ class FAQScreen extends StatelessWidget {
               _buildFAQItem(
                 'Can i log into my profile from multiple devices simultaneously?',
                 [
-                  'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect. Please recheck your credentials and ensure that the details are accurate.'
+                  'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
+                  'Please recheck your credentials and ensure that the details are accurate.'
                 ],
               ),
             ],
@@ -129,7 +146,7 @@ class FAQScreen extends StatelessWidget {
   }
 
   Widget _buildFAQItem(String question, List<String> answers,
-      {bool isExpanded = false}) {
+      {bool isExpanded = false, bool heading = false}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white, // White background
@@ -154,15 +171,29 @@ class FAQScreen extends StatelessWidget {
           iconColor: Colors.red,
           collapsedIconColor: Colors.grey,
           children: answers.map((answer) {
+            bool isFirstAnswer = answers.indexOf(answer) == 0;
+
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  '*  $answer',
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                    color: const Color(0XFF171717),
-                  ),
+                child: Column(
+                  children: [
+                    if (heading && isFirstAnswer)
+                      Text(
+                        answer,
+                        style: AppTextStyles.spanTextStyle.copyWith(
+                          color: const Color(0XFF171717),
+                        ),
+                      ),
+                    if (!isFirstAnswer)
+                      Text(
+                        '*  $answer',
+                        style: AppTextStyles.spanTextStyle.copyWith(
+                          color: const Color(0XFF171717),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             );
