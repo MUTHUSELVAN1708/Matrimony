@@ -204,15 +204,17 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.red),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Skip',
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: () {
+        //
+        //     },
+        //     child: const Text(
+        //       'Skip',
+        //       style: TextStyle(color: Colors.black),
+        //     ),
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

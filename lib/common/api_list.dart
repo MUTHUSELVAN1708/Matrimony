@@ -2,10 +2,11 @@ class Api {
   // static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
   // static const String baseUrl = 'http://192.168.29.14:8080/api/ahathirumanam';
   // static const String baseUrl = 'http://192.168.1.12:8080/api/ahathirumanam';
-  static const String baseUrl = 'http://192.168.29.49:8080/api/ahathirumanam';
+  static const String baseUrl = 'http://192.168.94.182:8080/api/ahathirumanam';
 
-  static const String createUser = '$baseUrl/userCreate';
-  static const String otpVerify = '$baseUrl/verifyOTP';
+  static const String createUser = '$baseUrl/profileCreate';
+  static const String loginOtpVerify = '$baseUrl/loginotpverify';
+  static const String registerOtpVerify = '$baseUrl/registerotpverify';
   static const String createPersonalDetails = '$baseUrl/personalDetails';
   static const String createReligionsApi = '$baseUrl/religiousInformation';
   static const String createProfessionalInformation =

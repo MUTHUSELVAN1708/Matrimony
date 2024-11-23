@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/widgets/upload_photo.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
 import '../common/colors.dart';
 import '../edit/profile/basic_details.dart';
@@ -44,7 +48,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   Widget build(BuildContext context) {
     final heightQuery = MediaQuery.of(context).size.height;
     final widthQuery = MediaQuery.of(context).size.width;
-
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Scaffold(
       body: Stack(
         children: [
@@ -144,12 +148,40 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                           color: AppColors.primaryButtonColor,
                                           width: 2.0,
                                         ),
-                                      ),
-                                      child: ClipOval(
-                                        child: SvgPicture.asset(
-                                          'assets/profileIcon.svg',
-                                          fit: BoxFit.cover,
-                                        ),
+                                        image:
+                                            getImageApiProviderState.isLoading
+                                                ? null
+                                                : DecorationImage(
+                                                    image: getImageApiProviderState
+                                                                    .error !=
+                                                                null ||
+                                                            getImageApiProviderState
+                                                                    .data ==
+                                                                null ||
+                                                            getImageApiProviderState
+                                                                .data!
+                                                                .images
+                                                                .isEmpty
+                                                        ? const AssetImage(
+                                                                'assets/image/emptyProfile.png')
+                                                            as ImageProvider<
+                                                                Object>
+                                                        : MemoryImage(
+                                                            base64Decode(
+                                                              getImageApiProviderState
+                                                                  .data!
+                                                                  .images[0]
+                                                                  .toString()
+                                                                  .replaceAll(
+                                                                      '\n', '')
+                                                                  .replaceAll(
+                                                                      '\r', ''),
+                                                            ),
+                                                          ) as ImageProvider<
+                                                            Object>,
+                                                    // Use MemoryImage for fetched image
+                                                    fit: BoxFit.cover,
+                                                  ),
                                       ),
                                     ),
                                   ],
@@ -159,7 +191,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           ),
                         // Content
                         Padding(
-                          padding: EdgeInsets.only(top: heightQuery * 0.15),
+                          padding: EdgeInsets.only(top: heightQuery * 0.10),
                           child: Column(
                             children: [
                               // Persistent action buttons
@@ -193,7 +225,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                           'Personal Information',
                                           style: TextStyle(
                                             color: Colors.red,
-                                            fontSize: 16,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -291,11 +323,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         'icon': 'assets/Users Group Two Rounded.svg'
       },
       // {'title': 'About Our Family', 'color': Colors.purple,'icon': Colors.orange},
-      {
-        'title': 'Hobbies & Interests',
-        'color': Colors.green,
-        'icon': 'assets/Headphones Round Sound.svg'
-      },
+      // {
+      //   'title': 'Hobbies & Interests',
+      //   'color': Colors.green,
+      //   'icon': 'assets/Headphones Round Sound.svg'
+      // },
     ];
 
     return menuItems.map((item) {
@@ -430,7 +462,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   width: widthQuery * 0.5,
                   height: 32, // Fixed height for the button
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              const EditPartnerPreferencesMainScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE52938),
                       // Red color matching design

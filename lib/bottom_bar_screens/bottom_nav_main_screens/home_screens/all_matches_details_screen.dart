@@ -1,20 +1,35 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/models/partner_details_model.dart';
+import 'package:matrimony/models/user_details_model.dart';
+import 'package:matrimony/models/user_partner_data.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AllMatchesDetailsScreen extends StatefulWidget {
-  const AllMatchesDetailsScreen({super.key});
+class AllMatchesDetailsScreen extends ConsumerStatefulWidget {
+  final UserPartnerData userPartnerData;
+
+  const AllMatchesDetailsScreen({super.key, required this.userPartnerData});
 
   @override
-  State<AllMatchesDetailsScreen> createState() =>
+  ConsumerState<AllMatchesDetailsScreen> createState() =>
       _AllMatchesDetailsScreenState();
 }
 
-class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
+class _AllMatchesDetailsScreenState
+    extends ConsumerState<AllMatchesDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final userDetails = widget.userPartnerData.userDetails;
+    final partnerDetails = widget.userPartnerData.partnerDetails;
+    final allMatchProvider = ref.watch(allMatchesProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -27,7 +42,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('All Matches 1/15938',
+        title: Text('All Matches 1/${allMatchProvider.allMatchList?.length}',
             style: AppTextStyles.headingTextstyle),
       ),
       body: ScrollConfiguration(
@@ -35,9 +50,12 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _buildProfileHeader(context),
-              _buildProfileDetails(),
-              _buildPreferenceDetails(),
+              _buildProfileHeader(context, userDetails ?? const UserDetails(),
+                  partnerDetails ?? const PartnerDetailsModel()),
+              _buildProfileDetails(userDetails ?? const UserDetails(),
+                  partnerDetails ?? const PartnerDetailsModel()),
+              _buildPreferenceDetails(userDetails ?? const UserDetails(),
+                  partnerDetails ?? const PartnerDetailsModel()),
             ],
           ),
         ),
@@ -45,7 +63,8 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
     );
   }
 
-  Widget _buildProfileHeader(BuildContext context) {
+  Widget _buildProfileHeader(BuildContext context, UserDetails userDetails,
+      PartnerDetailsModel partnerDetails) {
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -60,10 +79,20 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                   alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage('assets/image/user1.png'))),
+                  decoration: BoxDecoration(
+                    image: userDetails.images != null &&
+                            userDetails.images!.isNotEmpty
+                        ? DecorationImage(
+                            image: MemoryImage(
+                              base64Decode(userDetails.images![0]),
+                            ),
+                            fit: BoxFit.cover,
+                          )
+                        : const DecorationImage(
+                            image: AssetImage('assets/image/emptyProfile.png'),
+                            fit: BoxFit.cover,
+                          ),
+                  ),
                 ),
                 Positioned(
                   top: 0,
@@ -141,53 +170,58 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Gowtham',
+                  userDetails.name ?? '-',
                   style: AppTextStyles.spanTextStyle.copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
                       fontSize: 20),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'MSE17920 | Last seen few hours ago',
+                Text(
+                  '${userDetails.uniqueId ?? '-'} | Last seen few hours ago',
                   style: AppTextStyles.secondrySpanTextStyle,
                 ),
                 const SizedBox(height: 10),
-                _buildBasicDetails('26 Yrs, 5\'9"', 'profileIcon'),
+                _buildBasicDetails(
+                    '${userDetails.age ?? '-'}, ${userDetails.height ?? '-'}',
+                    'profileIcon'),
                 const SizedBox(height: 8),
                 _buildBasicDetails(
-                    'Church Of South India (Caste No Bar)', 'building_icon'),
+                    userDetails.employedType ?? '-', 'building_icon'),
                 const SizedBox(height: 8),
                 _buildBasicDetails(
-                    'BE, Software Professional', 'professional_icon'),
+                    '${userDetails.education ?? '-'}, ${userDetails.occupation ?? '-'}',
+                    'professional_icon'),
                 const SizedBox(height: 8),
-                _buildBasicDetails('Chennai, Tamil Nadu', 'location_icon'),
+                _buildBasicDetails(
+                    '${userDetails.state ?? '-'}, ${userDetails.city ?? '-'}',
+                    'location_icon'),
               ],
             ),
           ),
           const SizedBox(height: 15),
           Text(
-            'About Gowtham',
+            'About ${userDetails.name ?? '-'}',
             style: AppTextStyles.spanTextStyle.copyWith(
                 color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20),
           ),
           const SizedBox(height: 8),
           Text(
-            'To describe about our family, we belong to the Christian Church of South India caste and looking for a match from other communities also. We are nuclear family with traditional values. My son resides in Chennai.',
+            userDetails.aboutYourSelf ?? '-',
             style: AppTextStyles.secondrySpanTextStyle
-                .copyWith(color: Colors.black),
+                .copyWith(color: Colors.black, fontSize: 16),
           ),
           const SizedBox(height: 8),
           Text(
-            'About his family',
+            'About ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'his' : 'her' : '-'} family',
             style: AppTextStyles.spanTextStyle.copyWith(
                 color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20),
           ),
           const SizedBox(height: 8),
           Text(
-            'My son is Gowtham and myself working in real estate. My wife is a homemaker and my daughter is a fashion designer.',
+            'My ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'son' : 'daughter' : '-'} is ${userDetails.name} and myself working in ${userDetails.occupation}.',
             style: AppTextStyles.secondrySpanTextStyle
-                .copyWith(color: Colors.black),
+                .copyWith(color: Colors.black, fontSize: 16),
           ),
           const SizedBox(height: 12),
           Center(
@@ -196,147 +230,88 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
             style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
           )),
           const SizedBox(height: 15),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: List.generate(5, (index) {
-          //     // Define the lists for the status labels, icon names, and SVG names.
-          //     final verificationStatus = [
-          //       'Mobile Verified',
-          //       'Govt. ID Verified',
-          //       'Photo Verified',
-          //       'Education Verified',
-          //       'Income Verified'
-          //     ];
-          //
-          //     final verificationStatusNot = [
-          //       'Mobile Not Verified',
-          //       'Govt. ID Not Verified',
-          //       'Photo Not Verified',
-          //       'Education Not Verified',
-          //       'Income Not Verified'
-          //     ];
-          //
-          //     final svgNames = [
-          //       'mynaui_mobile',
-          //       'govrn_id',
-          //       'user_alt',
-          //       'mdi_account-graduation',
-          //       'income_verify',
-          //     ];
-          //
-          //     final iconForStatus = [
-          //       'Done_intrest',
-          //       'Close_round',
-          //     ];
-          //
-          //     final isVerified = [true, true, false, true, false];
-          //
-          //     return Column(
-          //       children: [
-          //         Stack(
-          //           clipBehavior: Clip.none,
-          //           children: [
-          //             // Main icon container
-          //             Container(
-          //               // height: 60,
-          //               // width: 60,
-          //               padding: const EdgeInsets.all(4),
-          //               decoration: BoxDecoration(
-          //                 borderRadius: BorderRadius.circular(15),
-          //                 color: Colors.red, // Adjust color as needed
-          //               ),
-          //               child: CustomSvg(
-          //                 name: svgNames[index], // Dynamically pass the name
-          //                 color: Colors.white,
-          //               ),
-          //             ),
-          //             // Positioned status indicator
-          //             Positioned(
-          //               bottom: -5,
-          //               right: -5,
-          //               child: Container(
-          //                 padding: const EdgeInsets.all(4),
-          //                 decoration: BoxDecoration(
-          //                   color: isVerified[index]
-          //                       ? Colors.green
-          //                       : AppColors.primaryButtonColor,
-          //                   borderRadius: BorderRadius.circular(8),
-          //                 ),
-          //                 child: CustomSvg(
-          //                   name: isVerified[index]
-          //                       ? iconForStatus[0]
-          //                       : iconForStatus[1], // Conditionally select icon
-          //                   color: Colors.white,
-          //                 ),
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //         const SizedBox(height: 8),
-          //         // Status Text
-          //         Text(
-          //           isVerified[index]
-          //               ? verificationStatus[index]
-          //               : verificationStatusNot[index],
-          //           style: AppTextStyles.spanTextStyle.copyWith(
-          //             color: const Color(0XFF5F5B5B),
-          //           ),
-          //           textAlign: TextAlign.center,
-          //         ),
-          //       ],
-          //     );
-          //   }),
-          // )
           StatusRowWidget()
         ],
       ),
     );
   }
 
-  Widget _buildProfileDetails() {
+  Widget _buildProfileDetails(
+      UserDetails userDetails, PartnerDetailsModel partnerDetailsModel) {
     return Column(
       children: [
-        _buildSection('His Basic Details', [
-          _buildDetailItem('Age', '26 Years', 'user_alt'),
-          _buildDetailItem('Physique', "68Kg | " "5'5 | " "Normal", 'height'),
-          _buildDetailItem(
-              'Spoken Languages', 'Tamil (Mother Tongue)', 'language'),
-          _buildDetailItem('Eating Habits',
-              'To View His Eating Habits, Add Yours', 'chef_hat'),
-          _buildDetailItem('Profile Created By', 'Parents', 'user-edit'),
-          _buildDetailItem('Marital Status', 'Never Married', 'wedding_ring'),
-          _buildDetailItem('Lives In', 'Chennai, Tamil Nadu', 'location_icon'),
-          _buildDetailItem('Citizenship', 'Indian Citizen', 'flag'),
-          _buildDetailItem('Smoking Habits', 'Doesnt Smoke', 'smoking'),
-          _buildDetailItem('Drinking Habits', 'Doesnt Drink', 'wine_glass'),
-        ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Basic Details',
+            [
+              _buildDetailItem(
+                  'Age', '${userDetails.age ?? '-'} Years', 'user_alt'),
+              _buildDetailItem(
+                  'Physique',
+                  "${userDetails.weight ?? '-Kg'} | "
+                      "${userDetails.height ?? '-'} | "
+                      "${userDetails.physicalStatus ?? '-'}",
+                  'height'),
+              _buildDetailItem(
+                  'Spoken Languages',
+                  '${userDetails.motherTongue ?? '-'} (Mother Tongue)',
+                  'language'),
+              _buildDetailItem(
+                  'Eating Habits', userDetails.eatingHabits ?? '-', 'chef_hat'),
+              _buildDetailItem('Profile Created For',
+                  userDetails.profileFor ?? '-', 'user-edit'),
+              _buildDetailItem('Marital Status',
+                  userDetails.maritalStatus ?? '-', 'wedding_ring'),
+              _buildDetailItem(
+                  'Lives In',
+                  '${userDetails.city ?? '-'}, ${userDetails.state ?? '-'}',
+                  'location_icon'),
+              _buildDetailItem(
+                  'Own House',
+                  userDetails.ownHouse != null
+                      ? userDetails.ownHouse!
+                          ? 'Yes'
+                          : 'No'
+                      : '-',
+                  'location_icon'),
+              _buildDetailItem(
+                  'Citizenship', userDetails.citizenShip ?? '-', 'flag'),
+              _buildDetailItem('Smoking Habits',
+                  userDetails.smokingHabits ?? '-', 'smoking'),
+              _buildDetailItem('Drinking Habits',
+                  userDetails.drinkingHabits ?? '-', 'wine_glass'),
+            ]),
         _buildSection('contact number', [
+          _buildDetailItem('Mobile Number', userDetails.phoneNumber ?? '-',
+              'Phone _Calling_icon'),
           _buildDetailItem(
-              'Mobile Number', '+91 9560840637', 'Phone _Calling_icon'),
+              'Whom To Contact', userDetails.whomToContact ?? '-', 'user_alt'),
+          _buildDetailItem('Contact Person\'s Name',
+              userDetails.contactPersonName ?? '-', 'user_alt'),
+          _buildDetailItem('Available Time To Call',
+              userDetails.availableTimeToCall ?? '-', 'availabletime'),
+          _buildDetailItem('Comments', userDetails.comments ?? '-', 'comments'),
           ...[
             Container(
-              margin: EdgeInsets.all(24),
+              margin: const EdgeInsets.all(24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(4),
-                    // decoration:  BoxDecoration(
-                    //     color: Colors.white,
-                    //     border: Border.all(color: AppColors.spanTextColor),
-                    //     borderRadius: BorderRadius.circular(8)
-                    // ),
                     child: const Row(
                       children: [
                         CustomSvg(name: 'blue_verify'),
+                        SizedBox(
+                          width: 4,
+                        ),
                         Text('verified')
                       ],
                     ),
                   ),
                   InkWell(
                     onTap: () async {
-                      const phoneNumber = '6383266214';
-                      const whatsappUrl = 'https://wa.me/$phoneNumber';
+                      final phoneNumber = userDetails.phoneNumber ?? '';
+                      final whatsappUrl = 'https://wa.me/$phoneNumber';
 
                       if (await canLaunch(whatsappUrl)) {
                         await launch(whatsappUrl);
@@ -366,7 +341,8 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                   ),
                   InkWell(
                     onTap: () async {
-                      const phoneNumber = 'tel:+6383266214';
+                      final phoneNumber =
+                          'tel:${userDetails.phoneNumber ?? '-'}';
                       if (await canLaunch(phoneNumber)) {
                         await launch(phoneNumber);
                       } else {
@@ -393,34 +369,59 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
             )
           ]
         ]),
-        _buildSection('His Religious Details', [
-          _buildDetailItem('Religion', 'Christian', 'kumbudu'),
-          _buildDetailItem('Caste/Subcaste', 'Church Of Sounth India', 'notes'),
-          _buildDetailItem('Gothra(M)', 'Not Specified', 'people'),
-        ]),
-        _buildSection('His Horoscope Details', [
-          _buildDetailItem('Date Of Birth', '19.09.2024', 'calendar_date'),
-          _buildDetailItem('Time Of Birth', '10:10:20', 'calendar_date'),
-          _buildDetailItem(
-              'Star/Rassi', 'Star is Ashwini\nRaasi is TVK', 'astronomy'),
-        ]),
-        _buildSection('His Professional Details', [
-          _buildDetailItem(
-              'Employment', 'Works in Private Sector', 'card_profile'),
-          _buildDetailItem('Annual Income', '16-18 Lakhs', 'money_bag'),
-          _buildDetailItem('Education', 'B.E Computer Science Engineering',
-              'professional_icon'),
-          _buildDetailItem(
-              'Occupation', 'Software Professional', 'professional_icon'),
-        ]),
-        _buildSection('About His Family', [
-          _buildDetailItem('Family Type', 'Joint Family', 'family_type'),
-          _buildDetailItem(
-              'Family Status', 'Upper Middle Class', 'family_type'),
-          _buildDetailItem('Parents',
-              'Father is a businessman, mother is a home maker', '2person'),
-          _buildDetailItem('Sisters', '1 Sister', 'profileIcon'),
-        ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Religious Details',
+            [
+              _buildDetailItem(
+                  'Religion', userDetails.religion ?? '-', 'kumbudu'),
+              _buildDetailItem(
+                  'Caste/Subcaste',
+                  '${userDetails.caste ?? '-'}'
+                      '/'
+                      '${userDetails.subcaste ?? '-'}',
+                  'notes'),
+              _buildDetailItem('Gothra(M)', 'Not Specified', 'people'),
+            ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Horoscope Details',
+            [
+              _buildDetailItem(
+                  'Date Of Birth',
+                  userDetails.dateOfBirth != null &&
+                          DateTime.tryParse(userDetails.dateOfBirth!) != null
+                      ? DateFormat('dd-MM-yyyy')
+                          .format(DateTime.tryParse(userDetails.dateOfBirth!)!)
+                      : '-',
+                  'calendar_date'),
+              _buildDetailItem('Time Of Birth', '-', 'calendar_date'),
+              _buildDetailItem(
+                  'Star/Rassi',
+                  'Star is ${userDetails.star ?? '-'}\nRaasi is ${userDetails.raasi ?? '-'}',
+                  'astronomy'),
+            ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Professional Details',
+            [
+              _buildDetailItem('Employment', userDetails.employedType ?? '-',
+                  'card_profile'),
+              _buildDetailItem('Annual Income', userDetails.annualIncome ?? '-',
+                  'money_bag'),
+              _buildDetailItem('Education', userDetails.education ?? '-',
+                  'professional_icon'),
+              _buildDetailItem('Occupation', userDetails.occupation ?? '-',
+                  'professional_icon'),
+            ]),
+        _buildSection(
+            'About ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Family',
+            [
+              _buildDetailItem('Family Type', 'Joint Family', 'family_type'),
+              _buildDetailItem('Family Status', userDetails.familyStatus ?? '-',
+                  'family_type'),
+              _buildDetailItem('Parents',
+                  'Father is a businessman, mother is a home maker', '2person'),
+              _buildDetailItem('Sisters', '1 Sister', 'profileIcon'),
+              _buildDetailItem('Brothers', '1 Brother', 'profileIcon'),
+            ]),
       ],
     );
   }
@@ -495,7 +496,10 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          CustomSvg(name: (icon.isEmpty) ? 'new_verify' : icon)
+          CustomSvg(
+            name: (icon.isEmpty) ? 'blue_verify' : icon,
+            color: (icon.isEmpty) ? const Color(0xFF49A398) : null,
+          )
 // Space between text and icon
           // const Icon(
           //   Icons.verified,
@@ -523,13 +527,16 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
     );
   }
 
-  Widget _buildPreferenceDetails() {
+  Widget _buildPreferenceDetails(
+      UserDetails userDetails, PartnerDetailsModel partnerDetailsModel) {
+    final allMatchProvider = ref.watch(allMatchesProvider);
+    final myProfile = ref.watch(getImageApiProvider);
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
           child: Text(
-            "Gowtham's Partner Preferences",
+            "${userDetails.name ?? '-'}'s Partner Preferences",
             style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
           ),
         ),
@@ -550,7 +557,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildCircleAvatar('assets/image/user1.png'),
+              _buildCircleAvatar(myProfile.data?.images.firstOrNull),
               Expanded(
                 child: Align(
                   alignment: Alignment.center,
@@ -563,13 +570,13 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                               .copyWith(color: Colors.black),
                         ),
                         TextSpan(
-                          text: "19/19",
+                          text: "1/${allMatchProvider.allMatchList?.length}",
                           style: AppTextStyles.spanTextStyle
                               .copyWith(color: AppColors.headingTextColor),
                         ),
                       ])),
                       Text(
-                        "Of His Preferences",
+                        "Of ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Preferences",
                         style: AppTextStyles.spanTextStyle
                             .copyWith(color: Colors.black),
                       )
@@ -577,35 +584,66 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
                   ),
                 ),
               ),
-              _buildCircleAvatar('assets/image/user2.png'),
+              _buildCircleAvatar(userDetails.images?.firstOrNull),
             ],
           ),
         ),
-        _buildSection('His Basic Preferences', [
-          _buildDetailItem('Age', '24-28 years', ''),
-          _buildDetailItem('Height', "4'7\"-5'7\"", ''),
-          _buildDetailItem('Marital Status', 'Never Married', ''),
-          _buildDetailItem('Physical Status', 'Normal', ''),
-        ]),
-        _buildSection('His Religious Preferences', [
-          _buildDetailItem('Preferred Religion', 'Christian', ''),
-          _buildDetailItem('Preferred Caste', "Any", ''),
-          _buildDetailItem('Preferred Star', 'Any', ''),
-          _buildDetailItem('Preferred Dosham', 'Any', ''),
-        ]),
-        _buildSection('His Professional Preferences', [
-          _buildDetailItem('Preferred education',
-              'Aeronautical Engineering, B.Arch, B.Plan, BS', ''),
-          _buildDetailItem('Preferred Employment Type', "Any", ''),
-          _buildDetailItem('Preferred Occupation', 'Any', ''),
-          _buildDetailItem('Preferred Annual Income', 'Any', ''),
-        ]),
-        _buildSection('His Location Preferences', [
-          _buildDetailItem('Preferred Country', 'India', ''),
-          _buildDetailItem('Preferred Residing State',
-              "Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, Pondicherry", ''),
-          _buildDetailItem('Preferred Residing City', 'Any', ''),
-        ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Basic Preferences',
+            [
+              _buildDetailItem(
+                  'Age',
+                  '${partnerDetailsModel.partnerFromAge ?? ''} - ${partnerDetailsModel.partnerToAge ?? ''} Years',
+                  ''),
+              _buildDetailItem(
+                  'Height',
+                  "${partnerDetailsModel.partnerFromHeight ?? ''} - ${partnerDetailsModel.partnerToHeight ?? ''}",
+                  ''),
+              _buildDetailItem(
+                  'Weight',
+                  "${partnerDetailsModel.partnerFromWeight ?? ''} - ${partnerDetailsModel.partnerToWeight ?? ''}",
+                  ''),
+              _buildDetailItem('Marital Status',
+                  partnerDetailsModel.partnerMaritalStatus ?? '-', ''),
+              _buildDetailItem('Physical Status',
+                  partnerDetailsModel.partnerPhysicalStatus ?? '-', ''),
+            ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Religious Preferences',
+            [
+              _buildDetailItem('Preferred Religion',
+                  partnerDetailsModel.partnerReligion ?? '-', ''),
+              _buildDetailItem('Preferred Caste',
+                  partnerDetailsModel.partnerCaste ?? '-', ''),
+              _buildDetailItem(
+                  'Preferred Star', partnerDetailsModel.partnerStar ?? '-', ''),
+              _buildDetailItem('Preferred Raasi',
+                  partnerDetailsModel.partnerRassi ?? '-', ''),
+            ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Professional Preferences',
+            [
+              _buildDetailItem('Preferred education',
+                  partnerDetailsModel.partnerEducation ?? '-', ''),
+              _buildDetailItem('Preferred Employment Type',
+                  partnerDetailsModel.partnerEmployedIn ?? '-', ''),
+              _buildDetailItem('Preferred Occupation',
+                  partnerDetailsModel.partnerOccupation ?? '-', ''),
+              _buildDetailItem('Preferred Annual Income',
+                  partnerDetailsModel.partnerAnnualIncome ?? '-', ''),
+            ]),
+        _buildSection(
+            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Location Preferences',
+            [
+              _buildDetailItem('Preferred Country',
+                  partnerDetailsModel.partnerCountry ?? '-', ''),
+              _buildDetailItem('Preferred Residing State',
+                  partnerDetailsModel.partnerState ?? '-', ''),
+              _buildDetailItem('Preferred Residing City',
+                  partnerDetailsModel.partnerCity ?? '-', ''),
+              _buildDetailItem('Preferred Own House',
+                  partnerDetailsModel.partnerOwnHouse ?? '-', ''),
+            ]),
         Row(
           children: [
             Expanded(
@@ -660,7 +698,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
     );
   }
 
-  Widget _buildCircleAvatar(String url) {
+  Widget _buildCircleAvatar(String? url) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -669,7 +707,13 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
       child: CircleAvatar(
         radius: 40,
         backgroundColor: Colors.grey[200],
-        backgroundImage: AssetImage(url),
+        backgroundImage: url != null && url.isNotEmpty
+            ? MemoryImage(
+                base64Decode(url),
+              )
+            : const AssetImage(
+                'assets/image/emptyprofile.png',
+              ) as ImageProvider,
       ),
     );
   }
@@ -682,7 +726,7 @@ class _AllMatchesDetailsScreenState extends State<AllMatchesDetailsScreen> {
           child: Text(
             label,
             style: AppTextStyles.secondrySpanTextStyle
-                .copyWith(color: Colors.black),
+                .copyWith(color: Colors.black, fontSize: 15),
             overflow: TextOverflow.ellipsis,
           ),
         ),

@@ -7,6 +7,9 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+import 'package:matrimony/models/user_partner_data.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
 class MatchesScreen extends ConsumerStatefulWidget {
@@ -22,38 +25,44 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
     final allMatchProvider = ref.watch(allMatchesProvider);
     return allMatchProvider.allMatchList != null &&
             allMatchProvider.allMatchList!.isNotEmpty
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                '${allMatchProvider.allMatchList!.length} Matches',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.headingTextstyle,
-              ),
-              Text(
-                'Based on your Partner preferences',
-                textAlign: TextAlign.center,
-                style:
-                    AppTextStyles.spanTextStyle.copyWith(color: Colors.black),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context)
-                      .copyWith(scrollbars: false),
-                  child: ListView.builder(
-                    itemCount: allMatchProvider.allMatchList!.length,
-                    itemBuilder: (context, index) {
-                      final matchingData =
-                          allMatchProvider.allMatchList![index];
-                      return MatchCard(match: matchingData);
-                    },
+        ? EnhancedLoadingWrapper(
+            isLoading: ref.read(userManagementProvider).isLoadingForPartner,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  '${allMatchProvider.allMatchList!.length} Matches',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.headingTextstyle,
+                ),
+                Text(
+                  'Based on your Partner preferences',
+                  textAlign: TextAlign.center,
+                  style:
+                      AppTextStyles.spanTextStyle.copyWith(color: Colors.black),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context)
+                        .copyWith(scrollbars: false),
+                    child: ListView.builder(
+                      itemCount: allMatchProvider.allMatchList!.length,
+                      itemBuilder: (context, index) {
+                        final matchingData =
+                            allMatchProvider.allMatchList![index];
+                        return MatchCard(match: matchingData);
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         : const Center(
             child: Text(
@@ -132,33 +141,43 @@ class MatchCard extends ConsumerWidget {
           Positioned(
             right: 10,
             top: 10,
-            child: ElevatedButton(
-              onPressed: () {
-                final getImageApiProviderState = ref.watch(getImageApiProvider);
-                if (getImageApiProviderState.data != null &&
-                    getImageApiProviderState.data!.paymentStatus) {
+            child: SizedBox(
+              height: 30,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final getImageApiProviderState =
+                      ref.watch(getImageApiProvider);
+                  final partnerDetails = await ref
+                      .read(userManagementProvider.notifier)
+                      .getPartnerDetails(match.id ?? 0);
+                  // if (getImageApiProviderState.data != null &&
+                  //     getImageApiProviderState.data!.paymentStatus) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const AllMatchesDetailsScreen()));
-                } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PlanUpgradeScreen()));
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              ),
-              child: const Text(
-                'View Details',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
+                          builder: (context) => AllMatchesDetailsScreen(
+                                userPartnerData:
+                                    partnerDetails ?? UserPartnerData(),
+                              )));
+                  // } else {
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => const PlanUpgradeScreen()));
+                  // }
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5))),
+                child: const Text(
+                  'View Details',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ),

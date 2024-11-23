@@ -28,10 +28,10 @@ class RegisterService {
       print(response.body);
       print(response.statusCode);
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        print('Account Created');
-        print(data['id']);
-        return {'userId': data['id'], 'errorMessage': ''};
+        // final data = jsonDecode(response.body);
+        // print('Account Created');
+        // print(data['id']);
+        return {'errorMessage': ''};
       } else if (response.statusCode == 400) {
         return {'errorMessage': jsonDecode(response.body)['errorMessage']};
       } else {
@@ -42,20 +42,18 @@ class RegisterService {
     }
   }
 
-  Future<bool> otpVerificationApi(
+  Future<bool> otpRegisterVerificationApi(
     String otp,
     String phoneNo,
   ) async {
-    final int? userId = await SharedPrefHelper.getUserId();
     final response = await http.post(
-      Uri.parse(Api.otpVerify),
+      Uri.parse(Api.registerOtpVerify),
       headers: {
         'Content-Type': 'application/json',
         'AppId': "1",
         // 'token': token!,
       },
       body: jsonEncode({
-        'id': userId,
         'otp': otp,
         'phoneNumber': phoneNo,
       }),
@@ -63,6 +61,38 @@ class RegisterService {
     print("$otp,$phoneNo");
     print(response.statusCode);
     if (response.statusCode == 200) {
+      print(response.body);
+      final data = jsonDecode(response.body);
+      print(data);
+      await _saveUserData(data['id'], data['token']);
+      return true;
+      print(response.statusCode);
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> otpLoginVerificationApi(
+    String otp,
+    String phoneNo,
+  ) async {
+    final response = await http.post(
+      Uri.parse(Api.loginOtpVerify),
+      headers: {
+        'Content-Type': 'application/json',
+        'AppId': "1",
+        // 'token': token!,
+      },
+      body: jsonEncode({
+        'otp': otp,
+        'phoneNumber': phoneNo,
+      }),
+    );
+    print("$otp,$phoneNo");
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      await _saveUserData(data['id'], data['token']);
       return true;
       print(response.statusCode);
     } else {
@@ -248,5 +278,11 @@ class RegisterService {
       throw Exception(
           'Failed to submit professional information: ${response.body}');
     }
+  }
+
+  Future<void> _saveUserData(int userId, String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('userId', userId);
+    await prefs.setString('token', token);
   }
 }

@@ -40,8 +40,7 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
       );
 
       if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        print(response.statusCode);
+        final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
         final userDetails = UserDetails.fromJson(jsonResponse);
         print('User');
         print(userDetails.toJson());
@@ -82,7 +81,7 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
       );
 
       if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
+        final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
         final partnerDetails = UserDetails.fromJson(jsonResponse);
         final partnerPartnerDetails =
             PartnerDetailsModel.fromJson(jsonResponse);
@@ -172,7 +171,7 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
     return 0;
   }
 
-  void getLocalData() {
+  Future<void> getLocalData() async {
     getAllCountryLocal();
     getAllStateLocal();
     getAllCityLocal();

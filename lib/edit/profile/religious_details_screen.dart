@@ -41,6 +41,8 @@ class _ReligiousDetailsScreenState
     ref
         .read(religiousProvider.notifier)
         .setReligiousDetails(ref.read(userManagementProvider).userDetails);
+    await ref.read(userManagementProvider.notifier).getLocalData();
+    await ref.read(religiousProvider.notifier).getReligiousDetails();
   }
 
   @override
@@ -125,21 +127,21 @@ class _ReligiousDetailsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitle(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 _buildReligionSelection(context, ref, religiousState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 _buildCasteSelection(context, ref, religiousState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 _buildSubCasteSelection(context, ref, religiousState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 _buildMotherTongueSelection(context, ref, religiousState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 _buildMarryFromOtherCommunitiesToggle(ref, religiousState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 _buildStarSelection(context, ref, religiousState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 _buildRaasiSelection(context, ref, religiousState),
-                const SizedBox(height: 24),
+                const SizedBox(height: 6),
                 _buildSaveButton(context, ref, religiousState),
                 const SizedBox(height: 16),
               ],
@@ -174,10 +176,17 @@ class _ReligiousDetailsScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Religion',
-            options: ReligiousOptions.religions,
+            options: religiousState.religionList
+                .map((religion) => religion.religion)
+                .toList(),
             selectedValue: religiousState.religion ?? 'Select',
-            onSelect: (value) {
+            onSelect: (value) async {
               ref.read(religiousProvider.notifier).updateReligion(value);
+              if (value != religiousState.religion) {
+                await ref
+                    .read(religiousProvider.notifier)
+                    .getCasteDetailsList();
+              }
             },
           ),
         );
@@ -200,17 +209,25 @@ class _ReligiousDetailsScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Caste',
-            options: ReligiousOptions.castes,
+            options:
+                religiousState.casteList.map((caste) => caste.castes).toList(),
             selectedValue: religiousState.caste ?? "Select",
-            onSelect: (value) {
+            onSelect: (value) async {
               ref.read(religiousProvider.notifier).updateCaste(value);
+              if (value != religiousState.caste) {
+                await ref
+                    .read(religiousProvider.notifier)
+                    .getSubCasteDetailsList();
+              }
             },
           ),
         );
       },
       child: _buildListTile(
         'Caste',
-        religiousState.caste ?? "Select",
+        religiousState.caste == null || religiousState.caste == ''
+            ? "Select"
+            : religiousState.caste.toString(),
       ),
     );
   }
@@ -226,7 +243,9 @@ class _ReligiousDetailsScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Sub Caste',
-            options: ReligiousOptions.subCastes,
+            options: religiousState.subCasteList
+                .map((subCaste) => subCaste.subCaste)
+                .toList(),
             selectedValue: religiousState.subCaste ?? "Select",
             onSelect: (value) {
               ref.read(religiousProvider.notifier).updateSubCaste(value);
@@ -236,7 +255,9 @@ class _ReligiousDetailsScreenState
       },
       child: _buildListTile(
         'Sub Caste',
-        religiousState.subCaste ?? "Select",
+        religiousState.subCaste == null || religiousState.subCaste == ''
+            ? "Select"
+            : religiousState.subCaste.toString(),
       ),
     );
   }
@@ -274,12 +295,15 @@ class _ReligiousDetailsScreenState
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: const Text('Willing To Marry From Other Communities'),
-      trailing: Switch(
-        value: religiousState.willingToMarryOtherCommunities ?? false,
-        onChanged: (bool value) {
-          ref.read(religiousProvider.notifier).updateWillingToMarry(value);
-        },
-        activeColor: AppColors.primaryButtonColor,
+      trailing: Transform.scale(
+        scale: 0.7,
+        child: Switch(
+          value: religiousState.willingToMarryOtherCommunities ?? false,
+          onChanged: (bool value) {
+            ref.read(religiousProvider.notifier).updateWillingToMarry(value);
+          },
+          activeColor: AppColors.primaryButtonColor,
+        ),
       ),
     );
   }
@@ -393,7 +417,7 @@ class _ReligiousDetailsScreenState
       contentPadding: EdgeInsets.zero,
       title: Text(title),
       subtitle: Text(
-        subtitle,
+        subtitle == '' ? 'Select' : subtitle,
         style: const TextStyle(color: Colors.grey),
       ),
       trailing: const Icon(Icons.chevron_right),

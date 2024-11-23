@@ -118,62 +118,6 @@ class LogStateNotifier extends StateNotifier<LoginState> {
           isLoading: false,
           error: json.decode(response.body)['errorMessage'],
         );
-        return LogUserModel(
-            id: 1, email: '', phoneNumber: '', role: '', token: '');
-      }
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
-      return LogUserModel(
-          id: 1, email: '', phoneNumber: '', role: '', token: '');
-    }
-    return LogUserModel(id: 1, email: '', phoneNumber: '', role: '', token: '');
-  }
-
-  Future<LogUserModel> otpWithLogin(String phoneNo, String no) async {
-    state = state.copyWith(isLoading: true, error: null, data: null);
-    if (no.length != 10) {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Please Enter mobile number correctly',
-      );
-      return const LogUserModel(
-          id: 1, email: '', phoneNumber: '', role: '', token: '');
-    }
-    try {
-      final response = await http.post(
-        Uri.parse(Api.otpWithLogin),
-        headers: {
-          'Content-Type': 'application/json',
-          'AppId': '1',
-        },
-        body: jsonEncode({
-          'phoneNumber': phoneNo,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        final userImageData = LogUserModel.fromJson(jsonResponse);
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', userImageData.token);
-        await prefs.setInt('userId', userImageData.id);
-
-        print(userImageData.toJson());
-        state = state.copyWith(
-          isLoading: false,
-          data: userImageData,
-        );
-
-        return userImageData;
-      } else if (response.statusCode == 400) {
-        state = state.copyWith(
-          isLoading: false,
-          error: json.decode(response.body)['errorMessage'],
-        );
         return const LogUserModel(
             id: 1, email: '', phoneNumber: '', role: '', token: '');
       }
@@ -187,6 +131,50 @@ class LogStateNotifier extends StateNotifier<LoginState> {
     }
     return const LogUserModel(
         id: 1, email: '', phoneNumber: '', role: '', token: '');
+  }
+
+  Future<String> otpWithLogin(String phoneNo, String no) async {
+    state = state.copyWith(isLoading: true, error: null, data: null);
+    if (no.length != 10) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Please Enter mobile number correctly',
+      );
+      return 'Please Enter mobile number correctly';
+    }
+    try {
+      final response = await http.post(
+        Uri.parse(Api.otpWithLogin),
+        headers: {
+          'Content-Type': 'application/json',
+          'AppId': '1',
+        },
+        body: jsonEncode({
+          'phoneNumber': phoneNo,
+        }),
+      );
+      if (response.statusCode == 200) {
+        // final jsonResponse = json.decode(response.body);
+        state = state.copyWith(
+          isLoading: false,
+        );
+
+        return 'Success';
+      } else if (response.statusCode == 400) {
+        state = state.copyWith(
+          isLoading: false,
+          error: json.decode(response.body)['errorMessage'],
+        );
+        return json.decode(response.body)['errorMessage'];
+      }
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+      return 'Something Went Wrong. Please Try Again!.';
+    }
+    return 'Something Went Wrong. Please Try Again!.';
   }
 
   void updatePhoneNo(String mobileNo) {
