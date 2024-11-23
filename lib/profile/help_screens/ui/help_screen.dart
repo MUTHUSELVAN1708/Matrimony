@@ -85,7 +85,7 @@ class _HelpScreenState extends State<HelpScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: ManagePhotosUpdateScreen(),
+                  screen: PhotoUpdateHelpScreen(),
                 );
               },
               leading: Text(
@@ -105,7 +105,7 @@ class _HelpScreenState extends State<HelpScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: PhotoUpdateHelpScreen(),
+                  screen: ManagePhotosUpdateScreen(),
                 );
               },
               leading: Text(
