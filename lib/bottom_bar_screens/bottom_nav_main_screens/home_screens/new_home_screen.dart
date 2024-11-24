@@ -86,7 +86,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             _buildAllMatches(ref),
             _buildCompleteProfile(),
             _buildSuccessStory(context),
-            if(getImageApiProviderState.data != null && !getImageApiProviderState.data!.paymentStatus)...[
+            if (getImageApiProviderState.data != null &&
+                !getImageApiProviderState.data!.paymentStatus) ...[
               _buildUpgradeNow(context),
             ],
             const ProfileCardStack(),
@@ -250,7 +251,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             ),
             color: Colors.white,
           ),
-          margin: const EdgeInsets.only(top: 50,bottom: 20),
+          margin: const EdgeInsets.only(top: 50, bottom: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -808,60 +809,58 @@ class TwinkleButtonScreenState extends State<TwinkleButtonScreen>
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Upgrade now to find your\nperfect life partner\nfaster than ever!',
-              style: TextStyle(color: Colors.red.shade700, fontSize: 20),
-            ),
-            const Text(
-                'Take the Next Step Towards Your\nHappily Even After!',
-                style: TextStyle(color: Colors.black, fontSize: 15)),
-            const SizedBox(
-              height: 8,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PlanUpgradeScreen()),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Upgrade now to find your\nperfect life partner\nfaster than ever!',
+            style: TextStyle(color: Colors.red.shade700, fontSize: 20),
+          ),
+          const Text('Take the Next Step Towards Your\nHappily Even After!',
+              style: TextStyle(color: Colors.black, fontSize: 15)),
+          const SizedBox(
+            height: 8,
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const PlanUpgradeScreen()),
+              );
+            },
+            child: AnimatedBuilder(
+              animation: _twinkleAnimation,
+              builder: (context, child) {
+                return Container(
+                  width: 100,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.redAccent.withOpacity(
+                            _twinkleAnimation.value), // Animate opacity
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(
+                            0, 2), // Add a slight shadow for a raised effect
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Upgrade Now',
+                      style: TextStyle(color: Colors.black54, fontSize: 14),
+                    ),
+                  ),
                 );
               },
-              child: AnimatedBuilder(
-                animation: _twinkleAnimation,
-                builder: (context, child) {
-                  return Container(
-                    width: 100,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black12),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.redAccent.withOpacity(
-                              _twinkleAnimation.value), // Animate opacity
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: const Offset(
-                              0, 2), // Add a slight shadow for a raised effect
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Upgrade Now',
-                        style: TextStyle(color: Colors.black54, fontSize: 14),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-      );
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
-

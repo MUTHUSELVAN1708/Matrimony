@@ -51,9 +51,12 @@ class RegisterUserPhotoUploadedSuccessScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                      builder: (context) => RegisterUserGovernmentProof(),
-                    ),(route) => false,);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => RegisterUserGovernmentProof(),
+                      ),
+                      (route) => false,
+                    );
                   },
                   style: AppTextStyles.primaryButtonstyle,
                   child: const Text(

@@ -36,7 +36,7 @@ class RegisterReligionNotifier extends StateNotifier<RegisterReligionState> {
     state = state.copyWith(subCaste: subCaste);
   }
 
-  void updateOtherMotherTongue(String otherMotherTongue){
+  void updateOtherMotherTongue(String otherMotherTongue) {
     state = state.copyWith(otherMotherTongue: otherMotherTongue);
   }
 

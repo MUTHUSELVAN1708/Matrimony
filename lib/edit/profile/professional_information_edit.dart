@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/notifier/profile_notifier.dart';
 import 'package:matrimony/edit/profile/providers/professional_info_provider.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
@@ -43,19 +44,29 @@ class _ProfessionalInformationDetailsScreenState
   Widget build(BuildContext context) {
     final professionalInfoState = ref.watch(professionalInfoProvider);
     final heightQuery = MediaQuery.of(context).size.height;
-
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        children: [
-          _buildHeader(context, heightQuery),
-          _buildForm(context, ref, professionalInfoState, heightQuery),
-        ],
+    final width = MediaQuery.of(context).size.width;
+    return EnhancedLoadingWrapper(
+      isLoading: professionalInfoState.isLoading,
+      child: PopScope(
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) {
+            widget.onPop('true');
+          }
+        },
+        child: Material(
+          color: Colors.transparent,
+          child: Stack(
+            children: [
+              _buildHeader(context, heightQuery),
+              _buildForm(context, ref, professionalInfoState, heightQuery),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, double heightQuery) {
+  Widget _buildHeader(BuildContext context, double width) {
     return Positioned(
       top: 40,
       left: 16,
@@ -72,7 +83,7 @@ class _ProfessionalInformationDetailsScreenState
               color: Colors.white,
             ),
           ),
-          SizedBox(width: heightQuery * 0.15),
+          SizedBox(width: width * 0.10),
           const Text(
             'Professional Information',
             style: TextStyle(
@@ -118,34 +129,34 @@ class _ProfessionalInformationDetailsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitle(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 5),
                 _buildEducationSelection(context, ref, professionalInfoState),
-                if (professionalInfoState.education != null &&
-                    professionalInfoState.education?.toLowerCase() !=
-                        "other") ...[
-                  const SizedBox(height: 16),
-                  _buildTextField('Enter College / Institution',
-                      professionalInfoState.college ?? '', true, (value) {
-                    // ref.read(professionalInfoProvider.notifier).updateCollege(value);
-                  }),
-                ],
-                const SizedBox(height: 16),
+                // if (professionalInfoState.education != null &&
+                //     professionalInfoState.education?.toLowerCase() !=
+                //         "other") ...[
+                //   const SizedBox(height: 5),
+                //   _buildTextField('Enter College / Institution',
+                //       professionalInfoState.college ?? '', true, (value) {
+                //     // ref.read(professionalInfoProvider.notifier).updateCollege(value);
+                //   }),
+                // ],
+                const SizedBox(height: 5),
                 _buildOccupationSelection(context, ref, professionalInfoState),
-                if (professionalInfoState.occupation != null) ...[
-                  const SizedBox(height: 16),
-                  _buildTextField('Enter Organization Name',
-                      professionalInfoState.college ?? '', true, (value) {
-                    // ref.read(professionalInfoProvider.notifier).updateCollege(value);
-                  }),
-                ],
-                const SizedBox(height: 16),
+                // if (professionalInfoState.occupation != null) ...[
+                //   const SizedBox(height: 5),
+                //   _buildTextField('Enter Organization Name',
+                //       professionalInfoState.college ?? '', true, (value) {
+                //     // ref.read(professionalInfoProvider.notifier).updateCollege(value);
+                //   }),
+                // ],
+                const SizedBox(height: 5),
                 _buildEmployedInSelection(context, ref, professionalInfoState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 5),
                 _buildCitizenshipSelection(context, ref, professionalInfoState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 5),
                 _buildCurrencyTypeSelection(
                     context, ref, professionalInfoState),
-                const SizedBox(height: 16),
+                const SizedBox(height: 5),
                 _buildAnnualIncomeSelection(
                     context, ref, professionalInfoState),
                 const SizedBox(height: 24),
@@ -329,20 +340,27 @@ class _ProfessionalInformationDetailsScreenState
   ) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Annual Income',
-            options: IncomeOptions
-                .options[professionalInfoState.currencyType ?? 'INR (₹)']!,
-            selectedValue: professionalInfoState.annualIncome ?? 'Select',
-            onSelect: (value) {
-              ref
-                  .read(professionalInfoProvider.notifier)
-                  .updateAnnualIncome(value);
-            },
-          ),
-        );
+        if (professionalInfoState.currencyType != null) {
+          showDialog(
+            context: context,
+            builder: (context) => CommonSelectionDialog(
+              title: 'Select Annual Income',
+              options: IncomeOptions
+                  .options[professionalInfoState.currencyType ?? 'INR (₹)']!,
+              selectedValue: professionalInfoState.annualIncome ?? 'Select',
+              onSelect: (value) {
+                ref
+                    .read(professionalInfoProvider.notifier)
+                    .updateAnnualIncome(value);
+              },
+            ),
+          );
+        } else {
+          CustomSnackBar.show(
+              context: context,
+              message: 'Please Select First Currency Type!.',
+              isError: true);
+        }
       },
       child: _buildListTile(
         'Annual Income',
@@ -360,8 +378,14 @@ class _ProfessionalInformationDetailsScreenState
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        onPressed: () {
-          if (ref.read(professionalInfoProvider.notifier).validateForm()) {
+        onPressed: () async {
+          final result = await ref
+              .read(professionalInfoProvider.notifier)
+              .updateProfessionalDetails();
+          ref
+              .read(userManagementProvider.notifier)
+              .updateProfessionalDetails(professionalInfoState);
+          if (result) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
               widget.onPop('true');
@@ -373,16 +397,11 @@ class _ProfessionalInformationDetailsScreenState
               );
             });
           } else {
-            Future.delayed(const Duration(microseconds: 50), () {
-              Navigator.pop(context);
-              widget.onPop('true');
-            }).then((_) {
-              CustomSnackBar.show(
-                isError: false,
-                context: context,
-                message: 'Profile updated successfully!',
-              );
-            });
+            CustomSnackBar.show(
+              isError: false,
+              context: context,
+              message: 'Something Went wrong. Please Try Again!',
+            );
           }
         },
         style: ElevatedButton.styleFrom(

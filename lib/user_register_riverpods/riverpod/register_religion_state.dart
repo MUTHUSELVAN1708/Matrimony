@@ -44,7 +44,8 @@ class RegisterReligionState {
       otherReligion: otherReligion ?? this.otherReligion,
       otherCaste: otherCaste ?? this.otherCaste,
       otherSubCaste: otherSubCaste ?? this.otherSubCaste,
-      willingToMarryOtherCastes: willingToMarryOtherCastes ?? this.willingToMarryOtherCastes,
+      willingToMarryOtherCastes:
+          willingToMarryOtherCastes ?? this.willingToMarryOtherCastes,
       isLoading: isLoading ?? this.isLoading,
     );
   }

@@ -49,16 +49,23 @@ class _ReligiousDetailsScreenState
   Widget build(BuildContext context) {
     final religiousState = ref.watch(religiousProvider);
     final heightQuery = MediaQuery.of(context).size.height;
-
+    final width = MediaQuery.of(context).size.width;
     return EnhancedLoadingWrapper(
       isLoading: religiousState.isLoading,
-      child: Material(
-        color: Colors.transparent,
-        child: Stack(
-          children: [
-            _buildHeader(context, heightQuery),
-            _buildForm(context, ref, religiousState, heightQuery),
-          ],
+      child: PopScope(
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) {
+            widget.onPop('true');
+          }
+        },
+        child: Material(
+          color: Colors.transparent,
+          child: Stack(
+            children: [
+              _buildHeader(context, width),
+              _buildForm(context, ref, religiousState, heightQuery),
+            ],
+          ),
         ),
       ),
     );
@@ -81,7 +88,7 @@ class _ReligiousDetailsScreenState
               color: Colors.white,
             ),
           ),
-          SizedBox(width: heightQuery * 0.15),
+          SizedBox(width: heightQuery * 0.20),
           const Text(
             'Religious Information',
             style: TextStyle(

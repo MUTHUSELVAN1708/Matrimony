@@ -68,7 +68,7 @@ class InitialScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'already have an account?',
+                      'Already have an account?',
                       style: AppTextStyles.spanTextStyle
                           .copyWith(color: AppColors.primaryButtonTextColor),
                     ),

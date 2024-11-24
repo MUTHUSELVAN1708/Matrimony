@@ -151,39 +151,39 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                           width: 2.0,
                                         ),
                                         image:
-                                        getImageApiProviderState.isLoading
-                                            ? null
-                                            : DecorationImage(
-                                          image: getImageApiProviderState
-                                              .error !=
-                                              null ||
-                                              getImageApiProviderState
-                                                  .data ==
-                                                  null ||
-                                              getImageApiProviderState
-                                                  .data!
-                                                  .images
-                                                  .isEmpty
-                                              ? const AssetImage(
-                                              'assets/image/emptyProfile.png')
-                                          as ImageProvider<
-                                              Object>
-                                              : MemoryImage(
-                                            base64Decode(
-                                              getImageApiProviderState
-                                                  .data!
-                                                  .images[0]
-                                                  .toString()
-                                                  .replaceAll(
-                                                  '\n', '')
-                                                  .replaceAll(
-                                                  '\r', ''),
-                                            ),
-                                          ) as ImageProvider<
-                                              Object>,
-                                          // Use MemoryImage for fetched image
-                                          fit: BoxFit.cover,
-                                        ),
+                                            getImageApiProviderState.isLoading
+                                                ? null
+                                                : DecorationImage(
+                                                    image: getImageApiProviderState
+                                                                    .error !=
+                                                                null ||
+                                                            getImageApiProviderState
+                                                                    .data ==
+                                                                null ||
+                                                            getImageApiProviderState
+                                                                .data!
+                                                                .images
+                                                                .isEmpty
+                                                        ? const AssetImage(
+                                                                'assets/image/emptyProfile.png')
+                                                            as ImageProvider<
+                                                                Object>
+                                                        : MemoryImage(
+                                                            base64Decode(
+                                                              getImageApiProviderState
+                                                                  .data!
+                                                                  .images[0]
+                                                                  .toString()
+                                                                  .replaceAll(
+                                                                      '\n', '')
+                                                                  .replaceAll(
+                                                                      '\r', ''),
+                                                            ),
+                                                          ) as ImageProvider<
+                                                            Object>,
+                                                    // Use MemoryImage for fetched image
+                                                    fit: BoxFit.cover,
+                                                  ),
                                       ),
                                     ),
                                   ],
@@ -201,7 +201,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     _buildActionButton(
                                         'Edit Contact', () {}, context),
@@ -213,17 +213,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                                   RegisterUserPhotoUploadScreen(
                                                     isEditPhoto: true,
                                                     images:
-                                                    getImageApiProviderState
-                                                        .data?.images,
+                                                        getImageApiProviderState
+                                                            .data?.images,
                                                   )));
                                     }, context),
-                                    _buildActionButton(
-                                        'Edit Horoscope', () {
+                                    _buildActionButton('Edit Horoscope', () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                              const HoroscopeAddDetailScreen()));
+                                                  const HoroscopeAddDetailScreen()));
                                     }, context),
                                   ],
                                 ),
@@ -238,7 +237,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                       ),
                                       const Padding(
                                         padding:
-                                        EdgeInsets.symmetric(vertical: 8),
+                                            EdgeInsets.symmetric(vertical: 8),
                                         child: Text(
                                           'Personal Information',
                                           style: TextStyle(
@@ -437,24 +436,24 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               //   }
               // }),
               screen: const LocationDetailsScreen(
-                //     onPop: (value) {
-                //   if (value == 'true') {
-                //     _updateProfileElementsVisibility(true);
-                //   }
-                // }
-              ),
+                  //     onPop: (value) {
+                  //   if (value == 'true') {
+                  //     _updateProfileElementsVisibility(true);
+                  //   }
+                  // }
+                  ),
             );
           } else {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,
               screen: const UpdateFamilyDetail(
-                //     onPop: (value) {
-                //   if (value == 'true') {
-                //     _updateProfileElementsVisibility(true);
-                //   }
-                // }
-              ),
+                  //     onPop: (value) {
+                  //   if (value == 'true') {
+                  //     _updateProfileElementsVisibility(true);
+                  //   }
+                  // }
+                  ),
             );
           }
         },
@@ -504,7 +503,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) =>
-                          const EditPartnerPreferencesMainScreen(),
+                              const EditPartnerPreferencesMainScreen(),
                         ),
                       );
                     },

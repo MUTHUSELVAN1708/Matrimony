@@ -383,7 +383,7 @@ class _RegisterUserProfessionalInfoScreenState
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: ProgressIndicatorWidget(value: 0.7),
+        title: const ProgressIndicatorWidget(value: 0.7),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(

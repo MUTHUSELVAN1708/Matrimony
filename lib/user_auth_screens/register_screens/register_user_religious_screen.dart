@@ -80,7 +80,8 @@ class _RegisterReligiousDetailsScreenState
                 CustomDropdownField(
                   isOtherValue: registerReligionState.otherMotherTongue,
                   controller: otherMotherTongueController,
-                  isOther: registerReligionState.motherTongue == 'Other',
+                  // isOther: registerReligionState.motherTongue == 'Other',
+                  isOther: true,
                   value: registerReligionState.motherTongue ?? '',
                   hint: 'Mother Tongue',
                   items: PartnerPreferenceConstData.motherTongueOptions,
@@ -103,7 +104,8 @@ class _RegisterReligiousDetailsScreenState
                   isOtherValue: registerReligionState.otherReligion,
                   value: registerReligionState.religion ?? '',
                   hint: 'Religion',
-                  isOther: registerReligionState.religion == 'Other',
+                  // isOther: registerReligionState.religion == 'Other',
+                  isOther: true,
                   items: religionState.data.map((e) => e.religion).toList()
                     ..add('Other'),
                   onChanged: (value) async {
@@ -142,7 +144,8 @@ class _RegisterReligiousDetailsScreenState
                         controller: otherCasteController,
                         value: registerReligionState.caste ?? '',
                         hint: 'Caste',
-                        isOther: registerReligionState.caste == 'Other',
+                        // isOther: registerReligionState.caste == 'Other',
+                        isOther: true,
                         items:
                             religionState.casteList.map((e) => e.caste).toList()
                               ..add('Other'),
@@ -183,10 +186,11 @@ class _RegisterReligiousDetailsScreenState
                     ? const SizedBox()
                     : CustomDropdownField(
                         value: registerReligionState.subCaste ?? '',
-                        isOther: registerReligionState.subCaste == 'Other',
+                        // isOther: registerReligionState.subCaste == 'Other',
                         controller: otherSubCasteController,
                         isOtherValue: registerReligionState.otherSubCaste,
                         hint: 'Sub Caste',
+                        isOther: true,
                         items: religionState.subCasteList
                             .map((e) => e.subCaste)
                             .toList()
