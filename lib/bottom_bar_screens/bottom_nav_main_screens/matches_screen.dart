@@ -90,9 +90,9 @@ class MatchCard extends ConsumerWidget {
           ClipRRect(
             borderRadius:
                 BorderRadius.circular(4), // Adjust radius for the card
-            child: match.photos![0].isNotEmpty
+            child: match.images![0].isNotEmpty
                 ? Image.memory(
-                    base64Decode(match.photos![0]),
+                    base64Decode(match.images![0]),
                     height: MediaQuery.of(context).size.height * 0.3,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -131,7 +131,7 @@ class MatchCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  match.id.toString(),
+                  '#${match.uniqueId ?? ''}',
                   style: AppTextStyles.spanTextStyle.copyWith(
                       color: AppColors.primaryButtonTextColor, fontSize: 14),
                 ),
@@ -190,13 +190,25 @@ class MatchCard extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  _buildInfoChip('Not Working'),
-                  const SizedBox(width: 8),
-                  _buildInfoChip('${match.age} Years'),
-                  const SizedBox(width: 8),
-                  _buildInfoChip("match.caste"),
-                  const SizedBox(width: 8),
-                  _buildInfoChip("match.location"),
+                  if (match.occupation != null && match.occupation != '') ...[
+                    _buildInfoChip(match.occupation!),
+                    const SizedBox(width: 8),
+                  ],
+                  if (match.age != null) ...[
+                    _buildInfoChip('${match.age} Yrs'),
+                    const SizedBox(width: 8),
+                  ],
+                  if (match.caste != null && match.caste != '') ...[
+                    _buildInfoChip(match.caste!),
+                    const SizedBox(width: 8),
+                  ],
+                  if (match.state != null &&
+                      match.state != '' &&
+                      match.city != null &&
+                      match.city != '') ...[
+                    _buildInfoChip('${match.city},${match.state!}'),
+                    const SizedBox(width: 8),
+                  ],
                 ],
               ),
             ),
@@ -207,20 +219,22 @@ class MatchCard extends ConsumerWidget {
   }
 
   Widget _buildInfoChip(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 12,
-          color: Colors.black87,
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(4),
         ),
-        overflow: TextOverflow.ellipsis, // Ellipsis for long text
-        maxLines: 1, // Limit to one line
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.black87,
+          ),
+          overflow: TextOverflow.ellipsis, // Ellipsis for long text
+          maxLines: 1, // Limit to one line
+        ),
       ),
     );
   }

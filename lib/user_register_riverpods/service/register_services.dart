@@ -159,7 +159,7 @@ class RegisterService {
         'religion': religion,
         'caste': caste,
         'subCaste': subCaste,
-        'division': division,
+        'willingToMarryFromOtherCommunities': division,
       }),
     );
 
@@ -231,7 +231,11 @@ class RegisterService {
         'city': city,
         'flatNumber': flatNumber,
         'address': address,
-        'ownHouse': ownHouse
+        'ownHouse': ownHouse != null
+            ? ownHouse
+                ? 'Yes'
+                : 'No'
+            : null
       }),
     );
 

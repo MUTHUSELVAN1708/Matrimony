@@ -1,17 +1,24 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_photo_upload_screens/register_user_photo_uploaded_success_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/create_user_photo_notifier.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_photo_picker_notifier.dart'; // Riverpod image picker
 
 class RegisterUserPhotoUploadScreen extends ConsumerStatefulWidget {
-  const RegisterUserPhotoUploadScreen({super.key});
+  final bool? isEditPhoto;
+  final List<String>? images;
+
+  const RegisterUserPhotoUploadScreen(
+      {super.key, this.isEditPhoto, this.images});
 
   @override
   ConsumerState<RegisterUserPhotoUploadScreen> createState() =>
@@ -29,6 +36,14 @@ class _RegisterUserPhotoUploadScreenState
   Future<void> disposeState() async {
     await Future.delayed(Duration.zero);
     ref.read(imagePickerProvider.notifier).disposeState();
+    if (widget.isEditPhoto != null) {
+      print(widget.images);
+      ref.read(imagePickerProvider.notifier).initialState(
+            widget.images?.isNotEmpty == true ? widget.images?.first : null,
+            widget.images!.length > 1 ? widget.images![1] : null,
+            widget.images!.length > 2 ? widget.images![2] : null,
+          );
+    }
   }
 
   @override
@@ -47,18 +62,19 @@ class _RegisterUserPhotoUploadScreenState
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          TextButton(
-            child: Text('Skip',
-                style: AppTextStyles.headingTextstyle
-                    .copyWith(color: Colors.black)),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => RegisterUserGovernmentProof(),
-                ),
-              );
-            },
-          ),
+          if (widget.isEditPhoto == null)
+            TextButton(
+              child: Text('Skip',
+                  style: AppTextStyles.headingTextstyle
+                      .copyWith(color: Colors.black)),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => RegisterUserGovernmentProof(),
+                  ),
+                );
+              },
+            ),
         ],
       ),
       body: Padding(
@@ -66,10 +82,15 @@ class _RegisterUserPhotoUploadScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 30),
-            const Text(
-              'Upload your photo',
+            const SizedBox(height: 20),
+            Text(
+              widget.isEditPhoto == null
+                  ? 'Upload your photo'
+                  : 'Edit your Photo',
               style: AppTextStyles.headingTextstyle,
+            ),
+            const SizedBox(
+              height: 15,
             ),
             const Text(
               textAlign: TextAlign.center,
@@ -88,37 +109,40 @@ class _RegisterUserPhotoUploadScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildPhotoUploadBox(
-                  large: true,
-                  context: context,
-                  imageUrl: imagePickerState.imageUrl1,
-                  isLoading: imagePickerState.isLoading1,
-                  onTap: () {
-                    ref.read(imagePickerProvider.notifier).pickImage1();
-                  },
-                ),
-                const SizedBox(width: 10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildPhotoUploadBox(
                       context: context,
-                      imageUrl: imagePickerState.imageUrl2,
-                      isLoading: imagePickerState.isLoading2,
+                      imageUrl: imagePickerState.imageUrl1,
+                      isLoading: imagePickerState.isLoading1,
                       onTap: () {
-                        ref.read(imagePickerProvider.notifier).pickImage2();
+                        _showImageSourceSelector(context, 1);
+                        // ref.read(imagePickerProvider.notifier).pickImage2();
                       },
                     ),
                     const SizedBox(height: 10),
                     _buildPhotoUploadBox(
                       context: context,
-                      imageUrl: imagePickerState.imageUrl3,
-                      isLoading: imagePickerState.isLoading3,
+                      imageUrl: imagePickerState.imageUrl2,
+                      isLoading: imagePickerState.isLoading2,
                       onTap: () {
-                        ref.read(imagePickerProvider.notifier).pickImage3();
+                        _showImageSourceSelector(context, 2);
+                        // ref.read(imagePickerProvider.notifier).pickImage3();
                       },
                     ),
                   ],
+                ),
+                const SizedBox(width: 10),
+                _buildPhotoUploadBox(
+                  large: true,
+                  context: context,
+                  imageUrl: imagePickerState.imageUrl3,
+                  isLoading: imagePickerState.isLoading3,
+                  onTap: () {
+                    _showImageSourceSelector(context, 3);
+                    // ref.read(imagePickerProvider.notifier).pickImage1();
+                  },
                 ),
               ],
             ),
@@ -140,14 +164,21 @@ class _RegisterUserPhotoUploadScreenState
                       final value = await ref
                           .read(imageRegisterApiProvider.notifier)
                           .uploadPhoto(isImagesNotEmpty);
+                      await ref.read(getImageApiProvider.notifier).getImage();
+                      ref.read(userManagementProvider.notifier).updateImage(
+                          ref.read(getImageApiProvider).data?.images);
                       if (value) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const RegisterUserPhotoUploadedSuccessScreen(),
-                          ),
-                          // (route) => false,
-                        );
+                        if (widget.isEditPhoto == null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const RegisterUserPhotoUploadedSuccessScreen(),
+                            ),
+                            // (route) => false,
+                          );
+                        } else {
+                          Navigator.of(context).pop();
+                        }
                       } else {
                         CustomSnackBar.show(
                           context: context,
@@ -155,14 +186,20 @@ class _RegisterUserPhotoUploadScreenState
                           isError: true,
                         );
                       }
+                    }else{
+                      CustomSnackBar.show(
+                        context: context,
+                        message: 'Please Upload 2 Photos.',
+                        isError: true,
+                      );
                     }
                   }
                 },
                 style: AppTextStyles.primaryButtonstyle,
                 child: imageApi.isLoading
                     ? const LoadingIndicator()
-                    : const Text(
-                        'Continue',
+                    : Text(
+                        widget.isEditPhoto == null ? 'Continue' : 'Update',
                         style: AppTextStyles.primarybuttonText,
                       ),
               ),
@@ -173,6 +210,57 @@ class _RegisterUserPhotoUploadScreenState
     );
   }
 
+  void _showImageSourceSelector(BuildContext context, int imageType) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Colors.blue),
+              title: const Text('Camera'),
+              onTap: () async {
+                Navigator.pop(context);
+                imageType == 1
+                    ? ref
+                        .read(imagePickerProvider.notifier)
+                        .pickImage1(ImageSource.camera)
+                    : imageType == 2
+                        ? ref
+                            .read(imagePickerProvider.notifier)
+                            .pickImage2(ImageSource.camera)
+                        : ref
+                            .read(imagePickerProvider.notifier)
+                            .pickImage3(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo, color: Colors.green),
+              title: const Text('Gallery'),
+              onTap: () async {
+                Navigator.pop(context); // Close the bottom sheet
+                imageType == 1
+                    ? ref
+                        .read(imagePickerProvider.notifier)
+                        .pickImage1(ImageSource.gallery)
+                    : imageType == 2
+                        ? ref
+                            .read(imagePickerProvider.notifier)
+                            .pickImage2(ImageSource.gallery)
+                        : ref
+                            .read(imagePickerProvider.notifier)
+                            .pickImage3(ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildPhotoUploadBox({
     required BuildContext context,
     bool large = false,
@@ -180,14 +268,13 @@ class _RegisterUserPhotoUploadScreenState
     bool isLoading = false,
     required VoidCallback onTap,
   }) {
-    print(imageUrl);
     return InkWell(
       onTap: onTap,
       child: Container(
         width: large
             ? MediaQuery.of(context).size.width * 0.4
             : MediaQuery.of(context).size.width * 0.4,
-        height: large ? 300 : 150,
+        height: large ? 310 : 150,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(10),

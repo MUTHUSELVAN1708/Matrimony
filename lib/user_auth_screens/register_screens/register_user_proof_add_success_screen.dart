@@ -50,11 +50,11 @@ class RegisterUserGovernmentProofSuccessScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const RegisterPartnerBasicPreferenceScreen()),
+                              const RegisterPartnerBasicPreferenceScreen()),(route) => false,
                     );
                   },
                   style: AppTextStyles.primaryButtonstyle,

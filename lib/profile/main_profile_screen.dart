@@ -234,11 +234,11 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       ),
       MenuItem(
         icon: 'assets/more.svg',
-        title: 'More',
+        title: 'FAQ',
         onTap: () {
           NavigationHelper.slideNavigateTo(
             context: context,
-            screen: FAQScreen(),
+            screen: const FAQScreen(),
           );
         },
       ),
