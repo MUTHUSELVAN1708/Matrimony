@@ -55,10 +55,12 @@ class RegisterUserInitialProfileSuccessScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const RegisterUserPhotoUploadScreen()),(route) => false,);
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const RegisterUserPhotoUploadScreen()),
+                      (route) => false,
+                    );
                   },
                   style: AppTextStyles.primaryButtonstyle,
                   child: const Text(

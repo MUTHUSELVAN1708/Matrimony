@@ -7,7 +7,7 @@ class UploadPhotoWidget extends ConsumerWidget {
   const UploadPhotoWidget({super.key});
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -42,12 +42,9 @@ class UploadPhotoWidget extends ConsumerWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            RegisterUserPhotoUploadScreen(
+                        builder: (context) => RegisterUserPhotoUploadScreen(
                               isEditPhoto: true,
-                              images:
-                              getImageApiProviderState
-                                  .data?.images,
+                              images: getImageApiProviderState.data?.images,
                             )));
               },
               style: ElevatedButton.styleFrom(

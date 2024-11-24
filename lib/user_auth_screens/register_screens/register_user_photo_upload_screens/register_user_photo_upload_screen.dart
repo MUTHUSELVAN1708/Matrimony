@@ -36,12 +36,23 @@ class _RegisterUserPhotoUploadScreenState
   Future<void> disposeState() async {
     await Future.delayed(Duration.zero);
     ref.read(imagePickerProvider.notifier).disposeState();
-    if (widget.isEditPhoto != null) {
-      print(widget.images);
+    if (widget.isEditPhoto != null && widget.images != null) {
       ref.read(imagePickerProvider.notifier).initialState(
-            widget.images?.isNotEmpty == true ? widget.images?.first : null,
-            widget.images!.length > 1 ? widget.images![1] : null,
-            widget.images!.length > 2 ? widget.images![2] : null,
+            widget.images?.isNotEmpty == true
+                ? widget.images!.first.isNotEmpty
+                    ? widget.images?.first
+                    : null
+                : null,
+            widget.images!.length > 1
+                ? widget.images![1].isNotEmpty
+                    ? widget.images![1]
+                    : null
+                : null,
+            widget.images!.length > 2
+                ? widget.images![2].isNotEmpty
+                    ? widget.images![2]
+                    : null
+                : null,
           );
     }
   }
@@ -186,7 +197,7 @@ class _RegisterUserPhotoUploadScreenState
                           isError: true,
                         );
                       }
-                    }else{
+                    } else {
                       CustomSnackBar.show(
                         context: context,
                         message: 'Please Upload 2 Photos.',

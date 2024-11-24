@@ -54,7 +54,8 @@ class RegisterUserGovernmentProofSuccessScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const RegisterPartnerBasicPreferenceScreen()),(route) => false,
+                              const RegisterPartnerBasicPreferenceScreen()),
+                      (route) => false,
                     );
                   },
                   style: AppTextStyles.primaryButtonstyle,

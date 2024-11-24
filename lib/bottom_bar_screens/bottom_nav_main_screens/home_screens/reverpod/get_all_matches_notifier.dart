@@ -17,7 +17,16 @@ class Matches extends Equatable {
   final String? state;
   final String? city;
 
-  const Matches({this.id, this.name, this.age, this.images,this.uniqueId,this.occupation,this.caste,this.state,this.city});
+  const Matches(
+      {this.id,
+      this.name,
+      this.age,
+      this.images,
+      this.uniqueId,
+      this.occupation,
+      this.caste,
+      this.state,
+      this.city});
 
   Map<String, dynamic> toJson() {
     return {
@@ -28,29 +37,29 @@ class Matches extends Equatable {
       'uniqueId': uniqueId,
       'city': city,
       'state': state,
-      'occupation' : occupation,
+      'occupation': occupation,
       'caste': caste,
     };
   }
 
   factory Matches.fromJson(Map<String, dynamic> json) {
     return Matches(
-      id: json['userId'] as int?,
-      name: json['name'] as String?,
-      age: json['age'] as int?,
+        id: json['userId'] as int?,
+        name: json['name'] as String?,
+        age: json['age'] as int?,
         images: (json['images'] as List<dynamic>?)
-          ?.map((item) => item.toString())
-          .toList(),
-      occupation: json['occupation'] as String?,
-      caste: json['caste'] as String?,
-      state: json['state'] as String?,
-      city: json['city'] as String?,
-      uniqueId: json['uniqueId'] as String?
-    );
+            ?.map((item) => item.toString())
+            .toList(),
+        occupation: json['occupation'] as String?,
+        caste: json['caste'] as String?,
+        state: json['state'] as String?,
+        city: json['city'] as String?,
+        uniqueId: json['uniqueId'] as String?);
   }
 
   @override
-  List<Object?> get props => [id, name, age, images,occupation,caste,state,city,uniqueId];
+  List<Object?> get props =>
+      [id, name, age, images, occupation, caste, state, city, uniqueId];
 }
 
 class AllMatchState extends Equatable {

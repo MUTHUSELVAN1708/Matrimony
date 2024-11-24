@@ -42,7 +42,9 @@ class _HoroscopeAddDetailScreenState
   Future<void> getData() async {
     await Future.delayed(Duration.zero);
     ref.read(horoscopeProvider.notifier).resetHoroscope();
-    ref.read(horoscopeProvider.notifier).setHoroscope(ref.read(userManagementProvider).userDetails);
+    ref
+        .read(horoscopeProvider.notifier)
+        .setHoroscope(ref.read(userManagementProvider).userDetails);
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -238,7 +240,9 @@ class _HoroscopeAddDetailScreenState
                     controller: stateController,
                     icon: Icons.location_on,
                     onChanged: (value) {
-                      ref.read(horoscopeProvider.notifier).updateBirthCity(value);
+                      ref
+                          .read(horoscopeProvider.notifier)
+                          .updateBirthCity(value);
                     },
                     hintText: 'Enter Your Birth State',
                     enabled: true),
@@ -259,7 +263,9 @@ class _HoroscopeAddDetailScreenState
                     controller: cityController,
                     icon: Icons.location_on,
                     onChanged: (value) {
-                      ref.read(horoscopeProvider.notifier).updateBirthCity(value);
+                      ref
+                          .read(horoscopeProvider.notifier)
+                          .updateBirthCity(value);
                     },
                     hintText: 'Enter Your Birth City',
                     enabled: true),

@@ -6,6 +6,7 @@ import 'package:matrimony/common/api_list.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit/profile/state/edit_contact_state.dart';
+import 'package:matrimony/edit/profile/state/professional_info_state.dart';
 import 'package:matrimony/edit/profile/state/religious_state.dart';
 import 'package:matrimony/models/partner_details_model.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
@@ -122,8 +123,8 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
             willingToMarryFromOtherCommunities:
                 religiousState.willingToMarryOtherCommunities != null
                     ? religiousState.willingToMarryOtherCommunities!
-                        ? '1'
-                        : '0'
+                        ? 'true'
+                        : 'false'
                     : null));
   }
 
@@ -161,6 +162,17 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
     ));
   }
 
+  void updateProfessionalDetails(ProfessionalInfoState professionalInfoState) {
+    state = state.copyWith(
+        userDetails: state.userDetails.copyWith(
+            education: professionalInfoState.education,
+            occupation: professionalInfoState.occupation,
+            employedType: professionalInfoState.employedIn,
+            citizenShip: professionalInfoState.citizenship,
+            annualIncomeCurrency: professionalInfoState.currencyType,
+            annualIncome: professionalInfoState.annualIncome));
+  }
+
   int calculateAge(DateTime? dateOfBirth) {
     if (dateOfBirth != null) {
       final DateTime now = DateTime.now();
@@ -175,8 +187,9 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
     return 0;
   }
 
-  void updateImage(List<String>? images){
-    state = state.copyWith(userDetails: state.userDetails.copyWith(images: images));
+  void updateImage(List<String>? images) {
+    state =
+        state.copyWith(userDetails: state.userDetails.copyWith(images: images));
   }
 
   Future<void> getLocalData() async {

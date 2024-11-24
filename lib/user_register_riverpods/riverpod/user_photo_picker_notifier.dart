@@ -71,7 +71,7 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
         isLoading3: false);
   }
 
-  void initialState(String? url1,String? url2,String? url3) {
+  void initialState(String? url1, String? url2, String? url3) {
     state = ImagePickerState(
         imageUrl1: url1,
         imageUrl2: url2,
@@ -132,13 +132,10 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
   }
 
   Future<String?> _pickAndConvertImage(ImageSource source) async {
-    final XFile? image =
-        await _imagePicker.pickImage(source: source);
+    final XFile? image = await _imagePicker.pickImage(source: source);
     if (image != null) {
-
       if (kIsWeb) {
-        final Uint8List bytes =
-            await image.readAsBytes();
+        final Uint8List bytes = await image.readAsBytes();
         final base64String = base64Encode(bytes);
         return base64String;
       } else {

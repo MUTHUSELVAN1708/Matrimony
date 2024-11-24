@@ -37,11 +37,11 @@ class HoroscopeNotifier extends StateNotifier<HoroscopeState> {
     state = HoroscopeState();
   }
 
-  void setHoroscope(UserDetails userDetails){
+  void setHoroscope(UserDetails userDetails) {
     // state = state.copyWith(dateOfBirth: )
   }
 
-  Future<bool> editHoroscope() async{
+  Future<bool> editHoroscope() async {
     state = state.copyWith(isLoading: true);
 
     try {

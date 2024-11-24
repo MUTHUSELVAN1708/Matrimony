@@ -703,7 +703,7 @@ class _AllMatchesDetailsScreenState
       children: [
         Expanded(
           child: Text(
-            label == ''? '-': label,
+            label == '' ? '-' : label,
             style: AppTextStyles.secondrySpanTextStyle
                 .copyWith(color: Colors.black, fontSize: 15),
             overflow: TextOverflow.ellipsis,

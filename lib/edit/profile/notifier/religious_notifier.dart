@@ -5,7 +5,6 @@ import 'package:matrimony/common/api_list.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/models/religion_model.dart';
 import 'package:matrimony/models/user_details_model.dart';
-import 'package:matrimony/user_register_riverpods/riverpod/create_user_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../state/religious_state.dart';
 import 'package:http/http.dart' as http;
@@ -57,6 +56,7 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
       for (final a in religionList) {
         if (a.religion == state.religion) {
           religionId = a.id;
+          break;
         }
       }
       state = state.copyWith(religionList: religionList);
@@ -79,6 +79,7 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
       for (final a in casteList) {
         if (a.castes == state.caste) {
           casteId = a.id;
+          break;
         }
       }
       state = state.copyWith(casteList: casteList);
@@ -116,6 +117,7 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
       for (final a in religionList) {
         if (a.religion == state.religion) {
           religionId = a.id;
+          break;
         }
       }
     }
@@ -144,18 +146,16 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
       for (final a in casteList) {
         if (a.castes == state.caste) {
           casteId = a.id;
+          break;
         }
       }
     }
-    print('casetIf');
-    print(casteId);
     if (subcaste != null && subcaste.isNotEmpty) {
       final List<dynamic> subcastes = jsonDecode(subcaste);
       List<SubCaste> subcasteList = subcastes
           .map((e) => SubCaste.fromJson(e as Map<String, dynamic>))
           .where((caste) => caste.casteId == casteId)
           .toList();
-      print(subcasteList);
       // subcasteList.removeWhere((caste) => caste.casteId != casteId);
       state = state.copyWith(subCasteList: subcasteList);
     } else {

@@ -167,7 +167,7 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                             },
                           ),
                         ),
-                      if (selectedValue == 'Other')
+                      if (selectedValue == 'Other' && widget.isOther != null)
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 10),
@@ -204,17 +204,24 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                           width: double.infinity,
                           height: 45,
                           child: ElevatedButton(
-                            onPressed: selectedValue == 'Other' &&
-                                    otherText.trim().isEmpty
-                                ? null
+                            onPressed: widget.isOther != null
+                                ? selectedValue == 'Other' &&
+                                        otherText.trim().isEmpty
+                                    ? null
+                                    : () {
+                                        widget.onChanged(selectedValue);
+                                        Navigator.pop(context);
+                                      }
                                 : () {
                                     widget.onChanged(selectedValue);
                                     Navigator.pop(context);
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: selectedValue == 'Other' &&
-                                      otherText.trim().isEmpty
-                                  ? Colors.grey
+                              backgroundColor: widget.isOther != null
+                                  ? selectedValue == 'Other' &&
+                                          otherText.trim().isEmpty
+                                      ? Colors.grey
+                                      : Colors.red
                                   : Colors.red,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),

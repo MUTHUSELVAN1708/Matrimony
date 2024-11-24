@@ -46,13 +46,20 @@ class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
 
     return EnhancedLoadingWrapper(
       isLoading: profileState.isLoading,
-      child: Material(
-        color: Colors.transparent,
-        child: Stack(
-          children: [
-            _buildHeader(context, heightQuery),
-            _buildForm(context, ref, profileState, heightQuery),
-          ],
+      child: PopScope(
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) {
+            widget.onPop('true');
+          }
+        },
+        child: Material(
+          color: Colors.transparent,
+          child: Stack(
+            children: [
+              _buildHeader(context, heightQuery),
+              _buildForm(context, ref, profileState, heightQuery),
+            ],
+          ),
         ),
       ),
     );
