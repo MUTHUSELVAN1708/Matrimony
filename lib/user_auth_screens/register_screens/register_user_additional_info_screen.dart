@@ -140,13 +140,13 @@ class _RegisterUserAdditionalInfoScreenState
                         aboutYourSelf: _aboutController.text,
                         employefamilyStatus: selectedFamilyStatus);
                     if (success) {
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
                               RegisterUserInitialProfileSuccessScreen(),
                         ),
-                        (Route<dynamic> route) => false,
+                        // (Route<dynamic> route) => false,
                       );
                     } else {
                       CustomSnackBar.show(

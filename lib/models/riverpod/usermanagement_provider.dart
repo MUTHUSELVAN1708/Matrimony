@@ -120,7 +120,11 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
             motherTongue: religiousState.motherTongue,
             subcaste: religiousState.subCaste,
             willingToMarryFromOtherCommunities:
-                religiousState.willingToMarryOtherCommunities));
+                religiousState.willingToMarryOtherCommunities != null
+                    ? religiousState.willingToMarryOtherCommunities!
+                        ? '1'
+                        : '0'
+                    : null));
   }
 
   void updateContactDetails(EditContactState editContactState) {
@@ -169,6 +173,10 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
       return calculatedAge;
     }
     return 0;
+  }
+
+  void updateImage(List<String>? images){
+    state = state.copyWith(userDetails: state.userDetails.copyWith(images: images));
   }
 
   Future<void> getLocalData() async {

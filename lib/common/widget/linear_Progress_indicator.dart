@@ -4,7 +4,7 @@ import 'package:matrimony/common/colors.dart';
 class ProgressIndicatorWidget extends StatelessWidget {
   final double value;
 
-  ProgressIndicatorWidget({required this.value});
+  const ProgressIndicatorWidget({super.key, required this.value});
 
   @override
   Widget build(BuildContext context) {

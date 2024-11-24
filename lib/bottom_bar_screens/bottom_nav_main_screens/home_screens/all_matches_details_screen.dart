@@ -183,7 +183,7 @@ class _AllMatchesDetailsScreenState
                 ),
                 const SizedBox(height: 10),
                 _buildBasicDetails(
-                    '${userDetails.age ?? '-'}, ${userDetails.height ?? '-'}',
+                    '${userDetails.age ?? '-'} Yrs, ${userDetails.height ?? '-'}',
                     'profileIcon'),
                 const SizedBox(height: 8),
                 _buildBasicDetails(
@@ -211,7 +211,7 @@ class _AllMatchesDetailsScreenState
             style: AppTextStyles.secondrySpanTextStyle
                 .copyWith(color: Colors.black, fontSize: 16),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 14),
           Text(
             'About ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'his' : 'her' : '-'} family',
             style: AppTextStyles.spanTextStyle.copyWith(
@@ -223,14 +223,16 @@ class _AllMatchesDetailsScreenState
             style: AppTextStyles.secondrySpanTextStyle
                 .copyWith(color: Colors.black, fontSize: 16),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 15),
           Center(
               child: Text(
-            'Profile verification score - 3/5',
+            'Profile Verification Score - ${calculateVerificationScore(userDetails)}/5',
             style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
           )),
-          const SizedBox(height: 15),
-          StatusRowWidget()
+          const SizedBox(height: 20),
+          StatusRowWidget(
+            userDetails: userDetails,
+          )
         ],
       ),
     );
@@ -266,13 +268,7 @@ class _AllMatchesDetailsScreenState
                   '${userDetails.city ?? '-'}, ${userDetails.state ?? '-'}',
                   'location_icon'),
               _buildDetailItem(
-                  'Own House',
-                  userDetails.ownHouse != null
-                      ? userDetails.ownHouse!
-                          ? 'Yes'
-                          : 'No'
-                      : '-',
-                  'location_icon'),
+                  'Own House', userDetails.ownHouse ?? '-', 'location_icon'),
               _buildDetailItem(
                   'Citizenship', userDetails.citizenShip ?? '-', 'flag'),
               _buildDetailItem('Smoking Habits',
@@ -510,23 +506,6 @@ class _AllMatchesDetailsScreenState
     );
   }
 
-  Widget _buildInfoChip(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: Colors.grey[800],
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
-
   Widget _buildPreferenceDetails(
       UserDetails userDetails, PartnerDetailsModel partnerDetailsModel) {
     final allMatchProvider = ref.watch(allMatchesProvider);
@@ -724,11 +703,14 @@ class _AllMatchesDetailsScreenState
       children: [
         Expanded(
           child: Text(
-            label,
+            label == ''? '-': label,
             style: AppTextStyles.secondrySpanTextStyle
                 .copyWith(color: Colors.black, fontSize: 15),
             overflow: TextOverflow.ellipsis,
           ),
+        ),
+        const SizedBox(
+          height: 3,
         ),
         CustomSvg(
           name: icon,
@@ -736,12 +718,27 @@ class _AllMatchesDetailsScreenState
       ],
     );
   }
+
+  int calculateVerificationScore(UserDetails userDetails) {
+    int score = 0;
+
+    if (userDetails.photoStatus == true) score++;
+    if (userDetails.pnoStatus == true) score++;
+    if (userDetails.govtIdProofStatus == true) score++;
+    if (userDetails.educationStatus == true) score++;
+    if (userDetails.incomeStatus == true) score++;
+
+    return score;
+  }
 }
 
 class StatusRowWidget extends StatelessWidget {
+  final UserDetails userDetails;
+
+  const StatusRowWidget({super.key, required this.userDetails});
+
   @override
   Widget build(BuildContext context) {
-    // Define the lists for the status labels, icon names, and SVG names.
     final verificationStatus = [
       'Mobile Verified',
       'Govt. ID Verified',
@@ -771,13 +768,19 @@ class StatusRowWidget extends StatelessWidget {
       'Close_round',
     ];
 
-    final isVerified = [true, true, false, true, false];
+    final isVerified = [
+      userDetails.pnoStatus ?? false,
+      userDetails.govtIdProofStatus ?? false,
+      userDetails.photoStatus ?? false,
+      userDetails.educationStatus ?? false,
+      userDetails.incomeStatus ?? false
+    ];
 
-    double iconSize = MediaQuery.of(context).size.width *
-        0.12; // Adjust icon size based on screen width
+    double iconSize = MediaQuery.of(context).size.width * 0.12;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(5, (index) {
         return Flexible(
           child: Column(
@@ -785,14 +788,15 @@ class StatusRowWidget extends StatelessWidget {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Main icon container
                   Container(
                     height: iconSize,
                     width: iconSize,
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: Colors.red, // Adjust color as needed
+                      color: svgNames[index] == 'govrn_id'
+                          ? Colors.blueAccent
+                          : Colors.red, // Adjust color as needed
                     ),
                     child: CustomSvg(
                       name: svgNames[index], // Dynamically pass the name
@@ -807,8 +811,8 @@ class StatusRowWidget extends StatelessWidget {
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: isVerified[index]
-                            ? Colors.green
-                            : AppColors.primaryButtonColor,
+                            ? const Color(0xFF28EB9D)
+                            : AppColors.primaryButtonColor.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: CustomSvg(
@@ -816,6 +820,7 @@ class StatusRowWidget extends StatelessWidget {
                             ? iconForStatus[0]
                             : iconForStatus[1], // Conditionally select icon
                         color: Colors.white,
+                        height: 15,
                       ),
                     ),
                   ),

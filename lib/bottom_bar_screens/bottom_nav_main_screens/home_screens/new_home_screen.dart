@@ -74,6 +74,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Scaffold(
       key: _scaffoldKey, // Add this line
       endDrawer: const ProfileMainScreen(),
@@ -85,7 +86,9 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             _buildAllMatches(ref),
             _buildCompleteProfile(),
             _buildSuccessStory(context),
-            _buildUpgradeNow(context),
+            if(getImageApiProviderState.data != null && !getImageApiProviderState.data!.paymentStatus)...[
+              _buildUpgradeNow(context),
+            ],
             const ProfileCardStack(),
             _buildAssistanceService(),
           ],
@@ -247,8 +250,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             ),
             color: Colors.white,
           ),
-          height: 300,
-          margin: const EdgeInsets.only(top: 50, bottom: 15),
+          margin: const EdgeInsets.only(top: 50,bottom: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -323,12 +325,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   ),
                   child: Image.memory(
                     base64Decode(
-                      dailyRecommentData.photos![0]
+                      dailyRecommentData.images![0]
                           .toString()
                           .replaceAll('\n', '')
                           .replaceAll('\r', ''),
                     ),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
@@ -482,7 +484,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                                     image: DecorationImage(
                                       image: MemoryImage(
                                         base64Decode(
-                                          matching.photos![0]
+                                          matching.images![0]
                                               .toString()
                                               .replaceAll('\n', '')
                                               .replaceAll('\r', '')
@@ -681,56 +683,10 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           borderRadius: BorderRadius.circular(10),
           // border: Border.all(color: Colors.black12)
         ),
-        child: Row(
+        child: const Row(
           children: [
-            Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Upgrade now to find your\nperfect life partner\nfaster than ever!',
-                  style: TextStyle(color: Colors.red.shade700, fontSize: 20),
-                ),
-                const Text(
-                    'Take the Next Step Towards Your\nHappily Even After!',
-                    style: TextStyle(color: Colors.black, fontSize: 15)),
-                const SizedBox(
-                  height: 5,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PlanUpgradeScreen()),
-                    );
-                  },
-                  child: Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                      // border: Border.all(color: Colors.black38,),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: const Offset(
-                              0, 2), // Add a slight shadow for a raised effect
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Upgrade Now',
-                        style: TextStyle(color: Colors.black54, fontSize: 12),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            )),
-            const CircleAvatar(
+            TwinkleButtonScreen(),
+            CircleAvatar(
               radius: 60,
               backgroundImage: AssetImage('assets/image/successimage.png'),
               backgroundColor: Colors.transparent,
@@ -819,3 +775,93 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     );
   }
 }
+
+class TwinkleButtonScreen extends StatefulWidget {
+  const TwinkleButtonScreen({super.key});
+
+  @override
+  TwinkleButtonScreenState createState() => TwinkleButtonScreenState();
+}
+
+class TwinkleButtonScreenState extends State<TwinkleButtonScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _twinkleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
+    _twinkleAnimation =
+        Tween<double>(begin: 0.2, end: 1.0).animate(_animationController);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose(); // Dispose to free resources
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Upgrade now to find your\nperfect life partner\nfaster than ever!',
+              style: TextStyle(color: Colors.red.shade700, fontSize: 20),
+            ),
+            const Text(
+                'Take the Next Step Towards Your\nHappily Even After!',
+                style: TextStyle(color: Colors.black, fontSize: 15)),
+            const SizedBox(
+              height: 8,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PlanUpgradeScreen()),
+                );
+              },
+              child: AnimatedBuilder(
+                animation: _twinkleAnimation,
+                builder: (context, child) {
+                  return Container(
+                    width: 100,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black12),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.redAccent.withOpacity(
+                              _twinkleAnimation.value), // Animate opacity
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: const Offset(
+                              0, 2), // Add a slight shadow for a raised effect
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Upgrade Now',
+                        style: TextStyle(color: Colors.black54, fontSize: 14),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      );
+  }
+}
+

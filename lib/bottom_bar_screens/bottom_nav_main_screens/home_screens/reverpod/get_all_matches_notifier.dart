@@ -10,16 +10,26 @@ class Matches extends Equatable {
   final int? id;
   final String? name;
   final int? age;
-  final List<String>? photos;
+  final List<String>? images;
+  final String? uniqueId;
+  final String? occupation;
+  final String? caste;
+  final String? state;
+  final String? city;
 
-  const Matches({this.id, this.name, this.age, this.photos});
+  const Matches({this.id, this.name, this.age, this.images,this.uniqueId,this.occupation,this.caste,this.state,this.city});
 
   Map<String, dynamic> toJson() {
     return {
       'userId': id,
       'name': name,
       'age': age,
-      'photos': photos,
+      'images': images,
+      'uniqueId': uniqueId,
+      'city': city,
+      'state': state,
+      'occupation' : occupation,
+      'caste': caste,
     };
   }
 
@@ -28,14 +38,19 @@ class Matches extends Equatable {
       id: json['userId'] as int?,
       name: json['name'] as String?,
       age: json['age'] as int?,
-      photos: (json['photos'] as List<dynamic>?)
+        images: (json['images'] as List<dynamic>?)
           ?.map((item) => item.toString())
           .toList(),
+      occupation: json['occupation'] as String?,
+      caste: json['caste'] as String?,
+      state: json['state'] as String?,
+      city: json['city'] as String?,
+      uniqueId: json['uniqueId'] as String?
     );
   }
 
   @override
-  List<Object?> get props => [id, name, age, photos];
+  List<Object?> get props => [id, name, age, images,occupation,caste,state,city,uniqueId];
 }
 
 class AllMatchState extends Equatable {

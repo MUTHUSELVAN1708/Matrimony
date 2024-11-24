@@ -113,7 +113,11 @@ class PartnerPreferenceNotifier<T>
           'food': food,
           'spokenLanguages': spokenLanguages,
           'interest': interest,
-          'ownHouse': ownHouse
+          'ownHouse': ownHouse != null
+              ? ownHouse
+                  ? 'Yes'
+                  : 'No'
+              : null
         }),
       );
 

@@ -81,37 +81,37 @@ class GetImageApiNotifier extends StateNotifier<GetImageState> {
   GetImageApiNotifier() : super(GetImageState());
 
   Future<void> getImage() async {
-    state = state.copyWith(isLoading: true, error: null, data: null);
-    try {
-      final int? userId = await SharedPrefHelper.getUserId();
-      final response = await http.post(
-        Uri.parse(Api.getUserImage),
-        headers: {
-          'Content-Type': 'application/json',
-          'AppId': '1',
-        },
-        body: jsonEncode({'userId': userId}),
-      );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        final userImageData = UserImageModel.fromJson(jsonResponse);
-        state = state.copyWith(
-          isLoading: false,
-          data: userImageData,
+      state = state.copyWith(isLoading: true, error: null, data: null);
+      try {
+        final int? userId = await SharedPrefHelper.getUserId();
+        final response = await http.post(
+          Uri.parse(Api.getUserImage),
+          headers: {
+            'Content-Type': 'application/json',
+            'AppId': '1',
+          },
+          body: jsonEncode({'userId': userId}),
         );
-      } else {
+
+        if (response.statusCode == 200) {
+          final jsonResponse = json.decode(response.body);
+          final userImageData = UserImageModel.fromJson(jsonResponse);
+          state = state.copyWith(
+            isLoading: false,
+            data: userImageData,
+          );
+        } else {
+          state = state.copyWith(
+            isLoading: false,
+            error: 'Failed to retrieve image: ${response.reasonPhrase}',
+          );
+        }
+      } catch (e) {
         state = state.copyWith(
           isLoading: false,
-          error: 'Failed to retrieve image: ${response.reasonPhrase}',
+          error: e.toString(),
         );
       }
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
-    }
   }
 }
 

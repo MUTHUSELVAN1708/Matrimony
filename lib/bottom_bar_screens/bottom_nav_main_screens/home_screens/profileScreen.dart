@@ -24,10 +24,10 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Row(
+              const Row(
                 children: [
-                  const Icon(Icons.arrow_back_ios, color: Colors.white),
-                  const SizedBox(width: 20),
+                  Icon(Icons.arrow_back_ios, color: Colors.white),
+                  SizedBox(width: 20),
                   ProgressIndicatorWidget(value: 0.7),
                 ],
               ),
@@ -73,30 +73,30 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black),
+                  ),
                   child: const Text('Edit Contact'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    side: BorderSide(color: Colors.black),
-                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black),
+                  ),
                   child: const Text('Add Photos'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    side: BorderSide(color: Colors.black),
-                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text('Add Horoscope'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
-                    side: BorderSide(color: Colors.black),
+                    side: const BorderSide(color: Colors.black),
                   ),
+                  child: const Text('Add Horoscope'),
                 ),
               ],
             ),

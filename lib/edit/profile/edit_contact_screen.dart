@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:matrimony/common/widget/common_selection_dialog.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
@@ -29,6 +30,7 @@ class _EditContactScreenState extends ConsumerState<EditContactScreen> {
   final commentsController = TextEditingController();
   final newEmailController = TextEditingController();
   final newPhoneNumberController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -415,9 +417,12 @@ class _EditContactScreenState extends ConsumerState<EditContactScreen> {
       BuildContext context, WidgetRef ref, EditContactState editContactState) {
     return GestureDetector(
       onTap: () async {
+        final editContactState = ref.read(editContactProvider);
         final TimeOfDay? selectedTime = await showTimePicker(
           context: context,
-          initialTime: TimeOfDay.now(),
+          initialTime: editContactState.availableTimeToCall != null
+              ? convertStringToTimeOfDay(editContactState.availableTimeToCall!)
+              : TimeOfDay.now(),
         );
         if (selectedTime != null) {
           final String formattedTime = selectedTime.format(context);
@@ -436,5 +441,11 @@ class _EditContactScreenState extends ConsumerState<EditContactScreen> {
         trailing: const Icon(Icons.chevron_right),
       ),
     );
+  }
+
+  TimeOfDay convertStringToTimeOfDay(String timeString) {
+    final DateFormat format = DateFormat('hh:mm a');
+    final DateTime dateTime = format.parse(timeString);
+    return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
   }
 }

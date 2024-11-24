@@ -121,7 +121,7 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final response = await http.get(Uri.parse(Api.getReligious));
+      final response = await http.get(Uri.parse(Api.getAllReligion));
       print(response.statusCode);
 
       if (response.statusCode == 200) {
@@ -181,6 +181,14 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
       );
       print('Error: $error');
     }
+  }
+
+  void removeCasteData() async {
+    state = state.copyWith(casteList: []);
+  }
+
+  void removeSubCasteData() async {
+    state = state.copyWith(subCasteList: []);
   }
 
   Future<void> getSubCasteData(String casteId) async {

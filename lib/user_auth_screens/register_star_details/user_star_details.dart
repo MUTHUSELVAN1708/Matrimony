@@ -7,14 +7,13 @@ import 'package:matrimony/user_register_riverpods/riverpod/preference_input_noti
 import '../../common/widget/common_dialog_box.dart';
 
 class AddStarDetailScreen extends ConsumerStatefulWidget {
-  const AddStarDetailScreen({Key? key}) : super(key: key);
+  const AddStarDetailScreen({super.key});
 
   @override
   _AddStarDetailScreenState createState() => _AddStarDetailScreenState();
 }
 
 class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
-  // Define the lists for stars and raasi
   final List<String> starList = [
     'Ashwini',
     'Bharani',
@@ -150,7 +149,7 @@ class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HoroscopeAddDetailScreen(),
+                        builder: (context) => const HoroscopeAddDetailScreen(),
                       ),
                     );
                   },

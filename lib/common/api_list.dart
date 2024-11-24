@@ -21,9 +21,9 @@ class Api {
   static const String dailyRecommented = '$baseUrl/dailyRecommendation';
   static const String getReligious = '$baseUrl/getreligion';
   static const String getcaste = '$baseUrl/getcaste';
-  static const String getSubcaste = '$baseUrl/getSubcaste';
+  static const String getSubcaste = '$baseUrl/getsubcaste';
   static const String getallCountry = '$baseUrl/getallcountry';
-  static const String getState = '$baseUrl/getState';
+  static const String getState = '$baseUrl/getstate';
   static const String getcity = '$baseUrl/getcity';
   static const String getUserImage = '$baseUrl/userDetails';
   static const String passwordWithLogin = '$baseUrl/loginwithpassword';
@@ -58,4 +58,6 @@ class Api {
   static const String reject = '$baseUrl/reject';
   static const String received = '$baseUrl/received';
   static const String sent = '$baseUrl/sent';
+  static const String saveHoroscope = '$baseUrl/savehoroscope';
+  static const String editHoroscope = '$baseUrl/editHoroscope';
 }

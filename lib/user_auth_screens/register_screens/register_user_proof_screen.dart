@@ -182,13 +182,13 @@ class _RegisterUserGovernmentProofState
                               govtIdProof: selectedProof,
                               idImage: proofState.base64Image);
                       if (value) {
-                        Navigator.pushAndRemoveUntil(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   const RegisterUserGovernmentProofSuccessScreen()),
-                          (Route<dynamic> route) =>
-                              false, // Removes all previous routes
+                          // (Route<dynamic> route) =>
+                          //     false,
                         );
                       } else {
                         CustomSnackBar.show(

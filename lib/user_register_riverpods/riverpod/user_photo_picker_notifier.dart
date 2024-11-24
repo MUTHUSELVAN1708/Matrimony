@@ -71,30 +71,43 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
         isLoading3: false);
   }
 
-  Future<void> pickImage1() async {
+  void initialState(String? url1,String? url2,String? url3) {
+    state = ImagePickerState(
+        imageUrl1: url1,
+        imageUrl2: url2,
+        imageUrl3: url3,
+        error1: null,
+        error2: null,
+        error3: null,
+        isLoading1: false,
+        isLoading2: false,
+        isLoading3: false);
+  }
+
+  Future<void> pickImage1(ImageSource source) async {
     state = state.copyWith(isLoading1: true);
     await _pickImageAndUpdateState(
-      pickImage: _pickAndConvertImage(),
+      pickImage: _pickAndConvertImage(source),
       updateState: (imageUrl) =>
           state.copyWith(imageUrl1: imageUrl, isLoading1: false),
       errorState: (error) => state.copyWith(error1: error, isLoading1: false),
     );
   }
 
-  Future<void> pickImage2() async {
+  Future<void> pickImage2(ImageSource camera) async {
     state = state.copyWith(isLoading2: true);
     await _pickImageAndUpdateState(
-      pickImage: _pickAndConvertImage(),
+      pickImage: _pickAndConvertImage(camera),
       updateState: (imageUrl) =>
           state.copyWith(imageUrl2: imageUrl, isLoading2: false),
       errorState: (error) => state.copyWith(error2: error, isLoading2: false),
     );
   }
 
-  Future<void> pickImage3() async {
+  Future<void> pickImage3(ImageSource source) async {
     state = state.copyWith(isLoading3: true);
     await _pickImageAndUpdateState(
-      pickImage: _pickAndConvertImage(),
+      pickImage: _pickAndConvertImage(source),
       updateState: (imageUrl) =>
           state.copyWith(imageUrl3: imageUrl, isLoading3: false),
       errorState: (error) => state.copyWith(error3: error, isLoading3: false),
@@ -118,26 +131,20 @@ class ImagePickerNotifier extends StateNotifier<ImagePickerState> {
     }
   }
 
-  Future<String?> _pickAndConvertImage() async {
+  Future<String?> _pickAndConvertImage(ImageSource source) async {
     final XFile? image =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-    print(image);
+        await _imagePicker.pickImage(source: source);
     if (image != null) {
-      print("entered converter");
 
       if (kIsWeb) {
         final Uint8List bytes =
-            await image.readAsBytes(); // Use image.readAsBytes() directly
+            await image.readAsBytes();
         final base64String = base64Encode(bytes);
-        print(base64String);
         return base64String;
       } else {
         final File imageFile = File(image.path);
-        print("Image file path: ${imageFile.path}");
         final bytes = await imageFile.readAsBytes();
-        print(bytes);
         final base64String = base64Encode(bytes);
-        print(base64String);
         return base64String;
       }
     }

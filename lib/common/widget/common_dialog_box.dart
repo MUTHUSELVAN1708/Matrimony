@@ -7,15 +7,20 @@ class CustomDropdownField extends StatefulWidget {
   final List<String> items;
   final Function(String) onChanged;
   final bool isRequired;
+  final bool? isOther;
+  final String? isOtherValue;
+  final TextEditingController? controller;
 
-  const CustomDropdownField({
-    Key? key,
-    required this.value,
-    required this.hint,
-    required this.items,
-    required this.onChanged,
-    this.isRequired = true,
-  }) : super(key: key);
+  const CustomDropdownField(
+      {super.key,
+      required this.value,
+      required this.hint,
+      required this.items,
+      required this.onChanged,
+      this.isRequired = true,
+      this.isOther,
+      this.isOtherValue,
+      this.controller});
 
   @override
   State<CustomDropdownField> createState() => _CustomDropdownFieldState();
@@ -25,16 +30,19 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
   late String selectedValue;
   List<String> filteredItems = [];
   String searchQuery = '';
+  String otherText = '';
 
   @override
   void initState() {
     super.initState();
     selectedValue = widget.value;
     filteredItems = widget.items;
+    otherText = widget.isOtherValue ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
+    selectedValue = widget.value;
     return GestureDetector(
       onTap: () => _showSelectionDialog(context),
       child: Container(
@@ -49,7 +57,11 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
           children: [
             Expanded(
               child: Text(
-                selectedValue.isEmpty ? widget.hint : selectedValue,
+                selectedValue.isEmpty
+                    ? widget.hint
+                    : selectedValue == 'Other'
+                        ? otherText
+                        : selectedValue,
                 style: TextStyle(
                   color: selectedValue.isEmpty
                       ? Colors.grey.shade600
@@ -67,6 +79,7 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
 
   void _showSelectionDialog(BuildContext context) {
     setState(() {
+      selectedValue = widget.value;
       filteredItems = widget.items;
       searchQuery = '';
     });
@@ -83,7 +96,7 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
             builder: (BuildContext context, StateSetter setState) {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.7,
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -154,18 +167,55 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                             },
                           ),
                         ),
+                      if (selectedValue == 'Other')
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          child: TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                otherText = value;
+                              });
+                            },
+                            controller: widget.controller,
+                            decoration: InputDecoration(
+                              hintText: 'Enter Other Value',
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
+                              ),
+                              disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
+                              ),
+                            ),
+                          ),
+                        ),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: SizedBox(
                           width: double.infinity,
                           height: 45,
                           child: ElevatedButton(
-                            onPressed: () {
-                              widget.onChanged(selectedValue);
-                              Navigator.pop(context);
-                            },
+                            onPressed: selectedValue == 'Other' &&
+                                    otherText.trim().isEmpty
+                                ? null
+                                : () {
+                                    widget.onChanged(selectedValue);
+                                    Navigator.pop(context);
+                                  },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
+                              backgroundColor: selectedValue == 'Other' &&
+                                      otherText.trim().isEmpty
+                                  ? Colors.grey
+                                  : Colors.red,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),

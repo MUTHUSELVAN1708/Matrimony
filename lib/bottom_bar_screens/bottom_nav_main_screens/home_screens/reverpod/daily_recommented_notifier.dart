@@ -11,13 +11,13 @@ class DailyRecomment extends Equatable {
   final int? id;
   final String? name;
   final int? age;
-  final List<String>? photos;
+  final List<String>? images;
 
   const DailyRecomment({
     this.id,
     this.name,
     this.age,
-    this.photos,
+    this.images,
   });
 
   // Method to convert object to JSON
@@ -26,7 +26,7 @@ class DailyRecomment extends Equatable {
       'id': id ?? 0,
       'name': name ?? '',
       'age': age ?? 0,
-      'photos': photos ?? [],
+      'images': images ?? [],
     };
   }
 
@@ -35,7 +35,7 @@ class DailyRecomment extends Equatable {
       id: json['id'] as int? ?? 0,
       name: json['name'] as String? ?? '',
       age: json['age'] as int? ?? 0,
-      photos: (json['photos'] as List<dynamic>?)
+      images: (json['images'] as List<dynamic>?)
               ?.map((item) => item as String)
               .toList() ??
           [], // Return an empty list if photos is null
@@ -43,7 +43,7 @@ class DailyRecomment extends Equatable {
   }
 
   @override
-  List<Object?> get props => [name, photos, age];
+  List<Object?> get props => [name, images, age];
 }
 
 class dailyRecommentState extends Equatable {

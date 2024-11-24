@@ -173,7 +173,11 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
         star: userDetails.star,
         subCaste: userDetails.subcaste,
         willingToMarryOtherCommunities:
-            userDetails.willingToMarryFromOtherCommunities);
+            userDetails.willingToMarryFromOtherCommunities != null
+                ? userDetails.willingToMarryFromOtherCommunities == 'true'
+                    ? true
+                    : false
+                : false);
     print(state.subCaste);
   }
 

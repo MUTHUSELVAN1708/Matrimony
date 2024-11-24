@@ -187,7 +187,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     String? religion,
     String? caste,
     String? subCaste,
-    String? division,
+    String? willingToMarry,
   }) async {
     state = RegisterState(isLoading: true, error: null, success: null);
 
@@ -197,7 +197,7 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
           religion ?? '',
           caste ?? '',
           subCaste ?? '',
-          division ?? '');
+          willingToMarry ?? '');
       if (response) {
         state = RegisterState(
             isLoading: false,

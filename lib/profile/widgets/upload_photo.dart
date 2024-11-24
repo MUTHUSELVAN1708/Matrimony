@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_user_photo_upload_screens/register_user_photo_upload_screen.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
-class UploadPhotoWidget extends StatelessWidget {
-  const UploadPhotoWidget({Key? key}) : super(key: key);
+class UploadPhotoWidget extends ConsumerWidget {
+  const UploadPhotoWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -21,7 +25,7 @@ class UploadPhotoWidget extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           // Text
-          Text(
+          const Text(
             'Put a face to your profile',
             style: TextStyle(
               color: Colors.black54, // Red color matching design
@@ -31,10 +35,21 @@ class UploadPhotoWidget extends StatelessWidget {
           ),
           const Spacer(),
           // Upload Photo Button
-          Container(
-            height: 32, // Fixed height for the button
+          SizedBox(
+            height: 32,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RegisterUserPhotoUploadScreen(
+                              isEditPhoto: true,
+                              images:
+                              getImageApiProviderState
+                                  .data?.images,
+                            )));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     const Color(0xFFE52938), // Red color matching design
