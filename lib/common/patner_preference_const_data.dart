@@ -105,6 +105,7 @@ class PartnerPreferenceConstData {
     'Educational Institution',
     'Research Organization',
     'Consultancy',
+    'Other'
   ];
 
   static const List<String> occupationList = [
@@ -123,6 +124,24 @@ class PartnerPreferenceConstData {
     'Data Analyst',
     'HR Manager',
     'Project Manager',
+  ];
+
+  static const List<String> occupationListPreference = [
+    'Software Professional',
+    'Engineer',
+    'Doctor',
+    'Teacher',
+    'Business Owner',
+    'Accountant',
+    'Lawyer',
+    'Architect',
+    'Consultant',
+    'Artist',
+    'Writer',
+    'Sales Professional',
+    'Marketing Professional',
+    'Healthcare Worker',
+    'Other',
   ];
 
   static const List<String> incomeList = [

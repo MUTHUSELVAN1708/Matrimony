@@ -7,13 +7,10 @@ import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_state.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preference_dialog.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_height_dialog.dart';
-import '../../common/colors.dart';
-import '../../common/widget/common_selection_dialog.dart';
-import '../../common/widget/custom_snackbar.dart';
-import '../../common/widget/custom_text_field.dart';
-import '../../service/date_picker.dart';
-import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
-import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/common_selection_dialog.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 
 class EditPartnerPreferencesLocation extends ConsumerStatefulWidget {
   const EditPartnerPreferencesLocation({
@@ -38,8 +35,7 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    // editPartnerPreferenceProviderState.setValuesInitial('20 - 25',
-    //     '4 ft 7 in(139 cm)', '49 - 55', 'widowed', 'Normal', 'karnadaka');
+    editPartnerPreferenceProviderState.setLocationValues(ref.read(userManagementProvider).userPartnerDetails);
   }
 
   @override
@@ -293,34 +289,6 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildStarSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Star',
-            options: PartnerPreferenceConstData.starList,
-            selectedValue: editPartnerPreferenceProviderState.star,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateStar(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'Star',
-        editPartnerPreferenceProviderState.star,
-      ),
-    );
-  }
-
   void _selectHouse(BuildContext context) {
     final editPartnerPreferenceProviderState =
         ref.watch(editPartnerPreferenceProvider);
@@ -413,62 +381,6 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildDrinkingHabitsSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Your Drinking Habit',
-            options: ProfileOptions.drinkingHabits,
-            selectedValue: editPartnerPreferenceProviderState.drinkingHabits,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateDrinkingHabits(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'Drinking Habits',
-        editPartnerPreferenceProviderState.drinkingHabits,
-      ),
-    );
-  }
-
-  Widget _buildSmokingHabitsSelection(
-    BuildContext context,
-    WidgetRef ref,
-    ProfileState profileState,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Your Smoking Habit',
-            options: ProfileOptions.smokingHabits,
-            selectedValue: profileState.smokingHabits,
-            onSelect: (value) {
-              ref
-                  .read(profileProvider.notifier)
-                  .updateSmokingHabitsStatus(value);
-            },
-          ),
-        );
-      },
-      child: _buildListTile(
-        'Smoking Habits',
-        profileState.smokingHabits ?? '',
-      ),
-    );
-  }
-
   Widget _buildSaveButton(
     BuildContext context,
     WidgetRef ref,
@@ -479,43 +391,28 @@ class _PartnerPreferenceBasicDetailScreenState
       height: 48,
       child: ElevatedButton(
         onPressed: () async {
-          final va = ref.read(editPartnerPreferenceProvider);
-          print(va.star);
-          print(va.caste);
-          print(va.division);
-          print(va.raasi);
-          print(va.religion);
-
-          if (true) {
-            Future.delayed(const Duration(microseconds: 50), () {
-              // Navigator.pop(context);
-              // onPop('true');
-            })
-                .then((_) {
-              CustomSnackBar.show(
-                isError: false,
-                context: context,
-                message: 'Profile updated successfully!',
-              );
-            });
-            // Handle save logic
-          } else {
+          final result = await ref
+              .read(editPartnerPreferenceProvider.notifier)
+              .updateLocationDetails();
+          ref
+              .read(userManagementProvider.notifier)
+              .updatePartnerLocationDetails(profileState);
+          if (result) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              // onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,
                 context: context,
-                message: 'Profile updated successfully!',
+                message: 'Partner Preference updated successfully!',
               );
             });
-
-            // CustomSnackBar.show(
-            //   context: context,
-            //   message: 'Please fill all required fields and ensure age is 18+',
-            //   isError: true,
-            // );
+          } else {
+            CustomSnackBar.show(
+              isError: true,
+              context: context,
+              message: 'Something Went wrong. Please Try Again!',
+            );
           }
         },
         style: ElevatedButton.styleFrom(

@@ -46,9 +46,8 @@ class HoroscopeNotifier extends StateNotifier<HoroscopeState> {
 
     try {
       final int? userId = await SharedPrefHelper.getUserId();
-
-      final response = await http.put(
-        Uri.parse(Api.editHoroscope),
+      final response = await http.post(
+        Uri.parse(Api.saveHoroscope),
         headers: {
           'Content-Type': 'application/json',
           'AppId': '1',

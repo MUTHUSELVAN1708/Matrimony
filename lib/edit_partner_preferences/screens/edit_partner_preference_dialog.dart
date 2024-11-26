@@ -48,6 +48,10 @@ class _AgeCustomDialogBoxState extends State<EditPartnerPreferenceDialog> {
   void initState() {
     super.initState();
     selectedValues = List.from(widget.value);
+    print('Ada gommala');
+    print(selectedValues);
+    // fromItem = [widget.value.first];
+    // toItem = [widget.value.last];
   }
 
   List<String> toItem = [];

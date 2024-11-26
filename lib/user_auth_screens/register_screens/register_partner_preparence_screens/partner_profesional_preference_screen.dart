@@ -118,16 +118,22 @@ class _PartnerProfessionalScreenState
   ];
 
   List<String> employedInList = [
-    'Private',
     'Government',
+    'Private',
     'Business',
-    'Self Employed',
+    'Self-employed',
     'Freelancer',
-    'Retired',
-    'Student',
-    'Housewife',
-    'Not Working',
-    'Other',
+    'Non-profit Organization',
+    'NGO',
+    'Start-up',
+    'Multinational Corporation',
+    'Startup',
+    'Public Sector',
+    'Healthcare',
+    'Educational Institution',
+    'Research Organization',
+    'Consultancy',
+    'Other'
   ];
 
   final List<String> occupationList = [

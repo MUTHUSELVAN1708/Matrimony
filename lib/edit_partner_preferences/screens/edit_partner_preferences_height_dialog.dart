@@ -44,6 +44,8 @@ class _HeightDropdownFieldState
     super.initState();
     selectedValues = List.from(widget.value);
     filteredItems = widget.items!;
+    toItem = [widget.value.last];
+    fromItem = [widget.value.first];
   }
 
   List<String> toItem = [];
@@ -121,9 +123,9 @@ class _HeightDropdownFieldState
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Select ${widget.hint}',
+                          'Select ${widget.hint} Range',
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

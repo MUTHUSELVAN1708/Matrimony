@@ -8,6 +8,7 @@ import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit/profile/state/edit_contact_state.dart';
 import 'package:matrimony/edit/profile/state/professional_info_state.dart';
 import 'package:matrimony/edit/profile/state/religious_state.dart';
+import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_state.dart';
 import 'package:matrimony/models/partner_details_model.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_details_model.dart';
@@ -48,6 +49,7 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
         final userPartnerDetails = PartnerDetailsModel.fromJson(jsonResponse);
         print('Partner');
         print(userPartnerDetails.toJson());
+        print(userPartnerDetails.partnerProfession);
         state = state.copyWith(
             isLoadingForUser: false,
             userDetails: userDetails,
@@ -128,6 +130,22 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
                     : null));
   }
 
+  void updateLocationDetails(String country, String states, String pinCode,
+      String city, String flatNumber, String address, bool? ownHouse) {
+    state = state.copyWith(
+        userDetails: state.userDetails.copyWith(
+            country: country,
+            state: states,
+            pincode: pinCode,
+            city: city,
+            flatNumber: flatNumber,
+            ownHouse: ownHouse != null
+                ? ownHouse
+                    ? 'Yes'
+                    : 'No'
+                : null));
+  }
+
   void updateContactDetails(EditContactState editContactState) {
     final countryCode = editContactState.currentPhoneNumber
         ?.substring(0, editContactState.currentPhoneNumber!.length - 10);
@@ -171,6 +189,67 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
             citizenShip: professionalInfoState.citizenship,
             annualIncomeCurrency: professionalInfoState.currencyType,
             annualIncome: professionalInfoState.annualIncome));
+  }
+
+  void updatePartnerBasicDetails(
+      EditPartnerPreferenceState editPartnerPreferenceState) {
+    state = state.copyWith(
+        userPartnerDetails: state.userPartnerDetails.copyWith(
+            partnerFromAge: int.tryParse(editPartnerPreferenceState.fromAge),
+            partnerToAge: int.tryParse(editPartnerPreferenceState.toAge),
+            partnerToHeight: editPartnerPreferenceState.toHeight,
+            partnerFromHeight: editPartnerPreferenceState.fromHeight,
+            partnerToWeight: int.tryParse(editPartnerPreferenceState.toWeight),
+            partnerFromWeight:
+                int.tryParse(editPartnerPreferenceState.fromWeight),
+            partnerMaritalStatus: editPartnerPreferenceState.maritalStatus,
+            partnerPhysicalStatus: editPartnerPreferenceState.physicalStatus,
+            partnerMotherTongue: editPartnerPreferenceState.motherTongue));
+  }
+
+  void updatePartnerProfessionalDetails(
+      EditPartnerPreferenceState editPartnerPreferenceState) {
+    state = state.copyWith(
+        userPartnerDetails: state.userPartnerDetails.copyWith(
+            partnerProfession: editPartnerPreferenceState.occupation,
+            partnerOccupation: editPartnerPreferenceState.occupation,
+            partnerAnnualIncome: editPartnerPreferenceState.annulIncome,
+            partnerEmployedIn: editPartnerPreferenceState.employmentType,
+            partnerEducation: editPartnerPreferenceState.education));
+  }
+
+  void updatePartnerLifeStyleDetails(
+      EditPartnerPreferenceState editPartnerPreferenceState) {
+    state = state.copyWith(
+        userPartnerDetails: state.userPartnerDetails.copyWith(
+            partnerEatingHabits: editPartnerPreferenceState.eatingHabits,
+            partnerSmokingHabits: editPartnerPreferenceState.smokingHabits,
+            partnerDrinkingHabits: editPartnerPreferenceState.drinkingHabits));
+  }
+
+  void updatePartnerReligiousDetails(
+      EditPartnerPreferenceState editPartnerPreferenceState) {
+    state = state.copyWith(
+        userPartnerDetails: state.userPartnerDetails.copyWith(
+            partnerCaste: editPartnerPreferenceState.caste,
+            partnerReligion: editPartnerPreferenceState.religion,
+            partnerSubcaste: editPartnerPreferenceState.subCaste,
+            partnerRassi: editPartnerPreferenceState.raasi,
+            partnerStar: editPartnerPreferenceState.star));
+  }
+
+  void updatePartnerLocationDetails(
+      EditPartnerPreferenceState editPartnerPreferenceState) {
+    state = state.copyWith(
+        userPartnerDetails: state.userPartnerDetails.copyWith(
+            partnerCountry: editPartnerPreferenceState.country,
+            partnerState: editPartnerPreferenceState.state,
+            partnerCity: editPartnerPreferenceState.city,
+            partnerOwnHouse: editPartnerPreferenceState.isOwnHouse != null
+                ? editPartnerPreferenceState.isOwnHouse!
+                    ? 'true'
+                    : 'false'
+                : state.userPartnerDetails.partnerOwnHouse));
   }
 
   int calculateAge(DateTime? dateOfBirth) {

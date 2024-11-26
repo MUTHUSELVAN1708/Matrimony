@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
 import '../../common/widget/custom_snackbar.dart';
@@ -448,6 +449,7 @@ class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
           if (ref.read(profileProvider.notifier).validateProfile()) {
             final result =
                 await ref.read(profileProvider.notifier).updateBasicDetails();
+            await ref.read(getImageApiProvider.notifier).getImage();
             ref
                 .read(userManagementProvider.notifier)
                 .updateBasicDetails(profileState);
@@ -464,7 +466,7 @@ class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
               });
             } else {
               CustomSnackBar.show(
-                isError: false,
+                isError: true,
                 context: context,
                 message: 'Something Went wrong. Please Try Again!',
               );

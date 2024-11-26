@@ -52,6 +52,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final widthQuery = MediaQuery.of(context).size.width;
     final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(
@@ -430,29 +431,22 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,
-              // screen: LocationDetailsScreen(onPop: (value) {
-              //   if (value == 'true') {
-              //     _updateProfileElementsVisibility(true);
-              //   }
-              // }),
-              screen: const LocationDetailsScreen(
-                  //     onPop: (value) {
-                  //   if (value == 'true') {
-                  //     _updateProfileElementsVisibility(true);
-                  //   }
-                  // }
-                  ),
+              screen: LocationDetailsScreen(onPop: (value) {
+                if (value == 'true') {
+                  _updateProfileElementsVisibility(true);
+                }
+              }),
             );
           } else {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,
-              screen: const UpdateFamilyDetail(
-                  //     onPop: (value) {
-                  //   if (value == 'true') {
-                  //     _updateProfileElementsVisibility(true);
-                  //   }
-                  // }
+              screen: UpdateFamilyDetail(
+                      onPop: (value) {
+                    if (value == 'true') {
+                      _updateProfileElementsVisibility(true);
+                    }
+                  }
                   ),
             );
           }

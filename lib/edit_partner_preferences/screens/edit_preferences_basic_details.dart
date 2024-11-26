@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/data/profile_options.dart';
 import 'package:matrimony/edit/profile/notifier/profile_notifier.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_state.dart';
+import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preference_age_and_weight.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preference_dialog.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_height_dialog.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
@@ -28,9 +30,7 @@ class EditPartnerPreferenceBasicDetailScreen extends ConsumerStatefulWidget {
 
 class _PartnerPreferenceBasicDetailScreenState
     extends ConsumerState<EditPartnerPreferenceBasicDetailScreen> {
-  List<String> selectedAge = [];
-  List<String> selectWeight = [];
-  List<String> selectedHeight = [];
+  late List<String> selectedHeight = [];
 
   @override
   void initState() {
@@ -41,42 +41,57 @@ class _PartnerPreferenceBasicDetailScreenState
   Future<void> getValues() async {
     await Future.delayed(Duration.zero);
     final editPartnerPreferenceProviderState =
-        ref.read(editPartnerPreferenceProvider.notifier);
+    ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    // await ref.read(userManagementProvider.notifier).getUserDetails();
-    // editPartnerPreferenceProviderState.setValuesInitial('20 - 25',
-    //     '4 ft 7 in(139 cm)', '49 - 55', 'widowed', 'Normal', 'karnadaka');
+    editPartnerPreferenceProviderState
+        .setValuesInitial(ref
+        .read(userManagementProvider)
+        .userPartnerDetails);
   }
 
   @override
   Widget build(BuildContext context) {
     final editPartnerPreferenceProviderState =
-        ref.watch(editPartnerPreferenceProvider);
-    final heightQuery = MediaQuery.of(context).size.height;
-
-    return Material(
-      color: Colors.transparent,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              height: double.infinity,
-              margin: EdgeInsets.only(bottom: heightQuery * 0.2),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/initialimage.png'),
-                  // Use your image path here
-                  fit: BoxFit.cover,
+    ref.watch(editPartnerPreferenceProvider);
+    final heightQuery = MediaQuery
+        .of(context)
+        .size
+        .height;
+    selectedHeight.add(ref
+        .read(userManagementProvider)
+        .userPartnerDetails
+        .partnerFromHeight ?? '');
+    selectedHeight.add(ref
+        .read(userManagementProvider)
+        .userPartnerDetails
+        .partnerToHeight?? '');
+    return EnhancedLoadingWrapper(
+      isLoading: editPartnerPreferenceProviderState.isLoading,
+      child: Material(
+        color: Colors.transparent,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              Container(
+                height: double.infinity,
+                margin: EdgeInsets.only(bottom: heightQuery * 0.2),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/initialimage.png'),
+                    // Use your image path here
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  color: Colors.black.withOpacity(0.4),
                 ),
               ),
-              child: Container(
-                color: Colors.black.withOpacity(0.4),
-              ),
-            ),
-            _buildHeader(context, heightQuery),
-            _buildForm(
-                context, ref, editPartnerPreferenceProviderState, heightQuery),
-          ],
+              _buildHeader(context, heightQuery),
+              _buildForm(context, ref, editPartnerPreferenceProviderState,
+                  heightQuery),
+            ],
+          ),
         ),
       ),
     );
@@ -113,12 +128,10 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildForm(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-    double heightQuery,
-  ) {
+  Widget _buildForm(BuildContext context,
+      WidgetRef ref,
+      EditPartnerPreferenceState editPartnerPreferenceProviderState,
+      double heightQuery,) {
     return Positioned(
       top: heightQuery * 0.28,
       left: 0,
@@ -146,18 +159,16 @@ class _PartnerPreferenceBasicDetailScreenState
               children: [
                 _buildTitle(),
                 const SizedBox(height: 16),
-                EditPartnerPreferenceDialog(
-                  value: selectedAge,
+                AgeSelectionDialog(
                   hint: 'Age',
-                  hint2: 'From Age',
-                  hint3: 'To Age',
-                  items: PartnerPreferenceConstData.toAgeList,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAge = value;
-                    });
-                  },
-                  ageheight: true,
+                  toValue: ref
+                      .read(userManagementProvider)
+                      .userPartnerDetails
+                      .partnerToAge,
+                  fromValue: ref
+                      .read(userManagementProvider)
+                      .userPartnerDetails
+                      .partnerFromAge,
                 ),
                 const SizedBox(
                   height: 4,
@@ -174,24 +185,25 @@ class _PartnerPreferenceBasicDetailScreenState
                     setState(() {
                       selectedHeight = value;
                     });
+                    if(selectedHeight.isNotEmpty){
+                      ref.read(editPartnerPreferenceProvider.notifier).updateFromHeight(value.first.split('-').first.trim());
+                      ref.read(editPartnerPreferenceProvider.notifier).updateToHeight(value.first.split('-').last.trim());
+                    }
                   },
                 ),
                 const SizedBox(
                   height: 4,
                 ),
-                EditPartnerPreferenceDialog(
-                  value: selectWeight,
+                AgeSelectionDialog(
                   hint: 'Weight',
-                  hint2: 'From Weight',
-                  hint3: 'To Weight',
-                  items: PartnerPreferenceConstData.weightListPartner,
-                  onChanged: (value) {
-                    setState(() {
-                      selectWeight = value;
-                      // selectToAge = selectedAge[1];
-                    });
-                  },
-                  ageheight: true,
+                  toValue: ref
+                      .read(userManagementProvider)
+                      .userPartnerDetails
+                      .partnerFromWeight,
+                  fromValue: ref
+                      .read(userManagementProvider)
+                      .userPartnerDetails
+                      .partnerToWeight,
                 ),
                 _buildMaritalStatusSelection(
                     context, ref, editPartnerPreferenceProviderState),
@@ -224,25 +236,24 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildMaritalStatusSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
+  Widget _buildMaritalStatusSelection(BuildContext context,
+      WidgetRef ref,
+      EditPartnerPreferenceState editPartnerPreferenceProviderState,) {
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Marital Status',
-            options: ProfileOptions.maritalStatus,
-            selectedValue: editPartnerPreferenceProviderState.maritalStatus,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateMaritalStatus(value);
-            },
-          ),
+          builder: (context) =>
+              CommonSelectionDialog(
+                title: 'Select Marital Status',
+                options: ProfileOptions.maritalStatus,
+                selectedValue: editPartnerPreferenceProviderState.maritalStatus,
+                onSelect: (value) {
+                  ref
+                      .read(editPartnerPreferenceProvider.notifier)
+                      .updateMaritalStatus(value);
+                },
+              ),
         );
       },
       child: _buildListTile(
@@ -252,25 +263,25 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildPhysicalStatusSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
+  Widget _buildPhysicalStatusSelection(BuildContext context,
+      WidgetRef ref,
+      EditPartnerPreferenceState editPartnerPreferenceProviderState,) {
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Physical Status',
-            options: ProfileOptions.physicalStatus,
-            selectedValue: editPartnerPreferenceProviderState.physicalStatus,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updatePhysicalStatus(value);
-            },
-          ),
+          builder: (context) =>
+              CommonSelectionDialog(
+                title: 'Select Physical Status',
+                options: ProfileOptions.physicalStatus,
+                selectedValue: editPartnerPreferenceProviderState
+                    .physicalStatus,
+                onSelect: (value) {
+                  ref
+                      .read(editPartnerPreferenceProvider.notifier)
+                      .updatePhysicalStatus(value);
+                },
+              ),
         );
       },
       child: _buildListTile(
@@ -280,90 +291,64 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildMotherTongueSelection(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState editPartnerPreferenceProviderState,
-  ) {
+  Widget _buildMotherTongueSelection(BuildContext context,
+      WidgetRef ref,
+      EditPartnerPreferenceState editPartnerPreferenceProviderState,) {
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Mother Tongue',
-            options: PartnerPreferenceConstData.motherTongueOptions,
-            selectedValue: editPartnerPreferenceProviderState.eatingHabits,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateMotherTongue(value);
-            },
-          ),
+          builder: (context) =>
+              CommonSelectionDialog(
+                title: 'Select Mother Tongue',
+                options: const ['Any',...PartnerPreferenceConstData.motherTongueOptions],
+                selectedValue: editPartnerPreferenceProviderState.motherTongue,
+                onSelect: (value) {
+                  ref
+                      .read(editPartnerPreferenceProvider.notifier)
+                      .updateMotherTongue(value);
+                },
+              ),
         );
       },
       child: _buildListTile(
         'Mother Tongue',
-        editPartnerPreferenceProviderState.eatingHabits,
+        editPartnerPreferenceProviderState.motherTongue,
       ),
     );
   }
 
-  Widget _buildSaveButton(
-    BuildContext context,
-    WidgetRef ref,
-    EditPartnerPreferenceState profileState,
-  ) {
+  Widget _buildSaveButton(BuildContext context,
+      WidgetRef ref,
+      EditPartnerPreferenceState profileState,) {
     return SizedBox(
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
         onPressed: () async {
-          final age = selectedAge.isNotEmpty
-              ? selectedAge[0]
-                  .replaceAll(RegExp(r'[\[\]]'), '')
-                  .split(' ')
-                  .join(' - ')
-              : '';
-          final height = selectedHeight[0];
-          final weight = selectWeight.isNotEmpty
-              ? selectWeight[0]
-                  .replaceAll(RegExp(r'[\[\]]'), '')
-                  .split(' ')
-                  .join(' - ')
-              : '';
-          ref
+          final editPreference = ref.watch(editPartnerPreferenceProvider);
+          final result = await ref
               .read(editPartnerPreferenceProvider.notifier)
-              .setValues(age, height, weight);
-          if (true) {
-            Future.delayed(const Duration(microseconds: 50), () {
-              // Navigator.pop(context);
-              // onPop('true');
-            })
-                .then((_) {
-              CustomSnackBar.show(
-                isError: false,
-                context: context,
-                message: 'Profile updated successfully!',
-              );
-            });
-            // Handle save logic
-          } else {
+              .updateBasicDetails();
+          ref
+              .read(userManagementProvider.notifier)
+              .updatePartnerBasicDetails(editPreference);
+          if (result) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              // onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,
                 context: context,
-                message: 'Profile updated successfully!',
+                message: 'Partner Preference updated successfully!',
               );
             });
-
-            // CustomSnackBar.show(
-            //   context: context,
-            //   message: 'Please fill all required fields and ensure age is 18+',
-            //   isError: true,
-            // );
+          } else {
+            CustomSnackBar.show(
+              isError: true,
+              context: context,
+              message: 'Something Went wrong. Please Try Again!',
+            );
           }
         },
         style: ElevatedButton.styleFrom(

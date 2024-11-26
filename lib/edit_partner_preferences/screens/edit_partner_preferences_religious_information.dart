@@ -7,6 +7,7 @@ import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_state.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preference_dialog.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_height_dialog.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
 import '../../common/widget/custom_snackbar.dart';
@@ -39,8 +40,12 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    // editPartnerPreferenceProviderState.setValuesInitial('20 - 25',
-    //     '4 ft 7 in(139 cm)', '49 - 55', 'widowed', 'Normal', 'karnadaka');
+    editPartnerPreferenceProviderState
+        .setReligionValues(ref.read(userManagementProvider).userPartnerDetails);
+    await ref.read(userManagementProvider.notifier).getLocalData();
+    await ref
+        .read(editPartnerPreferenceProvider.notifier)
+        .getReligiousDetails();
   }
 
   @override
@@ -202,7 +207,12 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Religion',
-            options: ProfileOptions.religions,
+            options: [
+              'Any',
+              ...editPartnerPreferenceProviderState.religionList
+                  .map((religion) => religion.religion),
+              'Other'
+            ],
             selectedValue: editPartnerPreferenceProviderState.religion,
             onSelect: (value) {
               ref
@@ -214,7 +224,9 @@ class _PartnerPreferenceBasicDetailScreenState
       },
       child: _buildListTile(
         'Religion',
-        editPartnerPreferenceProviderState.religion,
+        editPartnerPreferenceProviderState.religion.isEmpty
+            ? 'Select'
+            : editPartnerPreferenceProviderState.religion,
       ),
     );
   }
@@ -226,23 +238,37 @@ class _PartnerPreferenceBasicDetailScreenState
   ) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Caste',
-            options: PartnerPreferenceConstData.casteOptions,
-            selectedValue: editPartnerPreferenceProviderState.caste,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateCaste(value);
-            },
-          ),
-        );
+        if (editPartnerPreferenceProviderState.religion.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (context) => CommonSelectionDialog(
+              title: 'Select Caste',
+              options: [
+                'Any',
+                ...editPartnerPreferenceProviderState.casteList
+                    .map((caste) => caste.castes),
+                'Other'
+              ],
+              selectedValue: editPartnerPreferenceProviderState.caste,
+              onSelect: (value) {
+                ref
+                    .read(editPartnerPreferenceProvider.notifier)
+                    .updateCaste(value);
+              },
+            ),
+          );
+        } else {
+          CustomSnackBar.show(
+              context: context,
+              message: 'Please Select Religion!.',
+              isError: true);
+        }
       },
       child: _buildListTile(
         'Caste',
-        editPartnerPreferenceProviderState.caste,
+        editPartnerPreferenceProviderState.caste.isEmpty
+            ? 'Select'
+            : editPartnerPreferenceProviderState.caste,
       ),
     );
   }
@@ -254,23 +280,38 @@ class _PartnerPreferenceBasicDetailScreenState
   ) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select Sub Caste',
-            options: PartnerPreferenceConstData.subCasteOptions,
-            selectedValue: editPartnerPreferenceProviderState.division,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateDivision(value);
-            },
-          ),
-        );
+        if (editPartnerPreferenceProviderState.caste.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                CommonSelectionDialog(
+                  title: 'Select Sub Caste',
+                  options: [
+                    'Any',
+                    ...editPartnerPreferenceProviderState.subCasteList
+                        .map((subCaste) => subCaste.subCaste),
+                    'Other'
+                  ],
+                  selectedValue: editPartnerPreferenceProviderState.subCaste,
+                  onSelect: (value) {
+                    ref
+                        .read(editPartnerPreferenceProvider.notifier)
+                        .updateSubCaste(value);
+                  },
+                ),
+          );
+        }else{
+          CustomSnackBar.show(
+              context: context,
+              message: 'Please Select Caste!.',
+              isError: true);
+        }
       },
       child: _buildListTile(
         'Sub Caste',
-        editPartnerPreferenceProviderState.division,
+        editPartnerPreferenceProviderState.subCaste.isEmpty
+            ? 'Select'
+            : editPartnerPreferenceProviderState.subCaste,
       ),
     );
   }
@@ -341,43 +382,28 @@ class _PartnerPreferenceBasicDetailScreenState
       height: 48,
       child: ElevatedButton(
         onPressed: () async {
-          final va = ref.read(editPartnerPreferenceProvider);
-          print(va.star);
-          print(va.caste);
-          print(va.division);
-          print(va.raasi);
-          print(va.religion);
-
-          if (true) {
-            Future.delayed(const Duration(microseconds: 50), () {
-              // Navigator.pop(context);
-              // onPop('true');
-            })
-                .then((_) {
-              CustomSnackBar.show(
-                isError: false,
-                context: context,
-                message: 'Profile updated successfully!',
-              );
-            });
-            // Handle save logic
-          } else {
+          final result = await ref
+              .read(editPartnerPreferenceProvider.notifier)
+              .updateReligionDetails();
+          ref
+              .read(userManagementProvider.notifier)
+              .updatePartnerReligiousDetails(profileState);
+          if (result) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              // onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,
                 context: context,
-                message: 'Profile updated successfully!',
+                message: 'Partner Preference updated successfully!',
               );
             });
-
-            // CustomSnackBar.show(
-            //   context: context,
-            //   message: 'Please fill all required fields and ensure age is 18+',
-            //   isError: true,
-            // );
+          } else {
+            CustomSnackBar.show(
+              isError: true,
+              context: context,
+              message: 'Something Went wrong. Please Try Again!',
+            );
           }
         },
         style: ElevatedButton.styleFrom(

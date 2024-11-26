@@ -7,6 +7,7 @@ import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_state.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preference_dialog.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_height_dialog.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
 import '../../common/widget/custom_snackbar.dart';
@@ -38,8 +39,7 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    // editPartnerPreferenceProviderState.setValuesInitial('20 - 25',
-    //     '4 ft 7 in(139 cm)', '49 - 55', 'widowed', 'Normal', 'karnadaka');
+    editPartnerPreferenceProviderState.setLifeStyleValues(ref.read(userManagementProvider).userPartnerDetails);
   }
 
   @override
@@ -277,43 +277,28 @@ class _PartnerPreferenceBasicDetailScreenState
       height: 48,
       child: ElevatedButton(
         onPressed: () async {
-          final va = ref.read(editPartnerPreferenceProvider);
-          print(va.star);
-          print(va.caste);
-          print(va.division);
-          print(va.raasi);
-          print(va.religion);
-
-          if (true) {
-            Future.delayed(const Duration(microseconds: 50), () {
-              // Navigator.pop(context);
-              // onPop('true');
-            })
-                .then((_) {
-              CustomSnackBar.show(
-                isError: false,
-                context: context,
-                message: 'Profile updated successfully!',
-              );
-            });
-            // Handle save logic
-          } else {
+          final result = await ref
+              .read(editPartnerPreferenceProvider.notifier)
+              .updateLifeStyleDetails();
+          ref
+              .read(userManagementProvider.notifier)
+              .updatePartnerLifeStyleDetails(profileState);
+          if (result) {
             Future.delayed(const Duration(microseconds: 50), () {
               Navigator.pop(context);
-              // onPop('true');
             }).then((_) {
               CustomSnackBar.show(
                 isError: false,
                 context: context,
-                message: 'Profile updated successfully!',
+                message: 'Partner Preference updated successfully!',
               );
             });
-
-            // CustomSnackBar.show(
-            //   context: context,
-            //   message: 'Please fill all required fields and ensure age is 18+',
-            //   isError: true,
-            // );
+          } else {
+            CustomSnackBar.show(
+              isError: true,
+              context: context,
+              message: 'Something Went wrong. Please Try Again!',
+            );
           }
         },
         style: ElevatedButton.styleFrom(

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:matrimony/common/api_list.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Country {
   final int id;
@@ -185,13 +186,148 @@ class CountryNotifier extends StateNotifier<CountryState> {
     }
   }
 
-  Future<void> editLocationApi(String country, String states, String pinCode,
-      String city, String flatNumber, String address, bool ownHouse) async {
+  Future<void> getAllCountryDataForEdit(String country) async {
+    state = state.copyWith(isLoading: true);
+    int? countryId;
+    String? country1;
+    try {
+      final response = await http.get(Uri.parse(Api.getallCountry));
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as List;
+
+        final countryData =
+            jsonData.map((item) => Country.fromJson(item)).toList();
+
+        state = state.copyWith(isLoading: false, countryList: countryData);
+        for(final a in countryData){
+          if(a.countrys == country){
+            countryId = a.id;
+            country1 = a.countrys;
+            break;
+          }
+        }
+      } else {
+        throw Exception('Failed to load countrys data');
+      }
+    } catch (error) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: error.toString(),
+      );
+    }
+    getAllStateData(countryId ?? 0,country1 ?? '');
+  }
+
+  Future<void> getAllStateData(int countryId,String country) async {
+    state = state.copyWith(isLoading: true);
+    int? stateId;
+    try {
+      final response = await http.post(
+        Uri.parse(Api.getState),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'countryId': countryId}),
+      );
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as List;
+
+        final stateData =
+        jsonData.map((item) => StateModel.fromJson(item)).toList();
+
+
+        state = state.copyWith(isLoading: false, stateList: stateData);
+        for(final a in stateData){
+          if(a.states == country){
+            print(a.states);
+            stateId = a.id;
+            break;
+          }
+        }
+      } else {
+        state = state.copyWith(isLoading: false, stateList: []);
+        throw Exception('Failed to load countrys data');
+      }
+    } catch (error) {
+      state = state.copyWith(
+          isLoading: false, errorMessage: error.toString(), stateList: []);
+    }
+    getCityData(stateId ?? 0);
+  }
+
+
+  Future<void> getReligiousDetails(String country,String states) async {
+    final prefs = await SharedPreferences.getInstance();
+    final religionString = prefs.getString('country');
+    int? religionId;
+    if (religionString != null && religionString.isNotEmpty) {
+      final List<dynamic> religious = jsonDecode(religionString);
+      List<Country> religionList = religious
+          .map((e) => Country.fromJson(e as Map<String, dynamic>))
+          .toList();
+      for (final a in religionList) {
+        if (a.countrys == country) {
+          religionId = a.id;
+          break;
+        }
+      }
+      state = state.copyWith(countryList: religionList);
+    } else {
+      state = state.copyWith(countryList: []);
+    }
+    getCasteDetails(religionId,states);
+  }
+
+  Future<void> getCasteDetails(int? religionId,String states) async {
+    final prefs = await SharedPreferences.getInstance();
+    final caste = prefs.getString('state');
+    print('Otha ');
+    print(states);
+    int? casteId;
+    if (caste != null && caste.isNotEmpty) {
+      final List<dynamic> castes = jsonDecode(caste);
+      List<StateModel> casteList = castes
+          .map((e) => StateModel.fromJson(e as Map<String, dynamic>))
+          .where((caste) => caste.countryId == religionId)
+          .toList();
+      for (final a in casteList) {
+        if (a.states == states) {
+          casteId = a.id;
+          break;
+        }
+      }
+      state = state.copyWith(stateList: casteList);
+    } else {
+      state = state.copyWith(stateList: []);
+    }
+    getSubCasteDetails(casteId);
+  }
+
+  Future<void> getSubCasteDetails(int? casteId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final subCaste = prefs.getString('city');
+    if (subCaste != null && subCaste.isNotEmpty) {
+      final List<dynamic> subCastes = jsonDecode(subCaste);
+      List<City> subCasteList = subCastes
+          .map((e) => City.fromJson(e as Map<String, dynamic>))
+          .where((subcaste) => subcaste.stateId == casteId)
+          .toList();
+      state = state.copyWith(cityList: subCasteList);
+    } else {
+      state = state.copyWith(cityList: []);
+    }
+  }
+
+  Future<bool> editLocationApi(String country, String states, String pinCode,
+      String city, String flatNumber, String address, bool? ownHouse) async {
     state = state.copyWith(isLoading: true);
 
     try {
       final int? userId = await SharedPrefHelper.getUserId();
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse(Api.editLocation),
         headers: {
           'Content-Type': 'application/json',
@@ -213,18 +349,15 @@ class CountryNotifier extends StateNotifier<CountryState> {
       );
 
       if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body) as List;
-
-        final cityData = jsonData.map((item) => City.fromJson(item)).toList();
-
-        state = state.copyWith(isLoading: false, cityList: cityData);
+        return true;
       } else {
         state = state.copyWith(isLoading: false, cityList: []);
-        throw Exception('Failed to load countrys data');
+        return false;
       }
     } catch (error) {
       state = state.copyWith(
           isLoading: false, errorMessage: error.toString(), cityList: []);
+      return false;
     }
   }
 }

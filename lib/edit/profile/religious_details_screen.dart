@@ -396,7 +396,7 @@ class _ReligiousDetailsScreenState
             });
           } else {
             CustomSnackBar.show(
-              isError: false,
+              isError: true,
               context: context,
               message: 'Something Went wrong. Please Try Again!',
             );
