@@ -10,7 +10,6 @@ class UpdatePartnerLocationPreferenceScreen extends StatefulWidget {
 
 class _UpdatePartnerLocationPreferenceScreenState
     extends State<UpdatePartnerLocationPreferenceScreen> {
-  // Form values
   String country = 'Select Country';
   String state = 'Select State';
   String city = 'Select City';

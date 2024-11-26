@@ -174,7 +174,9 @@ class _RegisterUserPhotoUploadScreenState
                         1) {
                       final value = await ref
                           .read(imageRegisterApiProvider.notifier)
-                          .uploadPhoto(isImagesNotEmpty);
+                          .uploadPhoto(isImagesNotEmpty
+                              .where((element) => element.isNotEmpty)
+                              .toList());
                       await ref.read(getImageApiProvider.notifier).getImage();
                       ref.read(userManagementProvider.notifier).updateImage(
                           ref.read(getImageApiProvider).data?.images);

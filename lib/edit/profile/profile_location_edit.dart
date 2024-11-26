@@ -1,8 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/common_selection_dialog.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+
+import '../../user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 
 // class LocationDetailsScreen extends ConsumerStatefulWidget {
 //   final Function(String? value) onPop;
@@ -294,287 +304,453 @@ import 'package:matrimony/common/widget/common_selection_dialog.dart';
 //
 // }
 
-class LocationDetailsScreen extends StatefulWidget {
+class LocationDetailsScreen extends ConsumerStatefulWidget {
   const LocationDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  State<LocationDetailsScreen> createState() => _LocationDetailsScreenState();
+  ConsumerState<LocationDetailsScreen> createState() =>
+      _LocationDetailsScreenState();
 }
 
-class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
-  // Form key for validation
+class _LocationDetailsScreenState extends ConsumerState<LocationDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String? cuntryLiving;
-  String? residingState;
-  String? residingCity;
-  String address = '';
-  String? flatNo;
-  String? ownHouse;
-  String? pinCode;
+  String cuntryLiving = '';
+  String residingState = '';
+  String residingCity = '';
+  TextEditingController address = TextEditingController();
+  TextEditingController flatNo = TextEditingController();
+  String ownHouse = '';
+  TextEditingController pinCode = TextEditingController();
+  bool? isOwnHouse;
+
+  @override
+  void initState() {
+    super.initState();
+    getCountry();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getUserLocationMethod();
+  }
+
+  void getUserLocationMethod() async {
+    print('hello___________');
+    final userManagementState = ref.watch(userManagementProvider);
+    cuntryLiving = userManagementState.userDetails.country ?? '';
+    residingState = userManagementState.userDetails.state ?? '';
+    residingCity = userManagementState.userDetails.city ?? '';
+    address.text = userManagementState.userDetails.address ?? '';
+    ownHouse = userManagementState.userDetails.ownHouse ?? '';
+    pinCode.text = userManagementState.userDetails.pincode ?? '';
+    flatNo.text = userManagementState.userDetails.flatNumber ?? '';
+    print('userManagementState.userDetails.flatNumber');
+  }
+
+  Future<void> getCountry() async {
+    await Future.delayed(Duration.zero);
+    ref.read(locationProvider.notifier).getallCountryData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.50,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/initialimage.png'),
-                // Use your image path here
-                fit: BoxFit.cover,
+    final userManagementState = ref.watch(userManagementProvider);
+    final usernotifier = ref.read(userManagementProvider.notifier);
+    final countryState = ref.watch(locationProvider);
+    return EnhancedLoadingWrapper(
+      isLoading: countryState.isLoading,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.50,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/initialimage.png'),
+                  // Use your image path here
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              _buildCustomAppBar(),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.10),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(30)),
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text(
-                        'Family Details',
-                        style: AppTextStyles.headingTextstyle,
-                      ),
-                      const SizedBox(height: 16),
-                      Expanded(
-                        child: ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context)
-                              .copyWith(scrollbars: false),
-                          child: SingleChildScrollView(
-                            child: Form(
-                              key: _formKey,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  children: [
-                                    _buildDetailItem('Country Living',
-                                        cuntryLiving ?? '-Select-', onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            CommonSelectionDialog(
-                                          removeSearching: true,
-                                          title: 'Country Living',
-                                          options: PartnerPreferenceConstData
-                                              .countries,
-                                          selectedValue:
-                                              cuntryLiving ?? 'Select',
-                                          onSelect: (value) {
-                                            setState(() {
-                                              cuntryLiving = value;
-                                            });
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                    _buildDetailItem('Residing State',
-                                        residingState ?? '-Select-', onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            CommonSelectionDialog(
-                                          removeSearching: true,
-                                          title: 'Residing State',
-                                          options: PartnerPreferenceConstData
-                                              .states.keys
-                                              .toList(),
-                                          selectedValue:
-                                              residingState ?? 'Select',
-                                          onSelect: (value) {
-                                            setState(() {
-                                              residingState = value;
-                                            });
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                    _buildDetailItem('residing City',
-                                        residingCity ?? '-Select-', onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            CommonSelectionDialog(
-                                          removeSearching: true,
-                                          title: 'residing city',
-                                          options: PartnerPreferenceConstData
-                                              .cities.keys
-                                              .toList(),
-                                          selectedValue:
-                                              residingCity ?? 'Select',
-                                          onSelect: (value) {
-                                            setState(() {
-                                              residingCity = value;
-                                            });
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                    _buildDetailItem(
-                                      'pin Code',
-                                      pinCode ?? '-Select-',
-                                      onTap: () {
+            Column(
+              children: [
+                _buildCustomAppBar(),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.10),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(30)),
+                    ),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          'Location Details',
+                          style: AppTextStyles.headingTextstyle,
+                        ),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: ScrollConfiguration(
+                            behavior: ScrollConfiguration.of(context)
+                                .copyWith(scrollbars: false),
+                            child: SingleChildScrollView(
+                              child: Form(
+                                key: _formKey,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Column(
+                                    children: [
+                                      _buildDetailItem(
+                                          'Country Living', cuntryLiving,
+                                          onTap: () {
                                         showDialog(
                                           context: context,
                                           builder: (context) =>
                                               CommonSelectionDialog(
-                                            removeSearching: true,
-                                            title: 'pin Code',
-                                            options: const [
-                                              'employed',
-                                              'business man',
-                                              'professional',
-                                              'retired',
-                                              "Not employed",
-                                              'passed away'
+                                            removeSearching: false,
+                                            title: 'Country Living',
+                                            options: [
+                                              ...countryState.countryList
+                                                  .map((e) => e.countrys)
+                                                  .toList(),
+                                              'other'
                                             ],
-                                            selectedValue: pinCode ?? 'Select',
-                                            onSelect: (value) {
+                                            selectedValue: cuntryLiving,
+                                            onSelect: (value) async {
                                               setState(() {
-                                                pinCode = value;
+                                                pinCode.text = '';
+                                                residingCity = '';
+                                                residingState = '';
+                                                countryState.stateList.clear();
+                                                cuntryLiving = value;
                                               });
+
+                                              int? stateId;
+                                              for (var e
+                                                  in countryState.countryList) {
+                                                if (cuntryLiving.isNotEmpty) {
+                                                  if (e.countrys ==
+                                                      cuntryLiving) {
+                                                    stateId = e.id;
+                                                    break;
+                                                  }
+                                                }
+                                              }
+
+                                              print(
+                                                  "Selected State ID: $stateId");
+
+                                              // Ensure stateId is not null before calling getStateData
+                                              if (stateId != null) {
+                                                await ref
+                                                    .read(locationProvider
+                                                        .notifier)
+                                                    .getStateData(stateId);
+                                              } else {
+                                                print(
+                                                    "No state ID found for the selected country.");
+                                              }
                                             },
                                           ),
                                         );
-                                      },
-                                    ),
-                                    _buildDetailItem(
-                                      'own house',
-                                      ownHouse ?? '-Select-',
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              CommonSelectionDialog(
-                                            removeSearching: true,
-                                            title: 'own house',
-                                            options: const [
-                                              'yes',
-                                              "No",
-                                            ],
-                                            selectedValue: ownHouse ?? 'Select',
-                                            onSelect: (value) {
-                                              setState(() {
-                                                ownHouse = value;
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 16),
-                                      decoration: BoxDecoration(
-                                        color: Colors
-                                            .white, // Background color for the TextField
-                                        borderRadius: BorderRadius.circular(
-                                            15), // Optional: rounded corners
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.08),
-                                            offset: const Offset(1, 2),
-                                            blurRadius: 11.1,
-                                            spreadRadius: 0,
-                                          ),
-                                        ],
-                                      ),
-                                      child: TextField(
-                                        keyboardType: TextInputType.number,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            flatNo = value;
-                                          });
+                                      }),
+                                      cuntryLiving.isEmpty
+                                          ? SizedBox()
+                                          : _buildDetailItem(
+                                              'Residing State', residingState,
+                                              onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    CommonSelectionDialog(
+                                                  removeSearching: false,
+                                                  title: 'Residing State',
+                                                  options: [
+                                                    ...countryState.stateList
+                                                        .map((e) => e.states)
+                                                        .toList(),
+                                                    'other'
+                                                  ],
+                                                  selectedValue: residingState,
+                                                  onSelect: (value) async {
+                                                    setState(() {
+                                                      residingCity = '';
+                                                      pinCode.text = '';
+                                                      countryState.cityList
+                                                          .clear();
+                                                      residingState = value;
+                                                    });
+                                                    int? stateId;
+                                                    for (var e in countryState
+                                                        .stateList) {
+                                                      if (residingState
+                                                          .isNotEmpty) {
+                                                        if (e.states ==
+                                                            residingState) {
+                                                          stateId = e.id;
+                                                          break;
+                                                        }
+                                                      }
+                                                    }
+
+                                                    print(
+                                                        "Selected State ID: $stateId");
+                                                    if (stateId != null) {
+                                                      await ref
+                                                          .read(locationProvider
+                                                              .notifier)
+                                                          .getCityData(stateId);
+                                                    } else {
+                                                      print(
+                                                          "No state ID found for the selected country.");
+                                                    }
+                                                  },
+                                                ),
+                                              );
+                                            }),
+                                      residingState.isEmpty
+                                          ? SizedBox()
+                                          : _buildDetailItem(
+                                              'residing City', residingCity,
+                                              onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    CommonSelectionDialog(
+                                                  removeSearching: false,
+                                                  title: 'residing city',
+                                                  options: [
+                                                    ...countryState.cityList
+                                                        .map((e) => e.citys)
+                                                        .toList(),
+                                                    'other'
+                                                  ],
+                                                  selectedValue: residingCity,
+                                                  onSelect: (value) {
+                                                    setState(() {
+                                                      pinCode.text = '';
+                                                      residingCity = value;
+                                                      for (var pin
+                                                          in countryState
+                                                              .cityList) {
+                                                        if (pin.citys ==
+                                                            residingCity) {
+                                                          pinCode.text = pin
+                                                              .pincode
+                                                              .toString();
+                                                        }
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                              );
+                                            }),
+                                      residingCity.isEmpty
+                                          ? const SizedBox()
+                                          : Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8,
+                                                      horizontal: 8),
+                                              child: TextField(
+                                                readOnly:
+                                                    residingCity.isNotEmpty
+                                                        ? false
+                                                        : true,
+                                                controller: pinCode,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly, // Allow only digits
+                                                  LengthLimitingTextInputFormatter(
+                                                      6),
+                                                ],
+                                                onChanged: (value) {
+                                                  // setState(() {
+                                                  //   pinCode.text = value;
+                                                  // });
+                                                },
+                                                decoration: InputDecoration(
+                                                  hintText: 'Pin Code',
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    borderSide: BorderSide(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        width: 2.0),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    borderSide: BorderSide(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        width: 2.0),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    borderSide: BorderSide(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        width: 2.0),
+                                                  ),
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                    horizontal: 16,
+                                                    vertical:
+                                                        12, // Padding inside the TextField
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                      _buildDetailItem(
+                                        'own house',
+                                        isOwnHouse == null ||
+                                                isOwnHouse == false
+                                            ? 'No'
+                                            : "yes",
+                                        onTap: () {
+                                          _selectHouse(context);
                                         },
-                                        decoration: const InputDecoration(
-                                          hintText: 'Flat No',
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.symmetric(
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 8),
+                                        child: TextField(
+                                          controller: flatNo,
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            hintText: 'Flat No',
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey.shade300,
+                                                  width: 2.0),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey.shade300,
+                                                  width: 2.0),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey.shade300,
+                                                  width: 2.0),
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
                                               horizontal: 16,
                                               vertical:
-                                                  12), // Padding inside the TextField
+                                                  12, // Padding inside the TextField
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 16),
-                                      decoration: BoxDecoration(
-                                        color: Colors
-                                            .white, // Background color for the TextField
-                                        borderRadius: BorderRadius.circular(
-                                            15), // Optional: rounded corners
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.08),
-                                            offset: Offset(1, 2),
-                                            blurRadius: 11.1,
-                                            spreadRadius: 0,
-                                          ),
-                                        ],
-                                      ),
-                                      child: TextField(
-                                        maxLines: 5,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            address = value;
-                                          });
-                                        },
-                                        decoration: const InputDecoration(
-                                          hintText: 'Address',
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.symmetric(
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 8),
+                                        child: TextField(
+                                          controller: address,
+                                          maxLines: 5,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              address.text = value;
+                                            });
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText: 'Address',
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey
+                                                      .shade300), // Default border color
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey
+                                                      .shade300), // Same for enabled state
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey
+                                                      .shade300), // Same for focused state
+                                            ),
+                                            disabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey
+                                                      .shade300), // Same for disabled state
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
                                               horizontal: 16,
                                               vertical:
-                                                  12), // Padding inside the TextField
+                                                  12, // Padding inside the TextField
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                  ],
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: AppTextStyles.primaryButtonstyle,
-                  onPressed: _saveDetails,
-                  child: const Text(
-                    'Save',
-                    style: AppTextStyles.primarybuttonText,
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: AppTextStyles.primaryButtonstyle,
+                    onPressed: _saveDetails,
+                    child: countryState.isLoading
+                        ? const LoadingIndicator()
+                        : const Text(
+                            'Save',
+                            style: AppTextStyles.primarybuttonText,
+                          ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -584,22 +760,22 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(
-                  0.08), // Shadow color with opacity (equivalent to #00000008 in CSS)
-              offset: const Offset(
-                  1, 2), // Horizontal and vertical offset (1px, 2px)
-              blurRadius: 11.1, // Blur radius (11.1px)
-              spreadRadius: 0, // No spread, just the normal shadow
-            ),
-          ],
-        ),
+        // decoration: BoxDecoration(
+        //   borderRadius: BorderRadius.circular(15),
+        //   color: Colors.white,
+        //   boxShadow: [
+        //     BoxShadow(
+        //       color: Colors.black.withOpacity(
+        //           0.08), // Shadow color with opacity (equivalent to #00000008 in CSS)
+        //       offset: const Offset(
+        //           1, 2), // Horizontal and vertical offset (1px, 2px)
+        //       blurRadius: 11.1, // Blur radius (11.1px)
+        //       spreadRadius: 0, // No spread, just the normal shadow
+        //     ),
+        //   ],
+        // ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -608,19 +784,18 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
               children: [
                 Text(
                   label,
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16),
+                  // style: AppTextStyles.spanTextStyle.copyWith(
+                  //     color: AppColors.black,
+                  //     fontWeight: FontWeight.w600,
+                  //     fontSize: 16),
                 ),
-                Text(
-                  value,
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                      color: value == '-Select-'
-                          ? AppColors.spanTextColor
-                          : AppColors.black,
-                      fontWeight: FontWeight.w400),
-                ),
+                Text(value, style: const TextStyle(color: Colors.grey)
+                    // AppTextStyles.spanTextStyle.copyWith(
+                    //     color: value == '-Select-'
+                    //         ? AppColors.spanTextColor
+                    //         : AppColors.black,
+                    //     fontWeight: FontWeight.w400),
+                    ),
               ],
             ),
             const Icon(Icons.chevron_right),
@@ -648,7 +823,7 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Edit Family Details',
+                  'Edit Location Details',
                   textAlign: TextAlign.center,
                   style: AppTextStyles.headingTextstyle,
                 ),
@@ -660,12 +835,130 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
     );
   }
 
-  void _saveDetails() {
-    if (_formKey.currentState!.validate()) {
-      // Implement save logic here
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Saving details...')),
+  Future<void> _saveDetails() async {
+    await ref.read(locationProvider.notifier).editLocationApi(
+        cuntryLiving,
+        residingState,
+        pinCode.text,
+        residingCity,
+        flatNo.text,
+        address.text,
+        isOwnHouse!);
+    final upDateLocation = ref.watch(locationProvider);
+    if (upDateLocation.errorMessage != null) {
+      CustomSnackBar.show(
+        context: context,
+        message: 'Something Went Wrong. Please Try Again!',
+        isError: true,
       );
-    }
+    } else {}
+  }
+
+  Widget _buildSelectionField({
+    required String value,
+    required String hint,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                value.isEmpty ? hint : value,
+                style: TextStyle(
+                  color: value.isEmpty ? Colors.grey.shade600 : Colors.black,
+                ),
+              ),
+              Icon(Icons.arrow_drop_down, color: Colors.grey.shade600),
+            ],
+          ),
+        ));
+  }
+
+  void _selectHouse(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(child: Text('Own House')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isOwnHouse = true;
+                  });
+                  Navigator.pop(context, true);
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: isOwnHouse == true
+                        ? const Color(0xFFFFCBCC)
+                        : Colors.transparent,
+                    border: Border.all(
+                      color:
+                          isOwnHouse == true ? Colors.transparent : Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Yes',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color:
+                              isOwnHouse == true ? Colors.black : Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isOwnHouse = false;
+                  });
+                  Navigator.pop(context, false);
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: isOwnHouse == false
+                        ? const Color(0xFFFFCBCC)
+                        : Colors.transparent,
+                    border: Border.all(
+                      color: isOwnHouse == false
+                          ? Colors.transparent
+                          : Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'No',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color:
+                              isOwnHouse == false ? Colors.black : Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
