@@ -51,6 +51,9 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
     });
   }
 
+  bool otherValue = false;
+  final other = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -77,7 +80,7 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  widget.removeSearching
+                  widget.removeSearching || otherValue
                       ? const SizedBox()
                       : TextField(
                           controller: searchController,
@@ -121,40 +124,50 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                         ),
                       ),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: RawScrollbar(
-                        thumbColor: AppColors.primaryButtonColor,
-                        controller: _scrollController,
-                        thumbVisibility: true,
-                        radius: const Radius.circular(16),
-                        thickness: 8,
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: filteredOptions.length,
-                          itemBuilder: (context, index) =>
-                              RadioListTile<String>(
-                            title: Text(
-                              filteredOptions[index],
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: filteredOptions[index] == tempSelected
-                                    ? AppColors.primaryButtonColor
-                                    : Colors.black,
+                  : otherValue
+                      ? Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 24),
+                          child: TextFormField(
+                            controller: other,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder()),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: RawScrollbar(
+                            thumbColor: AppColors.primaryButtonColor,
+                            controller: _scrollController,
+                            thumbVisibility: true,
+                            radius: const Radius.circular(16),
+                            thickness: 8,
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              itemCount: filteredOptions.length,
+                              itemBuilder: (context, index) =>
+                                  RadioListTile<String>(
+                                title: Text(
+                                  filteredOptions[index],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color:
+                                        filteredOptions[index] == tempSelected
+                                            ? AppColors.primaryButtonColor
+                                            : Colors.black,
+                                  ),
+                                ),
+                                value: filteredOptions[index],
+                                groupValue: tempSelected,
+                                activeColor: Colors.red[400],
+                                onChanged: (value) {
+                                  setState(() {
+                                    tempSelected = value;
+                                  });
+                                },
                               ),
                             ),
-                            value: filteredOptions[index],
-                            groupValue: tempSelected,
-                            activeColor: Colors.red[400],
-                            onChanged: (value) {
-                              setState(() {
-                                tempSelected = value;
-                              });
-                            },
                           ),
                         ),
-                      ),
-                    ),
             ),
             Container(
               padding: const EdgeInsets.all(16.0),
@@ -163,7 +176,10 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
               ),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryButtonColor,
+                  backgroundColor: other.text.isNotEmpty ||
+                          (tempSelected != null && tempSelected!.isNotEmpty)
+                      ? AppColors.primaryButtonColor
+                      : AppColors.statusBarShadowColor,
                   foregroundColor: AppColors.primaryButtonTextColor,
                   elevation: 0,
                   minimumSize: const Size(double.infinity, 48),
@@ -171,12 +187,45 @@ class _CommonSelectionDialogState extends ConsumerState<CommonSelectionDialog> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
-                  if (tempSelected != null && tempSelected!.isNotEmpty) {
-                    widget.onSelect(tempSelected!);
-                    Navigator.pop(context);
-                  }
-                },
+                onPressed: (other.text.isNotEmpty ||
+                        (tempSelected != null && tempSelected!.isNotEmpty))
+                    ? () {
+                        if (other.text.isNotEmpty) {
+                          // Handle the case where text is entered in the 'other' field
+                          widget.onSelect(other.text);
+                          Navigator.pop(context);
+                        } else if (tempSelected != null) {
+                          if (tempSelected == 'other') {
+                            // Handle 'other' option being selected
+                            setState(() {
+                              otherValue = true;
+                            });
+                          } else {
+                            // Handle a valid selection other than 'other'
+                            widget.onSelect(tempSelected!);
+                            Navigator.pop(context);
+                          }
+                        }
+                      }
+                    : null,
+
+                // onPressed:other.text.isNotEmpty? (){
+                //   if(other.text.isNotEmpty){
+                //     widget.onSelect(other.text);
+                //     Navigator.pop(context);
+                //   }
+                // }: () {
+                //     if(tempSelected != null && tempSelected! == 'other'){
+                //       setState(() {
+                //         otherValue = true;
+                //       });
+                //     }else {
+                //       if (tempSelected != null && tempSelected!.isNotEmpty) {
+                //         widget.onSelect(tempSelected!);
+                //         Navigator.pop(context);
+                //       }
+                //     }
+                // },
                 child: const Text(
                   'Apply',
                   style: TextStyle(

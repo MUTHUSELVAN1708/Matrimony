@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:matrimony/common/api_list.dart';
+import 'package:matrimony/common/local_storage.dart';
+import 'package:matrimony/common/patner_preference_const_data.dart';
 
 class Country {
   final int id;
@@ -140,6 +142,7 @@ class CountryNotifier extends StateNotifier<CountryState> {
 
         final stateData =
             jsonData.map((item) => StateModel.fromJson(item)).toList();
+        print(stateData.length);
 
         state = state.copyWith(isLoading: false, stateList: stateData);
       } else {
@@ -152,7 +155,9 @@ class CountryNotifier extends StateNotifier<CountryState> {
     }
   }
 
-  Future<void> getCityData(int stateId) async {
+  Future<void> getCityData(
+    int stateId,
+  ) async {
     state = state.copyWith(isLoading: true);
 
     try {
@@ -162,6 +167,49 @@ class CountryNotifier extends StateNotifier<CountryState> {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({'stateId': stateId}),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as List;
+
+        final cityData = jsonData.map((item) => City.fromJson(item)).toList();
+
+        state = state.copyWith(isLoading: false, cityList: cityData);
+      } else {
+        state = state.copyWith(isLoading: false, cityList: []);
+        throw Exception('Failed to load countrys data');
+      }
+    } catch (error) {
+      state = state.copyWith(
+          isLoading: false, errorMessage: error.toString(), cityList: []);
+    }
+  }
+
+  Future<void> editLocationApi(String country, String states, String pinCode,
+      String city, String flatNumber, String address, bool ownHouse) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.post(
+        Uri.parse(Api.editLocation),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'userId': userId,
+          'country': country,
+          'state': states,
+          'pincode': pinCode,
+          'city': city,
+          'flatNumber': flatNumber,
+          'address': address,
+          'ownHouse': ownHouse != null
+              ? ownHouse
+                  ? 'Yes'
+                  : 'No'
+              : null
+        }),
       );
 
       if (response.statusCode == 200) {
