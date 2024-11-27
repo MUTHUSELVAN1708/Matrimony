@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_notifier.dart';
 import 'package:matrimony/models/religion_model.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 
 class EditPartnerPreferenceState {
   final String fromAge;
@@ -32,6 +34,9 @@ class EditPartnerPreferenceState {
   final List<Religion> religionList;
   final List<Caste> casteList;
   final List<SubCaste> subCasteList;
+  final List<Country> countryList;
+  final List<StateModel> stateList;
+  final List<City> cityList;
 
   EditPartnerPreferenceState(
       {this.fromAge = '',
@@ -62,7 +67,10 @@ class EditPartnerPreferenceState {
       this.isLoading = false,
       this.religionList = const [],
       this.casteList = const [],
-      this.subCasteList = const []});
+      this.subCasteList = const [],
+      this.countryList = const [],
+      this.stateList = const [],
+      this.cityList = const []});
 
   EditPartnerPreferenceState copyWith(
       {String? fromAge,
@@ -93,7 +101,10 @@ class EditPartnerPreferenceState {
       bool? isLoading,
       List<Religion>? religionList,
       List<Caste>? casteList,
-      List<SubCaste>? subCasteList}) {
+      List<SubCaste>? subCasteList,
+      List<Country>? countryList,
+      List<StateModel>? stateList,
+      List<City>? cityList}) {
     return EditPartnerPreferenceState(
         toHeight: toHeight ?? this.toHeight,
         fromAge: fromAge ?? this.fromAge,
@@ -123,7 +134,10 @@ class EditPartnerPreferenceState {
         isLoading: isLoading ?? this.isLoading,
         casteList: casteList ?? this.casteList,
         religionList: religionList ?? this.religionList,
-        subCasteList: subCasteList ?? this.subCasteList);
+        subCasteList: subCasteList ?? this.subCasteList,
+        cityList: cityList ?? this.cityList,
+        stateList: stateList ?? this.stateList,
+        countryList: countryList ?? this.countryList);
   }
 }
 

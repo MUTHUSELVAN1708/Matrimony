@@ -6,9 +6,11 @@ import 'package:matrimony/common/api_list.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit/profile/state/edit_contact_state.dart';
+import 'package:matrimony/edit/profile/state/location_state.dart';
 import 'package:matrimony/edit/profile/state/professional_info_state.dart';
 import 'package:matrimony/edit/profile/state/religious_state.dart';
 import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_preference_state.dart';
+import 'package:matrimony/horoscopeandstar/riverpod/horoscope_state.dart';
 import 'package:matrimony/models/partner_details_model.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_details_model.dart';
@@ -130,17 +132,17 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
                     : null));
   }
 
-  void updateLocationDetails(String country, String states, String pinCode,
-      String city, String flatNumber, String address, bool? ownHouse) {
+  void updateLocationDetails(LocationState locationState) {
     state = state.copyWith(
         userDetails: state.userDetails.copyWith(
-            country: country,
-            state: states,
-            pincode: pinCode,
-            city: city,
-            flatNumber: flatNumber,
-            ownHouse: ownHouse != null
-                ? ownHouse
+            country: locationState.country,
+            state: locationState.state,
+            pincode: locationState.pincode,
+            city: locationState.city,
+            flatNumber: locationState.flatNo,
+            address: locationState.address,
+            ownHouse: locationState.ownHouse != null
+                ? locationState.ownHouse!
                     ? 'Yes'
                     : 'No'
                 : null));
@@ -344,5 +346,27 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
         // final jsonData = json.decode(response.body) as List;
       }
     }
+  }
+
+  void updateYourSelf(String? familyStatus, String? yourSelf) {
+    state = state.copyWith(
+        userDetails: state.userDetails
+            .copyWith(familyStatus: familyStatus, aboutYourSelf: yourSelf));
+  }
+
+  void updateGovtProof(String? govtIdProof, String? idImage) {
+    state = state.copyWith(
+        userDetails: state.userDetails
+            .copyWith(govtIdProof: govtIdProof, idImage: idImage));
+  }
+
+  void updateHoroscopeDetails(HoroscopeState horoscopeState) {
+    state = state.copyWith(
+        userDetails: state.userDetails.copyWith(
+            timeOfBirth: horoscopeState.timeOfBirth,
+            stateOfBirth: horoscopeState.birthState,
+            countryOfBirth: horoscopeState.birthCountry,
+            cityOfBirth: horoscopeState.birthCity,
+            dob: horoscopeState.dateOfBirth));
   }
 }

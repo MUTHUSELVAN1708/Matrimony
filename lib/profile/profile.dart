@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/edit/profile/partner_family_details.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/widgets/upload_photo.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_user_additional_info_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_photo_upload_screens/register_user_photo_upload_screen.dart';
 import 'package:matrimony/user_auth_screens/register_star_details/heroscope_add_details_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
@@ -212,18 +214,29 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   RegisterUserPhotoUploadScreen(
-                                                    isEditPhoto: true,
-                                                    images:
-                                                        getImageApiProviderState
-                                                            .data?.images,
-                                                  )));
+                                                      isEditPhoto: true,
+                                                      images:
+                                                          getImageApiProviderState
+                                                              .data?.images,
+                                                      onPop: (value) {
+                                                        if (value == true) {
+                                                          _updateProfileElementsVisibility(
+                                                              true);
+                                                        }
+                                                      })));
                                     }, context),
                                     _buildActionButton('Edit Horoscope', () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const HoroscopeAddDetailScreen()));
+                                                  HoroscopeAddDetailScreen(
+                                                      onPop: (value) {
+                                                    if (value == true) {
+                                                      _updateProfileElementsVisibility(
+                                                          true);
+                                                    }
+                                                  })));
                                     }, context),
                                   ],
                                 ),
@@ -437,17 +450,27 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 }
               }),
             );
+          } else if (title == 'Family Details') {
+            _updateProfileElementsVisibility(false);
+            NavigationHelper.slideNavigateTo(
+              context: context,
+              screen: UpdateFamilyDetail(onPop: (value) {
+                if (value == 'true') {
+                  _updateProfileElementsVisibility(true);
+                }
+              }),
+            );
           } else {
             _updateProfileElementsVisibility(false);
             NavigationHelper.slideNavigateTo(
               context: context,
-              screen: UpdateFamilyDetail(
-                      onPop: (value) {
+              screen: RegisterUserAdditionalInfoScreen(
+                  userDetails: ref.read(userManagementProvider).userDetails,
+                  onPop: (value) {
                     if (value == 'true') {
                       _updateProfileElementsVisibility(true);
                     }
-                  }
-                  ),
+                  }),
             );
           }
         },

@@ -11,7 +11,12 @@ import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:intl/intl.dart';
 
 class HoroscopeAddDetailScreen extends ConsumerStatefulWidget {
-  const HoroscopeAddDetailScreen({super.key});
+  final Function(bool value) onPop;
+
+  const HoroscopeAddDetailScreen({
+    super.key,
+    required this.onPop,
+  });
 
   @override
   ConsumerState<HoroscopeAddDetailScreen> createState() =>
@@ -41,10 +46,18 @@ class _HoroscopeAddDetailScreenState
 
   Future<void> getData() async {
     await Future.delayed(Duration.zero);
+    final user = ref.read(userManagementProvider).userDetails;
     ref.read(horoscopeProvider.notifier).resetHoroscope();
-    ref
-        .read(horoscopeProvider.notifier)
-        .setHoroscope(ref.read(userManagementProvider).userDetails);
+    ref.read(horoscopeProvider.notifier).setHoroscope(user);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final user = ref.read(userManagementProvider).userDetails;
+    countryController.text = user.countryOfBirth ?? '';
+    stateController.text = user.stateOfBirth ?? '';
+    cityController.text = user.cityOfBirth ?? '';
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -85,222 +98,237 @@ class _HoroscopeAddDetailScreenState
     final horoscopeState = ref.watch(horoscopeProvider);
     return EnhancedLoadingWrapper(
       isLoading: horoscopeState.isLoading,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0,
+      child: PopScope(
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) {
+            widget.onPop(true);
+          }
+        },
+        child: Scaffold(
           backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.red, size: 20),
-            onPressed: () => Navigator.pop(context),
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios,
+                    color: Colors.red, size: 20),
+                onPressed: () {
+                  widget.onPop(true);
+                  Navigator.pop(context);
+                }),
+            title: Text(
+              'Add Horoscope Details',
+              style: AppTextStyles.headingTextstyle.copyWith(fontSize: 22),
+            ),
+            centerTitle: true,
           ),
-          title: Text(
-            'Add Horoscope Details',
-            style: AppTextStyles.headingTextstyle.copyWith(fontSize: 22),
-          ),
-          centerTitle: true,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage('assets/starimage.png'),
-                    ),
-                    border: Border.all(color: Colors.red.withOpacity(0.3)),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                GestureDetector(
-                  onTap: () => _selectDate(context),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 200,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade300)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Text(
-                              horoscopeState.dateOfBirth ??
-                                  'Select Date Of Birth',
-                              style: TextStyle(
-                                  color: horoscopeState.dateOfBirth != null
-                                      ? Colors.black
-                                      : Colors.grey,
-                                  fontSize: 16),
+                      image: const DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage('assets/starimage.png'),
+                      ),
+                      border: Border.all(color: Colors.red.withOpacity(0.3)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  GestureDetector(
+                    onTap: () => _selectDate(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey.shade300)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 5,
                             ),
-                          ),
-                          const Icon(
-                            Icons.calendar_today,
-                            color: AppColors.primaryButtonColor,
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                        ],
+                            Expanded(
+                              child: Text(
+                                horoscopeState.dateOfBirth ??
+                                    'Select Date Of Birth',
+                                style: TextStyle(
+                                    color: horoscopeState.dateOfBirth != null
+                                        ? Colors.black
+                                        : Colors.grey,
+                                    fontSize: 16),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.calendar_today,
+                              color: AppColors.primaryButtonColor,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 24),
-                GestureDetector(
-                  onTap: () => _selectTime(context),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade300)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Text(
-                              horoscopeState.timeOfBirth ??
-                                  'Select Time Of Birth',
-                              style: TextStyle(
-                                  color: horoscopeState.timeOfBirth != null
-                                      ? Colors.black
-                                      : Colors.grey,
-                                  fontSize: 16),
+                  const SizedBox(height: 24),
+                  GestureDetector(
+                    onTap: () => _selectTime(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey.shade300)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 5,
                             ),
-                          ),
-                          const Icon(
-                            Icons.access_time_sharp,
-                            color: AppColors.primaryButtonColor,
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                        ],
+                            Expanded(
+                              child: Text(
+                                horoscopeState.timeOfBirth ??
+                                    'Select Time Of Birth',
+                                style: TextStyle(
+                                    color: horoscopeState.timeOfBirth != null
+                                        ? Colors.black
+                                        : Colors.grey,
+                                    fontSize: 16),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.access_time_sharp,
+                              color: AppColors.primaryButtonColor,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                // Country dropdown
-                // CustomDropdownField(
-                //   value: selectedCountry ?? '',
-                //   hint: 'Select your country',
-                //   items: _countries,
-                //   onChanged: (String? newValue) {
-                //     setState(() {
-                //       selectedCountry = newValue!;
-                //     });
-                //   },
-                // ),
-                buildTextFieldWithIcon(
-                    controller: countryController,
-                    icon: Icons.location_on,
-                    onChanged: (value) {
-                      ref
-                          .read(horoscopeProvider.notifier)
-                          .updateBirthCountry(value);
-                    },
-                    hintText: 'Enter Your Birth Country',
-                    enabled: true),
-                const SizedBox(height: 24),
+                  // Country dropdown
+                  // CustomDropdownField(
+                  //   value: selectedCountry ?? '',
+                  //   hint: 'Select your country',
+                  //   items: _countries,
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       selectedCountry = newValue!;
+                  //     });
+                  //   },
+                  // ),
+                  buildTextFieldWithIcon(
+                      controller: countryController,
+                      icon: Icons.location_on,
+                      onChanged: (value) {
+                        ref
+                            .read(horoscopeProvider.notifier)
+                            .updateBirthCountry(value);
+                      },
+                      hintText: 'Enter Your Birth Country',
+                      enabled: true),
+                  const SizedBox(height: 24),
 
-                // State dropdown
-                // CustomDropdownField(
-                //   value: selectedState ?? '',
-                //   hint: 'Select your state',
-                //   items: _states,
-                //   onChanged: (String? newValue) {
-                //     setState(() {
-                //       selectedState = newValue!;
-                //     });
-                //   },
-                // ),
-                buildTextFieldWithIcon(
-                    controller: stateController,
-                    icon: Icons.location_on,
-                    onChanged: (value) {
-                      ref
-                          .read(horoscopeProvider.notifier)
-                          .updateBirthCity(value);
-                    },
-                    hintText: 'Enter Your Birth State',
-                    enabled: true),
-                const SizedBox(height: 24),
+                  // State dropdown
+                  // CustomDropdownField(
+                  //   value: selectedState ?? '',
+                  //   hint: 'Select your state',
+                  //   items: _states,
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       selectedState = newValue!;
+                  //     });
+                  //   },
+                  // ),
+                  buildTextFieldWithIcon(
+                      controller: stateController,
+                      icon: Icons.location_on,
+                      onChanged: (value) {
+                        ref
+                            .read(horoscopeProvider.notifier)
+                            .updateBirthState(value);
+                      },
+                      hintText: 'Enter Your Birth State',
+                      enabled: true),
+                  const SizedBox(height: 24),
 
-                // City dropdown
-                // CustomDropdownField(
-                //   value: selectedCity ?? '',
-                //   hint: 'Select your city of birth',
-                //   items: _cities,
-                //   onChanged: (String? newValue) {
-                //     setState(() {
-                //       selectedCity = newValue!;
-                //     });
-                //   },
-                // ),
-                buildTextFieldWithIcon(
-                    controller: cityController,
-                    icon: Icons.location_on,
-                    onChanged: (value) {
-                      ref
-                          .read(horoscopeProvider.notifier)
-                          .updateBirthCity(value);
-                    },
-                    hintText: 'Enter Your Birth City',
-                    enabled: true),
-                const SizedBox(height: 24),
+                  // City dropdown
+                  // CustomDropdownField(
+                  //   value: selectedCity ?? '',
+                  //   hint: 'Select your city of birth',
+                  //   items: _cities,
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       selectedCity = newValue!;
+                  //     });
+                  //   },
+                  // ),
+                  buildTextFieldWithIcon(
+                      controller: cityController,
+                      icon: Icons.location_on,
+                      onChanged: (value) {
+                        ref
+                            .read(horoscopeProvider.notifier)
+                            .updateBirthCity(value);
+                      },
+                      hintText: 'Enter Your Birth City',
+                      enabled: true),
+                  const SizedBox(height: 24),
 
-                // Next button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final result = await ref
-                          .read(horoscopeProvider.notifier)
-                          .editHoroscope();
-                      if (result) {
-                        CustomSnackBar.show(
-                            context: context,
-                            message: 'Horoscope Updated Successfully.',
-                            isError: false);
-                        Navigator.of(context).pop();
-                      } else {
-                        CustomSnackBar.show(
-                            context: context,
-                            message: 'Something Went Wrong. Please Try Again!.',
-                            isError: true);
-                      }
-                    },
-                    style: AppTextStyles.primaryButtonstyle,
-                    child: const Text(
-                      'Save',
-                      style: AppTextStyles.primarybuttonText,
+                  // Next button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final result = await ref
+                            .read(horoscopeProvider.notifier)
+                            .editHoroscope();
+                        ref
+                            .read(userManagementProvider.notifier)
+                            .updateHoroscopeDetails(horoscopeState);
+                        if (result) {
+                          CustomSnackBar.show(
+                              context: context,
+                              message: 'Horoscope Updated Successfully.',
+                              isError: false);
+                          widget.onPop(true);
+                          Navigator.of(context).pop();
+                        } else {
+                          CustomSnackBar.show(
+                              context: context,
+                              message:
+                                  'Something Went Wrong. Please Try Again!.',
+                              isError: true);
+                        }
+                      },
+                      style: AppTextStyles.primaryButtonstyle,
+                      child: const Text(
+                        'Save',
+                        style: AppTextStyles.primarybuttonText,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -35,7 +35,10 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    editPartnerPreferenceProviderState.setLocationValues(ref.read(userManagementProvider).userPartnerDetails);
+    editPartnerPreferenceProviderState
+        .setLocationValues(ref.read(userManagementProvider).userPartnerDetails);
+    await ref.read(userManagementProvider.notifier).getLocalData();
+    await ref.read(editPartnerPreferenceProvider.notifier).getCountryDetails();
   }
 
   @override
@@ -192,19 +195,31 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Country',
-            options: PartnerPreferenceConstData.countries,
+            options: [
+              'Any',
+              ...editPartnerPreferenceProviderState.countryList
+                  .map((country) => country.countrys),
+              'Other'
+            ],
             selectedValue: editPartnerPreferenceProviderState.country,
             onSelect: (value) {
               ref
                   .read(editPartnerPreferenceProvider.notifier)
                   .updateCountry(value);
+              if (value != editPartnerPreferenceProviderState.country) {
+                ref
+                    .read(editPartnerPreferenceProvider.notifier)
+                    .getStateDetailsList(value);
+              }
             },
           ),
         );
       },
       child: _buildListTile(
         'Country',
-        editPartnerPreferenceProviderState.country,
+        editPartnerPreferenceProviderState.country.isEmpty
+            ? 'Select'
+            : editPartnerPreferenceProviderState.country,
       ),
     );
   }
@@ -216,24 +231,42 @@ class _PartnerPreferenceBasicDetailScreenState
   ) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select State',
-            options: PartnerPreferenceConstData
-                .states[editPartnerPreferenceProviderState.country]!,
-            selectedValue: editPartnerPreferenceProviderState.state,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateState(value);
-            },
-          ),
-        );
+        if (editPartnerPreferenceProviderState.country.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (context) => CommonSelectionDialog(
+              title: 'Select State',
+              options: [
+                'Any',
+                ...editPartnerPreferenceProviderState.stateList
+                    .map((state) => state.states),
+                'Other'
+              ],
+              selectedValue: editPartnerPreferenceProviderState.state,
+              onSelect: (value) {
+                ref
+                    .read(editPartnerPreferenceProvider.notifier)
+                    .updateState(value);
+                if (value != editPartnerPreferenceProviderState.state) {
+                  ref
+                      .read(editPartnerPreferenceProvider.notifier)
+                      .getCityDetailsList(value);
+                }
+              },
+            ),
+          );
+        } else {
+          CustomSnackBar.show(
+              context: context,
+              message: 'Please Select Country!.',
+              isError: true);
+        }
       },
       child: _buildListTile(
         'State',
-        editPartnerPreferenceProviderState.state,
+        editPartnerPreferenceProviderState.state.isEmpty
+            ? 'Select'
+            : editPartnerPreferenceProviderState.state,
       ),
     );
   }
@@ -245,24 +278,37 @@ class _PartnerPreferenceBasicDetailScreenState
   ) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => CommonSelectionDialog(
-            title: 'Select City',
-            options: PartnerPreferenceConstData
-                .cities[editPartnerPreferenceProviderState.state]!,
-            selectedValue: editPartnerPreferenceProviderState.city,
-            onSelect: (value) {
-              ref
-                  .read(editPartnerPreferenceProvider.notifier)
-                  .updateCity(value);
-            },
-          ),
-        );
+        if (editPartnerPreferenceProviderState.state.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (context) => CommonSelectionDialog(
+              title: 'Select City',
+              options: [
+                'Any',
+                ...editPartnerPreferenceProviderState.cityList
+                    .map((city) => city.citys),
+                'Other'
+              ],
+              selectedValue: editPartnerPreferenceProviderState.city,
+              onSelect: (value) {
+                ref
+                    .read(editPartnerPreferenceProvider.notifier)
+                    .updateCity(value);
+              },
+            ),
+          );
+        } else {
+          CustomSnackBar.show(
+              context: context,
+              message: 'Please Select State!.',
+              isError: true);
+        }
       },
       child: _buildListTile(
         'City',
-        editPartnerPreferenceProviderState.city,
+        editPartnerPreferenceProviderState.city.isEmpty
+            ? 'Select'
+            : editPartnerPreferenceProviderState.city,
       ),
     );
   }
@@ -284,7 +330,7 @@ class _PartnerPreferenceBasicDetailScreenState
             : editPartnerPreferenceProviderState.isOwnHouse != null &&
                     !editPartnerPreferenceProviderState.isOwnHouse!
                 ? 'No'
-                : '',
+                : 'Select',
       ),
     );
   }

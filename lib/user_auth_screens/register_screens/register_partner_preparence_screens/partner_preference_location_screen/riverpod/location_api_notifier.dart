@@ -200,8 +200,8 @@ class CountryNotifier extends StateNotifier<CountryState> {
             jsonData.map((item) => Country.fromJson(item)).toList();
 
         state = state.copyWith(isLoading: false, countryList: countryData);
-        for(final a in countryData){
-          if(a.countrys == country){
+        for (final a in countryData) {
+          if (a.countrys == country) {
             countryId = a.id;
             country1 = a.countrys;
             break;
@@ -216,10 +216,10 @@ class CountryNotifier extends StateNotifier<CountryState> {
         errorMessage: error.toString(),
       );
     }
-    getAllStateData(countryId ?? 0,country1 ?? '');
+    getAllStateData(countryId ?? 0, country1 ?? '');
   }
 
-  Future<void> getAllStateData(int countryId,String country) async {
+  Future<void> getAllStateData(int countryId, String country) async {
     state = state.copyWith(isLoading: true);
     int? stateId;
     try {
@@ -236,12 +236,11 @@ class CountryNotifier extends StateNotifier<CountryState> {
         final jsonData = json.decode(response.body) as List;
 
         final stateData =
-        jsonData.map((item) => StateModel.fromJson(item)).toList();
-
+            jsonData.map((item) => StateModel.fromJson(item)).toList();
 
         state = state.copyWith(isLoading: false, stateList: stateData);
-        for(final a in stateData){
-          if(a.states == country){
+        for (final a in stateData) {
+          if (a.states == country) {
             print(a.states);
             stateId = a.id;
             break;
@@ -258,8 +257,7 @@ class CountryNotifier extends StateNotifier<CountryState> {
     getCityData(stateId ?? 0);
   }
 
-
-  Future<void> getReligiousDetails(String country,String states) async {
+  Future<void> getCountryDetails(String country, String states) async {
     final prefs = await SharedPreferences.getInstance();
     final religionString = prefs.getString('country');
     int? religionId;
@@ -278,14 +276,12 @@ class CountryNotifier extends StateNotifier<CountryState> {
     } else {
       state = state.copyWith(countryList: []);
     }
-    getCasteDetails(religionId,states);
+    getStateDetails(religionId, states);
   }
 
-  Future<void> getCasteDetails(int? religionId,String states) async {
+  Future<void> getStateDetails(int? religionId, String states) async {
     final prefs = await SharedPreferences.getInstance();
     final caste = prefs.getString('state');
-    print('Otha ');
-    print(states);
     int? casteId;
     if (caste != null && caste.isNotEmpty) {
       final List<dynamic> castes = jsonDecode(caste);
@@ -303,10 +299,10 @@ class CountryNotifier extends StateNotifier<CountryState> {
     } else {
       state = state.copyWith(stateList: []);
     }
-    getSubCasteDetails(casteId);
+    getCityDetails(casteId);
   }
 
-  Future<void> getSubCasteDetails(int? casteId) async {
+  Future<void> getCityDetails(int? casteId) async {
     final prefs = await SharedPreferences.getInstance();
     final subCaste = prefs.getString('city');
     if (subCaste != null && subCaste.isNotEmpty) {
@@ -316,6 +312,64 @@ class CountryNotifier extends StateNotifier<CountryState> {
           .where((subcaste) => subcaste.stateId == casteId)
           .toList();
       state = state.copyWith(cityList: subCasteList);
+    } else {
+      state = state.copyWith(cityList: []);
+    }
+  }
+
+  Future<void> getStateDetailsList(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final caste = prefs.getString('state');
+    final religion = prefs.getString('country');
+    int? religionId;
+    if (religion != null && religion.isNotEmpty) {
+      final List<dynamic> religions = jsonDecode(religion);
+      List<Country> religionList = religions
+          .map((e) => Country.fromJson(e as Map<String, dynamic>))
+          .toList();
+      for (final a in religionList) {
+        if (a.countrys == value) {
+          religionId = a.id;
+          break;
+        }
+      }
+    }
+    if (caste != null && caste.isNotEmpty) {
+      final List<dynamic> castes = jsonDecode(caste);
+      List<StateModel> casteList = castes
+          .map((e) => StateModel.fromJson(e as Map<String, dynamic>))
+          .where((caste) => caste.countryId == religionId)
+          .toList();
+      state = state.copyWith(stateList: casteList, cityList: []);
+    } else {
+      state = state.copyWith(stateList: [], cityList: []);
+    }
+  }
+
+  Future<void> getCityDetailsList(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final subcaste = prefs.getString('city');
+    final caste = prefs.getString('state');
+    int? casteId;
+    if (caste != null && caste.isNotEmpty) {
+      final List<dynamic> castes = jsonDecode(caste);
+      List<StateModel> casteList = castes
+          .map((e) => StateModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      for (final a in casteList) {
+        if (a.states == value) {
+          casteId = a.id;
+          break;
+        }
+      }
+    }
+    if (subcaste != null && subcaste.isNotEmpty) {
+      final List<dynamic> subcastes = jsonDecode(subcaste);
+      List<City> subcasteList = subcastes
+          .map((e) => City.fromJson(e as Map<String, dynamic>))
+          .where((caste) => caste.stateId == casteId)
+          .toList();
+      state = state.copyWith(cityList: subcasteList);
     } else {
       state = state.copyWith(cityList: []);
     }

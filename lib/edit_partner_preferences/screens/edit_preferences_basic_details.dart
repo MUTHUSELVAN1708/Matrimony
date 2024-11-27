@@ -41,30 +41,23 @@ class _PartnerPreferenceBasicDetailScreenState
   Future<void> getValues() async {
     await Future.delayed(Duration.zero);
     final editPartnerPreferenceProviderState =
-    ref.read(editPartnerPreferenceProvider.notifier);
+        ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
     editPartnerPreferenceProviderState
-        .setValuesInitial(ref
-        .read(userManagementProvider)
-        .userPartnerDetails);
+        .setValuesInitial(ref.read(userManagementProvider).userPartnerDetails);
   }
 
   @override
   Widget build(BuildContext context) {
     final editPartnerPreferenceProviderState =
-    ref.watch(editPartnerPreferenceProvider);
-    final heightQuery = MediaQuery
-        .of(context)
-        .size
-        .height;
-    selectedHeight.add(ref
-        .read(userManagementProvider)
-        .userPartnerDetails
-        .partnerFromHeight ?? '');
-    selectedHeight.add(ref
-        .read(userManagementProvider)
-        .userPartnerDetails
-        .partnerToHeight?? '');
+        ref.watch(editPartnerPreferenceProvider);
+    final heightQuery = MediaQuery.of(context).size.height;
+    selectedHeight.add(
+        ref.read(userManagementProvider).userPartnerDetails.partnerFromHeight ??
+            '');
+    selectedHeight.add(
+        ref.read(userManagementProvider).userPartnerDetails.partnerToHeight ??
+            '');
     return EnhancedLoadingWrapper(
       isLoading: editPartnerPreferenceProviderState.isLoading,
       child: Material(
@@ -128,10 +121,12 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildForm(BuildContext context,
-      WidgetRef ref,
-      EditPartnerPreferenceState editPartnerPreferenceProviderState,
-      double heightQuery,) {
+  Widget _buildForm(
+    BuildContext context,
+    WidgetRef ref,
+    EditPartnerPreferenceState editPartnerPreferenceProviderState,
+    double heightQuery,
+  ) {
     return Positioned(
       top: heightQuery * 0.28,
       left: 0,
@@ -185,9 +180,14 @@ class _PartnerPreferenceBasicDetailScreenState
                     setState(() {
                       selectedHeight = value;
                     });
-                    if(selectedHeight.isNotEmpty){
-                      ref.read(editPartnerPreferenceProvider.notifier).updateFromHeight(value.first.split('-').first.trim());
-                      ref.read(editPartnerPreferenceProvider.notifier).updateToHeight(value.first.split('-').last.trim());
+                    if (selectedHeight.isNotEmpty) {
+                      ref
+                          .read(editPartnerPreferenceProvider.notifier)
+                          .updateFromHeight(
+                              value.first.split('-').first.trim());
+                      ref
+                          .read(editPartnerPreferenceProvider.notifier)
+                          .updateToHeight(value.first.split('-').last.trim());
                     }
                   },
                 ),
@@ -236,24 +236,25 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildMaritalStatusSelection(BuildContext context,
-      WidgetRef ref,
-      EditPartnerPreferenceState editPartnerPreferenceProviderState,) {
+  Widget _buildMaritalStatusSelection(
+    BuildContext context,
+    WidgetRef ref,
+    EditPartnerPreferenceState editPartnerPreferenceProviderState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) =>
-              CommonSelectionDialog(
-                title: 'Select Marital Status',
-                options: ProfileOptions.maritalStatus,
-                selectedValue: editPartnerPreferenceProviderState.maritalStatus,
-                onSelect: (value) {
-                  ref
-                      .read(editPartnerPreferenceProvider.notifier)
-                      .updateMaritalStatus(value);
-                },
-              ),
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Marital Status',
+            options: ProfileOptions.maritalStatus,
+            selectedValue: editPartnerPreferenceProviderState.maritalStatus,
+            onSelect: (value) {
+              ref
+                  .read(editPartnerPreferenceProvider.notifier)
+                  .updateMaritalStatus(value);
+            },
+          ),
         );
       },
       child: _buildListTile(
@@ -263,25 +264,25 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildPhysicalStatusSelection(BuildContext context,
-      WidgetRef ref,
-      EditPartnerPreferenceState editPartnerPreferenceProviderState,) {
+  Widget _buildPhysicalStatusSelection(
+    BuildContext context,
+    WidgetRef ref,
+    EditPartnerPreferenceState editPartnerPreferenceProviderState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) =>
-              CommonSelectionDialog(
-                title: 'Select Physical Status',
-                options: ProfileOptions.physicalStatus,
-                selectedValue: editPartnerPreferenceProviderState
-                    .physicalStatus,
-                onSelect: (value) {
-                  ref
-                      .read(editPartnerPreferenceProvider.notifier)
-                      .updatePhysicalStatus(value);
-                },
-              ),
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Physical Status',
+            options: ProfileOptions.physicalStatus,
+            selectedValue: editPartnerPreferenceProviderState.physicalStatus,
+            onSelect: (value) {
+              ref
+                  .read(editPartnerPreferenceProvider.notifier)
+                  .updatePhysicalStatus(value);
+            },
+          ),
         );
       },
       child: _buildListTile(
@@ -291,24 +292,28 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildMotherTongueSelection(BuildContext context,
-      WidgetRef ref,
-      EditPartnerPreferenceState editPartnerPreferenceProviderState,) {
+  Widget _buildMotherTongueSelection(
+    BuildContext context,
+    WidgetRef ref,
+    EditPartnerPreferenceState editPartnerPreferenceProviderState,
+  ) {
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) =>
-              CommonSelectionDialog(
-                title: 'Select Mother Tongue',
-                options: const ['Any',...PartnerPreferenceConstData.motherTongueOptions],
-                selectedValue: editPartnerPreferenceProviderState.motherTongue,
-                onSelect: (value) {
-                  ref
-                      .read(editPartnerPreferenceProvider.notifier)
-                      .updateMotherTongue(value);
-                },
-              ),
+          builder: (context) => CommonSelectionDialog(
+            title: 'Select Mother Tongue',
+            options: const [
+              'Any',
+              ...PartnerPreferenceConstData.motherTongueOptions
+            ],
+            selectedValue: editPartnerPreferenceProviderState.motherTongue,
+            onSelect: (value) {
+              ref
+                  .read(editPartnerPreferenceProvider.notifier)
+                  .updateMotherTongue(value);
+            },
+          ),
         );
       },
       child: _buildListTile(
@@ -318,9 +323,11 @@ class _PartnerPreferenceBasicDetailScreenState
     );
   }
 
-  Widget _buildSaveButton(BuildContext context,
-      WidgetRef ref,
-      EditPartnerPreferenceState profileState,) {
+  Widget _buildSaveButton(
+    BuildContext context,
+    WidgetRef ref,
+    EditPartnerPreferenceState profileState,
+  ) {
     return SizedBox(
       width: double.infinity,
       height: 48,
