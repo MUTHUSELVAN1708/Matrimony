@@ -38,50 +38,61 @@ class BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: _screens[_currentIndex]),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: AppColors.primaryButtonColor,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.white,
-          currentIndex: _currentIndex,
-          onTap: (index) {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          if (_currentIndex != 0) {
             setState(() {
-              _currentIndex = index;
+              _currentIndex = 0;
             });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/homeicon.svg'),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon:
-                  SvgPicture.asset('assets/matchesicon.svg'), // Corrected here
-              label: 'Matches',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                  'assets/notificationicon.svg'), // Corrected here
-              label: 'Notification',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/smsicon.svg'), // Corrected here
-              label: 'Inbox',
-            ),
-            BottomNavigationBarItem(
-              icon:
-                  SvgPicture.asset('assets/settingsicon.svg'), // Corrected here
-              label: 'Filter',
-            ),
-          ],
+          }
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(child: _screens[_currentIndex]),
+        bottomNavigationBar: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          decoration: const BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: BottomNavigationBar(
+            backgroundColor: AppColors.primaryButtonColor,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.white,
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset('assets/homeicon.svg'),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                    'assets/matchesicon.svg'), // Corrected here
+                label: 'Matches',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                    'assets/notificationicon.svg'), // Corrected here
+                label: 'Notification',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset('assets/smsicon.svg'), // Corrected here
+                label: 'Inbox',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                    'assets/settingsicon.svg'), // Corrected here
+                label: 'Filter',
+              ),
+            ],
+          ),
         ),
       ),
     );

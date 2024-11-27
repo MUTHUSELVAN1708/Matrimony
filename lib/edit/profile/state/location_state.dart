@@ -3,30 +3,35 @@ class LocationState {
   final String state;
   final String city;
   final String pincode;
-  final bool ownHouse;
+  final bool? ownHouse;
   final String flatNo;
   final String address;
+  final bool isLoading;
+  final bool? isOtherCity;
 
   LocationState({
     required this.country,
     required this.state,
     required this.city,
     required this.pincode,
-    required this.ownHouse,
+    this.ownHouse,
     required this.flatNo,
     required this.address,
+    this.isLoading = false,
+    this.isOtherCity,
   });
 
   factory LocationState.initial() {
     return LocationState(
-      country: '',
-      state: '',
-      city: '',
-      pincode: '',
-      ownHouse: false,
-      flatNo: '',
-      address: '',
-    );
+        country: '',
+        state: '',
+        city: '',
+        pincode: '',
+        ownHouse: null,
+        flatNo: '',
+        address: '',
+        isLoading: false,
+        isOtherCity: null);
   }
 
   LocationState copyWith({
@@ -37,6 +42,8 @@ class LocationState {
     bool? ownHouse,
     String? flatNo,
     String? address,
+    bool? isLoading,
+    bool? isOtherCity,
   }) {
     return LocationState(
       country: country ?? this.country,
@@ -46,6 +53,8 @@ class LocationState {
       ownHouse: ownHouse ?? this.ownHouse,
       flatNo: flatNo ?? this.flatNo,
       address: address ?? this.address,
+      isLoading: isLoading ?? this.isLoading,
+      isOtherCity: isOtherCity ?? this.isOtherCity,
     );
   }
 }

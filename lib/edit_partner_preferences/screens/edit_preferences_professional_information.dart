@@ -39,7 +39,8 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    editPartnerPreferenceProviderState.setProfessionalValues(ref.read(userManagementProvider).userPartnerDetails);
+    editPartnerPreferenceProviderState.setProfessionalValues(
+        ref.read(userManagementProvider).userPartnerDetails);
   }
 
   @override
@@ -196,7 +197,10 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Occupation',
-            options: const ['Any',...PartnerPreferenceConstData.occupationList],
+            options: const [
+              'Any',
+              ...PartnerPreferenceConstData.occupationList
+            ],
             selectedValue: editPartnerPreferenceProviderState.occupation,
             onSelect: (value) {
               ref
@@ -224,7 +228,7 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Annul Income',
-            options: const ['Any',...PartnerPreferenceConstData.incomeList],
+            options: const ['Any', ...PartnerPreferenceConstData.incomeList],
             selectedValue: editPartnerPreferenceProviderState.annulIncome,
             onSelect: (value) {
               ref
@@ -252,7 +256,10 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Employment Type',
-            options: const ['Any',...PartnerPreferenceConstData.employedInList],
+            options: const [
+              'Any',
+              ...PartnerPreferenceConstData.employedInList
+            ],
             selectedValue: editPartnerPreferenceProviderState.employmentType,
             onSelect: (value) {
               ref
@@ -280,7 +287,7 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Education',
-            options: const ['Any',...PartnerPreferenceConstData.educationList],
+            options: const ['Any', ...PartnerPreferenceConstData.educationList],
             selectedValue: editPartnerPreferenceProviderState.education,
             onSelect: (value) {
               ref

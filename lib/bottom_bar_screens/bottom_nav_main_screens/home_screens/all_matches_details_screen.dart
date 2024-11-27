@@ -213,16 +213,25 @@ class _AllMatchesDetailsScreenState
           ),
           const SizedBox(height: 14),
           Text(
-            'About ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'his' : 'her' : '-'} family',
+            'About ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Family',
             style: AppTextStyles.spanTextStyle.copyWith(
                 color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20),
           ),
           const SizedBox(height: 8),
-          Text(
-            'My ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'son' : 'daughter' : '-'} is ${userDetails.name} and myself working in ${userDetails.occupation}.',
-            style: AppTextStyles.secondrySpanTextStyle
-                .copyWith(color: Colors.black, fontSize: 16),
-          ),
+          if (userDetails.fatherOccupation != null &&
+              userDetails.motherOccupation != null) ...[
+            Text(
+              'Fathers Occupation is ${userDetails.fatherOccupation!.isEmpty ? '-' : userDetails.fatherOccupation} and Mothers Occupation is ${userDetails.motherOccupation!.isEmpty ? '-' : userDetails.motherOccupation}.',
+              style: AppTextStyles.secondrySpanTextStyle
+                  .copyWith(color: Colors.black, fontSize: 16),
+            ),
+          ] else ...[
+            Text(
+              '-',
+              style: AppTextStyles.secondrySpanTextStyle
+                  .copyWith(color: Colors.black, fontSize: 16),
+            )
+          ],
           const SizedBox(height: 15),
           Center(
               child: Text(
@@ -370,13 +379,10 @@ class _AllMatchesDetailsScreenState
             [
               _buildDetailItem(
                   'Religion', userDetails.religion ?? '-', 'kumbudu'),
+              _buildDetailItem('Caste', userDetails.caste ?? '-', 'notes'),
               _buildDetailItem(
-                  'Caste/Subcaste',
-                  '${userDetails.caste ?? '-'}'
-                      '/'
-                      '${userDetails.subcaste ?? '-'}',
-                  'notes'),
-              _buildDetailItem('Gothra(M)', 'Not Specified', 'people'),
+                  'Sub caste', userDetails.subcaste ?? '-', 'notes'),
+              // _buildDetailItem('Gothra(M)', 'Not Specified', 'people'),
             ]),
         _buildSection(
             '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Horoscope Details',
@@ -389,7 +395,8 @@ class _AllMatchesDetailsScreenState
                           .format(DateTime.tryParse(userDetails.dateOfBirth!)!)
                       : '-',
                   'calendar_date'),
-              _buildDetailItem('Time Of Birth', '-', 'calendar_date'),
+              _buildDetailItem('Time Of Birth', userDetails.timeOfBirth ?? '-',
+                  'calendar_date'),
               _buildDetailItem(
                   'Star/Rassi',
                   'Star is ${userDetails.star ?? '-'}\nRaasi is ${userDetails.raasi ?? '-'}',
@@ -410,13 +417,22 @@ class _AllMatchesDetailsScreenState
         _buildSection(
             'About ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Family',
             [
-              _buildDetailItem('Family Type', 'Joint Family', 'family_type'),
-              _buildDetailItem('Family Status', userDetails.familyStatus ?? '-',
+              _buildDetailItem(
+                  'Family Type', userDetails.famliyType ?? '-', 'family_type'),
+              _buildDetailItem('Family Status', userDetails.famliyStatus ?? '-',
                   'family_type'),
-              _buildDetailItem('Parents',
-                  'Father is a businessman, mother is a home maker', '2person'),
-              _buildDetailItem('Sisters', '1 Sister', 'profileIcon'),
-              _buildDetailItem('Brothers', '1 Brother', 'profileIcon'),
+              _buildDetailItem(
+                  'Parents',
+                  '${userDetails.fatherName ?? ''}${userDetails.fatherName != null ? ', ' : ''}${userDetails.motherName ?? '-'}',
+                  '2person'),
+              _buildDetailItem(
+                  'Sisters',
+                  '${userDetails.noOfSisters ?? '-'} ${userDetails.noOfSisters != null ? 'Sister' : ''}',
+                  'profileIcon'),
+              _buildDetailItem(
+                  'Brothers',
+                  '${userDetails.noOfBrothers ?? '-'} ${userDetails.noOfBrothers != null ? 'Brother' : ''}',
+                  'profileIcon'),
             ]),
       ],
     );

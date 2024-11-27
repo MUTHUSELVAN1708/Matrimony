@@ -7,6 +7,7 @@ import 'package:matrimony/edit_partner_preferences/riverpod/edit_partner_prefere
 import 'package:matrimony/models/partner_details_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:matrimony/models/religion_model.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditPartnerPreferenceNotifier
@@ -38,10 +39,17 @@ class EditPartnerPreferenceNotifier
   void updatePhysicalStatus(String physicalStatus) =>
       state = state.copyWith(physicalStatus: physicalStatus);
 
-  void updateReligion(String religion) =>
-      state = state.copyWith(religion: religion);
+  void updateReligion(String religion) {
+    state = state.copyWith(
+        religion: religion,
+        caste: religion != state.religion ? '' : state.caste,
+        subCaste: religion != state.religion ? '' : state.subCaste);
+  }
 
-  void updateCaste(String caste) => state = state.copyWith(caste: caste);
+  void updateCaste(String caste) {
+    state = state.copyWith(
+        caste: caste, subCaste: caste != state.caste ? '' : state.subCaste);
+  }
 
   void updateSubCaste(String subCaste) =>
       state = state.copyWith(subCaste: subCaste);
@@ -62,11 +70,13 @@ class EditPartnerPreferenceNotifier
   void updateEducation(String education) =>
       state = state.copyWith(education: education);
 
-  void updateCountry(String country) =>
-      state = state.copyWith(country: country);
+  void updateCountry(String country) => state = state.copyWith(
+      country: country,
+      state: country != state.country ? '' : state.state,
+      city: country != state.country ? '' : state.city);
 
-  void updateState(String stateValue) =>
-      state = state.copyWith(state: stateValue);
+  void updateState(String stateValue) => state = state.copyWith(
+      state: stateValue, city: stateValue != state.state ? '' : state.city);
 
   void updateCity(String city) => state = state.copyWith(city: city);
 
@@ -114,9 +124,10 @@ class EditPartnerPreferenceNotifier
   void setProfessionalValues(PartnerDetailsModel partnerDetails) {
     state = state.copyWith(
         education: partnerDetails.partnerEducation,
-    employmentType: partnerDetails.partnerEmployedIn,
-    occupation: partnerDetails.partnerProfession ?? partnerDetails.partnerOccupation,
-    annulIncome: partnerDetails.partnerAnnualIncome);
+        employmentType: partnerDetails.partnerEmployedIn,
+        occupation: partnerDetails.partnerProfession ??
+            partnerDetails.partnerOccupation,
+        annulIncome: partnerDetails.partnerAnnualIncome);
   }
 
   void setLocationValues(PartnerDetailsModel partnerDetails) {
@@ -408,7 +419,7 @@ class EditPartnerPreferenceNotifier
     }
   }
 
-  Future<void> getCasteDetailsList() async {
+  Future<void> getCasteDetailsList(String value) async {
     final prefs = await SharedPreferences.getInstance();
     final caste = prefs.getString('caste');
     final religion = prefs.getString('religion');
@@ -419,7 +430,7 @@ class EditPartnerPreferenceNotifier
           .map((e) => Religion.fromJson(e as Map<String, dynamic>))
           .toList();
       for (final a in religionList) {
-        if (a.religion == state.religion) {
+        if (a.religion == value) {
           religionId = a.id;
           break;
         }
@@ -431,14 +442,13 @@ class EditPartnerPreferenceNotifier
           .map((e) => Caste.fromJson(e as Map<String, dynamic>))
           .where((caste) => caste.religionId == religionId)
           .toList();
-      // casteList.removeWhere((caste) => caste.religionId != religionId);
       state = state.copyWith(casteList: casteList, subCasteList: []);
     } else {
       state = state.copyWith(casteList: [], subCasteList: []);
     }
   }
 
-  Future<void> getSubCasteDetailsList() async {
+  Future<void> getSubCasteDetailsList(String value) async {
     final prefs = await SharedPreferences.getInstance();
     final subcaste = prefs.getString('subcaste');
     final caste = prefs.getString('caste');
@@ -446,9 +456,9 @@ class EditPartnerPreferenceNotifier
     if (caste != null && caste.isNotEmpty) {
       final List<dynamic> castes = jsonDecode(caste);
       List<Caste> casteList =
-      castes.map((e) => Caste.fromJson(e as Map<String, dynamic>)).toList();
+          castes.map((e) => Caste.fromJson(e as Map<String, dynamic>)).toList();
       for (final a in casteList) {
-        if (a.castes == state.caste) {
+        if (a.castes == value) {
           casteId = a.id;
           break;
         }
@@ -464,6 +474,125 @@ class EditPartnerPreferenceNotifier
       state = state.copyWith(subCasteList: subcasteList);
     } else {
       state = state.copyWith(subCasteList: []);
+    }
+  }
+
+  Future<void> getCountryDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    final religionString = prefs.getString('country');
+    int? religionId;
+    if (religionString != null && religionString.isNotEmpty) {
+      final List<dynamic> religious = jsonDecode(religionString);
+      List<Country> religionList = religious
+          .map((e) => Country.fromJson(e as Map<String, dynamic>))
+          .toList();
+      for (final a in religionList) {
+        if (a.countrys == state.country) {
+          religionId = a.id;
+          break;
+        }
+      }
+      state = state.copyWith(countryList: religionList);
+    } else {
+      state = state.copyWith(countryList: []);
+    }
+    getStateDetails(religionId);
+  }
+
+  Future<void> getStateDetails(int? religionId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final caste = prefs.getString('state');
+    int? casteId;
+    if (caste != null && caste.isNotEmpty) {
+      final List<dynamic> castes = jsonDecode(caste);
+      List<StateModel> casteList = castes
+          .map((e) => StateModel.fromJson(e as Map<String, dynamic>))
+          .where((caste) => caste.countryId == religionId)
+          .toList();
+      for (final a in casteList) {
+        if (a.states == state.state) {
+          casteId = a.id;
+          break;
+        }
+      }
+      state = state.copyWith(stateList: casteList);
+    } else {
+      state = state.copyWith(stateList: []);
+    }
+    getCityDetails(casteId);
+  }
+
+  Future<void> getCityDetails(int? casteId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final subCaste = prefs.getString('city');
+    if (subCaste != null && subCaste.isNotEmpty) {
+      final List<dynamic> subCastes = jsonDecode(subCaste);
+      List<City> subCasteList = subCastes
+          .map((e) => City.fromJson(e as Map<String, dynamic>))
+          .where((subcaste) => subcaste.stateId == casteId)
+          .toList();
+      state = state.copyWith(cityList: subCasteList);
+    } else {
+      state = state.copyWith(cityList: []);
+    }
+  }
+
+  Future<void> getStateDetailsList(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final caste = prefs.getString('state');
+    final religion = prefs.getString('country');
+    int? religionId;
+    if (religion != null && religion.isNotEmpty) {
+      final List<dynamic> religions = jsonDecode(religion);
+      List<Country> religionList = religions
+          .map((e) => Country.fromJson(e as Map<String, dynamic>))
+          .toList();
+      for (final a in religionList) {
+        if (a.countrys == value) {
+          religionId = a.id;
+          break;
+        }
+      }
+    }
+    if (caste != null && caste.isNotEmpty) {
+      final List<dynamic> castes = jsonDecode(caste);
+      List<StateModel> casteList = castes
+          .map((e) => StateModel.fromJson(e as Map<String, dynamic>))
+          .where((caste) => caste.countryId == religionId)
+          .toList();
+      state = state.copyWith(stateList: casteList, cityList: []);
+    } else {
+      state = state.copyWith(stateList: [], cityList: []);
+    }
+  }
+
+  Future<void> getCityDetailsList(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final subcaste = prefs.getString('city');
+    final caste = prefs.getString('state');
+    int? casteId;
+    if (caste != null && caste.isNotEmpty) {
+      final List<dynamic> castes = jsonDecode(caste);
+      List<StateModel> casteList = castes
+          .map((e) => StateModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      for (final a in casteList) {
+        if (a.states == value) {
+          casteId = a.id;
+          break;
+        }
+      }
+    }
+    if (subcaste != null && subcaste.isNotEmpty) {
+      final List<dynamic> subcastes = jsonDecode(subcaste);
+      List<City> subcasteList = subcastes
+          .map((e) => City.fromJson(e as Map<String, dynamic>))
+          .where((caste) => caste.stateId == casteId)
+          .toList();
+      // subcasteList.removeWhere((caste) => caste.casteId != casteId);
+      state = state.copyWith(cityList: subcasteList);
+    } else {
+      state = state.copyWith(cityList: []);
     }
   }
 }

@@ -152,6 +152,7 @@ class CustomTextFieldWidget extends StatelessWidget {
         inputFormatters: inputFormatters,
         onChanged: onChanged,
         onEditingComplete: onEditingComplete,
+        cursorColor: Colors.grey,
         onFieldSubmitted: onSubmitted,
         onSaved: onSaved != null ? (value) => onSaved!(value ?? '') : null,
         validator: validator,
@@ -163,56 +164,36 @@ class CustomTextFieldWidget extends StatelessWidget {
         expands: expands,
         autofocus: autofocus,
         onTap: onTap,
-        showCursor: showCursor,
         autocorrect: autocorrect,
         enableSuggestions: enableSuggestions,
         textAlign: textAlign,
         textAlignVertical: textAlignVertical,
         style: textStyle ?? const TextStyle(color: Colors.black),
-        // decoration: InputDecoration(
-        //   hintText: hintText,
-        //   labelText: labelText,
-        //   errorText: errorText,
-        //   filled: true,
-        //   isDense: isDense,
-        //   fillColor: fillColor ?? Colors.white,
-        //   contentPadding: contentPadding ??
-        //       const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
-        //   hintStyle: hintStyle ?? const TextStyle(color: Colors.grey),
-        //   labelStyle: labelStyle,
-        //   errorStyle: errorStyle,
-        //   counterText: counterText,
-        //   prefix: prefix,
-        //   suffix: suffix,
-        //   prefixIcon: prefixIcon ?? _getDefaultPrefixIcon(),
-        //   suffixIcon: suffixIcon,
-        //   prefixIconConstraints: prefixIconConstraints,
-        //   suffixIconConstraints: suffixIconConstraints,
-        //   enabledBorder: _buildBorder(borderColor ?? Colors.transparent),
-        //   disabledBorder: _buildBorder(Colors.transparent),
-        //   focusedBorder: _buildBorder(borderColor ?? Colors.red),
-        //   errorBorder: _buildBorder(Colors.red),
-        //   focusedErrorBorder: _buildBorder(Colors.red),
-        // ),
         decoration: InputDecoration(
           hintText: hintText,
           filled: true,
           fillColor: fillColor ?? Colors.grey.withOpacity(0.05),
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+              const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
           hintStyle: const TextStyle(color: Colors.grey),
           prefixIcon: _getDefaultPrefixIcon(),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
+            borderSide: borderColor != null
+                ? BorderSide(color: borderColor!)
+                : BorderSide.none,
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
+            borderSide: borderColor != null
+                ? BorderSide(color: borderColor!)
+                : BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
+            borderSide: borderColor != null
+                ? BorderSide(color: borderColor!)
+                : BorderSide.none,
           ),
         ),
         autovalidateMode: autovalidateMode,

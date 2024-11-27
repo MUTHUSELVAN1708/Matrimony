@@ -39,7 +39,8 @@ class _PartnerPreferenceBasicDetailScreenState
     final editPartnerPreferenceProviderState =
         ref.read(editPartnerPreferenceProvider.notifier);
     editPartnerPreferenceProviderState.resetState();
-    editPartnerPreferenceProviderState.setLifeStyleValues(ref.read(userManagementProvider).userPartnerDetails);
+    editPartnerPreferenceProviderState.setLifeStyleValues(
+        ref.read(userManagementProvider).userPartnerDetails);
   }
 
   @override

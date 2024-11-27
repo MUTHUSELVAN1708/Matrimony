@@ -7,6 +7,7 @@ import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/faq_screen/faq_screen.dart';
 import 'package:matrimony/profile/help_screens/ui/help_screen.dart';
 import 'package:matrimony/profile/profile.dart';
@@ -183,6 +184,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
             context: context,
             screen: RegisterUserGovernmentProof(
               title: 'update',
+              userDetails: ref.read(userManagementProvider).userDetails,
             ),
           );
         },

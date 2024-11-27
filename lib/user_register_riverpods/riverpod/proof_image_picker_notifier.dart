@@ -3,6 +3,7 @@ import 'dart:io' show File;
 // import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:matrimony/models/user_details_model.dart';
 // ignore: avoid_web_libraries_in_flutter
 // import 'dart:html' as html;
 
@@ -18,7 +19,7 @@ class ProofImageNotifier extends StateNotifier<ProofImageState> {
 
   ProofImageNotifier() : super(ProofImageState());
 
-  Future<void> pickImage() async {
+  Future<void> pickImage(String idName) async {
     try {
       // if (kIsWeb) {
       //   // For web, use dart:html library to pick an image
@@ -51,7 +52,7 @@ class ProofImageNotifier extends StateNotifier<ProofImageState> {
         final imageName = pickedFile.path.split('/').last; // Get file name
         state = ProofImageState(
           base64Image: base64String,
-          imageName: imageName,
+          imageName: idName,
         );
       }
       // }
@@ -59,6 +60,13 @@ class ProofImageNotifier extends StateNotifier<ProofImageState> {
       // Handle errors gracefully (for debugging/logging as needed)
       print('Error picking image: $error');
     }
+  }
+
+  void setIdImage(UserDetails userDetails) {
+    state = ProofImageState(
+      base64Image: userDetails.idImage,
+      imageName: userDetails.govtIdProof,
+    );
   }
 }
 

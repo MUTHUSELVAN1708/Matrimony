@@ -149,7 +149,9 @@ class _AddStarDetailScreenState extends ConsumerState<AddStarDetailScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HoroscopeAddDetailScreen(),
+                        builder: (context) => HoroscopeAddDetailScreen(
+                          onPop: (bool value) {},
+                        ),
                       ),
                     );
                   },

@@ -16,9 +16,14 @@ import 'package:matrimony/user_register_riverpods/riverpod/user_photo_picker_not
 class RegisterUserPhotoUploadScreen extends ConsumerStatefulWidget {
   final bool? isEditPhoto;
   final List<String>? images;
+  final Function(bool value)? onPop;
 
-  const RegisterUserPhotoUploadScreen(
-      {super.key, this.isEditPhoto, this.images});
+  const RegisterUserPhotoUploadScreen({
+    super.key,
+    this.isEditPhoto,
+    this.images,
+    this.onPop,
+  });
 
   @override
   ConsumerState<RegisterUserPhotoUploadScreen> createState() =>
@@ -62,162 +67,180 @@ class _RegisterUserPhotoUploadScreenState
     final imagePickerState = ref.watch(imagePickerProvider);
     final imageApi = ref.watch(imageRegisterApiProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppColors.primaryButtonColor),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          if (widget.isEditPhoto == null)
-            TextButton(
-              child: Text('Skip',
-                  style: AppTextStyles.headingTextstyle
-                      .copyWith(color: Colors.black)),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          if (widget.onPop != null) {
+            widget.onPop!(true);
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios,
+                  color: AppColors.primaryButtonColor),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RegisterUserGovernmentProof(),
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            Text(
-              widget.isEditPhoto == null
-                  ? 'Upload your photo'
-                  : 'Edit your Photo',
-              style: AppTextStyles.headingTextstyle,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text(
-              textAlign: TextAlign.center,
-              'We’d love to see. Upload a photo for your life journey',
-              style: AppTextStyles.spanTextStyle,
-            ),
-            const SizedBox(height: 15),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Photos help you get 50% more likes. Add at least 2.',
+                if (widget.onPop != null) {
+                  widget.onPop!(true);
+                }
+                Navigator.pop(context);
+              }),
+          actions: [
+            if (widget.isEditPhoto == null)
+              TextButton(
+                child: Text('Skip',
+                    style: AppTextStyles.headingTextstyle
+                        .copyWith(color: Colors.black)),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterUserGovernmentProof(),
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              Text(
+                widget.isEditPhoto == null
+                    ? 'Upload your photo'
+                    : 'Edit your Photo',
+                style: AppTextStyles.headingTextstyle,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text(
+                textAlign: TextAlign.center,
+                'We’d love to see. Upload a photo for your life journey',
                 style: AppTextStyles.spanTextStyle,
               ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildPhotoUploadBox(
-                      context: context,
-                      imageUrl: imagePickerState.imageUrl1,
-                      isLoading: imagePickerState.isLoading1,
-                      onTap: () {
-                        _showImageSourceSelector(context, 1);
-                        // ref.read(imagePickerProvider.notifier).pickImage2();
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    _buildPhotoUploadBox(
-                      context: context,
-                      imageUrl: imagePickerState.imageUrl2,
-                      isLoading: imagePickerState.isLoading2,
-                      onTap: () {
-                        _showImageSourceSelector(context, 2);
-                        // ref.read(imagePickerProvider.notifier).pickImage3();
-                      },
-                    ),
-                  ],
+              const SizedBox(height: 15),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Photos help you get 50% more likes. Add at least 2.',
+                  style: AppTextStyles.spanTextStyle,
                 ),
-                const SizedBox(width: 10),
-                _buildPhotoUploadBox(
-                  large: true,
-                  context: context,
-                  imageUrl: imagePickerState.imageUrl3,
-                  isLoading: imagePickerState.isLoading3,
-                  onTap: () {
-                    _showImageSourceSelector(context, 3);
-                    // ref.read(imagePickerProvider.notifier).pickImage1();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (imageApi.isLoading) {
-                  } else {
-                    final isImagesNotEmpty = [
-                      imagePickerState.imageUrl1 ?? '',
-                      imagePickerState.imageUrl2 ?? '',
-                      imagePickerState.imageUrl3 ?? ''
-                    ];
-                    if (isImagesNotEmpty.where((url) => url.isNotEmpty).length >
-                        1) {
-                      final value = await ref
-                          .read(imageRegisterApiProvider.notifier)
-                          .uploadPhoto(isImagesNotEmpty
-                              .where((element) => element.isNotEmpty)
-                              .toList());
-                      await ref.read(getImageApiProvider.notifier).getImage();
-                      ref.read(userManagementProvider.notifier).updateImage(
-                          ref.read(getImageApiProvider).data?.images);
-                      if (value) {
-                        if (widget.isEditPhoto == null) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const RegisterUserPhotoUploadedSuccessScreen(),
-                            ),
-                            // (route) => false,
-                          );
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildPhotoUploadBox(
+                        context: context,
+                        imageUrl: imagePickerState.imageUrl1,
+                        isLoading: imagePickerState.isLoading1,
+                        onTap: () {
+                          _showImageSourceSelector(context, 1);
+                          // ref.read(imagePickerProvider.notifier).pickImage2();
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      _buildPhotoUploadBox(
+                        context: context,
+                        imageUrl: imagePickerState.imageUrl2,
+                        isLoading: imagePickerState.isLoading2,
+                        onTap: () {
+                          _showImageSourceSelector(context, 2);
+                          // ref.read(imagePickerProvider.notifier).pickImage3();
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  _buildPhotoUploadBox(
+                    large: true,
+                    context: context,
+                    imageUrl: imagePickerState.imageUrl3,
+                    isLoading: imagePickerState.isLoading3,
+                    onTap: () {
+                      _showImageSourceSelector(context, 3);
+                      // ref.read(imagePickerProvider.notifier).pickImage1();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (imageApi.isLoading) {
+                    } else {
+                      final isImagesNotEmpty = [
+                        imagePickerState.imageUrl1 ?? '',
+                        imagePickerState.imageUrl2 ?? '',
+                        imagePickerState.imageUrl3 ?? ''
+                      ];
+                      if (isImagesNotEmpty
+                              .where((url) => url.isNotEmpty)
+                              .length >
+                          1) {
+                        final value = await ref
+                            .read(imageRegisterApiProvider.notifier)
+                            .uploadPhoto(isImagesNotEmpty
+                                .where((element) => element.isNotEmpty)
+                                .toList());
+                        await ref.read(getImageApiProvider.notifier).getImage();
+                        ref.read(userManagementProvider.notifier).updateImage(
+                            ref.read(getImageApiProvider).data?.images);
+                        if (value) {
+                          if (widget.isEditPhoto == null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegisterUserPhotoUploadedSuccessScreen(),
+                              ),
+                              // (route) => false,
+                            );
+                          } else {
+                            if (widget.onPop != null) {
+                              widget.onPop!(true);
+                            }
+                            Navigator.of(context).pop();
+                          }
                         } else {
-                          Navigator.of(context).pop();
+                          CustomSnackBar.show(
+                            context: context,
+                            message: 'Something Went Wrong. Please Try Again!',
+                            isError: true,
+                          );
                         }
                       } else {
                         CustomSnackBar.show(
                           context: context,
-                          message: 'Something Went Wrong. Please Try Again!',
+                          message: 'Please Upload 2 Photos.',
                           isError: true,
                         );
                       }
-                    } else {
-                      CustomSnackBar.show(
-                        context: context,
-                        message: 'Please Upload 2 Photos.',
-                        isError: true,
-                      );
                     }
-                  }
-                },
-                style: AppTextStyles.primaryButtonstyle,
-                child: imageApi.isLoading
-                    ? const LoadingIndicator()
-                    : Text(
-                        widget.isEditPhoto == null ? 'Continue' : 'Update',
-                        style: AppTextStyles.primarybuttonText,
-                      ),
+                  },
+                  style: AppTextStyles.primaryButtonstyle,
+                  child: imageApi.isLoading
+                      ? const LoadingIndicator()
+                      : Text(
+                          widget.isEditPhoto == null ? 'Continue' : 'Update',
+                          style: AppTextStyles.primarybuttonText,
+                        ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

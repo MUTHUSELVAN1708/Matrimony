@@ -218,6 +218,11 @@ class _PartnerPreferenceBasicDetailScreenState
               ref
                   .read(editPartnerPreferenceProvider.notifier)
                   .updateReligion(value);
+              if (value != editPartnerPreferenceProviderState.religion) {
+                ref
+                    .read(editPartnerPreferenceProvider.notifier)
+                    .getCasteDetailsList(value);
+              }
             },
           ),
         );
@@ -254,6 +259,11 @@ class _PartnerPreferenceBasicDetailScreenState
                 ref
                     .read(editPartnerPreferenceProvider.notifier)
                     .updateCaste(value);
+                if (value != editPartnerPreferenceProviderState.caste) {
+                  ref
+                      .read(editPartnerPreferenceProvider.notifier)
+                      .getSubCasteDetailsList(value);
+                }
               },
             ),
           );
@@ -283,24 +293,23 @@ class _PartnerPreferenceBasicDetailScreenState
         if (editPartnerPreferenceProviderState.caste.isNotEmpty) {
           showDialog(
             context: context,
-            builder: (context) =>
-                CommonSelectionDialog(
-                  title: 'Select Sub Caste',
-                  options: [
-                    'Any',
-                    ...editPartnerPreferenceProviderState.subCasteList
-                        .map((subCaste) => subCaste.subCaste),
-                    'Other'
-                  ],
-                  selectedValue: editPartnerPreferenceProviderState.subCaste,
-                  onSelect: (value) {
-                    ref
-                        .read(editPartnerPreferenceProvider.notifier)
-                        .updateSubCaste(value);
-                  },
-                ),
+            builder: (context) => CommonSelectionDialog(
+              title: 'Select Sub Caste',
+              options: [
+                'Any',
+                ...editPartnerPreferenceProviderState.subCasteList
+                    .map((subCaste) => subCaste.subCaste),
+                'Other'
+              ],
+              selectedValue: editPartnerPreferenceProviderState.subCaste,
+              onSelect: (value) {
+                ref
+                    .read(editPartnerPreferenceProvider.notifier)
+                    .updateSubCaste(value);
+              },
+            ),
           );
-        }else{
+        } else {
           CustomSnackBar.show(
               context: context,
               message: 'Please Select Caste!.',

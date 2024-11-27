@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PlanUpgradeScreen extends StatefulWidget {
-  const PlanUpgradeScreen({Key? key}) : super(key: key);
+  const PlanUpgradeScreen({super.key});
 
   @override
   State<PlanUpgradeScreen> createState() => _PlanUpgradeScreenState();
@@ -331,7 +330,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
                           },
                           style: AppTextStyles.primaryButtonstyle,
                           child: _isLoading
-                              ? const CircularProgressIndicator()
+                              ? const LoadingIndicator()
                               : const Text(
                                   'Get Price Estimate',
                                   style: AppTextStyles.primarybuttonText,

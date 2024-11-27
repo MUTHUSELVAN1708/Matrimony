@@ -38,7 +38,12 @@ class HoroscopeNotifier extends StateNotifier<HoroscopeState> {
   }
 
   void setHoroscope(UserDetails userDetails) {
-    // state = state.copyWith(dateOfBirth: )
+    state = state.copyWith(
+        dateOfBirth: userDetails.dob,
+        timeOfBirth: userDetails.timeOfBirth,
+        birthCity: userDetails.cityOfBirth,
+        birthCountry: userDetails.countryOfBirth,
+        birthState: userDetails.stateOfBirth);
   }
 
   Future<bool> editHoroscope() async {
