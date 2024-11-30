@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
+import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
@@ -380,6 +381,7 @@ class _ReligiousDetailsScreenState
           final result = await ref
               .read(religiousProvider.notifier)
               .updateReligiousDetails();
+          ref.read(completionProvider.notifier).getIncompleteFields();
           ref
               .read(userManagementProvider.notifier)
               .updateReligiousDetails(religiousState);

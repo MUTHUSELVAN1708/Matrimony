@@ -7,6 +7,7 @@ import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/success_page.dart';
+import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_details_model.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/partner_basic_preference_screen.dart';
@@ -102,24 +103,12 @@ class _RegisterUserGovernmentProofState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 30),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "we'd love to see, upload a photo for\nyour life journey",
-                      style: AppTextStyles.spanTextStyle.copyWith(fontSize: 16),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                   Text(
-                    'Select the govt ID to verify.',
+                    'Select the Govt ID to verify.',
                     style: AppTextStyles.secondrySpanTextStyle
-                        .copyWith(color: Colors.black, fontSize: 16),
+                        .copyWith(color: Colors.black, fontSize: 20),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'You Have Option To Protect Your Photo And Control\nWho Can See Your Photo.',
-                    style: AppTextStyles.spanTextStyle,
-                  ),
                   const SizedBox(height: 20),
                   Expanded(
                     child: GridView.builder(
@@ -222,6 +211,9 @@ class _RegisterUserGovernmentProofState
                                 .uploadGovernmentProofApi(
                                     govtIdProof: selectedProof,
                                     idImage: proofState.base64Image);
+                            ref
+                                .read(completionProvider.notifier)
+                                .getIncompleteFields();
                             ref
                                 .read(userManagementProvider.notifier)
                                 .updateGovtProof(

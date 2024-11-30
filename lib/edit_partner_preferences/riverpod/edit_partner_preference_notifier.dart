@@ -165,7 +165,7 @@ class EditPartnerPreferenceNotifier
           'physicalStatus': state.physicalStatus
         }),
       );
-
+      print(response.body);
       if (response.statusCode == 200) {
         // final data = jsonDecode(response.body) as List<dynamic>;
         state = state.copyWith(

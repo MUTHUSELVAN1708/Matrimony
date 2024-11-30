@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/notifier/profile_notifier.dart';
 import 'package:matrimony/edit/profile/providers/professional_info_provider.dart';
+import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import '../../common/colors.dart';
 import '../../common/widget/common_selection_dialog.dart';
@@ -382,6 +383,7 @@ class _ProfessionalInformationDetailsScreenState
           final result = await ref
               .read(professionalInfoProvider.notifier)
               .updateProfessionalDetails();
+          ref.read(completionProvider.notifier).getIncompleteFields();
           ref
               .read(userManagementProvider.notifier)
               .updateProfessionalDetails(professionalInfoState);

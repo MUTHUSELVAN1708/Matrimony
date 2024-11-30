@@ -189,6 +189,7 @@ class PartnerPreferenceConstData {
   ];
 
   static const List<String> starList = [
+    'Any',
     'Ashwini (அஸ்வினி)',
     'Bharani (பரணி)',
     'Krittika (கிருத்திகை)',
@@ -207,6 +208,7 @@ class PartnerPreferenceConstData {
   ];
 
   static const List<String> raasiList = [
+    'Any',
     "Aries",
     "Taurus",
     "Gemini",
@@ -267,6 +269,7 @@ class PartnerPreferenceConstData {
   };
 
   static const List<String> maritalStatusOptions = [
+    'Any',
     'Never Married',
     'Widow',
     'divorced',
@@ -300,9 +303,52 @@ class PartnerPreferenceConstData {
   ];
 
   static const List<String> motherTongueOptions = [
-    'Hindi',
-    'English',
+    'Any',
     'Tamil',
+    'English',
+    'Hindi',
+    'Telugu',
+    'Malayalam',
+    'Kannada',
+    'Bengali',
+    'Marathi',
+    'Gujarati',
+    'Punjabi',
+    'Urdu',
+    'Assamese',
+    'Odia',
+    'Maithili',
+    'Sanskrit',
+    'Dogri',
+    'Manipuri',
+    'Bodo',
+    'Konkani',
+    'Sindhi',
+    'Nepali',
+    'Santali',
+    'Kashmiri',
+    'Kurigram',
+    'Mizo',
+    'Haryanvi',
+    'Rajasthani',
+    'Angika',
+    'Chhattisgarhi',
+    'Bhili/Bhilodi',
+    'Marwari',
+    'Tulu',
+    'Garhwali',
+    'Kumaoni',
+    'Khandeshi',
+    'Khasi',
+    'Lepcha',
+    'Sikkimese',
+    'Other'
+  ];
+
+  static const List<String> motherTongueOptionsUser = [
+    'Tamil',
+    'English',
+    'Hindi',
     'Telugu',
     'Malayalam',
     'Kannada',

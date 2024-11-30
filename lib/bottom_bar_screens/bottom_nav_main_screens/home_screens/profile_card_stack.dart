@@ -1,60 +1,32 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
+import 'package:matrimony/interest_block_dontshow_report_profile/riverpod/interest_provider.dart';
 
-class ProfileCardStack extends StatefulWidget {
+class ProfileCardStack extends ConsumerStatefulWidget {
   const ProfileCardStack({super.key});
 
   @override
-  State<ProfileCardStack> createState() => _ProfileCardStackState();
+  ConsumerState<ProfileCardStack> createState() => _ProfileCardStackState();
 }
 
-class _ProfileCardStackState extends State<ProfileCardStack> {
+class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
   int currentIndex = 0;
 
-  final List<Map<String, String>> profiles = [
-    {
-      'name': 'Ragavan',
-      'id': '#id45473547',
-      'age': '32 Years',
-      'height': 'Ft: 7 in',
-      'education': 'BE, Mechanical',
-      'location': 'Chennai, Tamilnadu',
-    },
-    {
-      'name': 'Muthu',
-      'id': '#id45473548',
-      'age': '23 Years',
-      'height': 'Ft: 7 in',
-      'education': 'BE, Mechanical',
-      'location': 'Chennai, Tamilnadu',
-    },
-    {
-      'name': 'Abinaya',
-      'id': '#id45473549',
-      'age': '19 Years',
-      'height': 'Ft: 7 in',
-      'education': 'BE, Computer science',
-      'location': 'Chennai, Tamilnadu',
-    },
-    {
-      'name': 'Akshaya',
-      'id': '#id45473550',
-      'age': '19 Years',
-      'height': 'Ft: 7 in',
-      'education': 'BE, Computer science',
-      'location': 'Chennai, Tamilnadu',
-    },
-  ];
-
   void nextProfile() {
-    if (currentIndex < profiles.length - 1) {
-      setState(() {
-        currentIndex++;
-      });
+    if (ref.read(interestModelProvider).receivedInterests.isNotEmpty) {
+      if (currentIndex <
+          ref.read(interestModelProvider).receivedInterests.length - 1) {
+        setState(() {
+          currentIndex++;
+        });
+      }
     }
   }
 
@@ -68,8 +40,8 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
 
   @override
   Widget build(BuildContext context) {
-    final currentProfile = profiles[currentIndex];
-
+    final interestModelState = ref.watch(interestModelProvider);
+    final interestState = ref.watch(interestProvider);
     return Stack(
       children: [
         Container(
@@ -90,187 +62,292 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 4),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryButtonColor,
-                        borderRadius: BorderRadius.all(Radius.circular(6)),
-                      ),
-                      child: Text(
-                        'View All',
-                        style: AppTextStyles.primarybuttonText
-                            .copyWith(fontSize: 12),
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: Container(
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 6, vertical: 4),
+                  //     decoration: const BoxDecoration(
+                  //       color: AppColors.primaryButtonColor,
+                  //       borderRadius: BorderRadius.all(Radius.circular(6)),
+                  //     ),
+                  //     child: Text(
+                  //       'View All',
+                  //       style: AppTextStyles.primarybuttonText
+                  //           .copyWith(fontSize: 12),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 155,
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              bottomLeft: Radius.circular(10)),
-                          image: DecorationImage(
-                            image: AssetImage('assets/image/successimage.png'),
-                            // Correct image asset
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                        child: SizedBox(
-                      height: 155,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            currentProfile['name']!,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+              interestModelState.isLoading || interestState.isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                      color: Colors.pink,
+                    ))
+                  : interestModelState.receivedInterests
+                          .where((status) => status.status == 'Pending')
+                          .isEmpty
+                      ? Container(
+                          height: 155,
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: Colors.grey.withOpacity(0.3))),
+                          child: const Center(
+                            child: Text(
+                              'No Requests Here!',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            // Apply ellipsis
-                            maxLines: 1, // Limit to one line
                           ),
-                          Text(
-                            currentProfile['id']!,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          Text(
-                            currentProfile['age']!,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          Text(
-                            currentProfile['height']!,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          Text(
-                            currentProfile['education']!,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          Text(
-                            currentProfile['location']!,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          const SizedBox(height: 5),
-                          Container(
-                            height: 20,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.black54,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: const Center(
-                                child: Text(
-                              'Accept',
-                              style: TextStyle(color: Colors.white),
-                            )),
-                          ),
-                        ],
-                      ),
-                    )),
-                    Expanded(
-                        child: SizedBox(
-                      height: 155,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Expanded(
-                            child: Container(
+                        )
+                      : ListView.builder(
+                          itemCount: interestModelState.receivedInterests
+                              .where((status) => status.status == 'Pending')
+                              .length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final filteredInterests = interestModelState
+                                .receivedInterests
+                                .where(
+                                    (interest) => interest.status == 'Pending')
+                                .toList();
+                            final interest = filteredInterests[index];
+                            final imageProvider = interest.images!.isEmpty
+                                ? const AssetImage(
+                                        'assets/image/emptyProfile.png')
+                                    as ImageProvider<Object>
+                                : MemoryImage(
+                                    base64Decode(
+                                      interest.images!.first
+                                          .toString()
+                                          .replaceAll('\n', '')
+                                          .replaceAll('\r', ''),
+                                    ),
+                                  );
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black38),
                                 borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
                               ),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '"He has sent an\ninterest to you"',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.grey[600],
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      height: 155,
+                                      margin: const EdgeInsets.only(right: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                        ),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '15 Oct 2024',
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.grey[500],
-                                        fontSize: 12,
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: 155,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            interest.name ?? 'N/A',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            interest.uniqueId ?? 'N/A',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            interest.age != null
+                                                ? '${interest.age} Yrs'
+                                                : 'N/A',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            interest.height ?? 'N/A',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            interest.education ?? 'N/A',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          Text(
+                                            interest.city != null
+                                                ? '${interest.city}'
+                                                : interest.state != null
+                                                    ? ', ${interest.state}'
+                                                    : '',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              await ref
+                                                  .read(
+                                                      interestProvider.notifier)
+                                                  .acceptProfile('Accepted',
+                                                      interest.interestId!);
+                                              await ref
+                                                  .read(interestModelProvider
+                                                      .notifier)
+                                                  .getReceivedInterests();
+                                            },
+                                            child: Container(
+                                              height: 20,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black54,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: const Center(
+                                                child: Text(
+                                                  'Accept',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: 155,
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.black38),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '"He has sent an\ninterest to you"',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      interest.interestCreatedAt !=
+                                                              null
+                                                          ? DateFormat(
+                                                                  'dd MMM yyyy')
+                                                              .format(DateTime
+                                                                  .parse(interest
+                                                                      .interestCreatedAt!))
+                                                          : 'N/A',
+                                                      style: TextStyle(
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        color: Colors.grey[500],
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 30),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              await ref
+                                                  .read(
+                                                      interestProvider.notifier)
+                                                  .rejectProfile('Rejected',
+                                                      interest.interestId!);
+                                              await ref
+                                                  .read(interestModelProvider
+                                                      .notifier)
+                                                  .getReceivedInterests();
+                                            },
+                                            child: Container(
+                                              height: 20,
+                                              width: 98,
+                                              decoration: BoxDecoration(
+                                                color: Colors.red.shade700,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: const Center(
+                                                child: Text(
+                                                  'Decline',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            height: 20,
-                            width: 98,
-                            decoration: BoxDecoration(
-                                color: Colors.red.shade700,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: const Center(
-                                child: Text(
-                              'Decline',
-                              style: TextStyle(color: Colors.white),
-                            )),
-                          ),
-                        ],
-                      ),
-                    )),
-                  ],
-                ),
-              ),
+                            );
+                          },
+                        )
             ],
           ),
         ),
@@ -302,7 +379,10 @@ class _ProfileCardStackState extends State<ProfileCardStack> {
           bottom: 0,
           child: Center(
             child: GestureDetector(
-                onTap: currentIndex < profiles.length - 1 ? nextProfile : null,
+                onTap: currentIndex <
+                        interestModelState.receivedInterests.length - 1
+                    ? nextProfile
+                    : null,
                 child: Container(
                   height: 30,
                   decoration: BoxDecoration(

@@ -151,14 +151,34 @@ class ProfileOptions {
     'Awaiting Divorce'
   ];
 
+  static const List<String> maritalStatusPartner = [
+    'Any',
+    'Never Married',
+    'Widow',
+    'divorced',
+    'Awaiting Divorce'
+  ];
+
   static const List<String> physicalStatus = [
     'Normal',
     'Physically Challenged',
     'Doesn’t Matter'
   ];
 
+  static const List<String> physicalStatusForUser = [
+    'Normal',
+    'Physically Challenged',
+  ];
+
   static const List<String> eatingHabits = [
     'Doesn’t Matter',
+    'Vegetarian',
+    'Non - Vegetarian',
+    'Eggetarian'
+  ];
+
+  static const List<String> eatingHabitsForUser = [
+    'Not Specified',
     'Vegetarian',
     'Non - Vegetarian',
     'Eggetarian'
@@ -171,8 +191,22 @@ class ProfileOptions {
     'Drinks Regularly'
   ];
 
+  static const List<String> drinkingHabitsForUser = [
+    'Not Specified',
+    'Never Drinks',
+    'Drinks Socially',
+    'Drinks Regularly'
+  ];
+
   static const List<String> smokingHabits = [
     'Doesn’t Matter',
+    'Never Smokes',
+    'Smokes Occasionally',
+    'Smokes Regularly'
+  ];
+
+  static const List<String> smokingHabitsForUser = [
+    'Not Specified',
     'Never Smokes',
     'Smokes Occasionally',
     'Smokes Regularly'

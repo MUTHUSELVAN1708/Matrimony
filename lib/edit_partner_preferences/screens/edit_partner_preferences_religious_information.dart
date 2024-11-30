@@ -211,7 +211,7 @@ class _PartnerPreferenceBasicDetailScreenState
               'Any',
               ...editPartnerPreferenceProviderState.religionList
                   .map((religion) => religion.religion),
-              'Other'
+              // 'Other'
             ],
             selectedValue: editPartnerPreferenceProviderState.religion,
             onSelect: (value) {
@@ -252,7 +252,7 @@ class _PartnerPreferenceBasicDetailScreenState
                 'Any',
                 ...editPartnerPreferenceProviderState.casteList
                     .map((caste) => caste.castes),
-                'Other'
+                // 'Other'
               ],
               selectedValue: editPartnerPreferenceProviderState.caste,
               onSelect: (value) {
@@ -299,7 +299,7 @@ class _PartnerPreferenceBasicDetailScreenState
                 'Any',
                 ...editPartnerPreferenceProviderState.subCasteList
                     .map((subCaste) => subCaste.subCaste),
-                'Other'
+                // 'Other'
               ],
               selectedValue: editPartnerPreferenceProviderState.subCaste,
               onSelect: (value) {

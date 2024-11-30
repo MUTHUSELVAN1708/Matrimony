@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/log_out_model.dart';
 import 'package:matrimony/helper/nav_helper.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/change_password_screen.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/deactivate_account_screen.dart';
@@ -203,65 +204,7 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const CustomSvg(
-                name: 'successcircle',
-                height: 85,
-                width: 85,
-              ),
-              const SizedBox(width: 15),
-              Text(
-                'Do You Want To Log Out?',
-                style: AppTextStyles.headingTextstyle
-                    .copyWith(color: Colors.black),
-              ),
-            ],
-          ),
-          content: const Text(
-            'Are You Sure You Want To Log Out From My App?',
-            style: AppTextStyles.spanTextStyle,
-          ),
-          actions: <Widget>[
-            Column(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                    width: 100,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: AppTextStyles.primaryButtonstyle,
-                      child: const Text(
-                        'Yes',
-                        style: AppTextStyles.primarybuttonText,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                SizedBox(
-                  width: 100,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: AppTextStyles.primaryButtonstyle,
-                    child: const Text('No',
-                        style: AppTextStyles.primarybuttonText),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
+        return const LogOutModel();
       },
     );
   }

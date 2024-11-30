@@ -64,11 +64,11 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                         children: [
                           _buildListTile(
                             'Age',
-                            '${searchInput?.fromAge} yrs - ${searchInput?.toAge} yrs',
+                            '${searchInput?.fromAge == 0 ? '-' : searchInput?.fromAge} yrs - ${searchInput?.toAge == 0 ? '-' : searchInput?.toAge} yrs',
                             onTap: () => showAgeSelectionDialog(
                                 context,
                                 'Age',
-                                'from Age',
+                                'From Age',
                                 'To Age',
                                 PartnerPreferenceConstData.toAgeList,
                                 true),
@@ -80,24 +80,29 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                 context,
                                 true,
                                 'Height',
-                                'from height',
-                                'To height',
+                                'From Height',
+                                'To Height',
                                 PartnerPreferenceConstData
                                     .myHeightOptions.values
-                                    .toList()),
+                                    .toList(),
+                                searchInput?.fromHeight ?? '',
+                                searchInput?.toHeight ?? ''),
                           ),
                           InkWell(
                               onTap: () {
                                 showSelectionHabitsDialog(
-                                    context, 'Profile created by', [
-                                  'MySelf',
-                                  'Son',
-                                  'Daughter',
-                                  'Sister',
-                                  'Relative',
-                                  'Friend',
-                                  'Other'
-                                ]);
+                                    context,
+                                    'Profile created by',
+                                    [
+                                      'MySelf',
+                                      'Son',
+                                      'Daughter',
+                                      'Sister',
+                                      'Relative',
+                                      'Friend',
+                                      'Other'
+                                    ],
+                                    searchInput?.profileCreatedBy ?? '');
                               },
                               child: _buildListTile('Profile created by',
                                   "${searchInput?.profileCreatedBy}")),
@@ -107,7 +112,8 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     context,
                                     'Marital Status',
                                     PartnerPreferenceConstData
-                                        .maritalStatusOptions);
+                                        .maritalStatusOptions,
+                                    searchInput?.maritalStatus ?? '');
                               },
                               child: _buildListTile('Marital Status',
                                   '${searchInput?.maritalStatus}')),
@@ -117,7 +123,8 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     context,
                                     'Mother Tongue',
                                     PartnerPreferenceConstData
-                                        .motherTongueOptions);
+                                        .motherTongueOptions,
+                                    searchInput?.motherTongue ?? '');
                               },
                               child: _buildListTile('Mother Tongue',
                                   '${searchInput?.motherTongue}')),
@@ -127,7 +134,8 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     context,
                                     'Physical Status',
                                     PartnerPreferenceConstData
-                                        .physicalStatusOptions);
+                                        .physicalStatusOptions,
+                                    searchInput?.physicalStatus ?? '');
                               },
                               child: _buildListTile('Physical Status',
                                   '${searchInput?.physicalStatus}')),
@@ -223,15 +231,21 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                         children: [
                           InkWell(
                               onTap: () {
-                                showAnySelectionDialog(context, 'Occupation',
-                                    PartnerPreferenceConstData.occupationList);
+                                showAnySelectionDialog(
+                                    context,
+                                    'Occupation',
+                                    PartnerPreferenceConstData.occupationList,
+                                    searchInput.profession ?? '');
                               },
                               child: _buildListTile(
                                   'Occupation', '${searchInput.profession}')),
                           InkWell(
                               onTap: () {
-                                showAnySelectionDialog(context, 'annual income',
-                                    PartnerPreferenceConstData.incomeList);
+                                showAnySelectionDialog(
+                                    context,
+                                    'annual income',
+                                    PartnerPreferenceConstData.incomeList,
+                                    searchInput.annualIncome ?? '');
                               },
                               child: _buildListTile('annual income',
                                   '${searchInput.annualIncome}')),
@@ -240,14 +254,18 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                 showAnySelectionDialog(
                                     context,
                                     'employment type',
-                                    PartnerPreferenceConstData.employedInList);
+                                    PartnerPreferenceConstData.employedInList,
+                                    searchInput.employedIn ?? '');
                               },
                               child: _buildListTile('employment type',
                                   '${searchInput.employedIn}')),
                           InkWell(
                               onTap: () {
-                                showAnySelectionDialog(context, 'Education',
-                                    PartnerPreferenceConstData.educationList);
+                                showAnySelectionDialog(
+                                    context,
+                                    'Education',
+                                    PartnerPreferenceConstData.educationList,
+                                    searchInput.education ?? '');
                               },
                               child: _buildListTile(
                                   'Education', '${searchInput.education}')),
@@ -340,17 +358,6 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                         ],
                       ),
 
-                      // // Family Details Section
-                      // _buildExpandableSection(
-                      //   title: 'Family Details',
-                      //   icon: SvgPicture.asset('assets/image/filter_family.svg'),
-                      //   children: [
-                      //     _buildListTile('family status', 'Any'),
-                      //     _buildListTile('family type', 'Any'),
-                      //   ],
-                      // ),
-
-                      // Hobbies & Lifestyle Section
                       _buildExpandableSection(
                         title: 'Hobbies & Lifestyle',
                         icon:
@@ -359,10 +366,11 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                           InkWell(
                             onTap: () {
                               showSelectionHabitsDialog(
-                                context,
-                                'eating habits',
-                                PartnerPreferenceConstData.eatingHabitsOptions,
-                              );
+                                  context,
+                                  'eating habits',
+                                  PartnerPreferenceConstData
+                                      .eatingHabitsOptions,
+                                  searchInput.eatingHabits ?? '');
                             },
                             child: _buildListTile(
                               'eating habits',
@@ -372,22 +380,22 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                           InkWell(
                               onTap: () {
                                 showSelectionHabitsDialog(
-                                  context,
-                                  'smoking habits',
-                                  PartnerPreferenceConstData
-                                      .smokingHabitsOptions,
-                                );
+                                    context,
+                                    'smoking habits',
+                                    PartnerPreferenceConstData
+                                        .smokingHabitsOptions,
+                                    searchInput.smokingHabits ?? '');
                               },
                               child: _buildListTile('smoking habits',
                                   '${searchInput.smokingHabits}')),
                           InkWell(
                             onTap: () async {
                               showSelectionHabitsDialog(
-                                context,
-                                'drinking habits',
-                                PartnerPreferenceConstData
-                                    .drinkingHabitsOptions,
-                              );
+                                  context,
+                                  'drinking habits',
+                                  PartnerPreferenceConstData
+                                      .drinkingHabitsOptions,
+                                  searchInput.drinkingHabits ?? '');
                             },
                             child: _buildListTile(
                               'drinking habits',
@@ -712,7 +720,8 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
   Widget _buildListTile(String title, String subtitle, {VoidCallback? onTap}) {
     return Card(
       elevation: 0,
-      margin: const EdgeInsets.symmetric(vertical: 10), // Margin of 10
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      // Margin of 10
       color: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -800,12 +809,8 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
   }
 
   void showSelectionHabitsDialog(
-    BuildContext context,
-    String hint,
-    List<String> items,
-  ) {
-    String? tempSelectedValue =
-        ref.watch(searchFilterInputProvider)?.drinkingHabits;
+      BuildContext context, String hint, List<String> items, String value) {
+    String? tempSelectedValue = value;
     final otherController = TextEditingController();
 
     showDialog(
@@ -950,8 +955,8 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
   }
 
   void showAnySelectionDialog(
-      BuildContext context, String hint, List<String> items) {
-    String selectedValues = '';
+      BuildContext context, String hint, List<String> items, String value) {
+    String selectedValues = value;
 
     showDialog(
       context: context,
@@ -1097,8 +1102,11 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
 
   void showAgeSelectionDialog(BuildContext context, String hint, String hint1,
       String hint2, List<String> items, bool ageheight) {
-    List<String> fromItem = [];
-    List<String> toItem = [];
+    final value = ref.read(searchFilterInputProvider);
+    List<String> fromItem =
+        value?.fromAge != 0 ? [value?.fromAge.toString() ?? ''] : [];
+    List<String> toItem =
+        value?.toAge != 0 ? [value?.toAge.toString() ?? ''] : [];
     late List<String> selectedValues;
     bool isSelectAll = false;
     bool isSingleSelection = false;
@@ -1141,7 +1149,7 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                   children: [
                                     AgeCustomDialogBox(
                                       value: fromItem,
-                                      hint: hint2 ?? '',
+                                      hint: hint1 ?? '',
                                       items: items,
                                       onChanged: (data) {
                                         setState(() {
@@ -1303,14 +1311,20 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
     );
   }
 
-  void showHeightSelectionDialog(BuildContext context, bool ageHeight,
-      String hint, String hint2, String hint3, List<String> items) {
+  void showHeightSelectionDialog(
+      BuildContext context,
+      bool ageHeight,
+      String hint,
+      String hint2,
+      String hint3,
+      List<String> items,
+      String fromValue,
+      String toValue) {
     late List<String> selectedValues;
     List<String> filteredItems = [];
     bool isSingleSelection = false;
-    bool isSelectAll = false;
-    List<String> toItem = [];
-    List<String> fromItem = [];
+    List<String> toItem = [toValue];
+    List<String> fromItem = [fromValue];
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1385,58 +1399,58 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                   itemCount: items.length +
                                       (isSingleSelection ? 0 : 1),
                                   itemBuilder: (context, index) {
-                                    if (!isSingleSelection && index == 0) {
-                                      return ListTile(
-                                        onTap: () {
-                                          setState(() {
-                                            isSelectAll = !isSelectAll;
-                                            selectedValues = isSelectAll
-                                                ? List.from(items)
-                                                : [];
-                                          });
-                                        },
-                                        leading: isSelectAll
-                                            ? const Icon(
-                                                Icons
-                                                    .radio_button_checked_outlined,
-                                                color: Colors.red,
-                                              )
-                                            : const Icon(Icons.circle_outlined),
-                                        title: const Text("Select All"),
-                                      );
-                                    }
+                                    // if (!isSingleSelection && index == 0) {
+                                    //   return ListTile(
+                                    //     onTap: () {
+                                    //       setState(() {
+                                    //         isSelectAll = !isSelectAll;
+                                    //         selectedValues = isSelectAll
+                                    //             ? List.from(items)
+                                    //             : [];
+                                    //       });
+                                    //     },
+                                    //     leading: isSelectAll
+                                    //         ? const Icon(
+                                    //             Icons
+                                    //                 .radio_button_checked_outlined,
+                                    //             color: Colors.red,
+                                    //           )
+                                    //         : const Icon(Icons.circle_outlined),
+                                    //     title: const Text("Select All"),
+                                    //   );
+                                    // }
                                     final itemIndex =
                                         isSingleSelection ? index : index - 1;
                                     final currentItem = items[itemIndex];
 
                                     if (isSingleSelection) {
                                     } else {
-                                      return ListTile(
-                                        leading: selectedValues
-                                                .contains(currentItem)
-                                            ? const Icon(
-                                                Icons.radio_button_checked,
-                                                color: Colors.red,
-                                              )
-                                            : const Icon(Icons.circle_outlined),
-                                        title: Text(currentItem),
-                                        onTap: () {
-                                          setState(() {
-                                            select = !select;
-                                            if (select) {
-                                              selectedValues.add(currentItem);
-                                              if (selectedValues.length ==
-                                                  items.length) {
-                                                isSelectAll = true;
-                                              }
-                                            } else {
-                                              selectedValues
-                                                  .remove(currentItem);
-                                              isSelectAll = false;
-                                            }
-                                          });
-                                        },
-                                      );
+                                      // return ListTile(
+                                      //   leading: selectedValues
+                                      //           .contains(currentItem)
+                                      //       ? const Icon(
+                                      //           Icons.radio_button_checked,
+                                      //           color: Colors.red,
+                                      //         )
+                                      //       : const Icon(Icons.circle_outlined),
+                                      //   title: Text(currentItem),
+                                      //   onTap: () {
+                                      //     setState(() {
+                                      //       select = !select;
+                                      //       if (select) {
+                                      //         selectedValues.add(currentItem);
+                                      //         if (selectedValues.length ==
+                                      //             items.length) {
+                                      //           // isSelectAll = true;
+                                      //         }
+                                      //       } else {
+                                      //         selectedValues
+                                      //             .remove(currentItem);
+                                      //         // isSelectAll = false;
+                                      //       }
+                                      //     });
+                                      //   },
+                                      // );
                                     }
                                   },
                                 ),

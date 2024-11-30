@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/daily_recommendation_list_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/common/widget/log_out_model.dart';
 import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferences_main_screen.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/faq_screen/faq_screen.dart';
@@ -192,7 +194,12 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       MenuItem(
         icon: 'assets/dailyrecommend.svg',
         title: 'Daily Recommendations',
-        onTap: () {},
+        onTap: () {
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: const DailyRecommendationListScreen(),
+          );
+        },
       ),
       MenuItem(
         icon: 'assets/yourchats.svg',
@@ -216,11 +223,11 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       ),
       MenuItem(
         icon: 'assets/help.svg',
-        title: 'Help',
+        title: 'Help Centre',
         onTap: () {
           NavigationHelper.slideNavigateTo(
             context: context,
-            screen: HelpScreen(),
+            screen: const HelpScreen(),
           );
         },
       ),
@@ -229,11 +236,11 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
         title: 'Feedback',
         onTap: () {},
       ),
-      MenuItem(
-        icon: 'assets/successstories.svg',
-        title: 'Success Stories',
-        onTap: () {},
-      ),
+      // MenuItem(
+      //   icon: 'assets/successstories.svg',
+      //   title: 'Success Stories',
+      //   onTap: () {},
+      // ),
       MenuItem(
         icon: 'assets/more.svg',
         title: 'FAQ',
@@ -251,76 +258,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
           await showDialog<bool>(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                content: const Text(
-                  'Are you sure you want to logout?',
-                  style: TextStyle(color: AppColors.black, fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-                actions: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(color: Colors.grey)),
-                            child: const Center(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 6,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            final navigator = Navigator.of(context);
-                            await SharedPrefHelper.removeUser();
-                            if (!context.mounted) return;
-                            CustomSnackBar.show(
-                              context: context,
-                              message: 'Logged Out Successfully.',
-                              isError: false,
-                            );
-                            navigator.pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                              (Route<dynamic> route) => false,
-                            );
-                          },
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                                color: AppColors.primaryButtonColor,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(color: Colors.grey)),
-                            child: const Center(
-                              child: Text(
-                                'Logout',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              );
+              return const LogOutModel();
             },
           );
         },

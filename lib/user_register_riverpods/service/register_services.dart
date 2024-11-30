@@ -58,15 +58,20 @@ class RegisterService {
         'phoneNumber': phoneNo,
       }),
     );
-    print("$otp,$phoneNo");
-    print(response.statusCode);
     if (response.statusCode == 200) {
-      print(response.body);
       final data = jsonDecode(response.body);
-      print(data);
+      await http.post(
+        Uri.parse(Api.createpartnerPreference),
+        headers: {
+          'Content-Type': 'application/json',
+          'AppId': '1',
+        },
+        body: jsonEncode({
+          'userId': data['id'],
+        }),
+      );
       await _saveUserData(data['id'], data['token']);
       return true;
-      print(response.statusCode);
     } else {
       return false;
     }
@@ -245,7 +250,7 @@ class RegisterService {
       prefs.setString('employedType', responseData['employedType']);
       prefs.setString('occupation', responseData['occupation']);
       prefs.setString('education', responseData['education']);
-      prefs.setString('city', responseData['city']);
+      prefs.setString('city1', responseData['city']);
       return true;
       print(response.statusCode);
     } else {
