@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/widget/common_dialog_box.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_commen_dialog_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/location_widget/partner_location_preference_screen.dart';
@@ -28,6 +29,7 @@ class _PartnerProfessionalScreenState
   List<String> selectedIncome = [];
 
   final List<String> educationList = [
+    'Any',
     '10th',
     '12th',
     'Secondary School',
@@ -118,6 +120,7 @@ class _PartnerProfessionalScreenState
   ];
 
   List<String> employedInList = [
+    'Any',
     'Government',
     'Private',
     'Business',
@@ -137,6 +140,7 @@ class _PartnerProfessionalScreenState
   ];
 
   final List<String> occupationList = [
+    'Any',
     'Software Professional',
     'Engineer',
     'Doctor',
@@ -155,6 +159,7 @@ class _PartnerProfessionalScreenState
   ];
 
   final List<String> incomeList = [
+    'Any',
     '₹ 1 lakh & below',
     '₹ 1 lakh - ₹ 2 lakh',
     '₹ 2 lakh - ₹ 3 lakh',
@@ -237,141 +242,145 @@ class _PartnerProfessionalScreenState
             ),
             const SizedBox(height: 16),
 
-            selectedEdicationOther
-                ? TextFormField(
-                    controller: educationCtrl,
-                    decoration: InputDecoration(
-                        hintText: 'Education',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedEdicationOther = false;
-                                selectedEdication.clear();
-                                selectedEdication.add(educationCtrl.text);
-                                print(selectedEdication);
-                              });
-                            },
-                            icon: const Icon(Icons.close))),
-                  )
-                : AnyCustomPreferenceDropdown(
-                    other: true,
-                    value: selectedEdication,
-                    hint: "Education",
-                    items: educationList,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedEdication = value;
-                        if (value[0] == 'Other') {
-                          selectedEdicationOther = true;
-                        }
-                      });
-                    },
-                  ),
+            // selectedEdicationOther
+            //     ? TextFormField(
+            //         controller: educationCtrl,
+            //         decoration: InputDecoration(
+            //             hintText: 'Education',
+            //             border: OutlineInputBorder(
+            //                 borderRadius: BorderRadius.circular(15)),
+            //             suffixIcon: IconButton(
+            //                 onPressed: () {
+            //                   setState(() {
+            //                     selectedEdicationOther = false;
+            //                     selectedEdication.clear();
+            //                     selectedEdication.add(educationCtrl.text);
+            //                     print(selectedEdication);
+            //                   });
+            //                 },
+            //                 icon: const Icon(Icons.close))),
+            //       )
+            //     :
+            AnyCustomPreferenceDropdown(
+              other: true,
+              value: selectedEdication,
+              hint: "Education",
+              items: educationList,
+              onChanged: (value) {
+                setState(() {
+                  selectedEdication = value;
+                  if (value[0] == 'Other') {
+                    selectedEdicationOther = true;
+                  }
+                });
+              },
+            ),
             const SizedBox(height: 10),
 
-            selectedEmployedOther
-                ? TextFormField(
-                    controller: employedCtrl,
-                    decoration: InputDecoration(
-                        hintText: 'Employed In',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedEmployedOther = false;
-                                selectedEmployed.clear();
-                                selectedEmployed.add(employedCtrl.text);
-                                print(selectedEmployed);
-                              });
-                            },
-                            icon: const Icon(Icons.close))),
-                  )
-                : AnyCustomPreferenceDropdown(
-                    other: true,
-                    value: selectedEmployed,
-                    hint: "Employed In",
-                    items: employedInList,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedEmployed = value;
-                        if (value[0] == 'Other') {
-                          selectedEmployedOther = true;
-                        }
-                      });
-                    },
-                  ),
+            // selectedEmployedOther
+            //     ? TextFormField(
+            //         controller: employedCtrl,
+            //         decoration: InputDecoration(
+            //             hintText: 'Employed In',
+            //             border: OutlineInputBorder(
+            //                 borderRadius: BorderRadius.circular(15)),
+            //             suffixIcon: IconButton(
+            //                 onPressed: () {
+            //                   setState(() {
+            //                     selectedEmployedOther = false;
+            //                     selectedEmployed.clear();
+            //                     selectedEmployed.add(employedCtrl.text);
+            //                     print(selectedEmployed);
+            //                   });
+            //                 },
+            //                 icon: const Icon(Icons.close))),
+            //       )
+            //     :
+            AnyCustomPreferenceDropdown(
+              other: true,
+              value: selectedEmployed,
+              hint: "Employed In",
+              items: employedInList,
+              onChanged: (value) {
+                setState(() {
+                  selectedEmployed = value;
+                  if (value[0] == 'Other') {
+                    selectedEmployedOther = true;
+                  }
+                });
+              },
+            ),
             const SizedBox(height: 10),
 
             // Occupation Dropdown
-            selectedOccupationOther
-                ? TextFormField(
-                    controller: occupationCtrl,
-                    decoration: InputDecoration(
-                        hintText: 'Occupation',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedOccupationOther = false;
-                                selectedOccupation.clear();
-                                selectedOccupation.add(occupationCtrl.text);
-                                print(selectedOccupation);
-                              });
-                            },
-                            icon: const Icon(Icons.close))),
-                  )
-                : AnyCustomPreferenceDropdown(
-                    other: true,
-                    value: selectedOccupation,
-                    hint: "Occupation",
-                    items: occupationList,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedOccupation = value;
-                        if (value[0] == 'Other') {
-                          selectedOccupationOther = true;
-                        }
-                      });
-                    },
-                  ),
+            // selectedOccupationOther
+            //     ? TextFormField(
+            //         controller: occupationCtrl,
+            //         decoration: InputDecoration(
+            //             hintText: 'Occupation',
+            //             border: OutlineInputBorder(
+            //                 borderRadius: BorderRadius.circular(15)),
+            //             suffixIcon: IconButton(
+            //                 onPressed: () {
+            //                   setState(() {
+            //                     selectedOccupationOther = false;
+            //                     selectedOccupation.clear();
+            //                     selectedOccupation.add(occupationCtrl.text);
+            //                     print(selectedOccupation);
+            //                   });
+            //                 },
+            //                 icon: const Icon(Icons.close))),
+            //       )
+            //     :
+            AnyCustomPreferenceDropdown(
+              other: true,
+              value: selectedOccupation,
+              hint: "Occupation",
+              items: occupationList,
+              onChanged: (value) {
+                setState(() {
+                  selectedOccupation = value;
+                  if (value[0] == 'Other') {
+                    selectedOccupationOther = true;
+                  }
+                });
+              },
+            ),
             const SizedBox(height: 10),
 
-            selectedInComeOther
-                ? TextFormField(
-                    controller: inComeCtrl,
-                    decoration: InputDecoration(
-                        hintText: 'Annual Income',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedInComeOther = false;
-                                selectedIncome.clear();
-                                selectedIncome.add(inComeCtrl.text);
-                                print(selectedIncome);
-                              });
-                            },
-                            icon: const Icon(Icons.close))),
-                  )
-                : AnyCustomPreferenceDropdown(
-                    other: true,
-                    value: selectedIncome,
-                    hint: "Annual Income",
-                    items: incomeList,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedIncome = value;
-                        if (value[0] == 'Other') {
-                          selectedInComeOther = true;
-                        }
-                      });
-                    },
-                  ),
+            // selectedInComeOther
+            //     ? TextFormField(
+            //         controller: inComeCtrl,
+            //         decoration: InputDecoration(
+            //             hintText: 'Annual Income',
+            //             border: OutlineInputBorder(
+            //                 borderRadius: BorderRadius.circular(15)),
+            //             suffixIcon: IconButton(
+            //                 onPressed: () {
+            //                   setState(() {
+            //                     selectedInComeOther = false;
+            //                     selectedIncome.clear();
+            //                     selectedIncome.add(inComeCtrl.text);
+            //                     print(selectedIncome);
+            //                   });
+            //                 },
+            //                 icon: const Icon(Icons.close))),
+            //       )
+            //     :
+            AnyCustomPreferenceDropdown(
+              other: true,
+              value: selectedIncome,
+              hint: "Annual Income",
+              items: incomeList,
+              onChanged: (value) {
+                setState(() {
+                  selectedIncome = value;
+                  if (value[0] == 'Other') {
+                    selectedInComeOther = true;
+                  }
+                });
+              },
+            ),
             const SizedBox(height: 16),
 
             SizedBox(
@@ -379,17 +388,28 @@ class _PartnerProfessionalScreenState
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  ref
-                      .read(preferenceInputProvider.notifier)
-                      .updatePreferenceInput(
-                          education: selectedEdication.firstOrNull,
-                          employedIn: selectedEmployed.firstOrNull,
-                          annualIncome: selectedIncome.firstOrNull,
-                          profession: selectedOccupation.firstOrNull);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PartnerLocationScreen()));
+                  if (selectedEdication.firstOrNull != null &&
+                      selectedEmployed.firstOrNull != null &&
+                      selectedIncome.firstOrNull != null &&
+                      selectedOccupation.firstOrNull != null) {
+                    ref
+                        .read(preferenceInputProvider.notifier)
+                        .updatePreferenceInput(
+                            education: selectedEdication.firstOrNull,
+                            employedIn: selectedEmployed.firstOrNull,
+                            annualIncome: selectedIncome.firstOrNull,
+                            profession: selectedOccupation.firstOrNull);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const PartnerLocationScreen()));
+                  } else {
+                    CustomSnackBar.show(
+                        context: context,
+                        message: 'Please Select All Fields Mandatory!',
+                        isError: true);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,

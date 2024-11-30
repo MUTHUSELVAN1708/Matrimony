@@ -1,6 +1,6 @@
 class Api {
   // static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
-  // static const String baseUrl = 'http://192.168.29.14:8080/api/ahathirumanam';
+  // static const String baseUrl = 'http://192.168.29.49:8080/api/ahathirumanam';
   // static const String baseUrl = 'http://192.168.1.12:8080/api/ahathirumanam';
   static const String baseUrl = 'http://192.168.94.182:8080/api/ahathirumanam';
 
@@ -53,11 +53,20 @@ class Api {
   static const String report = '$baseUrl/report';
   static const String blocked = '$baseUrl/blocked';
   static const String reports = '$baseUrl/reports';
-  static const String send = '$baseUrl/send';
-  static const String accept = '$baseUrl/accept';
-  static const String reject = '$baseUrl/reject';
-  static const String received = '$baseUrl/received';
-  static const String sent = '$baseUrl/sent';
+  static const String send = '$baseUrl/interest/send';
+  static const String dontShow = '$baseUrl/interest/dont-show';
+  static const String acceptOrReject = '$baseUrl/interest/';
+  // static const String reject = '$baseUrl/reject-interest';
+  // static const String notInterest = '$baseUrl/not-interested';
+  static const String getReceivedList = '$baseUrl/interest/received';
+  static const String getSentList = '$baseUrl/interest/sent';
+  // static const String getRejectedList = '$baseUrl/rejected-interest';
+  // static const String getNotInterestedList = '$baseUrl/not-interested';
   static const String saveHoroscope = '$baseUrl/savehoroscope';
   static const String editHoroscope = '$baseUrl/editHoroscope';
+  static const String forgot = '$baseUrl/forgot';
+  static const String forgototpverify = '$baseUrl/forgototpverify';
+  static const String newpassword = '$baseUrl/newpassword';
+  static const String profilePercentage = '$baseUrl/profilePercentage';
+  // static const String editHoroscope = '$baseUrl/editHoroscope';
 }

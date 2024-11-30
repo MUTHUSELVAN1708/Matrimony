@@ -87,12 +87,12 @@ class PartnerDetailsModel extends Equatable {
   factory PartnerDetailsModel.fromJson(Map<String, dynamic> json) {
     final partnerPreference = json['partnerPreference'] ?? {};
     return PartnerDetailsModel(
-      partnerFromAge: partnerPreference['fromAge'],
-      partnerToAge: partnerPreference['toAge'],
+      partnerFromAge: partnerPreference['fromAge'] ?? 0,
+      partnerToAge: partnerPreference['toAge'] ?? 0,
       partnerFromHeight: partnerPreference['fromHeight'],
       partnerToHeight: partnerPreference['toHeight'],
-      partnerFromWeight: partnerPreference['fromWeight'],
-      partnerToWeight: partnerPreference['toWeight'],
+      partnerFromWeight: partnerPreference['fromWeight'] ?? 0,
+      partnerToWeight: partnerPreference['toWeight'] ?? 0,
       partnerMaritalStatus: partnerPreference['maritalStatus'],
       partnerMotherTongue: partnerPreference['motherTongue'],
       partnerPhysicalStatus: partnerPreference['physicalStatus'],

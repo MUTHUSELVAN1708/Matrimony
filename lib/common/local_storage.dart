@@ -13,7 +13,7 @@ class SharedPrefHelper {
 
   static Future<String?> getCity() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('city');
+    return prefs.getString('city1');
   }
 
   static Future<String?> getEmployedType() async {

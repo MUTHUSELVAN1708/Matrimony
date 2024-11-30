@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:matrimony/common/api_list.dart';
 import 'package:matrimony/common/local_storage.dart';
+import 'package:matrimony/edit/profile/providers/family_details_state.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
 import 'package:matrimony/edit/profile/state/edit_contact_state.dart';
 import 'package:matrimony/edit/profile/state/location_state.dart';
@@ -63,6 +64,7 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
         );
       }
     } catch (e) {
+      print(e);
       state = state.copyWith(
         isLoadingForUser: false,
         error: e.toString(),
@@ -162,6 +164,22 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
                 ? '$countryCode${editContactState.newPhoneNumber}'
                 : editContactState.currentPhoneNumber,
             contactPersonName: editContactState.contactPersonsName));
+  }
+
+  void updateFamilyDetails(FamilyDetailsState familyDetailsState) {
+    state = state.copyWith(
+        userDetails: state.userDetails.copyWith(
+            famliyValue: familyDetailsState.famliyValue,
+            famliyType: familyDetailsState.famliyType,
+            famliyStatus: familyDetailsState.famliyStatus,
+            fatherName: familyDetailsState.fatherName,
+            fatherOccupation: familyDetailsState.fatherOccupation,
+            motherName: familyDetailsState.motherName,
+            motherOccupation: familyDetailsState.motherOccupation,
+            noOfSisters: familyDetailsState.noOfSisters,
+            noOfBrothers: familyDetailsState.noOfBrothers,
+            brotherMarried: familyDetailsState.brotherMarried,
+            sisterMarried: familyDetailsState.sisterMarried));
   }
 
   void updateBasicDetails(ProfileState profileState) {

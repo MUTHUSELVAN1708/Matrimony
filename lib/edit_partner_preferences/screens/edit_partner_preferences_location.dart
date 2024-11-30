@@ -199,7 +199,7 @@ class _PartnerPreferenceBasicDetailScreenState
               'Any',
               ...editPartnerPreferenceProviderState.countryList
                   .map((country) => country.countrys),
-              'Other'
+              // 'Other'
             ],
             selectedValue: editPartnerPreferenceProviderState.country,
             onSelect: (value) {
@@ -240,7 +240,7 @@ class _PartnerPreferenceBasicDetailScreenState
                 'Any',
                 ...editPartnerPreferenceProviderState.stateList
                     .map((state) => state.states),
-                'Other'
+                // 'Other'
               ],
               selectedValue: editPartnerPreferenceProviderState.state,
               onSelect: (value) {
@@ -287,7 +287,7 @@ class _PartnerPreferenceBasicDetailScreenState
                 'Any',
                 ...editPartnerPreferenceProviderState.cityList
                     .map((city) => city.citys),
-                'Other'
+                // 'Other'
               ],
               selectedValue: editPartnerPreferenceProviderState.city,
               onSelect: (value) {

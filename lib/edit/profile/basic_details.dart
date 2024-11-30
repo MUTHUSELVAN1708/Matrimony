@@ -306,7 +306,7 @@ class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Your Physical Status',
-            options: ProfileOptions.physicalStatus,
+            options: ProfileOptions.physicalStatusForUser,
             selectedValue: profileState.physicalStatus,
             onSelect: (value) {
               ref.read(profileProvider.notifier).updatePhysicalStatus(value);
@@ -332,7 +332,7 @@ class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Your Eating Habit',
-            options: ProfileOptions.eatingHabits,
+            options: ProfileOptions.eatingHabitsForUser,
             selectedValue: profileState.eatingHabits,
             onSelect: (value) {
               ref
@@ -360,7 +360,7 @@ class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Your Drinking Habit',
-            options: ProfileOptions.drinkingHabits,
+            options: ProfileOptions.drinkingHabitsForUser,
             selectedValue: profileState.drinkingHabits,
             onSelect: (value) {
               ref
@@ -388,7 +388,7 @@ class _EditBasicDetailScreenState extends ConsumerState<EditBasicDetailScreen> {
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Your Smoking Habit',
-            options: ProfileOptions.smokingHabits,
+            options: ProfileOptions.smokingHabitsForUser,
             selectedValue: profileState.smokingHabits,
             onSelect: (value) {
               ref

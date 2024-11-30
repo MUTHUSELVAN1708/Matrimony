@@ -6,9 +6,9 @@ import 'package:matrimony/common/widget/common_selection_dialog.dart';
 class UpdateFamilyDetail extends StatefulWidget {
   final Function(String? value) onPop;
   const UpdateFamilyDetail({
-    Key? key,
+    super.key,
     required this.onPop,
-  }) : super(key: key);
+  });
 
   @override
   State<UpdateFamilyDetail> createState() => _UpdateFamilyDetailState();

@@ -86,12 +86,6 @@ class _LoginScreenState extends ConsumerState<LoginScreenWithOtp> {
                 const SizedBox(height: 40),
                 PhoneNumberField(phoneNoController: phoneNoController),
                 const SizedBox(height: 16),
-                loginState.error != null && phoneNoController.text.length != 10
-                    ? Text(
-                        loginState.error.toString(),
-                        style: const TextStyle(color: Colors.red),
-                      )
-                    : const SizedBox(),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -159,7 +153,7 @@ class _LoginScreenState extends ConsumerState<LoginScreenWithOtp> {
                     'Login With Password',
                     style: TextStyle(
                       color: AppColors.primaryButtonColor,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                 )),
@@ -168,8 +162,7 @@ class _LoginScreenState extends ConsumerState<LoginScreenWithOtp> {
                   children: [
                     Text("Don't have an account? ",
                         style: TextStyle(
-                          color: Colors.grey.withOpacity(0.5),
-                        )),
+                            color: Colors.grey.withOpacity(0.5), fontSize: 16)),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -181,7 +174,7 @@ class _LoginScreenState extends ConsumerState<LoginScreenWithOtp> {
                       },
                       child: const Text(
                         'Sign Up',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: Colors.red, fontSize: 16),
                       ),
                     ),
                   ],

@@ -84,7 +84,7 @@ class _RegisterReligiousDetailsScreenState
                   isOther: true,
                   value: registerReligionState.motherTongue ?? '',
                   hint: 'Mother Tongue',
-                  items: PartnerPreferenceConstData.motherTongueOptions,
+                  items: PartnerPreferenceConstData.motherTongueOptionsUser,
                   onChanged: (value) {
                     ref
                         .read(registerReligionProvider.notifier)
@@ -245,7 +245,13 @@ class _RegisterReligiousDetailsScreenState
                   child: ElevatedButton(
                     onPressed: registerReligionState.religion == null ||
                             registerReligionState.motherTongue == null
-                        ? null
+                        ? () {
+                            CustomSnackBar.show(
+                                context: context,
+                                message:
+                                    'Please Select Religion and Caste Mandatory!',
+                                isError: true);
+                          }
                         : () async {
                             if (registerStateNotifier.isLoading) {
                             } else {

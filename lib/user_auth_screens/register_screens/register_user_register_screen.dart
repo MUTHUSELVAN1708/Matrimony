@@ -252,9 +252,7 @@ class _RegisterUserDetailsScreenState
                     style: AppTextStyles.spanTextStyle.copyWith(fontSize: 13),
                   ),
                 ),
-
                 const SizedBox(height: 50),
-
                 // Get OTP Button
                 SizedBox(
                   width: double.infinity,
@@ -322,8 +320,9 @@ class _RegisterUserDetailsScreenState
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Already have an account? ',
-                        style: AppTextStyles.spanTextStyle),
+                    Text('Already have an account? ',
+                        style:
+                            AppTextStyles.spanTextStyle.copyWith(fontSize: 16)),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(

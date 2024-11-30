@@ -81,9 +81,9 @@ class InitialScreen extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        ' log in',
-                        style: AppTextStyles.spanTextStyle
-                            .copyWith(color: AppColors.primaryButtonColor),
+                        '  Log in',
+                        style: AppTextStyles.spanTextStyle.copyWith(
+                            color: AppColors.primaryButtonColor, fontSize: 18),
                       ),
                     )
                   ],

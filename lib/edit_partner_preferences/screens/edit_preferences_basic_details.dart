@@ -247,7 +247,7 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Marital Status',
-            options: ProfileOptions.maritalStatus,
+            options: ProfileOptions.maritalStatusPartner,
             selectedValue: editPartnerPreferenceProviderState.maritalStatus,
             onSelect: (value) {
               ref
@@ -303,10 +303,7 @@ class _PartnerPreferenceBasicDetailScreenState
           context: context,
           builder: (context) => CommonSelectionDialog(
             title: 'Select Mother Tongue',
-            options: const [
-              'Any',
-              ...PartnerPreferenceConstData.motherTongueOptions
-            ],
+            options: const [...PartnerPreferenceConstData.motherTongueOptions],
             selectedValue: editPartnerPreferenceProviderState.motherTongue,
             onSelect: (value) {
               ref

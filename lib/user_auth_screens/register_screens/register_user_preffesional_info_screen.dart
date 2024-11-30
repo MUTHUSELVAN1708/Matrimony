@@ -511,7 +511,9 @@ class _RegisterUserProfessionalInfoScreenState
                     onPressed: () async {
                       if (registerStateNotifier.isLoading) {
                       } else {
-                        if (educationDetails.isNotEmpty) {
+                        if (educationDetails.isNotEmpty &&
+                            annualIncome.isNotEmpty &&
+                            occupation.isNotEmpty) {
                           bool success = await ref
                               .read(registerProvider.notifier)
                               .createProfessionalApi(
@@ -526,7 +528,7 @@ class _RegisterUserProfessionalInfoScreenState
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    RegisterUserLocationScreen(),
+                                    const RegisterUserLocationScreen(),
                               ),
                             );
                           } else {
@@ -537,6 +539,12 @@ class _RegisterUserProfessionalInfoScreenState
                               isError: true,
                             );
                           }
+                        } else {
+                          CustomSnackBar.show(
+                              context: context,
+                              message:
+                                  'Please Select Education, Occupation and Annul Income Mandatory!',
+                              isError: true);
                         }
                       }
                     },

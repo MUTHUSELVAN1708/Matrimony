@@ -6,6 +6,7 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
+import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_photo_upload_screens/register_user_photo_uploaded_success_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_screen.dart';
@@ -197,6 +198,9 @@ class _RegisterUserPhotoUploadScreenState
                                 .where((element) => element.isNotEmpty)
                                 .toList());
                         await ref.read(getImageApiProvider.notifier).getImage();
+                        ref
+                            .read(completionProvider.notifier)
+                            .getIncompleteFields();
                         ref.read(userManagementProvider.notifier).updateImage(
                             ref.read(getImageApiProvider).data?.images);
                         if (value) {

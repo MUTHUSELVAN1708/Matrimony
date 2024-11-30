@@ -6,6 +6,7 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
+import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
 import 'package:matrimony/horoscopeandstar/riverpod/horoscope_provider.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:intl/intl.dart';
@@ -302,6 +303,9 @@ class _HoroscopeAddDetailScreenState
                         final result = await ref
                             .read(horoscopeProvider.notifier)
                             .editHoroscope();
+                        ref
+                            .read(completionProvider.notifier)
+                            .getIncompleteFields();
                         ref
                             .read(userManagementProvider.notifier)
                             .updateHoroscopeDetails(horoscopeState);

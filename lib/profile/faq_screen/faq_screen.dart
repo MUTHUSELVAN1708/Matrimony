@@ -51,14 +51,14 @@ class FAQScreen extends StatelessWidget {
                 ),
               ),
               _buildFAQItem(
-                'How do i login if i forget my email, mobile number?',
-                [
-                  'If you forgot your registered email ID, and mobile number, please reach out to our support team at helpdesk@ahatirumanam.com.',
-                  'They will assist you in the retrieval process and help you regain access to your account. Having at least one of these details is essential for the login process.',
-                ],
-                isExpanded: true,
-              ),
-              SizedBox(
+                  'How do i login if i forget my email, mobile number?',
+                  [
+                    'If you forgot your registered email ID, and mobile number, please reach out to our support team at helpdesk@ahatirumanam.com.',
+                    'They will assist you in the retrieval process and help you regain access to your account. Having at least one of these details is essential for the login process.',
+                  ],
+                  isExpanded: true,
+                  heading: true),
+              const SizedBox(
                 height: 10,
               ),
               _buildFAQItem(
@@ -71,7 +71,7 @@ class FAQScreen extends StatelessWidget {
                     'Follow the link to reset your password securely.',
                   ],
                   heading: true),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               _buildFAQItem(
@@ -87,57 +87,57 @@ class FAQScreen extends StatelessWidget {
                     'Please ensure that these details are accurate as they are essential for login and communication.'
                   ],
                   heading: true),
-              SizedBox(
-                height: 10,
-              ),
-              _buildFAQItem(
-                'I didn\'t receive the otp for login. what should i do?',
-                [
-                  'If you haven\'t received the OTP for login,please ensure your mobile number is entered correctly.',
-                  'Also check if your mobile device has a stable network connection, your mobile number is active and capable of receiving SMS.',
-                  'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              _buildFAQItem(
-                'I didn\'t receive the password reset email, what should i do?',
-                [
-                  'If you haven\'t received the password reset email, please ensure that your email address is correct.',
-                  'Also, check your spam or junk folders for the email. You can also try requesting another password reset email.',
-                  'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              _buildFAQItem(
-                'Can i log into my profile from multiple devices simultaneously?',
-                [
-                  'Yes, you can log into your profile from multiple devices simultaneously.'
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              _buildFAQItem(
-                'Why is the message invalid e-mail id/mobile number or incorrect password being displayed when i try to login?',
-                [
-                  'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
-                  'Please recheck your credentials and ensure that the details are accurate.'
-                ],
-              ),
               const SizedBox(
                 height: 10,
               ),
               _buildFAQItem(
-                'Can i log into my profile from multiple devices simultaneously?',
-                [
-                  'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
-                  'Please recheck your credentials and ensure that the details are accurate.'
-                ],
+                  'I didn\'t receive the otp for login. what should i do?',
+                  [
+                    'If you haven\'t received the OTP for login,please ensure your mobile number is entered correctly.',
+                    'Also check if your mobile device has a stable network connection, your mobile number is active and capable of receiving SMS.',
+                    'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
+                  ],
+                  heading: true),
+              const SizedBox(
+                height: 10,
               ),
+              _buildFAQItem(
+                  'I didn\'t receive the password reset email, what should i do?',
+                  [
+                    'If you haven\'t received the password reset email, please ensure that your email address is correct.',
+                    'Also, check your spam or junk folders for the email. You can also try requesting another password reset email.',
+                    'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
+                  ],
+                  heading: true),
+              const SizedBox(
+                height: 10,
+              ),
+              _buildFAQItem(
+                  'Can i log into my profile from multiple devices simultaneously?',
+                  [
+                    'Yes, you can log into your profile from multiple devices simultaneously.'
+                  ],
+                  heading: true),
+              const SizedBox(
+                height: 10,
+              ),
+              _buildFAQItem(
+                  'Why is the message invalid e-mail id/mobile number or incorrect password being displayed when i try to login?',
+                  [
+                    'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
+                    'Please recheck your credentials and ensure that the details are accurate.'
+                  ],
+                  heading: true),
+              const SizedBox(
+                height: 10,
+              ),
+              _buildFAQItem(
+                  'Can i log into my profile from multiple devices simultaneously?',
+                  [
+                    'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
+                    'Please recheck your credentials and ensure that the details are accurate.'
+                  ],
+                  heading: true),
             ],
           ),
         ),
@@ -166,12 +166,14 @@ class FAQScreen extends StatelessWidget {
           initiallyExpanded: isExpanded,
           title: Text(
             question,
-            style: AppTextStyles.spanTextStyle,
+            style: AppTextStyles.spanTextStyle.copyWith(fontSize: 18),
           ),
           iconColor: Colors.red,
           collapsedIconColor: Colors.grey,
           children: answers.map((answer) {
-            bool isFirstAnswer = answers.indexOf(answer) == 0;
+            bool isHeading = question ==
+                    'Can i change the mobile number, email address associated with my matrimony account?' ||
+                question == 'How do i log in if i forget my password?';
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -179,20 +181,25 @@ class FAQScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Column(
                   children: [
-                    if (heading && isFirstAnswer)
+                    if (isHeading && answers.indexOf(answer) == 0) ...[
                       Text(
                         answer,
                         style: AppTextStyles.spanTextStyle.copyWith(
                           color: const Color(0XFF171717),
                         ),
                       ),
-                    if (!isFirstAnswer)
-                      Text(
-                        '*  $answer',
-                        style: AppTextStyles.spanTextStyle.copyWith(
-                          color: const Color(0XFF171717),
+                    ] else ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(
+                          '*  $answer',
+                          style: AppTextStyles.spanTextStyle.copyWith(
+                            fontSize: 17,
+                            color: const Color(0XFF171717),
+                          ),
                         ),
                       ),
+                    ],
                   ],
                 ),
               ),

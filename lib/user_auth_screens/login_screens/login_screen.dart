@@ -87,10 +87,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onSubmitted: (value) =>
                       FocusScope.of(context).requestFocus(Password),
                   decoration: InputDecoration(
-                    hintText: 'Mobile No / Email ID',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    hintText: 'Enter Your Email',
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Colors.grey)),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -100,6 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onSubmitted: (value) =>
                       FocusScope.of(context).requestFocus(loginButton),
                   obscureText: _obscureText,
+                  obscuringCharacter: '*',
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -108,18 +115,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: _togglePasswordVisibility,
                     ),
                     hintText: 'Enter Your Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Colors.grey)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Colors.grey)),
                   ),
                 ),
                 const SizedBox(height: 24),
-                loginState.error != null
-                    ? Text(
-                        loginState.error.toString(),
-                        style: const TextStyle(color: Colors.red),
-                      )
-                    : const SizedBox(),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -172,7 +179,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                       child: const Text(
                         'Login With OTP',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: Colors.red, fontSize: 16),
                       ),
                     ),
                     const SizedBox(
@@ -194,7 +201,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                       child: const Text(
                         'Forgot Password?',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
                       ),
                     ),
                   ],
@@ -204,7 +211,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account? "),
+                    const Text(
+                      "Don't have an account? ",
+                      style: TextStyle(fontSize: 16),
+                    ),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -216,7 +226,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                       child: const Text(
                         'Sign Up',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: Colors.red, fontSize: 16),
                       ),
                     ),
                   ],

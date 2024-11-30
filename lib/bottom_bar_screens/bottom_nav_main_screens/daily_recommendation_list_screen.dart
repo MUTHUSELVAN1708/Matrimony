@@ -4,82 +4,91 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
-import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_partner_data.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
-class MatchesScreen extends ConsumerStatefulWidget {
-  const MatchesScreen({super.key});
+class DailyRecommendationListScreen extends ConsumerStatefulWidget {
+  const DailyRecommendationListScreen({super.key});
 
   @override
-  ConsumerState<MatchesScreen> createState() => _MatchesScreenState();
+  ConsumerState<DailyRecommendationListScreen> createState() =>
+      _MatchesScreenState();
 }
 
-class _MatchesScreenState extends ConsumerState<MatchesScreen> {
+class _MatchesScreenState extends ConsumerState<DailyRecommendationListScreen> {
   @override
   Widget build(BuildContext context) {
-    final allMatchProvider = ref.watch(allMatchesProvider);
-    return allMatchProvider.allMatchList != null &&
-            allMatchProvider.allMatchList!.isNotEmpty
-        ? EnhancedLoadingWrapper(
-            isLoading: ref.read(userManagementProvider).isLoadingForPartner,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  '${allMatchProvider.allMatchList!.length} Matches',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.headingTextstyle,
-                ),
-                Text(
-                  'Based on your Partner preferences',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                    color: Colors.black,
+    final dailyRecommendState = ref.watch(dailyRecommendProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Daily Recommendations ${dailyRecommendState.dailyRecommendList.isNotEmpty ? '(${dailyRecommendState.dailyRecommendList.length})' : ''}',
+          style: const TextStyle(color: AppColors.primaryButtonColor),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppColors.primaryButtonColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: dailyRecommendState.dailyRecommendList.isNotEmpty
+          ? Container(
+              color: Colors.white.withOpacity(0.9),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    'Based on your Partner preferences',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.spanTextStyle
+                        .copyWith(color: Colors.black, fontSize: 18),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context)
-                        .copyWith(scrollbars: false),
-                    child: ListView.builder(
-                      itemCount: allMatchProvider.allMatchList!.length,
-                      itemBuilder: (context, index) {
-                        final matchingData =
-                            allMatchProvider.allMatchList![index];
-                        return MatchCard(match: matchingData);
-                      },
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context)
+                          .copyWith(scrollbars: false),
+                      child: ListView.builder(
+                        itemCount:
+                            dailyRecommendState.dailyRecommendList.length,
+                        itemBuilder: (context, index) {
+                          final dailyRecommend =
+                              dailyRecommendState.dailyRecommendList[index];
+                          return MatchCard(dailyRecommend: dailyRecommend);
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            )
+          : const Center(
+              child: Text(
+                'No Daily Recommendations Available.',
+                style: TextStyle(fontSize: 20),
+              ),
             ),
-          )
-        : const Center(
-            child: Text(
-              'No Matches Available.',
-              style: TextStyle(fontSize: 20),
-            ),
-          );
+    );
   }
 }
 
 class MatchCard extends ConsumerWidget {
-  final Matches match;
+  final DailyRecommend dailyRecommend;
 
   const MatchCard({
     super.key,
-    required this.match,
+    required this.dailyRecommend,
   });
 
   @override
@@ -90,10 +99,10 @@ class MatchCard extends ConsumerWidget {
         children: [
           ClipRRect(
             borderRadius:
-                BorderRadius.circular(4), // Adjust radius for the card
-            child: match.images![0].isNotEmpty
+                BorderRadius.circular(8), // Adjust radius for the card
+            child: dailyRecommend.images.isNotEmpty
                 ? Image.memory(
-                    base64Decode(match.images![0]),
+                    base64Decode(dailyRecommend.images.first),
                     height: MediaQuery.of(context).size.height * 0.3,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -125,14 +134,14 @@ class MatchCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  match.name.toString(),
+                  dailyRecommend.name.toString(),
                   style: AppTextStyles.headingTextstyle.copyWith(
                       color: AppColors.primaryButtonTextColor,
                       fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '#${match.uniqueId ?? ''}',
+                  '#${dailyRecommend.uniqueId ?? ''}',
                   style: AppTextStyles.spanTextStyle.copyWith(
                       color: AppColors.primaryButtonTextColor, fontSize: 14),
                 ),
@@ -150,7 +159,7 @@ class MatchCard extends ConsumerWidget {
                       ref.watch(getImageApiProvider);
                   final partnerDetails = await ref
                       .read(userManagementProvider.notifier)
-                      .getPartnerDetails(match.id ?? 0);
+                      .getPartnerDetails(dailyRecommend.userId ?? 0);
                   if (getImageApiProviderState.data != null &&
                       getImageApiProviderState.data!.paymentStatus) {
                     Navigator.push(
@@ -159,6 +168,7 @@ class MatchCard extends ConsumerWidget {
                             builder: (context) => AllMatchesDetailsScreen(
                                   userPartnerData:
                                       partnerDetails ?? UserPartnerData(),
+                                  isDailyRecommend: true,
                                 )));
                   } else {
                     Navigator.push(
@@ -191,23 +201,26 @@ class MatchCard extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  if (match.occupation != null && match.occupation != '') ...[
-                    _buildInfoChip(match.occupation!),
+                  if (dailyRecommend.occupation != null &&
+                      dailyRecommend.occupation != '') ...[
+                    _buildInfoChip(dailyRecommend.occupation!),
                     const SizedBox(width: 8),
                   ],
-                  if (match.age != null) ...[
-                    _buildInfoChip('${match.age} Yrs'),
+                  if (dailyRecommend.age != null) ...[
+                    _buildInfoChip('${dailyRecommend.age} Yrs'),
                     const SizedBox(width: 8),
                   ],
-                  if (match.caste != null && match.caste != '') ...[
-                    _buildInfoChip(match.caste!),
+                  if (dailyRecommend.caste != null &&
+                      dailyRecommend.caste != '') ...[
+                    _buildInfoChip(dailyRecommend.caste!),
                     const SizedBox(width: 8),
                   ],
-                  if (match.state != null &&
-                      match.state != '' &&
-                      match.city != null &&
-                      match.city != '') ...[
-                    _buildInfoChip('${match.city},${match.state!}'),
+                  if (dailyRecommend.state != null &&
+                      dailyRecommend.state != '' &&
+                      dailyRecommend.city != null &&
+                      dailyRecommend.city != '') ...[
+                    _buildInfoChip(
+                        '${dailyRecommend.city},${dailyRecommend.state!}'),
                     const SizedBox(width: 8),
                   ],
                 ],

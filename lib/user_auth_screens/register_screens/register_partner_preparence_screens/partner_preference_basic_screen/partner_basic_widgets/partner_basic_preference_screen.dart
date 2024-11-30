@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
 import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
@@ -13,7 +14,7 @@ import 'package:matrimony/user_register_riverpods/riverpod/create_partner_prefer
 import 'package:matrimony/user_register_riverpods/riverpod/preference_input_notifier.dart';
 
 class RegisterPartnerBasicPreferenceScreen extends ConsumerStatefulWidget {
-  const RegisterPartnerBasicPreferenceScreen({Key? key}) : super(key: key);
+  const RegisterPartnerBasicPreferenceScreen({super.key});
 
   @override
   ConsumerState<RegisterPartnerBasicPreferenceScreen> createState() =>
@@ -164,41 +165,42 @@ class _RegisterPartnerBasicPreferenceScreenState
                     },
                   ),
                   const SizedBox(height: 10),
-                  motherTongueOther
-                      ? TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              selectedMotherTongue.clear();
-                              selectedMotherTongue.add(motherTongueCtrl.text);
-                            });
-                          },
-                          controller: motherTongueCtrl,
-                          decoration: InputDecoration(
-                              hintText: 'Mother Tongue',
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      motherTongueOther = false;
-                                    });
-                                  },
-                                  icon: const Icon(Icons.close)),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15))),
-                        )
-                      : AnyCustomPreferenceDropdown(
-                          other: true,
-                          value: selectedMotherTongue,
-                          hint: 'Mother Tongue',
-                          items: PartnerPreferenceConstData.motherTongueOptions,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedMotherTongue = value;
-                              if (value[0] == 'Other') {
-                                motherTongueOther = true;
-                              }
-                            });
-                          },
-                        ),
+                  // motherTongueOther
+                  //     ? TextFormField(
+                  //         onChanged: (value) {
+                  //           setState(() {
+                  //             selectedMotherTongue.clear();
+                  //             selectedMotherTongue.add(motherTongueCtrl.text);
+                  //           });
+                  //         },
+                  //         controller: motherTongueCtrl,
+                  //         decoration: InputDecoration(
+                  //             hintText: 'Mother Tongue',
+                  //             suffixIcon: IconButton(
+                  //                 onPressed: () {
+                  //                   setState(() {
+                  //                     motherTongueOther = false;
+                  //                   });
+                  //                 },
+                  //                 icon: const Icon(Icons.close)),
+                  //             border: OutlineInputBorder(
+                  //                 borderRadius: BorderRadius.circular(15))),
+                  //       )
+                  //     :
+                  AnyCustomPreferenceDropdown(
+                    other: true,
+                    value: selectedMotherTongue,
+                    hint: 'Mother Tongue',
+                    items: PartnerPreferenceConstData.motherTongueOptions,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedMotherTongue = value;
+                        if (value[0] == 'Other') {
+                          motherTongueOther = true;
+                        }
+                      });
+                    },
+                  ),
                   const SizedBox(height: 10),
                   PreferenceOptionalCustomDropdown(
                     value: selectedPhysicalStatus,
@@ -213,7 +215,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                   const SizedBox(height: 10),
                   PreferenceOptionalCustomDropdown(
                     value: selectedEatingHabits,
-                    hint: 'Eating Habits(Optional)',
+                    hint: 'Eating Habits',
                     items: PartnerPreferenceConstData.eatingHabitsOptions,
                     onChanged: (value) {
                       setState(() {
@@ -224,7 +226,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                   const SizedBox(height: 10),
                   PreferenceOptionalCustomDropdown(
                     value: selectedDrinkingHabits,
-                    hint: 'Drinking Habits(Optional)',
+                    hint: 'Drinking Habits',
                     items: PartnerPreferenceConstData.drinkingHabitsOptions,
                     onChanged: (value) {
                       setState(() {
@@ -235,7 +237,7 @@ class _RegisterPartnerBasicPreferenceScreenState
                   const SizedBox(height: 10),
                   PreferenceOptionalCustomDropdown(
                     value: selectedSmokingHabits,
-                    hint: 'Smoking Habits(Optional)',
+                    hint: 'Smoking Habits',
                     items: PartnerPreferenceConstData.smokingHabitsOptions,
                     onChanged: (value) {
                       setState(() {
@@ -256,32 +258,45 @@ class _RegisterPartnerBasicPreferenceScreenState
                             ?.replaceAll('[', '')
                             .replaceAll(']', '')
                             .split('-');
-                        inputStates.updatePreferenceInput(
-                            userId: userId,
-                            fromAge: age != null ? int.tryParse(age[0]) : null,
-                            toAge: age != null ? int.tryParse(age[1]) : null,
-                            fromHeight:
-                                height != null ? height[0].trim() : null,
-                            toHeight: height != null ? height[1].trim() : null,
-                            motherTongue: selectedMotherTongue.firstOrNull,
-                            maritalStatus: selectedMaritalStatus.firstOrNull,
-                            physicalStatus: selectedPhysicalStatus.firstOrNull,
-                            drinkingHabits: selectedDrinkingHabits.firstOrNull,
-                            eatingHabits: selectedEatingHabits.firstOrNull,
-                            smokingHabits: selectedSmokingHabits.firstOrNull);
+                        if (age != null &&
+                            height != null &&
+                            selectedMotherTongue.firstOrNull != null &&
+                            selectedMaritalStatus.firstOrNull != null &&
+                            selectedPhysicalStatus.firstOrNull != null &&
+                            selectedDrinkingHabits.firstOrNull != null &&
+                            selectedEatingHabits.firstOrNull != null &&
+                            selectedSmokingHabits.firstOrNull != null) {
+                          inputStates.updatePreferenceInput(
+                              userId: userId,
+                              fromAge:
+                                  age != null ? int.tryParse(age[0]) : null,
+                              toAge: age != null ? int.tryParse(age[1]) : null,
+                              fromHeight:
+                                  height != null ? height[0].trim() : null,
+                              toHeight:
+                                  height != null ? height[1].trim() : null,
+                              motherTongue: selectedMotherTongue.firstOrNull,
+                              maritalStatus: selectedMaritalStatus.firstOrNull,
+                              physicalStatus:
+                                  selectedPhysicalStatus.firstOrNull,
+                              drinkingHabits:
+                                  selectedDrinkingHabits.firstOrNull,
+                              eatingHabits: selectedEatingHabits.firstOrNull,
+                              smokingHabits: selectedSmokingHabits.firstOrNull);
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const PartnerReligiousPreferenceScreen(),
-                          ),
-                        );
-                        //                           ToastDialog.showToast(
-                        // context,
-                        // message: 'Your operation was completed successfully!',
-                        // isSuccess: true,
-                        //   );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const PartnerReligiousPreferenceScreen(),
+                            ),
+                          );
+                        } else {
+                          CustomSnackBar.show(
+                              context: context,
+                              message: 'Please Select All Fields Mandatory!',
+                              isError: true);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,

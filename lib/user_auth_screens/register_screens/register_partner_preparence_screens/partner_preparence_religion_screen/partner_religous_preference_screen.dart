@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/common/widget/preference_any_dialogBox.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/location_widget/common_location_dropdown.dart';
@@ -27,6 +28,7 @@ class _PartnerReligiousPreferenceScreenState
   List<String> selectedRassi = [];
 
   final List<String> starList = [
+    'Any',
     'Ashwini (அஸ்வினி)',
     'Bharani (பரணி)',
     'Krittika (கிருத்திகை)',
@@ -45,6 +47,7 @@ class _PartnerReligiousPreferenceScreenState
   ];
 
   final List<String> doshamList = [
+    'Any',
     'Yes',
     'No',
     'Don\'t Know',
@@ -63,6 +66,7 @@ class _PartnerReligiousPreferenceScreenState
   ];
 
   final List<String> rassiList = [
+    'Any',
     "Aries",
     "Taurus",
     "Gemini",
@@ -165,48 +169,120 @@ class _PartnerReligiousPreferenceScreenState
                   ),
                   const SizedBox(height: 16),
 
-                  religionOther
-                      ? TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              selectedReligion.clear();
-                              selectedReligion.add(religionCtrl.text);
-                            });
-                          },
-                          controller: religionCtrl,
-                          decoration: InputDecoration(
-                              hintText: 'Religion',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      religionOther = false;
-                                    });
-                                  },
-                                  icon: const Icon(Icons.close))),
-                        )
-                      : PreferenceLocationDropdown(
+                  // religionOther
+                  //     ? TextFormField(
+                  //         onChanged: (value) {
+                  //           setState(() {
+                  //             selectedReligion.clear();
+                  //             selectedReligion.add(religionCtrl.text);
+                  //           });
+                  //         },
+                  //         controller: religionCtrl,
+                  //         decoration: InputDecoration(
+                  //             hintText: 'Religion',
+                  //             border: OutlineInputBorder(
+                  //                 borderRadius: BorderRadius.circular(15)),
+                  //             suffixIcon: IconButton(
+                  //                 onPressed: () {
+                  //                   setState(() {
+                  //                     religionOther = false;
+                  //                   });
+                  //                 },
+                  //                 icon: const Icon(Icons.close))),
+                  //       )
+                  //     :
+                  PreferenceLocationDropdown(
+                    other: true,
+                    showSearch: true,
+                    value: selectedReligion,
+                    hint: "Religion",
+                    items: [
+                      ...religionState.data
+                          .map((religiousModel) => religiousModel.religion)
+                    ],
+                    onChanged: (value) async {
+                      setState(() {
+                        selectedReligion = value;
+                        selectedCaste.clear();
+                        selectedSubCaste.clear();
+                        if (value[0] == 'Other') {
+                          religionOther = true;
+                        }
+                      });
+
+                      int? stateId;
+                      for (var e in religionState.data) {
+                        if (e.religion == selectedReligion[0]) {
+                          stateId = e.id;
+                          break;
+                        }
+                      }
+
+                      print("Selected State ID: $stateId");
+                      if (stateId != null) {
+                        await ref
+                            .read(religiousProvider.notifier)
+                            .getCasteData('$stateId');
+                      } else {
+                        print("No state ID found for the selected country.");
+                      }
+                    },
+                  ),
+
+                  selectedReligion.isEmpty ||
+                          religionState.casteList.isEmpty ||
+                          selectedReligion.first == 'Any'
+                      ? SizedBox()
+                      : const SizedBox(height: 10),
+
+                  selectedReligion.isEmpty ||
+                          religionState.casteList.isEmpty ||
+                          selectedReligion.first == 'Any'
+                      ? SizedBox()
+                      :
+                      // casteOther
+                      // ? TextFormField(
+                      //     onChanged: (value) {
+                      //       setState(() {
+                      //         selectedCaste.clear();
+                      //         selectedCaste.add(casteCtrl.text);
+                      //       });
+                      //     },
+                      //     controller: casteCtrl,
+                      //     decoration: InputDecoration(
+                      //         hintText: 'Caste',
+                      //         border: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(15)),
+                      //         suffixIcon: IconButton(
+                      //             onPressed: () {
+                      //               setState(() {
+                      //                 casteOther = false;
+                      //               });
+                      //             },
+                      //             icon: const Icon(Icons.close))),
+                      //   )
+                      // :
+                      PreferenceLocationDropdown(
                           other: true,
                           showSearch: true,
-                          value: selectedReligion,
-                          hint: "Religion",
-                          items: religionState.data
-                              .map((religiousModel) => religiousModel.religion)
-                              .toList(),
+                          value: selectedCaste,
+                          hint: "Caste",
+                          items: [
+                            ...religionState.casteList
+                                .map((religiousModel) => religiousModel.caste)
+                          ],
                           onChanged: (value) async {
                             setState(() {
-                              selectedReligion = value;
-                              selectedCaste.clear();
+                              selectedCaste = value;
                               selectedSubCaste.clear();
                               if (value[0] == 'Other') {
-                                religionOther = true;
+                                casteOther = true;
                               }
                             });
 
                             int? stateId;
-                            for (var e in religionState.data) {
-                              if (e.religion == selectedReligion[0]) {
+                            for (var e in religionState.casteList) {
+                              if (e.caste == selectedCaste[0]) {
                                 stateId = e.id;
                                 break;
                               }
@@ -216,81 +292,13 @@ class _PartnerReligiousPreferenceScreenState
                             if (stateId != null) {
                               await ref
                                   .read(religiousProvider.notifier)
-                                  .getCasteData('$stateId');
+                                  .getSubCasteData("$stateId");
                             } else {
                               print(
                                   "No state ID found for the selected country.");
                             }
                           },
                         ),
-
-                  selectedReligion.isEmpty ||
-                          religionState.casteList.isEmpty ||
-                          selectedReligion.first == 'Any'
-                      ? SizedBox()
-                      : const SizedBox(height: 10),
-
-                  selectedReligion.isEmpty ||
-                          religionState.casteList.isEmpty ||
-                          selectedReligion.first == 'Any'
-                      ? SizedBox()
-                      : casteOther
-                          ? TextFormField(
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedCaste.clear();
-                                  selectedCaste.add(casteCtrl.text);
-                                });
-                              },
-                              controller: casteCtrl,
-                              decoration: InputDecoration(
-                                  hintText: 'Caste',
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                  suffixIcon: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          casteOther = false;
-                                        });
-                                      },
-                                      icon: const Icon(Icons.close))),
-                            )
-                          : PreferenceLocationDropdown(
-                              other: true,
-                              showSearch: true,
-                              value: selectedCaste,
-                              hint: "Caste",
-                              items: religionState.casteList
-                                  .map((religiousModel) => religiousModel.caste)
-                                  .toList(),
-                              onChanged: (value) async {
-                                setState(() {
-                                  selectedCaste = value;
-                                  selectedSubCaste.clear();
-                                  if (value[0] == 'Other') {
-                                    casteOther = true;
-                                  }
-                                });
-
-                                int? stateId;
-                                for (var e in religionState.casteList) {
-                                  if (e.caste == selectedCaste[0]) {
-                                    stateId = e.id;
-                                    break;
-                                  }
-                                }
-
-                                print("Selected State ID: $stateId");
-                                if (stateId != null) {
-                                  await ref
-                                      .read(religiousProvider.notifier)
-                                      .getSubCasteData("$stateId");
-                                } else {
-                                  print(
-                                      "No state ID found for the selected country.");
-                                }
-                              },
-                            ),
                   selectedCaste.isEmpty ||
                           religionState.subCasteList.isEmpty ||
                           selectedCaste.first == 'Any'
@@ -300,50 +308,51 @@ class _PartnerReligiousPreferenceScreenState
                           religionState.subCasteList.isEmpty ||
                           selectedCaste.first == 'Any'
                       ? SizedBox()
-                      : subCasteOther
-                          ? TextFormField(
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedSubCaste.clear();
-                                  selectedSubCaste.add(subCasteCtrl.text);
-                                });
-                              },
-                              controller: subCasteCtrl,
-                              decoration: InputDecoration(
-                                  hintText: 'Sub Caste',
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                  suffixIcon: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          subCasteOther = false;
-                                        });
-                                      },
-                                      icon: const Icon(Icons.close))),
-                            )
-                          : PreferenceLocationDropdown(
-                              other: true,
-                              showSearch: true,
-                              value: selectedSubCaste,
-                              hint: "SubCaste",
-                              items: religionState.subCasteList
-                                  .map(
-                                      (subCasteModel) => subCasteModel.subCaste)
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedSubCaste = value;
-                                  if (value[0] == 'Other') {
-                                    subCasteOther = true;
-                                  }
-                                });
-                              },
-                            ),
+                      :
+                      // subCasteOther
+                      //         ? TextFormField(
+                      //             onChanged: (value) {
+                      //               setState(() {
+                      //                 selectedSubCaste.clear();
+                      //                 selectedSubCaste.add(subCasteCtrl.text);
+                      //               });
+                      //             },
+                      //             controller: subCasteCtrl,
+                      //             decoration: InputDecoration(
+                      //                 hintText: 'Sub Caste',
+                      //                 border: OutlineInputBorder(
+                      //                     borderRadius: BorderRadius.circular(15)),
+                      //                 suffixIcon: IconButton(
+                      //                     onPressed: () {
+                      //                       setState(() {
+                      //                         subCasteOther = false;
+                      //                       });
+                      //                     },
+                      //                     icon: const Icon(Icons.close))),
+                      //           )
+                      //         :
+                      PreferenceLocationDropdown(
+                          other: true,
+                          showSearch: true,
+                          value: selectedSubCaste,
+                          hint: "SubCaste",
+                          items: religionState.subCasteList
+                              .map((subCasteModel) => subCasteModel.subCaste)
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedSubCaste = value;
+                              if (value[0] == 'Other') {
+                                subCasteOther = true;
+                              }
+                            });
+                          },
+                        ),
                   const SizedBox(height: 10),
 
                   AnyCustomPreferenceDropdown(
                     value: selectedStar,
-                    hint: "Star(Optional)",
+                    hint: "Star",
                     items: starList,
                     onChanged: (value) {
                       setState(() {
@@ -354,7 +363,7 @@ class _PartnerReligiousPreferenceScreenState
                   const SizedBox(height: 10),
                   AnyCustomPreferenceDropdown(
                     value: selectedRassi,
-                    hint: "Rassi(Optional)",
+                    hint: "Rassi",
                     items: rassiList,
                     onChanged: (value) {
                       setState(() {
@@ -381,23 +390,40 @@ class _PartnerReligiousPreferenceScreenState
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        ref
-                            .read(preferenceInputProvider.notifier)
-                            .updatePreferenceInput(
-                                religion: selectedReligion.firstOrNull,
-                                caste: selectedCaste.firstOrNull,
-                                subcaste: selectedSubCaste.firstOrNull,
-                                star: selectedStar.firstOrNull,
-                                rassi: selectedRassi.firstOrNull,
-                                dosham: selectedDosham.firstOrNull);
+                        if (selectedReligion.firstOrNull != null &&
+                            (selectedReligion.firstOrNull != 'Any'
+                                ? selectedCaste.firstOrNull != null
+                                : true) &&
+                            (selectedCaste.firstOrNull != 'Any' &&
+                                    selectedReligion.firstOrNull != 'Any'
+                                ? selectedSubCaste.firstOrNull != null
+                                : true) &&
+                            selectedStar.firstOrNull != null &&
+                            selectedRassi.firstOrNull != null) {
+                          ref
+                              .read(preferenceInputProvider.notifier)
+                              .updatePreferenceInput(
+                                  religion: selectedReligion.firstOrNull,
+                                  caste: selectedCaste.firstOrNull ?? 'Any',
+                                  subcaste:
+                                      selectedSubCaste.firstOrNull ?? 'Any',
+                                  star: selectedStar.firstOrNull,
+                                  rassi: selectedRassi.firstOrNull,
+                                  dosham: selectedDosham.firstOrNull);
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const PartnerProfessionalScreen(),
-                          ),
-                        );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const PartnerProfessionalScreen(),
+                            ),
+                          );
+                        } else {
+                          CustomSnackBar.show(
+                              context: context,
+                              message: 'Please Select All Fields Mandatory!',
+                              isError: true);
+                        }
                         //                       ToastDialog.showToast(
                         //   context,
                         //   message: 'Something went wrong. Please try again.',

@@ -316,30 +316,45 @@ class _RegisterUserPersonalDetailsScreenState
                         if (registerStatenotifier.isLoading) {
                         } else {
                           if (selectedGender == null) {
-                            _showErrorDialog('Please select your gender');
+                            CustomSnackBar.show(
+                                context: context,
+                                message: 'Please Select Your Gender!',
+                                isError: true);
                             return;
                           }
                           if (dateOfBirth == null) {
-                            _showErrorDialog(
-                                'Please select your date of birth');
+                            CustomSnackBar.show(
+                                context: context,
+                                message: 'Please Select Your Date Of Birth!',
+                                isError: true);
                             return;
                           }
                           if (height == null || height!.isEmpty) {
-                            _showErrorDialog('Please enter your height');
+                            CustomSnackBar.show(
+                                context: context,
+                                message: 'Please Select Your Height!',
+                                isError: true);
                             return;
                           }
                           if (weight == null || weight!.isEmpty) {
-                            _showErrorDialog('Please enter your weight');
+                            CustomSnackBar.show(
+                                context: context,
+                                message: 'Please Select Your Weight!',
+                                isError: true);
                             return;
                           }
                           if (physicalStatus == null) {
-                            _showErrorDialog(
-                                'Please select your physical status');
+                            CustomSnackBar.show(
+                                context: context,
+                                message: 'Please Select Your Physical Status!',
+                                isError: true);
                             return;
                           }
                           if (maritalStatus == null) {
-                            _showErrorDialog(
-                                'Please select your marital status');
+                            CustomSnackBar.show(
+                                context: context,
+                                message: 'Please Select Your Marital Status!',
+                                isError: true);
                             return;
                           }
 

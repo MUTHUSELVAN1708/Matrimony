@@ -10,12 +10,19 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
+import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_partner_data.dart';
 import 'package:matrimony/profile/main_profile_screen.dart';
+import 'package:matrimony/profile/profile.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_user_photo_upload_screens/register_user_photo_upload_screen.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_user_proof_screen.dart';
+import 'package:matrimony/user_auth_screens/register_star_details/heroscope_add_details_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_bar_screen.dart';
 import 'circularPercentIndicator.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class NewHomeScreen extends ConsumerStatefulWidget {
   const NewHomeScreen({super.key});
@@ -43,6 +50,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     fetchAllMatches();
     fetchImage();
     fetchDailyRecommendations();
+    fetchInterests();
+    fetchPercentage();
   }
 
   Future<void> fetchAllMatches() async {
@@ -52,6 +61,15 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
         isAllMatchesLoading = false;
       });
     }
+  }
+
+  Future<void> fetchPercentage() async {
+    await ref.read(completionProvider.notifier).getIncompleteFields();
+  }
+
+  Future<void> fetchInterests() async {
+    await ref.read(interestModelProvider.notifier).getReceivedInterests();
+    await ref.read(interestModelProvider.notifier).getSentInterests();
   }
 
   Future<void> fetchImage() async {
@@ -64,7 +82,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   }
 
   Future<void> fetchDailyRecommendations() async {
-    await ref.read(dailyRecommentProvider.notifier).dailyRecommentFetchData();
+    await ref.read(dailyRecommendProvider.notifier).fetchDailyRecommendations();
     if (mounted) {
       setState(() {
         isDailyRecommendLoading = false;
@@ -167,11 +185,16 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                         ],
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.menu, color: Colors.white),
-                      onPressed: () {
-                        _scaffoldKey.currentState?.openEndDrawer();
-                      },
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(6)),
+                      child: GestureDetector(
+                          onTap: () {
+                            _scaffoldKey.currentState?.openEndDrawer();
+                          },
+                          child: const Icon(Icons.menu, color: Colors.white)),
                     ),
                   ],
                 ),
@@ -237,7 +260,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   }
 
   Widget _buildDailyRecommendations(BuildContext context, WidgetRef ref) {
-    final dailyRecommentsState = ref.watch(dailyRecommentProvider);
+    final dailyRecommendsState = ref.watch(dailyRecommendProvider);
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.topCenter,
@@ -271,22 +294,18 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 ),
                 height: MediaQuery.of(context).size.height * 0.24,
                 width: MediaQuery.of(context).size.width - 20,
-                child: dailyRecommentsState.error != null
+                child: dailyRecommendsState.error != null
                     ? Center(
-                        child: Text(dailyRecommentsState.error.toString()),
+                        child: Text(dailyRecommendsState.error.toString()),
                       )
-                    : dailyRecommentsState.isLoading || isDailyRecommendLoading
+                    : dailyRecommendsState.isLoading || isDailyRecommendLoading
                         ? const Center(child: CircularProgressIndicator())
-                        : dailyRecommentsState.dailyRecommentList == null ||
-                                (dailyRecommentsState.dailyRecommentList !=
-                                        null &&
-                                    dailyRecommentsState
-                                        .dailyRecommentList!.isEmpty)
+                        : (dailyRecommendsState.dailyRecommendList.isEmpty)
                             ? const Center(
                                 child:
                                     Text('No Daily Recommendation Available'))
                             : _buildRecommendationsList(
-                                dailyRecommentsState, context),
+                                dailyRecommendsState, context),
               ),
             ],
           ),
@@ -302,14 +321,14 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   }
 
   Widget _buildRecommendationsList(
-      dynamic dailyRecommentsState, BuildContext context) {
+      dynamic dailyRecommendsState, BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.all(16),
-      itemCount: dailyRecommentsState.dailyRecommentList!.length,
+      itemCount: dailyRecommendsState.dailyRecommendList!.length,
       itemBuilder: (context, index) {
-        final dailyRecommentData =
-            dailyRecommentsState.dailyRecommentList![index];
+        final dailyRecommendData =
+            dailyRecommendsState.dailyRecommendList![index];
         return Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Column(
@@ -326,7 +345,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   ),
                   child: Image.memory(
                     base64Decode(
-                      dailyRecommentData.images![0]
+                      dailyRecommendData.images![0]
                           .toString()
                           .replaceAll('\n', '')
                           .replaceAll('\r', ''),
@@ -354,7 +373,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   child: Column(
                     children: [
                       Text(
-                        dailyRecommentData.name.toString(),
+                        dailyRecommendData.name.toString(),
                         style: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
@@ -363,7 +382,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        '${dailyRecommentData.age.toString()} Yrs',
+                        '${dailyRecommendData.age.toString()} Yrs',
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 10,
@@ -455,27 +474,27 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                                   final partnerDetails = await ref
                                       .read(userManagementProvider.notifier)
                                       .getPartnerDetails(matching.id ?? 0);
-                                  // if (getImageApiProviderState.data != null &&
-                                  //     getImageApiProviderState
-                                  //         .data!.paymentStatus) {
-                                  if (mounted) {
+                                  if (getImageApiProviderState.data != null &&
+                                      getImageApiProviderState
+                                          .data!.paymentStatus) {
+                                    if (mounted) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AllMatchesDetailsScreen(
+                                                    userPartnerData:
+                                                        partnerDetails ??
+                                                            UserPartnerData(),
+                                                  )));
+                                    }
+                                  } else {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                AllMatchesDetailsScreen(
-                                                  userPartnerData:
-                                                      partnerDetails ??
-                                                          UserPartnerData(),
-                                                )));
+                                                const PlanUpgradeScreen()));
                                   }
-                                  // } else {
-                                  //   Navigator.push(
-                                  //       context,
-                                  //       MaterialPageRoute(
-                                  //           builder: (context) =>
-                                  //               const PlanUpgradeScreen()));
-                                  // }
                                 },
                                 child: Container(
                                   width: 100,
@@ -560,6 +579,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   }
 
   Widget _buildCompleteProfile() {
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
+    final incompleteFields = ref.watch(completionProvider).incompleteFields;
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -600,29 +621,120 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   ),
                 ],
               ),
-              const CircularPercentIndicator(
-                percent: 0.75,
+              CircularPercentIndicator(
+                percent: incompleteFields.completionPercentage / 100,
                 size: 30,
                 strokeWidth: 2,
-              ),
+              )
             ],
           ),
           const SizedBox(
-            height: 4,
+            height: 8,
           ),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              _buildProfileTask('Add Your Photos', 'assets/add_icon.svg'),
-              _buildProfileTask('Add Your ID Card', 'assets/add_icon.svg'),
-              _buildProfileTask('Add Star', 'assets/add_icon.svg'),
-              _buildProfileTask('Add Your Aadhar Card', 'assets/add_icon.svg'),
-              _buildProfileTask('Add Horoscope', 'assets/add_icon.svg'),
-              _buildProfileTask(
-                  'Add Family Details', 'assets/add_one_icon.svg'),
-              _buildProfileTask(
-                  'Add Institution Details', 'assets/add_one_icon.svg'),
+              if (incompleteFields.uploadPhoto)
+                _buildProfileTask(
+                  'Add Your Photos',
+                  'assets/add_icon.svg',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegisterUserPhotoUploadScreen(
+                          isEditPhoto: true,
+                          images: getImageApiProviderState.data?.images,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              if (incompleteFields.govtIdProof)
+                _buildProfileTask(
+                  'Add Your ID Card',
+                  'assets/add_icon.svg',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegisterUserGovernmentProof(
+                          title: 'update',
+                          userDetails:
+                              ref.watch(userManagementProvider).userDetails,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              if (incompleteFields.religious)
+                _buildProfileTask(
+                  'Add Religion',
+                  'assets/add_icon.svg',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+              if (incompleteFields.horoscope)
+                _buildProfileTask(
+                  'Add Horoscope',
+                  'assets/add_icon.svg',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HoroscopeAddDetailScreen(
+                          onPop: (value) {},
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              if (incompleteFields.location)
+                _buildProfileTask(
+                  'Add Location',
+                  'assets/add_icon.svg',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+              if (incompleteFields.professional)
+                _buildProfileTask(
+                  'Add Institution Details',
+                  'assets/add_one_icon.svg',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+              if (incompleteFields.registration)
+                _buildProfileTask(
+                  'Add Personal Details',
+                  'assets/add_icon.svg',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
             ],
           ),
         ],
@@ -630,46 +742,98 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     );
   }
 
-  Widget _buildProfileTask(String title, String icon) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEFEFEF),
-        // border: Border.all(color: Colors.red),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            icon,
-            width: 16,
-            height: 16,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.black54,
-              fontSize: 12,
+  Widget _buildProfileTask(String title, String icon, Function onTap) {
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEFEFEF),
+          // border: Border.all(color: Colors.red),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              icon,
+              width: 16,
+              height: 16,
             ),
-          ),
-        ],
+            const SizedBox(width: 4),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black54,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   // Widget _buildDownloadBanner() {
+
   Widget _buildSuccessStory(BuildContext context) {
+    final List<String> imagePaths = [
+      'assets/image/successimage.png',
+      'assets/image/successimage.png',
+      'assets/image/successimage.png',
+    ];
+
     return Container(
       margin: const EdgeInsets.all(16),
       height: MediaQuery.of(context).size.height * 0.50,
       decoration: BoxDecoration(
-        image: const DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage('assets/image/successimage.png')),
         borderRadius: BorderRadius.circular(8),
-        color: Colors.pink[100], // Placeholder color
+      ),
+      child: Stack(
+        children: [
+          CarouselSlider.builder(
+            itemCount: imagePaths.length,
+            itemBuilder: (context, index, realIndex) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  imagePaths[index],
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
+              );
+            },
+            options: CarouselOptions(
+              height: MediaQuery.of(context).size.height * 0.50,
+              viewportFraction: 1.0,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 3),
+              enableInfiniteScroll: true,
+              onPageChanged: (index, reason) {},
+            ),
+          ),
+
+          // Dots Indicator
+          Positioned(
+            bottom: 10,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(imagePaths.length, (index) {
+                return Container(
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.8), // Indicator color
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
       ),
     );
   }

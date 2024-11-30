@@ -78,7 +78,7 @@ class UserDetails extends Equatable {
   final String? motherOccupation;
   final int? noOfBrothers;
   final String? brotherMarried;
-  final String? noOfSisters;
+  final int? noOfSisters;
   final String? sisterMarried;
 
   const UserDetails(
@@ -240,7 +240,7 @@ class UserDetails extends Equatable {
     String? motherOccupation,
     int? noOfBrothers,
     String? brotherMarried,
-    String? noOfSisters,
+    int? noOfSisters,
     String? sisterMarried,
   }) {
     return UserDetails(

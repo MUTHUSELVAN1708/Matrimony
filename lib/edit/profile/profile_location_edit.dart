@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/providers/location_provider.dart';
+import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
 import 'package:matrimony/edit/profile/state/location_state.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
@@ -457,6 +458,7 @@ class _ProfessionalInformationDetailsScreenState
           final result = await ref
               .read(locationProviderEdit.notifier)
               .updateLocationDetails();
+          ref.read(completionProvider.notifier).getIncompleteFields();
           ref
               .read(userManagementProvider.notifier)
               .updateLocationDetails(locationState);

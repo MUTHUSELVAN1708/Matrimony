@@ -109,68 +109,69 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              countryOther
-                  ? TextFormField(
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCountry.clear();
-                          selectedCountry.add(countryCtrl.text);
-                        });
-                      },
-                      controller: countryCtrl,
-                      decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  countryOther = false;
-                                });
-                              },
-                              icon: const Icon(Icons.close)),
-                          hintText: 'Country',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15))),
-                    )
-                  : PreferenceLocationDropdown(
-                      other: true,
-                      showSearch: true,
-                      value: selectedCountry.isNotEmpty ? selectedCountry : [],
-                      hint: "Country",
-                      // items: countries,
-                      items: countryState.countryList
-                          .map((e) => e.countrys)
-                          .toList(),
-                      onChanged: (value) async {
-                        // Update the selected country first
-                        setState(() {
-                          selectedCountry = value;
-                          selectedState.clear();
-                          selectedCity.clear();
-                          if (value[0] == 'Other') {
-                            countryOther = true;
-                          }
-                        });
+              // countryOther
+              //     ? TextFormField(
+              //         onChanged: (value) {
+              //           setState(() {
+              //             selectedCountry.clear();
+              //             selectedCountry.add(countryCtrl.text);
+              //           });
+              //         },
+              //         controller: countryCtrl,
+              //         decoration: InputDecoration(
+              //             suffixIcon: IconButton(
+              //                 onPressed: () {
+              //                   setState(() {
+              //                     countryOther = false;
+              //                   });
+              //                 },
+              //                 icon: const Icon(Icons.close)),
+              //             hintText: 'Country',
+              //             border: OutlineInputBorder(
+              //                 borderRadius: BorderRadius.circular(15))),
+              //       )
+              //     :
+              PreferenceLocationDropdown(
+                  other: true,
+                  showSearch: true,
+                  value: selectedCountry.isNotEmpty ? selectedCountry : [],
+                  hint: "Country",
+                  // items: countries,
+                  items: [
+                    ...countryState.countryList.map((e) => e.countrys).toList()
+                  ],
+                  onChanged: (value) async {
+                    // Update the selected country first
+                    setState(() {
+                      selectedCountry = value;
+                      selectedState.clear();
+                      selectedCity.clear();
+                      if (value[0] == 'Other') {
+                        countryOther = true;
+                      }
+                    });
 
-                        int? stateId;
-                        for (var e in countryState.countryList) {
-                          if (selectedCountry.isNotEmpty) {
-                            if (e.countrys == selectedCountry[0]) {
-                              stateId = e.id;
-                              break;
-                            }
-                          }
+                    int? stateId;
+                    for (var e in countryState.countryList) {
+                      if (selectedCountry.isNotEmpty) {
+                        if (e.countrys == selectedCountry[0]) {
+                          stateId = e.id;
+                          break;
                         }
+                      }
+                    }
 
-                        print("Selected State ID: $stateId");
+                    print("Selected State ID: $stateId");
 
-                        // Ensure stateId is not null before calling getStateData
-                        if (stateId != null) {
-                          await ref
-                              .read(locationProvider.notifier)
-                              .getStateData(stateId);
-                        } else {
-                          print("No state ID found for the selected country.");
-                        }
-                      }),
+                    // Ensure stateId is not null before calling getStateData
+                    if (stateId != null) {
+                      await ref
+                          .read(locationProvider.notifier)
+                          .getStateData(stateId);
+                    } else {
+                      print("No state ID found for the selected country.");
+                    }
+                  }),
               selectedCountry.isEmpty ||
                       countryState.stateList.isEmpty ||
                       selectedCountry[0] == 'Any'
@@ -182,109 +183,116 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                       countryState.stateList.isEmpty ||
                       selectedCountry[0] == 'Any'
                   ? SizedBox()
-                  : stateOther
-                      ? TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              selectedState.clear();
-                              selectedState.add(stateCtrl.text);
-                            });
-                          },
-                          controller: stateCtrl,
-                          decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      stateOther = false;
-                                    });
-                                  },
-                                  icon: const Icon(Icons.close)),
-                              hintText: 'State',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15))),
-                        )
-                      : PreferenceLocationDropdown(
-                          other: true,
-                          showSearch: true,
-                          value: selectedState.isEmpty ? selectedState : [],
-                          hint: "State",
-                          items: countryState.stateList
-                              .map((e) => e.states)
-                              .toList(),
-                          onChanged: (value) async {
-                            setState(() {
-                              selectedState = value;
-                              print(selectedState);
-                              selectedCity.clear();
-                              if (value[0] == 'Other') {
-                                stateOther = true;
-                              }
-                            });
-                            int? stateId;
-                            for (var e in countryState.stateList) {
-                              if (selectedState.isNotEmpty) {
-                                if (e.states == selectedState[0]) {
-                                  stateId = e.id;
-                                  break;
-                                }
-                              }
+                  :
+                  // stateOther
+                  //     ? TextFormField(
+                  //         onChanged: (value) {
+                  //           setState(() {
+                  //             selectedState.clear();
+                  //             selectedState.add(stateCtrl.text);
+                  //           });
+                  //         },
+                  //         controller: stateCtrl,
+                  //         decoration: InputDecoration(
+                  //             suffixIcon: IconButton(
+                  //                 onPressed: () {
+                  //                   setState(() {
+                  //                     stateOther = false;
+                  //                   });
+                  //                 },
+                  //                 icon: const Icon(Icons.close)),
+                  //             hintText: 'State',
+                  //             border: OutlineInputBorder(
+                  //                 borderRadius: BorderRadius.circular(15))),
+                  //       )
+                  //     :
+                  PreferenceLocationDropdown(
+                      other: true,
+                      showSearch: true,
+                      value: selectedState.isEmpty ? selectedState : [],
+                      hint: "State",
+                      items: [
+                        ...countryState.stateList.map((e) => e.states).toList()
+                      ],
+                      onChanged: (value) async {
+                        setState(() {
+                          selectedState = value;
+                          print(selectedState);
+                          selectedCity.clear();
+                          if (value[0] == 'Other') {
+                            stateOther = true;
+                          }
+                        });
+                        int? stateId;
+                        for (var e in countryState.stateList) {
+                          if (selectedState.isNotEmpty) {
+                            if (e.states == selectedState[0]) {
+                              stateId = e.id;
+                              break;
                             }
+                          }
+                        }
 
-                            print("Selected State ID: $stateId");
-                            if (stateId != null) {
-                              await ref
-                                  .read(locationProvider.notifier)
-                                  .getCityData(stateId);
-                            } else {
-                              print(
-                                  "No state ID found for the selected country.");
-                            }
-                          },
-                        ),
-              selectedState.isEmpty || countryState.cityList.isEmpty
-                  ? SizedBox()
+                        print("Selected State ID: $stateId");
+                        if (stateId != null) {
+                          await ref
+                              .read(locationProvider.notifier)
+                              .getCityData(stateId);
+                        } else {
+                          print("No state ID found for the selected country.");
+                        }
+                      },
+                    ),
+              selectedState.isEmpty ||
+                      countryState.cityList.isEmpty ||
+                      selectedState[0] == 'Any'
+                  ? const SizedBox()
                   : SizedBox(height: 10),
 
-              selectedState.isEmpty || countryState.cityList.isEmpty
-                  ? SizedBox()
-                  : cityOther
-                      ? TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              selectedCity.clear();
-                              selectedCity.add(cityCtrl.text);
-                            });
-                          },
-                          controller: cityCtrl,
-                          decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      cityOther = false;
-                                    });
-                                  },
-                                  icon: const Icon(Icons.close)),
-                              hintText: 'Country',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15))),
-                        )
-                      : PreferenceLocationDropdown(
-                          other: true,
-                          showSearch: true,
-                          value: selectedCity.isNotEmpty ? selectedCity : [],
-                          hint: "City",
-                          items: countryState.cityList
-                              .map((e) => e.citys)
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedCity = value;
-                              if (value[0] == 'Other') {
-                                cityOther = true;
-                              }
-                            });
-                          },
-                        ),
+              selectedState.isEmpty ||
+                      countryState.cityList.isEmpty ||
+                      selectedState[0] == 'Any'
+                  ? const SizedBox()
+                  :
+                  // cityOther
+                  //         ? TextFormField(
+                  //             onChanged: (value) {
+                  //               setState(() {
+                  //                 selectedCity.clear();
+                  //                 selectedCity.add(cityCtrl.text);
+                  //               });
+                  //             },
+                  //             controller: cityCtrl,
+                  //             decoration: InputDecoration(
+                  //                 suffixIcon: IconButton(
+                  //                     onPressed: () {
+                  //                       setState(() {
+                  //                         cityOther = false;
+                  //                       });
+                  //                     },
+                  //                     icon: const Icon(Icons.close)),
+                  //                 hintText: 'Country',
+                  //                 border: OutlineInputBorder(
+                  //                     borderRadius: BorderRadius.circular(15))),
+                  //           )
+                  //         :
+                  PreferenceLocationDropdown(
+                      other: true,
+                      showSearch: true,
+                      value: selectedCity.isNotEmpty ? selectedCity : [],
+                      hint: "City",
+                      items: [
+                        ...countryState.cityList.map((e) => e.citys).toList()
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCity = value;
+                          if (value[0] == 'Other') {
+                            cityOther = true;
+                          }
+                        });
+                      },
+                    ),
               const SizedBox(height: 10),
               _buildSelectionField(
                   hint: 'Own House',
@@ -304,34 +312,33 @@ class _PartnerLocationScreenState extends ConsumerState<PartnerLocationScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // if (selectedCountry.isNotEmpty &&
-                    //     selectedState.isNotEmpty) {
-                    ref
-                        .read(preferenceInputProvider.notifier)
-                        .updatePreferenceInput(
-                            country: selectedCountry.firstOrNull,
-                            states: selectedState.firstOrNull,
-                            city: selectedCity.firstOrNull,
-                            ownHouse: ownHouse);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const InterestPageView(),
-                      ),
-                    );
-                    // } else if (selectedCountry.isEmpty) {
-                    //   CustomSnackBar.show(
-                    //     context: context,
-                    //     message: 'Please Select Country.',
-                    //     isError: true,
-                    //   );
-                    // } else if (selectedState.isEmpty) {
-                    //   CustomSnackBar.show(
-                    //     context: context,
-                    //     message: 'Please Select State.',
-                    //     isError: true,
-                    //   );
-                    // }
+                    if (selectedCountry.firstOrNull != null &&
+                        (selectedCountry.firstOrNull != 'Any'
+                            ? selectedCountry.firstOrNull != null
+                            : true) &&
+                        (selectedState.firstOrNull != 'Any' &&
+                                selectedCountry.firstOrNull != 'Any'
+                            ? selectedState.firstOrNull != null
+                            : true)) {
+                      ref
+                          .read(preferenceInputProvider.notifier)
+                          .updatePreferenceInput(
+                              country: selectedCountry.firstOrNull,
+                              states: selectedState.firstOrNull ?? 'Any',
+                              city: selectedCity.firstOrNull ?? 'Any',
+                              ownHouse: ownHouse);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const InterestPageView(),
+                        ),
+                      );
+                    } else {
+                      CustomSnackBar.show(
+                          context: context,
+                          message: 'Please Select All Fields Mandatory!',
+                          isError: true);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
