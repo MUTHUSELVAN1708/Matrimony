@@ -10,6 +10,7 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
 import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
@@ -64,12 +65,18 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   }
 
   Future<void> fetchPercentage() async {
-    await ref.read(completionProvider.notifier).getIncompleteFields();
+    if (mounted) {
+      await ref.read(completionProvider.notifier).getIncompleteFields();
+    }
   }
 
   Future<void> fetchInterests() async {
-    await ref.read(interestModelProvider.notifier).getReceivedInterests();
-    await ref.read(interestModelProvider.notifier).getSentInterests();
+    if (mounted) {
+      await ref.read(interestModelProvider.notifier).getReceivedInterests();
+    }
+    if (mounted) {
+      await ref.read(interestModelProvider.notifier).getSentInterests();
+    }
   }
 
   Future<void> fetchImage() async {
@@ -93,24 +100,28 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final getImageApiProviderState = ref.watch(getImageApiProvider);
-    return Scaffold(
-      key: _scaffoldKey, // Add this line
-      endDrawer: const ProfileMainScreen(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(context),
-            _buildAllMatches(ref),
-            _buildCompleteProfile(),
-            _buildSuccessStory(context),
-            if (getImageApiProviderState.data != null &&
-                !getImageApiProviderState.data!.paymentStatus) ...[
-              _buildUpgradeNow(context),
+    final userManagementState = ref.watch(userManagementProvider);
+    return EnhancedLoadingWrapper(
+      isLoading: userManagementState.isLoadingForPartner,
+      child: Scaffold(
+        key: _scaffoldKey, // Add this line
+        endDrawer: const ProfileMainScreen(),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              _buildAllMatches(ref),
+              _buildCompleteProfile(),
+              _buildSuccessStory(context),
+              if (getImageApiProviderState.data != null &&
+                  !getImageApiProviderState.data!.paymentStatus) ...[
+                _buildUpgradeNow(context),
+              ],
+              const ProfileCardStack(),
+              _buildAssistanceService(),
             ],
-            const ProfileCardStack(),
-            _buildAssistanceService(),
-          ],
+          ),
         ),
       ),
     );
@@ -213,6 +224,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     // Your existing _buildPendingTasks code...
     final colors = [0xFF0D5986, 0xFFD6151A, 0xFFD65915, 0xFF7C590C];
     final colorsBackground = [0xFFE7F6FF, 0xFFFFE4E4, 0xFFFDDACB, 0xFFFFF4E7];
+    final interestState = ref.watch(interestModelProvider);
     final strings = [
       'Accept\nReceived',
       'Interests\nReceived',
@@ -235,7 +247,17 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
               child: Column(
                 children: [
                   Text(
-                    '00',
+                    index == 0
+                        ? interestState.receivedInterests
+                            .where((accept) => accept.status == 'Accepted')
+                            .length
+                            .toString()
+                            .padLeft(2, '0')
+                        : index == 1
+                            ? interestState.receivedInterests.length
+                                .toString()
+                                .padLeft(2, '0')
+                            : '00',
                     style: TextStyle(
                       fontSize: 35,
                       color: Color(colors[index]),

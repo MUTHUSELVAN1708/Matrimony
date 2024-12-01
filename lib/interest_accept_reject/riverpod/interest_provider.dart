@@ -44,6 +44,7 @@ class InterestModelNotifier extends Notifier<InterestModelState> {
         final List<dynamic> data = jsonDecode(response.body);
         final receivedInterests =
             data.map((e) => ReceiveModel.fromJson(e, true)).toList();
+        print(receivedInterests);
         state = state.copyWith(
             isLoading: false, receivedInterests: receivedInterests);
       } else {

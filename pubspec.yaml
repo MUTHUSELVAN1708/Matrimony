@@ -54,6 +54,7 @@ dependencies:
   flutter_native_splash:
   connectivity_plus: ^6.1.0
   carousel_slider: ^5.0.0
+  rename_app: ^1.6.1
 
 dev_dependencies:
   flutter_test:
