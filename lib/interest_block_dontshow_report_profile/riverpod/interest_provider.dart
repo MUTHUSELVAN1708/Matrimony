@@ -100,6 +100,7 @@ class InterestProvider extends StateNotifier<InterestState> {
         body: {'status': status},
       );
 
+      print(response.body);
       if (response.statusCode == 200) {
         state = state.copyWith(isLoading: false);
         return true;

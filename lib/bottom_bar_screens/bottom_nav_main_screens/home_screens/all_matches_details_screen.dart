@@ -97,6 +97,7 @@ class _AllMatchesDetailsScreenState
 
   Widget _buildProfileHeader(BuildContext context, UserDetails userDetails,
       PartnerDetailsModel partnerDetails) {
+    final interestProviderState = ref.watch(interestProvider);
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -135,24 +136,30 @@ class _AllMatchesDetailsScreenState
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.star_border_outlined,
-                                  color: Colors.black),
-                              Text(
-                                'Shortlist',
-                                style: AppTextStyles.spanTextStyle,
-                              )
-                            ],
-                          ),
-                        ),
+                        if ((interestProviderState.sentStatus == null ||
+                                interestProviderState.sentStatus == '') &&
+                            (interestProviderState.receiveStatus == null ||
+                                interestProviderState.receiveStatus == ''))
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.star_border_outlined,
+                                    color: Colors.black),
+                                Text(
+                                  'Shortlist',
+                                  style: AppTextStyles.spanTextStyle,
+                                )
+                              ],
+                            ),
+                          )
+                        else
+                          const SizedBox(),
                         PopupMenuButton<String>(
                           icon: Container(
                               padding: const EdgeInsets.all(8),
@@ -203,14 +210,22 @@ class _AllMatchesDetailsScreenState
                             //   value: 'share',
                             //   child: Text('Share Profile'),
                             // ),
-                            const PopupMenuItem<String>(
-                              value: 'shortlist',
-                              child: Text('Shortlist'),
-                            ),
-                            const PopupMenuItem<String>(
-                              value: 'dontShow',
-                              child: Text("Don't Show"),
-                            ),
+                            if ((interestProviderState.sentStatus == null ||
+                                    interestProviderState.sentStatus == '') &&
+                                (interestProviderState.receiveStatus == null ||
+                                    interestProviderState.receiveStatus == ''))
+                              const PopupMenuItem<String>(
+                                value: 'shortlist',
+                                child: Text('Shortlist'),
+                              ),
+                            if ((interestProviderState.sentStatus == null ||
+                                    interestProviderState.sentStatus == '') &&
+                                (interestProviderState.receiveStatus == null ||
+                                    interestProviderState.receiveStatus == ''))
+                              const PopupMenuItem<String>(
+                                value: 'dontShow',
+                                child: Text("Don't Show"),
+                              ),
                             const PopupMenuItem<String>(
                               value: 'block',
                               child: Text('Block'),
@@ -345,40 +360,42 @@ class _AllMatchesDetailsScreenState
     final interestProviderState = ref.watch(interestProvider);
     return Column(
       children: [
-        _buildSection(
-            '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Basic Details',
-            [
-              _buildDetailItem(
-                  'Age', '${userDetails.age ?? '-'} Years', 'user_alt'),
-              _buildDetailItem(
-                  'Physique',
-                  "${userDetails.weight ?? '-Kg'} | "
-                      "${userDetails.height ?? '-'} | "
-                      "${userDetails.physicalStatus ?? '-'}",
-                  'height'),
-              _buildDetailItem(
-                  'Spoken Languages',
-                  '${userDetails.motherTongue ?? '-'} (Mother Tongue)',
-                  'language'),
-              _buildDetailItem(
-                  'Eating Habits', userDetails.eatingHabits ?? '-', 'chef_hat'),
-              _buildDetailItem('Profile Created For',
-                  userDetails.profileFor ?? '-', 'user-edit'),
-              _buildDetailItem('Marital Status',
-                  userDetails.maritalStatus ?? '-', 'wedding_ring'),
-              _buildDetailItem(
-                  'Lives In',
-                  '${userDetails.city ?? '-'}, ${userDetails.state ?? '-'}',
-                  'location_icon'),
-              _buildDetailItem(
-                  'Own House', userDetails.ownHouse ?? '-', 'location_icon'),
-              _buildDetailItem(
-                  'Citizenship', userDetails.citizenShip ?? '-', 'flag'),
-              _buildDetailItem('Smoking Habits',
-                  userDetails.smokingHabits ?? '-', 'smoking'),
-              _buildDetailItem('Drinking Habits',
-                  userDetails.drinkingHabits ?? '-', 'wine_glass'),
-            ]),
+        _buildExpansionSection(
+          '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Basic Details',
+          [
+            _buildDetailItem(
+                'Age', '${userDetails.age ?? '-'} Years', 'user_alt'),
+            _buildDetailItem(
+                'Physique',
+                "${userDetails.weight ?? '-Kg'} | "
+                    "${userDetails.height ?? '-'} | "
+                    "${userDetails.physicalStatus ?? '-'}",
+                'height'),
+            _buildDetailItem(
+                'Spoken Languages',
+                '${userDetails.motherTongue ?? '-'} (Mother Tongue)',
+                'language'),
+            _buildDetailItem(
+                'Eating Habits', userDetails.eatingHabits ?? '-', 'chef_hat'),
+            _buildDetailItem('Profile Created For',
+                userDetails.profileFor ?? '-', 'user-edit'),
+            _buildDetailItem('Marital Status', userDetails.maritalStatus ?? '-',
+                'wedding_ring'),
+            _buildDetailItem(
+                'Lives In',
+                '${userDetails.city ?? '-'}, ${userDetails.state ?? '-'}',
+                'location_icon'),
+            _buildDetailItem(
+                'Own House', userDetails.ownHouse ?? '-', 'location_icon'),
+            _buildDetailItem(
+                'Citizenship', userDetails.citizenShip ?? '-', 'flag'),
+            _buildDetailItem(
+                'Smoking Habits', userDetails.smokingHabits ?? '-', 'smoking'),
+            _buildDetailItem('Drinking Habits',
+                userDetails.drinkingHabits ?? '-', 'wine_glass'),
+          ],
+        ),
+        // ]),
         _buildSection('contact number', [
           _buildDetailItem(
               'Mobile Number',
@@ -479,7 +496,7 @@ class _AllMatchesDetailsScreenState
             )
           ]
         ]),
-        _buildSection(
+        _buildExpansionSection(
             '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Religious Details',
             [
               _buildDetailItem(
@@ -489,7 +506,7 @@ class _AllMatchesDetailsScreenState
                   'Sub caste', userDetails.subcaste ?? '-', 'notes'),
               // _buildDetailItem('Gothra(M)', 'Not Specified', 'people'),
             ]),
-        _buildSection(
+        _buildExpansionSection(
             '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Horoscope Details',
             [
               _buildDetailItem(
@@ -507,7 +524,7 @@ class _AllMatchesDetailsScreenState
                   'Star is ${userDetails.star ?? '-'}\nRaasi is ${userDetails.raasi ?? '-'}',
                   'astronomy'),
             ]),
-        _buildSection(
+        _buildExpansionSection(
             '${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Professional Details',
             [
               _buildDetailItem('Employment', userDetails.employedType ?? '-',
@@ -519,7 +536,7 @@ class _AllMatchesDetailsScreenState
               _buildDetailItem('Occupation', userDetails.occupation ?? '-',
                   'professional_icon'),
             ]),
-        _buildSection(
+        _buildExpansionSection(
             'About ${userDetails.gender != null ? userDetails.gender == 'Male' ? 'His' : 'Her' : '-'} Family',
             [
               _buildDetailItem(
@@ -582,6 +599,39 @@ class _AllMatchesDetailsScreenState
 
         // const Divider(height: 1),
       ],
+    );
+  }
+
+  Widget _buildExpansionSection(String title, List<Widget> children) {
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 25),
+        title: Text(
+          title,
+          style: AppTextStyles.headingTextstyle.copyWith(fontSize: 20),
+        ),
+        collapsedIconColor: Colors.grey,
+        iconColor: Colors.grey,
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(1, 2),
+                  blurRadius: 11.1,
+                  spreadRadius: 0,
+                  color: Color(0x0D000000),
+                ),
+              ],
+            ),
+            child: Column(children: [...children]),
+          ),
+        ],
+      ),
     );
   }
 
@@ -952,7 +1002,7 @@ class _AllMatchesDetailsScreenState
                             Text(
                               interestProviderState.sentStatus.toString() ==
                                       'Pending'
-                                  ? 'Pending'
+                                  ? 'Requested'
                                   : interestProviderState.sentStatus
                                                   .toString() ==
                                               'Rejected' ||
@@ -1107,10 +1157,11 @@ class StatusRowWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       color: svgNames[index] == 'govrn_id'
                           ? Colors.blueAccent
-                          : Colors.red, // Adjust color as needed
+                              .withOpacity(isVerified[index] ? 1 : 0.5)
+                          : Colors.red.withOpacity(isVerified[index] ? 1 : 0.5),
                     ),
                     child: CustomSvg(
-                      name: svgNames[index], // Dynamically pass the name
+                      name: svgNames[index],
                       color: Colors.white,
                     ),
                   ),

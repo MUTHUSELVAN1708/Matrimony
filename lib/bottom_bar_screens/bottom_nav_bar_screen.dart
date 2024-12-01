@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/filter_screens/ui/search_filter_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/inbox_screen.dart';
@@ -10,6 +11,7 @@ import 'package:matrimony/common/colors.dart';
 class BottomNavBarScreen extends StatefulWidget {
   final int? index;
   final bool isFetch;
+
   const BottomNavBarScreen({super.key, this.index, required this.isFetch});
 
   @override
@@ -18,14 +20,14 @@ class BottomNavBarScreen extends StatefulWidget {
 
 class BottomNavBarScreenState extends State<BottomNavBarScreen> {
   int _currentIndex = 0;
+  DateTime? _lastBackPressTime;
 
   final List<Widget> _screens = [
     const NewHomeScreen(),
     const MatchesScreen(),
     const Notification2Screen(),
     const Inbox(),
-    // const InboxScreen(),
-    const PartnerSearchScreen(), // Replace with the actual Profile screen widget
+    const PartnerSearchScreen(),
   ];
 
   @override
@@ -36,18 +38,32 @@ class BottomNavBarScreenState extends State<BottomNavBarScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    if (_currentIndex != 0) {
+      setState(() {
+        _currentIndex = 0;
+      });
+      return false;
+    }
+
+    final now = DateTime.now();
+    if (_lastBackPressTime == null ||
+        now.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
+      _lastBackPressTime = now;
+      Fluttertoast.showToast(
+        msg: "Press again to exit",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          if (_currentIndex != 0) {
-            setState(() {
-              _currentIndex = 0;
-            });
-          }
-        }
-      },
+    return WillPopScope(
+      onWillPop: _onWillPop,
       child: Scaffold(
         body: SafeArea(child: _screens[_currentIndex]),
         bottomNavigationBar: Container(
@@ -73,22 +89,19 @@ class BottomNavBarScreenState extends State<BottomNavBarScreen> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                    'assets/matchesicon.svg'), // Corrected here
+                icon: SvgPicture.asset('assets/matchesicon.svg'),
                 label: 'Matches',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                    'assets/notificationicon.svg'), // Corrected here
+                icon: SvgPicture.asset('assets/notificationicon.svg'),
                 label: 'Notification',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/smsicon.svg'), // Corrected here
+                icon: SvgPicture.asset('assets/smsicon.svg'),
                 label: 'Inbox',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                    'assets/settingsicon.svg'), // Corrected here
+                icon: SvgPicture.asset('assets/settingsicon.svg'),
                 label: 'Filter',
               ),
             ],

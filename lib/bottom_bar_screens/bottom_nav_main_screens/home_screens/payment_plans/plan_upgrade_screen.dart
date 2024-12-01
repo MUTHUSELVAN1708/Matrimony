@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+import 'package:matrimony/models/user_details_model.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class PlanUpgradeScreen extends StatefulWidget {
+class PlanUpgradeScreen extends ConsumerStatefulWidget {
   const PlanUpgradeScreen({super.key});
 
   @override
-  State<PlanUpgradeScreen> createState() => _PlanUpgradeScreenState();
+  ConsumerState<PlanUpgradeScreen> createState() => _PlanUpgradeScreenState();
 }
 
-class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
+class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
   String selectedPlan = 'Basic';
   bool isThreeMonthSelected = true;
 
@@ -82,11 +85,11 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
   String get currentPrice {
     switch (selectedPlan) {
       case 'Premium':
-        return isThreeMonthSelected ? '₹3000' : '₹9000';
+        return isThreeMonthSelected ? '3000' : '9000';
       case 'Elite':
-        return isThreeMonthSelected ? '₹4000' : '₹12000';
+        return isThreeMonthSelected ? '4000' : '12000';
       default:
-        return isThreeMonthSelected ? '₹2000' : '₹6000';
+        return isThreeMonthSelected ? '2000' : '6000';
     }
   }
 
@@ -123,7 +126,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
   }
 
   late Razorpay _razorpay;
-  bool _isLoading = false; // Track loading state
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -135,9 +138,27 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    final userManagementState = ref.watch(userManagementProvider);
     setState(() {
       _isLoading = false;
     });
+    String paymentId = response.paymentId!;
+    String orderId = response.orderId!;
+    String signature = response.signature!;
+
+    Map<String, dynamic> paymentDetails = {
+      'paymentId': paymentId,
+      'orderId': orderId,
+      'signature': signature,
+      'amount': (currentPrice * 100),
+      'plan': selectedPlan,
+      'duration': isThreeMonthSelected ? '3 months' : '6 months',
+      'serviceName': 'RazorPay',
+      'timeOfPurchase': DateTime.now().toIso8601String(),
+      'phoneNumber': userManagementState.userDetails.phoneNumber,
+      'email': userManagementState.userDetails.email,
+      'userId': userManagementState.userDetails.userId,
+    };
     Fluttertoast.showToast(
       msg: "Payment Successful: ${response.paymentId}",
       timeInSecForIosWeb: 4,
@@ -158,28 +179,41 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
     setState(() {
       _isLoading = false;
     });
+    Map<String, dynamic> walletResponse = {
+      'walletName': response.walletName,
+    };
     Fluttertoast.showToast(
       msg: "External Wallet Selected: ${response.walletName}",
       timeInSecForIosWeb: 4,
     );
   }
 
-  void openPayment() {
+  @override
+  void dispose() {
+    _razorpay.clear();
+    super.dispose();
+  }
+
+  void openPayment(UserDetails userDetails) {
     setState(() {
       _isLoading = true;
     });
 
     var options = {
       'key': 'rzp_live_ILgsfZCZoFIKMb',
-      'amount': currentPrice * 100,
-      'name': 'MatriMony',
-      'description': 'Premium Membership',
-      'prefill': {'contact': '9876543210', 'email': 'user@example.com'},
+      'amount': (double.parse(1.toString()) * 100).toInt(),
+      'name': 'Aha Thirumanam',
+      'description': '$selectedPlan Membership',
+      'prefill': {
+        'contact': userDetails.phoneNumber ?? '',
+        'email': userDetails.email ?? ''
+      },
       'external': {
-        'wallets': ['paytm']
+        'wallets': ['paytm', 'gpay', 'phonepe']
       }
     };
-
+    print('Options');
+    print(options);
     try {
       _razorpay.open(options);
     } catch (e) {
@@ -196,6 +230,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userManagementState = ref.watch(userManagementProvider);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -203,17 +238,6 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.red),
           onPressed: () => Navigator.pop(context),
         ),
-        // actions: [
-        //   TextButton(
-        //     onPressed: () {
-        //
-        //     },
-        //     child: const Text(
-        //       'Skip',
-        //       style: TextStyle(color: Colors.black),
-        //     ),
-        //   ),
-        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -302,7 +326,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
                         ),
                       ),
                       Text(
-                        currentPrice,
+                        '₹$currentPrice',
                         style: AppTextStyles.headingTextstyle
                             .copyWith(fontSize: 50),
                       ),
@@ -326,7 +350,7 @@ class _PlanUpgradeScreenState extends State<PlanUpgradeScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            openPayment();
+                            openPayment(userManagementState.userDetails);
                           },
                           style: AppTextStyles.primaryButtonstyle,
                           child: _isLoading
