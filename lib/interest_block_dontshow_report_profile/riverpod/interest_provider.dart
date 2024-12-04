@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/api_list.dart';
 import 'package:matrimony/common/local_storage.dart';
 import 'package:matrimony/interest_block_dontshow_report_profile/state/interest_state.dart';
+import 'package:matrimony/models/block_dontshow_model.dart';
 import 'package:matrimony/models/interest_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,21 +16,31 @@ final interestProvider =
 class InterestProvider extends StateNotifier<InterestState> {
   InterestProvider() : super(InterestState.initial());
 
-  void setStatus(List<SentModel> requestModelList,
-      List<ReceiveModel> receivedModelList, String uniqueId) {
+  void setStatus(
+      List<SentModel> requestModelList,
+      List<ReceiveModel> receivedModelList,
+      List<BlockModel> blockList,
+      List<DoNotShowModel> ignoredList,
+      int userId) {
+    final blockModel = blockList.firstWhere((model) => model.userId == userId,
+        orElse: () => const BlockModel());
+    state = state.copyWith(isBlocked: blockModel.userId != null ? true : false);
+    final ignoreModel = ignoredList.firstWhere(
+        (model) => model.userId == userId,
+        orElse: () => const DoNotShowModel());
+    state =
+        state.copyWith(isIgnored: ignoreModel.userId != null ? true : false);
     String status = '';
     final matchModel = receivedModelList.firstWhere(
-      (model) => model.uniqueId == uniqueId,
+      (model) => model.userId == userId,
       orElse: () => const ReceiveModel(),
     );
     status = matchModel.status ?? '';
     state = state.copyWith(receiveStatus: status);
-    print(requestModelList);
     final matchingModel = requestModelList.firstWhere(
-      (model) => model.uniqueId == uniqueId,
+      (model) => model.userId == userId,
       orElse: () => const SentModel(),
     );
-    print(status);
     status = matchingModel.status ?? '';
     state = state.copyWith(sentStatus: status);
   }
@@ -71,9 +82,8 @@ class InterestProvider extends StateNotifier<InterestState> {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: {'userId': userId, 'hiddenUserId': receiverId},
+        body: {'userId': '$userId', 'hiddenUserId': '$receiverId'},
       );
-      print(response.body);
       if (response.statusCode == 200) {
         state = state.copyWith(isLoading: false);
         return true;
@@ -150,7 +160,7 @@ class InterestProvider extends StateNotifier<InterestState> {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: {'blockerId': userId, 'blockedId': blockedId},
+        body: {'blockerId': '$userId', 'blockedId': '$blockedId'},
       );
 
       if (response.statusCode == 200) {
@@ -166,7 +176,59 @@ class InterestProvider extends StateNotifier<InterestState> {
     }
   }
 
-  Future<bool> reportProfile(int reportedId) async {
+  Future<bool> unblockProfile(int blockedId) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.post(
+        Uri.parse(Api.unblock),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {'blockerId': '$userId', 'blockedId': '$blockedId'},
+      );
+
+      if (response.statusCode == 200) {
+        state = state.copyWith(isLoading: false, isBlocked: false);
+        return true;
+      } else {
+        state = state.copyWith(isLoading: false);
+        return false;
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false);
+      return false;
+    }
+  }
+
+  Future<bool> showAgain(int hiddenUserId) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.delete(
+        Uri.parse(Api.unDontShow),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {'userId': '$userId', 'hiddenUserId': '$hiddenUserId'},
+      );
+
+      if (response.statusCode == 200) {
+        state = state.copyWith(isLoading: false, isIgnored: false);
+        return true;
+      } else {
+        state = state.copyWith(isLoading: false);
+        return false;
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false);
+      return false;
+    }
+  }
+
+  Future<bool> reportProfile(int reportedId, String reason) async {
     state = state.copyWith(isLoading: true);
 
     try {
@@ -176,7 +238,11 @@ class InterestProvider extends StateNotifier<InterestState> {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: {'reporterId': userId, 'reportedId': reportedId, 'reason': ''},
+        body: {
+          'reporterId': '$userId',
+          'reportedId': '$reportedId',
+          'reason': reason
+        },
       );
 
       if (response.statusCode == 200) {

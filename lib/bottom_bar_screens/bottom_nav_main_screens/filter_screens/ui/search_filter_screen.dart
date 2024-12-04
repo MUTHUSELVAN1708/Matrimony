@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/filter_screens/riverpod/search_filter_notifier.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/filter_screens/riverpod/search_filter_state.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/filter_screens/ui/search_profile_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/custom_snackbar.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/prefarence_height_comment_box.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_basic_screen/partner_basic_widgets/preference_age_dialogBox.dart';
@@ -15,7 +19,7 @@ import 'package:matrimony/user_auth_screens/register_screens/register_partner_pr
 import 'package:matrimony/user_auth_screens/register_screens/register_partner_preparence_screens/partner_preference_location_screen/riverpod/location_api_notifier.dart';
 
 class PartnerSearchScreen extends ConsumerStatefulWidget {
-  const PartnerSearchScreen({Key? key}) : super(key: key);
+  const PartnerSearchScreen({super.key});
 
   @override
   ConsumerState<PartnerSearchScreen> createState() =>
@@ -24,13 +28,34 @@ class PartnerSearchScreen extends ConsumerStatefulWidget {
 
 class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    await Future.delayed(Duration.zero);
+    ref.read(searchFilterInputProvider.notifier).setSearchFilterInput(
+        ref.read(userManagementProvider).userPartnerDetails);
+    await ref.read(locationProvider.notifier).getCountryDetails(
+        ref.read(userManagementProvider).userPartnerDetails.partnerCountry ??
+            '',
+        ref.read(userManagementProvider).userPartnerDetails.partnerState ?? '');
+    await ref.read(religiousProvider.notifier).getReligiousDetails(
+        ref.read(userManagementProvider).userPartnerDetails.partnerReligion,
+        ref.read(userManagementProvider).userPartnerDetails.partnerCaste);
+    // ref.read(religiousProvider.notifier).getReligiousData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final searchInput = ref.watch(searchFilterInputProvider);
     final religionState = ref.watch(religiousProvider);
     final countryState = ref.watch(locationProvider);
-
+    final searchFilterState = ref.watch(searchFilterProvider);
     return EnhancedLoadingWrapper(
-      isLoading: religionState.isLoading,
+      isLoading: religionState.isLoading || searchFilterState.isLoading,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -52,7 +77,7 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                         height: 10,
                       ),
                       const Text(
-                        'search profile using the below criteria',
+                        'Search Profile Using The Below Criteria',
                         style: AppTextStyles.spanTextStyle,
                       ),
                       const SizedBox(height: 16),
@@ -75,7 +100,7 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                           ),
                           _buildListTile(
                             'Height',
-                            "${searchInput?.fromHeight}' - ${searchInput?.toHeight}'",
+                            "${searchInput?.fromHeight} - ${searchInput?.toHeight}",
                             onTap: () => showHeightSelectionDialog(
                                 context,
                                 true,
@@ -88,31 +113,31 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                 searchInput?.fromHeight ?? '',
                                 searchInput?.toHeight ?? ''),
                           ),
-                          InkWell(
-                              onTap: () {
-                                showSelectionHabitsDialog(
-                                    context,
-                                    'Profile created by',
-                                    [
-                                      'MySelf',
-                                      'Son',
-                                      'Daughter',
-                                      'Sister',
-                                      'Relative',
-                                      'Friend',
-                                      'Other'
-                                    ],
-                                    searchInput?.profileCreatedBy ?? '');
-                              },
-                              child: _buildListTile('Profile created by',
-                                  "${searchInput?.profileCreatedBy}")),
+                          // InkWell(
+                          //     onTap: () {
+                          //       showSelectionHabitsDialog(
+                          //           context,
+                          //           'Profile created by',
+                          //           [
+                          //             'MySelf',
+                          //             'Son',
+                          //             'Daughter',
+                          //             'Sister',
+                          //             'Relative',
+                          //             'Friend',
+                          //             'Other'
+                          //           ],
+                          //           searchInput?.profileCreatedBy ?? '');
+                          //     },
+                          //     child: _buildListTile('Profile created by',
+                          //         "${searchInput?.profileCreatedBy}")),
                           InkWell(
                               onTap: () {
                                 showAnySelectionDialog(
                                     context,
                                     'Marital Status',
                                     PartnerPreferenceConstData
-                                        .maritalStatusOptions,
+                                        .maritalStatusOptionsForSearch,
                                     searchInput?.maritalStatus ?? '');
                               },
                               child: _buildListTile('Marital Status',
@@ -123,14 +148,14 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     context,
                                     'Mother Tongue',
                                     PartnerPreferenceConstData
-                                        .motherTongueOptions,
+                                        .motherTongueOptionsUser,
                                     searchInput?.motherTongue ?? '');
                               },
                               child: _buildListTile('Mother Tongue',
                                   '${searchInput?.motherTongue}')),
                           InkWell(
                               onTap: () {
-                                showAnySelectionDialog(
+                                showSelectionHabitsDialog(
                                     context,
                                     'Physical Status',
                                     PartnerPreferenceConstData
@@ -154,72 +179,31 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                 religionState.data
                                     .map((subCasteModel) =>
                                         subCasteModel.religion)
-                                    .toList());
-                            int? stateId;
-                            for (var e in religionState.data) {
-                              if (e.religion == searchInput?.religion) {
-                                stateId = e.id;
-                                break;
-                              }
-                            }
-
-                            print("Selected State ID: $stateId");
-                            if (stateId != null) {
-                              await ref
-                                  .read(religiousProvider.notifier)
-                                  .getCasteData('$stateId');
-                            } else {
-                              print(
-                                  "No state ID found for the selected country.");
-                            }
+                                    .toList(),
+                                searchInput!.religion.toString());
                           }),
-                          searchInput!.religion!.isEmpty ||
-                                  religionState.casteList.isEmpty ||
-                                  searchInput.religion == 'Any'
-                              ? SizedBox()
-                              : _buildListTile('Caste', '${searchInput.caste}',
-                                  onTap: () async {
-                                  showLocationSelectionDialog(
-                                      context,
-                                      'Caste',
-                                      religionState.casteList
-                                          .map((subCasteModel) =>
-                                              subCasteModel.caste)
-                                          .toList());
-
-                                  int? stateId;
-                                  for (var e in religionState.casteList) {
-                                    if (e.caste == searchInput.caste) {
-                                      stateId = e.id;
-                                      break;
-                                    }
-                                  }
-
-                                  print("Selected State ID: $stateId");
-                                  if (stateId != null) {
-                                    await ref
-                                        .read(religiousProvider.notifier)
-                                        .getSubCasteData("$stateId");
-                                  } else {
-                                    print(
-                                        "No state ID found for the selected country.");
-                                  }
-                                }),
-                          searchInput.caste!.isEmpty ||
-                                  religionState.subCasteList.isEmpty ||
-                                  searchInput.caste == 'Any'
-                              ? const SizedBox()
-                              : _buildListTile(
-                                  'Sub Caste', '${searchInput.subcaste}',
-                                  onTap: () {
-                                  showLocationSelectionDialog(
-                                      context,
-                                      'Sub Caste',
-                                      religionState.subCasteList
-                                          .map((subCasteModel) =>
-                                              subCasteModel.subCaste)
-                                          .toList());
-                                }),
+                          _buildListTile('Caste', '${searchInput?.caste}',
+                              onTap: () async {
+                            showLocationSelectionDialog(
+                                context,
+                                'Caste',
+                                religionState.casteList
+                                    .map((subCasteModel) => subCasteModel.caste)
+                                    .toList(),
+                                searchInput!.caste.toString());
+                          }),
+                          _buildListTile(
+                              'Sub Caste', '${searchInput?.subcaste}',
+                              onTap: () {
+                            showLocationSelectionDialog(
+                                context,
+                                'Sub Caste',
+                                religionState.subCasteList
+                                    .map((subCasteModel) =>
+                                        subCasteModel.subCaste)
+                                    .toList(),
+                                searchInput!.subcaste.toString());
+                          }),
                         ],
                       ),
 
@@ -235,125 +219,78 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     context,
                                     'Occupation',
                                     PartnerPreferenceConstData.occupationList,
-                                    searchInput.profession ?? '');
+                                    searchInput?.profession ?? '');
                               },
                               child: _buildListTile(
-                                  'Occupation', '${searchInput.profession}')),
+                                  'Occupation', '${searchInput?.profession}')),
                           InkWell(
                               onTap: () {
                                 showAnySelectionDialog(
                                     context,
                                     'annual income',
                                     PartnerPreferenceConstData.incomeList,
-                                    searchInput.annualIncome ?? '');
+                                    searchInput?.annualIncome ?? '');
                               },
                               child: _buildListTile('annual income',
-                                  '${searchInput.annualIncome}')),
+                                  '${searchInput?.annualIncome}')),
                           InkWell(
                               onTap: () {
                                 showAnySelectionDialog(
                                     context,
                                     'employment type',
                                     PartnerPreferenceConstData.employedInList,
-                                    searchInput.employedIn ?? '');
+                                    searchInput?.employedIn ?? '');
                               },
                               child: _buildListTile('employment type',
-                                  '${searchInput.employedIn}')),
+                                  '${searchInput?.employedIn}')),
                           InkWell(
                               onTap: () {
                                 showAnySelectionDialog(
                                     context,
                                     'Education',
                                     PartnerPreferenceConstData.educationList,
-                                    searchInput.education ?? '');
+                                    searchInput?.education ?? '');
                               },
                               child: _buildListTile(
-                                  'Education', '${searchInput.education}')),
+                                  'Education', '${searchInput?.education}')),
                         ],
                       ),
 
-                      // Location Section
                       _buildExpandableSection(
                         title: 'Location',
                         icon: SvgPicture.asset(
                             'assets/image/filter_location.svg'),
                         children: [
-                          _buildListTile('Country', '${searchInput.country}',
+                          _buildListTile('Country', '${searchInput?.country}',
                               onTap: () async {
                             showLocationSelectionDialog(
                                 context,
                                 'Country',
                                 countryState.countryList
                                     .map((e) => e.countrys)
-                                    .toList());
-
-                            int? stateId;
-                            for (var e in countryState.countryList) {
-                              if (searchInput.country!.isNotEmpty) {
-                                if (e.countrys == searchInput.country) {
-                                  stateId = e.id;
-                                  break;
-                                }
-                              }
-                            }
-
-                            print("Selected State ID: $stateId");
-
-                            // Ensure stateId is not null before calling getStateData
-                            if (stateId != null) {
-                              await ref
-                                  .read(locationProvider.notifier)
-                                  .getStateData(stateId);
-                            } else {
-                              print(
-                                  "No state ID found for the selected country.");
-                            }
+                                    .toList(),
+                                searchInput!.country.toString());
                           }),
-                          countryState.countryList.isEmpty ||
-                                  countryState.stateList.isEmpty ||
-                                  searchInput.country == 'Any'
-                              ? const SizedBox()
-                              : _buildListTile('State', '${searchInput.states}',
-                                  onTap: () async {
-                                  showLocationSelectionDialog(
-                                      context,
-                                      'State',
-                                      countryState.stateList
-                                          .map((e) => e.states)
-                                          .toList());
-
-                                  int? stateId;
-                                  for (var e in countryState.stateList) {
-                                    if (searchInput.states!.isNotEmpty) {
-                                      if (e.states == searchInput.states) {
-                                        stateId = e.id;
-                                        break;
-                                      }
-                                    }
-                                  }
-
-                                  print("Selected State ID: $stateId");
-                                  if (stateId != null) {
-                                    await ref
-                                        .read(locationProvider.notifier)
-                                        .getCityData(stateId);
-                                  } else {
-                                    print(
-                                        "No state ID found for the selected country.");
-                                  }
-                                }),
-                          countryState.stateList.isEmpty ||
-                                  countryState.cityList.isEmpty
-                              ? const SizedBox()
-                              : _buildListTile('City', '${searchInput.city}',
-                                  onTap: () {
-                                  showLocationSelectionDialog(
-                                      context,
-                                      'City',
-                                      countryState.cityList
-                                          .map((e) => e.citys)
-                                          .toList());
-                                }),
+                          _buildListTile('State', '${searchInput?.states}',
+                              onTap: () async {
+                            showLocationSelectionDialog(
+                                context,
+                                'State',
+                                countryState.stateList
+                                    .map((e) => e.states)
+                                    .toList(),
+                                searchInput!.states.toString());
+                          }),
+                          _buildListTile('City', '${searchInput?.city}',
+                              onTap: () {
+                            showLocationSelectionDialog(
+                                context,
+                                'City',
+                                countryState.cityList
+                                    .map((e) => e.citys)
+                                    .toList(),
+                                searchInput!.city.toString());
+                          }),
                           // _buildListTile('citizenship', 'Any'),
                         ],
                       ),
@@ -370,11 +307,11 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                   'eating habits',
                                   PartnerPreferenceConstData
                                       .eatingHabitsOptions,
-                                  searchInput.eatingHabits ?? '');
+                                  searchInput?.eatingHabits ?? '');
                             },
                             child: _buildListTile(
                               'eating habits',
-                              '${searchInput.eatingHabits}',
+                              '${searchInput?.eatingHabits}',
                             ),
                           ),
                           InkWell(
@@ -384,10 +321,10 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     'smoking habits',
                                     PartnerPreferenceConstData
                                         .smokingHabitsOptions,
-                                    searchInput.smokingHabits ?? '');
+                                    searchInput?.smokingHabits ?? '');
                               },
                               child: _buildListTile('smoking habits',
-                                  '${searchInput.smokingHabits}')),
+                                  '${searchInput?.smokingHabits}')),
                           InkWell(
                             onTap: () async {
                               showSelectionHabitsDialog(
@@ -395,11 +332,11 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                   'drinking habits',
                                   PartnerPreferenceConstData
                                       .drinkingHabitsOptions,
-                                  searchInput.drinkingHabits ?? '');
+                                  searchInput?.drinkingHabits ?? '');
                             },
                             child: _buildListTile(
                               'drinking habits',
-                              '${searchInput.drinkingHabits}',
+                              '${searchInput?.drinkingHabits}',
                             ),
                           ),
                         ],
@@ -659,29 +596,31 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                       // const SizedBox(height: 16),
 
                       // Matches Count
-                      const Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '2,634',
-                              style: TextStyle(
-                                  fontFamily: 'Source Sans Pro',
-                                  color: AppColors.headingTextColor,
-                                  fontWeight:
-                                      FontWeight.w700), // red color for 634
-                            ),
-                            TextSpan(
-                              text: ' Matches Based On Your Preferences',
-                              style: TextStyle(
-                                  fontFamily: 'Source Sans Pro',
-                                  color: Colors.black,
-                                  fontWeight: FontWeight
-                                      .w700), // black color for the rest
-                            ),
-                          ],
-                        ),
-                      ),
-
+                      // Text.rich(
+                      //   TextSpan(
+                      //     children: [
+                      //       TextSpan(
+                      //         text: searchFilterState.searchModels.length
+                      //             .toString(),
+                      //         style: const TextStyle(
+                      //             fontFamily: 'Source Sans Pro',
+                      //             fontSize: 16,
+                      //             color: AppColors.headingTextColor,
+                      //             fontWeight:
+                      //                 FontWeight.w700), // red color for 634
+                      //       ),
+                      //       const TextSpan(
+                      //         text: ' Search Results Based On Your Inputs',
+                      //         style: TextStyle(
+                      //             fontSize: 16,
+                      //             fontFamily: 'Source Sans Pro',
+                      //             color: Colors.black,
+                      //             fontWeight: FontWeight
+                      //                 .w700), // black color for the rest
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       const SizedBox(height: 60),
 
                       // Search Button
@@ -696,10 +635,26 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                     height: 50,
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        ref
-                            .read(searchFilterInputProvider.notifier)
-                            .updateSearchFilterInput();
+                      onPressed: () async {
+                        // ref
+                        //     .read(searchFilterInputProvider.notifier)
+                        //     .updateSearchFilterInput();
+                        final result = await ref
+                            .read(searchFilterProvider.notifier)
+                            .searchResults(searchInput!);
+                        if (result) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SearchProfileScreen()));
+                        } else {
+                          CustomSnackBar.show(
+                              context: context,
+                              message:
+                                  'Something Went Wrong. Please Search Again!',
+                              isError: true);
+                        }
                       },
                       style: AppTextStyles.primaryButtonstyle,
                       child: const Text(
@@ -917,6 +872,11 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                       .read(searchFilterInputProvider.notifier)
                                       .updateInputHabitsValues(
                                           'eatingHabits', [tempSelectedValue!]);
+                                } else if (hint == 'Physical Status') {
+                                  ref
+                                      .read(searchFilterInputProvider.notifier)
+                                      .updateInputHabitsValues('physicalStatus',
+                                          [tempSelectedValue!]);
                                 } else if (hint == 'Profile created by') {
                                   ref
                                       .read(searchFilterInputProvider.notifier)
@@ -1505,10 +1465,12 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
   }
 
   void showLocationSelectionDialog(
-      BuildContext context, String hint, List<String> items) {
-    List<String> selectedValues = [];
+      BuildContext context, String hint, List<String> items, String value) {
+    List<String> selectedValues = [value];
     List<String> filteredItems = [];
     String searchQuery = '';
+    final religionState = ref.watch(religiousProvider);
+    final countryState = ref.watch(locationProvider);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1606,18 +1568,53 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                           width: double.infinity,
                           height: 45,
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               // widget.onChanged(selectedValues);
                               if (hint == 'Religion') {
                                 ref
                                     .read(searchFilterInputProvider.notifier)
                                     .updateInputReligionValues(
                                         'religion', selectedValues);
+
+                                int? stateId;
+                                for (var e in religionState.data) {
+                                  if (e.religion == selectedValues.first) {
+                                    stateId = e.id;
+                                    break;
+                                  }
+                                }
+
+                                print("Selected State ID: $stateId");
+                                if (stateId != null) {
+                                  await ref
+                                      .read(religiousProvider.notifier)
+                                      .getCasteData(stateId);
+                                } else {
+                                  print(
+                                      "No state ID found for the selected country.");
+                                }
                               } else if (hint == 'Caste') {
                                 ref
                                     .read(searchFilterInputProvider.notifier)
                                     .updateInputReligionValues(
                                         'caste', selectedValues);
+                                int? stateId;
+                                for (var e in religionState.casteList) {
+                                  if (e.caste == selectedValues.first) {
+                                    stateId = e.id;
+                                    break;
+                                  }
+                                }
+
+                                print("Selected State ID: $stateId");
+                                if (stateId != null) {
+                                  await ref
+                                      .read(religiousProvider.notifier)
+                                      .getSubCasteData(stateId);
+                                } else {
+                                  print(
+                                      "No state ID found for the selected country.");
+                                }
                               } else if (hint == 'Sub Caste') {
                                 ref
                                     .read(searchFilterInputProvider.notifier)
@@ -1628,11 +1625,50 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                     .read(searchFilterInputProvider.notifier)
                                     .updateInputReligionValues(
                                         'country', selectedValues);
+                                int? stateId;
+                                for (var e in countryState.countryList) {
+                                  if (selectedValues.isNotEmpty) {
+                                    if (e.countrys == selectedValues.first) {
+                                      stateId = e.id;
+                                      break;
+                                    }
+                                  }
+                                }
+
+                                print("Selected State ID: $stateId");
+
+                                if (stateId != null) {
+                                  await ref
+                                      .read(locationProvider.notifier)
+                                      .getStateData(stateId);
+                                } else {
+                                  print(
+                                      "No state ID found for the selected country.");
+                                }
                               } else if (hint == 'State') {
                                 ref
                                     .read(searchFilterInputProvider.notifier)
                                     .updateInputReligionValues(
                                         'state', selectedValues);
+                                int? stateId;
+                                for (var e in countryState.stateList) {
+                                  if (selectedValues.isNotEmpty) {
+                                    if (e.states == selectedValues.first) {
+                                      stateId = e.id;
+                                      break;
+                                    }
+                                  }
+                                }
+
+                                print("Selected State ID: $stateId");
+                                if (stateId != null) {
+                                  await ref
+                                      .read(locationProvider.notifier)
+                                      .getCityData(stateId);
+                                } else {
+                                  print(
+                                      "No state ID found for the selected country.");
+                                }
                               } else if (hint == 'City') {
                                 ref
                                     .read(searchFilterInputProvider.notifier)

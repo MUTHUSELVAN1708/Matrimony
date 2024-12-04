@@ -127,7 +127,7 @@ class _RegisterReligiousDetailsScreenState
                     if (stateId != null) {
                       await ref
                           .read(religiousProvider.notifier)
-                          .getCasteData('$stateId');
+                          .getCasteData(stateId);
                     } else {
                       ref.read(religiousProvider.notifier).removeCasteData();
                     }
@@ -168,7 +168,7 @@ class _RegisterReligiousDetailsScreenState
                           if (stateId != null) {
                             await ref
                                 .read(religiousProvider.notifier)
-                                .getSubCasteData("$stateId");
+                                .getSubCasteData(stateId);
                           } else {
                             ref
                                 .read(religiousProvider.notifier)

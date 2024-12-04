@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/log_out_model.dart';
 import 'package:matrimony/helper/nav_helper.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/change_password_screen.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/deactivate_account_screen.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/delete_profile_screen.dart';
 
-class AccountSettingScreen extends StatefulWidget {
+class AccountSettingScreen extends ConsumerStatefulWidget {
+  const AccountSettingScreen({super.key});
+
   @override
-  _AccountSettingScreenState createState() => _AccountSettingScreenState();
+  AccountSettingScreenState createState() => AccountSettingScreenState();
 }
 
-class _AccountSettingScreenState extends State<AccountSettingScreen> {
+class AccountSettingScreenState extends ConsumerState<AccountSettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +48,13 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: const ChangePasswordScreen(),
+                  screen: ChangePasswordScreen(
+                    phoneNumber: ref
+                            .read(userManagementProvider)
+                            .userDetails
+                            .phoneNumber ??
+                        '',
+                  ),
                 );
               },
               child: Container(

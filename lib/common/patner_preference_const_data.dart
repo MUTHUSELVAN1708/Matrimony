@@ -269,7 +269,13 @@ class PartnerPreferenceConstData {
   };
 
   static const List<String> maritalStatusOptions = [
-    'Any',
+    'Never Married',
+    'Widow',
+    'divorced',
+    'Awaiting Divorce'
+  ];
+
+  static const List<String> maritalStatusOptionsForSearch = [
     'Never Married',
     'Widow',
     'divorced',
@@ -281,6 +287,7 @@ class PartnerPreferenceConstData {
     'Physically Challenged',
     'Doesn’t Matter'
   ];
+
   static const List<String> eatingHabitsOptions = [
     'Doesn’t Matter',
     'Vegetarian',
