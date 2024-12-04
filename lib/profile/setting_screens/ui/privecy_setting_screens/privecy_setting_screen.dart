@@ -8,6 +8,8 @@ import 'package:matrimony/profile/setting_screens/ui/privecy_setting_screens/pri
 import 'package:matrimony/profile/setting_screens/ui/privecy_setting_screens/privercy_videochat_setting_screen.dart';
 
 class PrivacySettingScreen extends StatefulWidget {
+  const PrivacySettingScreen({super.key});
+
   @override
   _PrivacySettingScreenState createState() => _PrivacySettingScreenState();
 }
@@ -35,13 +37,13 @@ class _PrivacySettingScreenState extends State<PrivacySettingScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSettingTile('Mobile Number', onTap: _handleMobileNumberTap),
             _buildSettingTile('Photo', onTap: _handlePhotoTap),
-            _buildSettingTile('Video Profile', onTap: _handleVideoProfileTap),
+            _buildSettingTile('Video Chat', onTap: _handleVideoProfileTap),
             _buildSettingTile('Horoscope', onTap: _handleHoroscopeTap),
           ],
         ),
@@ -56,12 +58,13 @@ class _PrivacySettingScreenState extends State<PrivacySettingScreen> {
     return ListTile(
       title: Text(
         title,
-        style: AppTextStyles.spanTextStyle
-            .copyWith(color: Colors.black, fontWeight: FontWeight.w500),
+        style: AppTextStyles.spanTextStyle.copyWith(
+            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 18),
       ),
       trailing: const Icon(
         Icons.chevron_right,
         color: Colors.black,
+        size: 30,
       ),
       onTap: onTap,
     );
@@ -70,28 +73,28 @@ class _PrivacySettingScreenState extends State<PrivacySettingScreen> {
   void _handleMobileNumberTap() {
     NavigationHelper.slideNavigateTo(
       context: context,
-      screen: PrivacyMobileScreen(),
+      screen: const PrivacyMobileScreen(),
     );
   }
 
   void _handlePhotoTap() {
     NavigationHelper.slideNavigateTo(
       context: context,
-      screen: PrivacyPhotoScreen(),
+      screen: const PrivacyPhotoScreen(),
     );
   }
 
   void _handleVideoProfileTap() {
     NavigationHelper.slideNavigateTo(
       context: context,
-      screen: PrivacyVideoChatScreen(),
+      screen: const PrivacyVideoChatScreen(),
     );
   }
 
   void _handleHoroscopeTap() {
     NavigationHelper.slideNavigateTo(
       context: context,
-      screen: PrivacyHeroScopeScreen(),
+      screen: const PrivacyHeroScopeScreen(),
     );
   }
 }

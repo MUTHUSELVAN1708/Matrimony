@@ -45,17 +45,25 @@ class _HelpScreenState extends State<HelpScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: ProfileUpdateHelpScreen(),
+                  screen: const ProfileUpdateHelpScreen(),
                 );
               },
-              leading: Text(
-                'I want to edit my profile',
-                style: AppTextStyles.spanTextStyle
-                    .copyWith(fontWeight: FontWeight.w500, color: Colors.black),
+              leading: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  'I want to edit my profile',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: 18),
+                ),
               ),
               trailing: const Icon(
                 Icons.chevron_right,
                 color: AppColors.black,
+                size: 30,
               ),
             ),
             const SizedBox(
@@ -65,17 +73,25 @@ class _HelpScreenState extends State<HelpScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: ContactUpdateHelpScreen(),
+                  screen: const ContactUpdateHelpScreen(),
                 );
               },
-              leading: Text(
-                'I want to update my contact details',
-                style: AppTextStyles.spanTextStyle
-                    .copyWith(fontWeight: FontWeight.w500, color: Colors.black),
+              leading: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  'I want to update my contact details',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: 18),
+                ),
               ),
               trailing: const Icon(
                 Icons.chevron_right,
                 color: AppColors.black,
+                size: 30,
               ),
             ),
             const SizedBox(
@@ -85,17 +101,25 @@ class _HelpScreenState extends State<HelpScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: PhotoUpdateHelpScreen(),
+                  screen: const PhotoUpdateHelpScreen(),
                 );
               },
-              leading: Text(
-                'I want to add my photos',
-                style: AppTextStyles.spanTextStyle
-                    .copyWith(fontWeight: FontWeight.w500, color: Colors.black),
+              leading: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  'I want to add my photos',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: 18),
+                ),
               ),
               trailing: const Icon(
                 Icons.chevron_right,
                 color: AppColors.black,
+                size: 30,
               ),
             ),
             const SizedBox(
@@ -105,17 +129,26 @@ class _HelpScreenState extends State<HelpScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: ManagePhotosUpdateScreen(),
+                  screen: const ManagePhotosUpdateScreen(),
                 );
               },
-              leading: Text(
-                'Uploaded photos are not visible in my profile',
-                style: AppTextStyles.spanTextStyle
-                    .copyWith(fontWeight: FontWeight.w500, color: Colors.black),
+              leading: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  'Uploaded photos are not visible in my profile',
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               trailing: const Icon(
                 Icons.chevron_right,
                 color: AppColors.black,
+                size: 30,
               ),
             ),
             const SizedBox(
@@ -125,17 +158,25 @@ class _HelpScreenState extends State<HelpScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: HoroScopeUpdateHelpScreen(),
+                  screen: const HoroscopeUpdateHelpScreen(),
                 );
               },
-              leading: Text(
-                'I want to add my Horoscope',
-                style: AppTextStyles.spanTextStyle
-                    .copyWith(fontWeight: FontWeight.w500, color: Colors.black),
+              leading: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  'I want to add my Horoscope',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.spanTextStyle.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: 18),
+                ),
               ),
               trailing: const Icon(
                 Icons.chevron_right,
                 color: AppColors.black,
+                size: 30,
               ),
             ),
           ],

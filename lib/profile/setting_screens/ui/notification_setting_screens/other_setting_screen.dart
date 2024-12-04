@@ -3,6 +3,8 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
 class OtherSettingScreen extends StatefulWidget {
+  const OtherSettingScreen({super.key});
+
   @override
   State<OtherSettingScreen> createState() => _OtherSettingScreenState();
 }
@@ -27,12 +29,12 @@ class _OtherSettingScreenState extends State<OtherSettingScreen> {
               color: AppColors.headingTextColor,
             )),
         title: const Text(
-          'Other Setting',
+          'Other Settings',
           style: AppTextStyles.headingTextstyle,
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -42,7 +44,7 @@ class _OtherSettingScreenState extends State<OtherSettingScreen> {
             ),
             const SizedBox(height: 8.0),
             const Text(
-              'If you turn these off,you might miss out on offers& promotions',
+              'If You Turn These Off,You Might Miss Out On Offers & Promotions',
               style: AppTextStyles.spanTextStyle,
             ),
             const SizedBox(height: 16.0),
@@ -56,12 +58,12 @@ class _OtherSettingScreenState extends State<OtherSettingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'packages,discounts,etc',
+                  'Packages,Discounts,etc',
                   style: AppTextStyles.spanTextStyle,
                 ),
                 Transform.scale(
-                  scale:
-                      0.5, // You can adjust this value to make the switch smaller or larger
+                  scale: 0.5,
+                  // You can adjust this value to make the switch smaller or larger
                   child: Switch(
                     value: enableOffer,
                     onChanged: (value) {
