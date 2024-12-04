@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/filter_screens/ui/search_filter_screen.dart';
@@ -7,8 +8,9 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/matches_scr
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/new_home_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/notification_screen.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
-class BottomNavBarScreen extends StatefulWidget {
+class BottomNavBarScreen extends ConsumerStatefulWidget {
   final int? index;
   final bool isFetch;
 
@@ -18,7 +20,7 @@ class BottomNavBarScreen extends StatefulWidget {
   BottomNavBarScreenState createState() => BottomNavBarScreenState();
 }
 
-class BottomNavBarScreenState extends State<BottomNavBarScreen> {
+class BottomNavBarScreenState extends ConsumerState<BottomNavBarScreen> {
   int _currentIndex = 0;
   DateTime? _lastBackPressTime;
 
@@ -36,6 +38,12 @@ class BottomNavBarScreenState extends State<BottomNavBarScreen> {
     if (widget.index != null) {
       _currentIndex = widget.index!;
     }
+    clearState();
+  }
+
+  Future<void> clearState() async {
+    await Future.delayed(Duration.zero);
+    ref.read(getImageApiProvider.notifier).clearImage();
   }
 
   Future<bool> _onWillPop() async {

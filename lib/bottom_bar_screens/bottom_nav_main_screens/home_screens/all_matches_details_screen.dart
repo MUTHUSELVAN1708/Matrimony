@@ -17,6 +17,7 @@ import 'package:matrimony/models/partner_details_model.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_details_model.dart';
 import 'package:matrimony/models/user_partner_data.dart';
+import 'package:matrimony/profile/more/screens/report_profile_screen.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -129,7 +130,8 @@ class _AllMatchesDetailsScreenState
                             fit: BoxFit.cover,
                           )
                         : const DecorationImage(
-                            image: AssetImage('assets/image/emptyProfile.png'),
+                            image: AssetImage('assets/image/emptyProfile.png')
+                                as ImageProvider<Object>,
                             fit: BoxFit.cover,
                           ),
                   ),
@@ -223,14 +225,14 @@ class _AllMatchesDetailsScreenState
                                     .getBlockedUsers();
                                 break;
                               case 'report':
-                                await ref
-                                    .read(interestProvider.notifier)
-                                    .reportProfile(
-                                        userDetails.userId!, 'more calls');
-                                await ref
-                                    .read(allMatchesProvider.notifier)
-                                    .allMatchDataFetch();
-                                Navigator.of(context).pop();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ReportProfileScreen(
+                                              uniqueId: userDetails.uniqueId,
+                                              userId: userDetails.userId,
+                                            )));
                                 break;
                             }
                           },

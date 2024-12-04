@@ -57,10 +57,10 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
             isLoadingForUser: false,
             userDetails: userDetails,
             userPartnerDetails: userPartnerDetails);
-      } else if (response.statusCode == 400) {
+      } else {
         state = state.copyWith(
           isLoadingForUser: false,
-          error: json.decode(response.body)['errorMessage'],
+          error: '',
         );
       }
     } catch (e) {
@@ -86,24 +86,23 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
           'userId': userId,
         }),
       );
-
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
         final partnerDetails = UserDetails.fromJson(jsonResponse);
         final partnerPartnerDetails =
             PartnerDetailsModel.fromJson(jsonResponse);
-        print(partnerDetails.toJson());
-        print(partnerPartnerDetails.toJson());
+        // print(partnerDetails.toJson());
+        // print(partnerPartnerDetails.toJson());
         state = state.copyWith(
             isLoadingForPartner: false,
             partnerDetails: partnerDetails,
             partnerPartnerDetails: partnerPartnerDetails);
         return UserPartnerData(
             partnerDetails: partnerPartnerDetails, userDetails: partnerDetails);
-      } else if (response.statusCode == 400) {
+      } else {
         state = state.copyWith(
           isLoadingForPartner: false,
-          error: json.decode(response.body)['errorMessage'],
+          error: '',
         );
         return null;
       }
@@ -114,7 +113,6 @@ class UserManagementProvider extends StateNotifier<UserManagementState> {
       );
       return null;
     }
-    return null;
   }
 
   void updateReligiousDetails(ReligiousState religiousState) {

@@ -8,6 +8,8 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
+import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
+import 'package:matrimony/interest_block_dontshow_report_profile/riverpod/interest_provider.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_partner_data.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
@@ -26,7 +28,7 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
     return allMatchProvider.allMatchList != null &&
             allMatchProvider.allMatchList!.isNotEmpty
         ? EnhancedLoadingWrapper(
-            isLoading: ref.read(userManagementProvider).isLoadingForPartner,
+            isLoading: ref.watch(userManagementProvider).isLoadingForPartner,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -84,6 +86,9 @@ class MatchCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final interestState = ref.watch(interestModelProvider);
+    final isBlocked = interestState.blockedMeList.contains(match.id);
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Stack(
@@ -113,106 +118,139 @@ class MatchCard extends ConsumerWidget {
           Container(
             height: MediaQuery.of(context).size.height * 0.3,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withOpacity(isBlocked ? 0.6 : 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          Positioned(
-            bottom: 50,
-            left: 15,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  match.name.toString(),
-                  style: AppTextStyles.headingTextstyle.copyWith(
-                      color: AppColors.primaryButtonTextColor,
-                      fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '#${match.uniqueId ?? ''}',
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                      color: AppColors.primaryButtonTextColor, fontSize: 14),
-                ),
-              ],
+          if (isBlocked)
+            const Positioned.fill(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Blocked You",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(2, 1),
+                          blurRadius: 4,
+                          color: Colors.black,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Icon(
+                    Icons.block_rounded,
+                    color: Colors.red,
+                  )
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            right: 10,
-            top: 10,
-            child: SizedBox(
-              height: 30,
-              child: ElevatedButton(
-                onPressed: () async {
-                  final getImageApiProviderState =
-                      ref.watch(getImageApiProvider);
-                  final partnerDetails = await ref
-                      .read(userManagementProvider.notifier)
-                      .getPartnerDetails(match.id ?? 0);
-                  if (getImageApiProviderState.data != null &&
-                      getImageApiProviderState.data!.paymentStatus) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AllMatchesDetailsScreen(
-                                  userPartnerData:
-                                      partnerDetails ?? UserPartnerData(),
-                                )));
-                  } else {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PlanUpgradeScreen()));
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5))),
-                child: const Text(
-                  'View Details',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
+          if (!isBlocked)
+            Positioned(
+              bottom: 50,
+              left: 15,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    match.name.toString(),
+                    style: AppTextStyles.headingTextstyle.copyWith(
+                        color: AppColors.primaryButtonTextColor,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '#${match.uniqueId ?? ''}',
+                    style: AppTextStyles.spanTextStyle.copyWith(
+                        color: AppColors.primaryButtonTextColor, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          if (!isBlocked)
+            Positioned(
+              right: 10,
+              top: 10,
+              child: SizedBox(
+                height: 30,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final getImageApiProviderState =
+                        ref.watch(getImageApiProvider);
+                    final partnerDetails = await ref
+                        .read(userManagementProvider.notifier)
+                        .getPartnerDetails(match.id ?? 0);
+                    if (getImageApiProviderState.data != null &&
+                        getImageApiProviderState.data!.paymentStatus) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AllMatchesDetailsScreen(
+                                    userPartnerData:
+                                        partnerDetails ?? UserPartnerData(),
+                                  )));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PlanUpgradeScreen()));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5))),
+                  child: const Text(
+                    'View Details',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 8,
-            left: 8,
-            right: 8,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  if (match.occupation != null && match.occupation != '') ...[
-                    _buildInfoChip(match.occupation!),
-                    const SizedBox(width: 8),
+          if (!isBlocked)
+            Positioned(
+              bottom: 8,
+              left: 8,
+              right: 8,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    if (match.occupation != null && match.occupation != '') ...[
+                      _buildInfoChip(match.occupation!),
+                      const SizedBox(width: 8),
+                    ],
+                    if (match.age != null) ...[
+                      _buildInfoChip('${match.age} Yrs'),
+                      const SizedBox(width: 8),
+                    ],
+                    if (match.caste != null && match.caste != '') ...[
+                      _buildInfoChip(match.caste!),
+                      const SizedBox(width: 8),
+                    ],
+                    if (match.state != null &&
+                        match.state != '' &&
+                        match.city != null &&
+                        match.city != '') ...[
+                      _buildInfoChip('${match.city},${match.state!}'),
+                      const SizedBox(width: 8),
+                    ],
                   ],
-                  if (match.age != null) ...[
-                    _buildInfoChip('${match.age} Yrs'),
-                    const SizedBox(width: 8),
-                  ],
-                  if (match.caste != null && match.caste != '') ...[
-                    _buildInfoChip(match.caste!),
-                    const SizedBox(width: 8),
-                  ],
-                  if (match.state != null &&
-                      match.state != '' &&
-                      match.city != null &&
-                      match.city != '') ...[
-                    _buildInfoChip('${match.city},${match.state!}'),
-                    const SizedBox(width: 8),
-                  ],
-                ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

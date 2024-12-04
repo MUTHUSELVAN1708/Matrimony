@@ -202,7 +202,8 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
           'star': state.star,
           'subcaste': state.subCaste,
           'willingToMarryFromOtherCommunities':
-              state.willingToMarryOtherCommunities
+              state.willingToMarryOtherCommunities,
+          'division': ''
         }),
       );
 

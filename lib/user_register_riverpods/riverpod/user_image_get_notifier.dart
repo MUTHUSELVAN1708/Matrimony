@@ -80,6 +80,10 @@ class GetImageState {
 class GetImageApiNotifier extends StateNotifier<GetImageState> {
   GetImageApiNotifier() : super(GetImageState());
 
+  void clearImage() {
+    state = GetImageState();
+  }
+
   Future<void> getImage() async {
     state = state.copyWith(isLoading: true, error: null, data: null);
     try {

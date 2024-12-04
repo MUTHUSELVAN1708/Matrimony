@@ -33,7 +33,8 @@ class NewHomeScreen extends ConsumerStatefulWidget {
   ConsumerState<NewHomeScreen> createState() => _NewHomeScreenState();
 }
 
-class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
+class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
+    with AutomaticKeepAliveClientMixin {
   bool isAllMatchesLoading = false;
   bool isImageLoading = false;
   bool isDailyRecommendLoading = false;
@@ -44,6 +45,10 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     super.initState();
     getData();
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   Future<void> getData() async {
     await Future.delayed(Duration.zero);
@@ -87,14 +92,19 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     if (mounted) {
       ref.read(interestModelProvider.notifier).getReportedUsers();
     }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getMeBlockedUsers();
+    }
   }
 
   Future<void> fetchImage() async {
-    await ref.read(getImageApiProvider.notifier).getImage();
-    if (mounted) {
-      setState(() {
-        isImageLoading = false;
-      });
+    if (ref.watch(getImageApiProvider).data == null) {
+      await ref.read(getImageApiProvider.notifier).getImage();
+      if (mounted) {
+        setState(() {
+          isImageLoading = false;
+        });
+      }
     }
   }
 
@@ -109,6 +119,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final getImageApiProviderState = ref.watch(getImageApiProvider);
     final userManagementState = ref.watch(userManagementProvider);
     return EnhancedLoadingWrapper(
@@ -294,6 +305,11 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   Widget _buildDailyRecommendations(BuildContext context, WidgetRef ref) {
     final dailyRecommendsState = ref.watch(dailyRecommendProvider);
+    final interestModelState = ref.watch(interestModelProvider);
+    final dailyRecommendList = dailyRecommendsState.dailyRecommendList
+        .where(
+            (model) => !interestModelState.blockedMeList.contains(model.userId))
+        .toList();
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.topCenter,
@@ -333,12 +349,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                       )
                     : dailyRecommendsState.isLoading || isDailyRecommendLoading
                         ? const Center(child: CircularProgressIndicator())
-                        : (dailyRecommendsState.dailyRecommendList.isEmpty)
+                        : (dailyRecommendList.isEmpty)
                             ? const Center(
                                 child:
                                     Text('No Daily Recommendation Available'))
                             : _buildRecommendationsList(
-                                dailyRecommendsState, context),
+                                dailyRecommendList, context),
               ),
             ],
           ),
@@ -358,10 +374,9 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.all(16),
-      itemCount: dailyRecommendsState.dailyRecommendList!.length,
+      itemCount: dailyRecommendsState.length,
       itemBuilder: (context, index) {
-        final dailyRecommendData =
-            dailyRecommendsState.dailyRecommendList![index];
+        final dailyRecommendData = dailyRecommendsState[index];
         return Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Column(
@@ -435,6 +450,10 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   Widget _buildAllMatches(WidgetRef ref) {
     final matingData = ref.watch(allMatchesProvider);
+    final interestModelState = ref.watch(interestModelProvider);
+    final allMatchList = matingData.allMatchList
+        ?.where((model) => !interestModelState.blockedMeList.contains(model.id))
+        .toList();
     return Container(
       padding: const EdgeInsets.all(16),
       color: AppColors.userCardListColor,
@@ -489,7 +508,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : matingData.allMatchList == null ||
                             (matingData.allMatchList != null &&
-                                matingData.allMatchList!.isEmpty)
+                                allMatchList!.isEmpty)
                         ? const Center(
                             child: Text(
                             'No Matches Available',
@@ -497,9 +516,9 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                           ))
                         : ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: matingData.allMatchList!.length,
+                            itemCount: allMatchList!.length,
                             itemBuilder: (context, index) {
-                              final matching = matingData.allMatchList![index];
+                              final matching = allMatchList[index];
                               return GestureDetector(
                                 onTap: () async {
                                   final getImageApiProviderState =
