@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/helper/nav_helper.dart';
+import 'package:matrimony/profile/help_screens/ui/related_questions_screen.dart';
+import 'package:matrimony/user_auth_screens/register_screens/register_user_photo_upload_screens/register_user_photo_upload_screen.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
-class ManagePhotosUpdateScreen extends StatelessWidget {
-  const ManagePhotosUpdateScreen({Key? key}) : super(key: key);
+class ManagePhotosUpdateScreen extends ConsumerWidget {
+  const ManagePhotosUpdateScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -38,7 +44,7 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
                   const Text(
                     'Uploaded Photos Are Not Visible In My Profile',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -47,16 +53,14 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
                     'If uploaded photos are not visible in your profile, it could be due to any one of the following reasons',
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // Validation Section
                   const Text(
                     'Validation',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -65,16 +69,14 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
                     'All photos involve manual screening which usually takes a maximum of 1 hour to get validated before it is visible.',
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // Failed During Screening Section
                   const Text(
                     'Failed During Screening',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -83,34 +85,37 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
                     'Your photos may not have been approved due to any one of the following reasons',
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // Bullet Points
                   ..._buildBulletPoints([
                     'Poor Image Quality',
                     'Bad Lighting',
                     'Photo With Multiple People',
                     'Face Not Visible Due To Sunglasses, Mask.',
                   ]),
-
                   const SizedBox(height: 16),
                   const Text(
                     'You will receive a mail on your registered mail ID with the exact reason.',
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // Manage Photos Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        NavigationHelper.slideNavigateTo(
+                          context: context,
+                          screen: RegisterUserPhotoUploadScreen(
+                              isEditPhoto: true,
+                              images: getImageApiProviderState.data?.images,
+                              onPop: (value) {}),
+                        );
+                      },
                       style: AppTextStyles.primaryButtonstyle,
                       child: const Text(
                         'Manage Photos',
@@ -121,91 +126,10 @@ class ManagePhotosUpdateScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Related Questions Section
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: const BoxDecoration(
-                color: Color(0XffF2F2F2),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Related Questions',
-                    style: AppTextStyles.spanTextStyle.copyWith(
-                        color: AppColors.black, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(height: 16),
-                  _buildListTile('I Want To Edit My Profile'),
-                  _buildListTile('I Want To Update My Contact Details'),
-                  SizedBox(height: 16),
-                  Text(
-                    "Still Can't Find What You're Looking For? Don't Worry We're Here To Help",
-                    style: AppTextStyles.spanTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: AppColors.black),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            // Add call functionality
-                          },
-                          icon: Icon(Icons.phone, color: Colors.red),
-                          label: const Text(
-                            'Call Us',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.red),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            // Add chat functionality
-                          },
-                          icon: const Icon(Icons.chat, color: Colors.red),
-                          label: const Text(
-                            'Chat Now',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.red),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            const RelatedQuestionsScreen(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildListTile(String title) {
-    return ListTile(
-      title: Text(title, style: AppTextStyles.spanTextStyle
-          //     .copyWith(
-          //     color: AppColors.black
-          // ),
-          ),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      contentPadding: EdgeInsets.zero,
-      onTap: () {
-        // Add navigation functionality
-      },
     );
   }
 

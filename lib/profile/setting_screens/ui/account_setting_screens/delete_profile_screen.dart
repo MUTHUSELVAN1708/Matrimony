@@ -3,6 +3,8 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
 class DeleteProfileScreen extends StatefulWidget {
+  const DeleteProfileScreen({super.key});
+
   @override
   _DeleteProfileScreenState createState() => _DeleteProfileScreenState();
 }
@@ -38,10 +40,12 @@ class _DeleteProfileScreenState extends State<DeleteProfileScreen> {
           children: [
             Text(
               'Please Choose A Reason For Profile Deletion',
-              style: AppTextStyles.spanTextStyle.copyWith(color: Colors.black),
+              style: AppTextStyles.spanTextStyle
+                  .copyWith(color: Colors.black, fontSize: 18),
             ),
             const SizedBox(height: 16.0),
             RadioListTile(
+              contentPadding: const EdgeInsets.all(0),
               activeColor: AppColors.headingTextColor,
               title: const Text('Already Married',
                   style: AppTextStyles.spanTextStyle),
@@ -54,6 +58,7 @@ class _DeleteProfileScreenState extends State<DeleteProfileScreen> {
               },
             ),
             RadioListTile(
+              contentPadding: const EdgeInsets.all(0),
               activeColor: AppColors.headingTextColor,
               title: const Text('Getting Married Soon',
                   style: AppTextStyles.spanTextStyle),
@@ -66,6 +71,7 @@ class _DeleteProfileScreenState extends State<DeleteProfileScreen> {
               },
             ),
             RadioListTile(
+              contentPadding: const EdgeInsets.all(0),
               activeColor: AppColors.headingTextColor,
               title: const Text('Other Reason',
                   style: AppTextStyles.spanTextStyle),
@@ -81,13 +87,11 @@ class _DeleteProfileScreenState extends State<DeleteProfileScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  print('Reason for profile deletion: $_selectedReason');
-                },
+                onPressed: () {},
                 style: AppTextStyles.primaryButtonstyle,
-                child: const Text(
-                  'Submit',
-                  style: AppTextStyles.primarybuttonText,
+                child: Text(
+                  'Next',
+                  style: AppTextStyles.primarybuttonText.copyWith(fontSize: 18),
                 ),
               ),
             ),

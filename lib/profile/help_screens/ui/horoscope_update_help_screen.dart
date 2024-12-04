@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/helper/nav_helper.dart';
+import 'package:matrimony/profile/help_screens/ui/related_questions_screen.dart';
+import 'package:matrimony/user_auth_screens/register_star_details/heroscope_add_details_screen.dart';
 
-class HoroScopeUpdateHelpScreen extends StatelessWidget {
+class HoroscopeUpdateHelpScreen extends StatelessWidget {
+  const HoroscopeUpdateHelpScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +17,7 @@ class HoroScopeUpdateHelpScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         title: const Text(
-          'My Profile And Photos',
+          'My Horoscope Details',
           style: AppTextStyles.headingTextstyle,
         ),
         leading: IconButton(
@@ -34,23 +39,28 @@ class HoroScopeUpdateHelpScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'To Edit/ Update Profile',
+                    'To Edit/ Update Horoscope',
                     style: AppTextStyles.spanTextStyle.copyWith(
-                        color: AppColors.black, fontWeight: FontWeight.w500),
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18),
                   ),
-                  SizedBox(height: 8),
-                  const Text(
-                    'Please Tap On The Button Below To Edit/Update Your Profile',
-                    style: AppTextStyles.spanTextStyle,
+                  const SizedBox(height: 10),
+                  Text(
+                    'Please tap on the button below to add your Horoscope.',
+                    style: AppTextStyles.spanTextStyle.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      // Add edit profile functionality
+                      NavigationHelper.slideNavigateTo(
+                        context: context,
+                        screen: HoroscopeAddDetailScreen(onPop: (value) {}),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.primaryButtonColor,
                       minimumSize: const Size(120, 40),
                     ),
                     child: const Text(
@@ -61,99 +71,20 @@ class HoroScopeUpdateHelpScreen extends StatelessWidget {
                   const SizedBox(
                     height: 25,
                   ),
-                  Text(
-                    'note : it take upto 1 hour for your horoscope to get validated',
-                    style: AppTextStyles.spanTextStyle.copyWith(
-                        color: AppColors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500),
-                  ),
+                  // Text(
+                  //   'note : it take upto 1 hour for your horoscope to get validated',
+                  //   style: AppTextStyles.spanTextStyle.copyWith(
+                  //       color: AppColors.black,
+                  //       fontSize: 15,
+                  //       fontWeight: FontWeight.w500),
+                  // ),
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: const BoxDecoration(
-              color: Color(0XffF2F2F2),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Related Questions',
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                      color: AppColors.black, fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 16),
-                _buildListTile('I Want To Edit My Profile'),
-                _buildListTile('I Want To Update My Contact Details'),
-                SizedBox(height: 16),
-                Text(
-                  "Still Can't Find What You're Looking For? Don't Worry We're Here To Help",
-                  style: AppTextStyles.spanTextStyle.copyWith(
-                      fontWeight: FontWeight.w500, color: AppColors.black),
-                ),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          // Add call functionality
-                        },
-                        icon: Icon(Icons.phone, color: Colors.red),
-                        label: Text(
-                          'Call Us',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Colors.red),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          // Add chat functionality
-                        },
-                        icon: Icon(Icons.chat, color: Colors.red),
-                        label: Text(
-                          'Chat Now',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Colors.red),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          const RelatedQuestionsScreen(),
         ],
       ),
-    );
-  }
-
-  Widget _buildListTile(String title) {
-    return ListTile(
-      title: Text(title, style: AppTextStyles.spanTextStyle
-          //     .copyWith(
-          //     color: AppColors.black
-          // ),
-          ),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      contentPadding: EdgeInsets.zero,
-      onTap: () {
-        // Add navigation functionality
-      },
     );
   }
 }

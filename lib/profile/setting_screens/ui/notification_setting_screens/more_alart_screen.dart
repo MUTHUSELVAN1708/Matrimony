@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matrimony/common/app_text_style.dart';
 
 class MoreAlertsScreen extends StatefulWidget {
-  const MoreAlertsScreen({Key? key}) : super(key: key);
+  const MoreAlertsScreen({super.key});
 
   @override
   State<MoreAlertsScreen> createState() => _MoreAlertsScreenState();
@@ -38,13 +38,13 @@ class _MoreAlertsScreenState extends State<MoreAlertsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Choose how often you receive notifications about any member\'s activity on your profile',
+                'Choose How Often You Receive Notifications About Any Member\'s Activity On Your Profile',
                 style: AppTextStyles.spanTextStyle,
               ),
               const SizedBox(height: 24),
 
               _buildSectionTitle('Express Interest'),
-              _buildSubtitle('When members send an interest'),
+              _buildSubtitle('When Members Send An Interest'),
               _buildNotificationOptions(
                 value: expressInterestNotification,
                 onChanged: (value) {

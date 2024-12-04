@@ -53,7 +53,7 @@ class AccountSettingScreenState extends ConsumerState<AccountSettingScreen> {
                             .read(userManagementProvider)
                             .userDetails
                             .phoneNumber ??
-                        '',
+                        '0000000000',
                   ),
                 );
               },
@@ -131,7 +131,7 @@ class AccountSettingScreenState extends ConsumerState<AccountSettingScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: DeactivateAccountScreen(),
+                  screen: const DeactivateAccountScreen(),
                 );
               },
               child: Container(
@@ -171,7 +171,7 @@ class AccountSettingScreenState extends ConsumerState<AccountSettingScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: DeleteProfileScreen(),
+                  screen: const DeleteProfileScreen(),
                 );
               },
               child: Container(

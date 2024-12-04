@@ -3,6 +3,8 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
 class PrivacyVideoChatScreen extends StatefulWidget {
+  const PrivacyVideoChatScreen({super.key});
+
   @override
   _PrivacyVideoChatScreenState createState() => _PrivacyVideoChatScreenState();
 }
@@ -35,7 +37,7 @@ class _PrivacyVideoChatScreenState extends State<PrivacyVideoChatScreen> {
           children: [
             Text('Video Chat',
                 style: AppTextStyles.spanTextStyle
-                    .copyWith(color: AppColors.headingTextColor)),
+                    .copyWith(color: AppColors.headingTextColor, fontSize: 18)),
             const SizedBox(height: 8.0),
             Column(
               children: [
@@ -81,10 +83,12 @@ class _PrivacyVideoChatScreenState extends State<PrivacyVideoChatScreen> {
             Expanded(
               child: Row(
                 children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.spanTextStyle
-                        .copyWith(color: Colors.black),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: AppTextStyles.spanTextStyle
+                          .copyWith(color: Colors.black),
+                    ),
                   ),
                   if (recommended) ...[
                     const SizedBox(width: 50),

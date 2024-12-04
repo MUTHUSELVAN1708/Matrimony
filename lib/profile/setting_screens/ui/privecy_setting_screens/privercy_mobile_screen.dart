@@ -3,12 +3,14 @@ import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 
 class PrivacyMobileScreen extends StatefulWidget {
+  const PrivacyMobileScreen({super.key});
+
   @override
   _PrivacyMobileScreenState createState() => _PrivacyMobileScreenState();
 }
 
 class _PrivacyMobileScreenState extends State<PrivacyMobileScreen> {
-  String _mobileNumberVisibility = 'All Paid Numbers';
+  String _mobileNumberVisibility = 'all paid numbers';
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class _PrivacyMobileScreenState extends State<PrivacyMobileScreen> {
           children: [
             Text('Mobile number',
                 style: AppTextStyles.spanTextStyle
-                    .copyWith(color: AppColors.headingTextColor)),
+                    .copyWith(color: AppColors.headingTextColor, fontSize: 18)),
             const SizedBox(
               height: 10,
             ),
@@ -51,17 +53,17 @@ class _PrivacyMobileScreenState extends State<PrivacyMobileScreen> {
             Column(
               children: [
                 _customRadioOption(
-                  title: 'all paid numbers',
+                  title: 'All Paid Numbers',
                   value: 'all paid numbers',
                   recommended: true,
                 ),
                 _customRadioOption(
-                  title: 'paid members whom i contacted/responded to',
+                  title: 'Paid Members Whom I Contacted/Responded To',
                   value: 'paid members whom i contacted/responded to',
                   recommended: false,
                 ),
                 _customRadioOption(
-                  title: 'don’t show phone number(hide contact details)',
+                  title: 'Don’t Show Phone Number(Hide Contact Details)',
                   value: 'don’t show phone number(hide contact details)',
                   recommended: false,
                 ),
@@ -90,10 +92,12 @@ class _PrivacyMobileScreenState extends State<PrivacyMobileScreen> {
             Expanded(
               child: Row(
                 children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.spanTextStyle
-                        .copyWith(color: Colors.black),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: AppTextStyles.spanTextStyle
+                          .copyWith(color: Colors.black),
+                    ),
                   ),
                   if (recommended) ...[
                     const SizedBox(width: 50),

@@ -53,11 +53,14 @@ class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
                 style: AppTextStyles.spanTextStyle
                     .copyWith(fontSize: 18, color: AppColors.headingTextColor),
               ),
+              const SizedBox(
+                height: 5,
+              ),
               const Text(
                 'If you turn these off, you might miss out on our recommendations based on your preferences',
                 style: AppTextStyles.spanTextStyle,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _buildSettingTile(
                 'Phone Number Views',
                 'when members view your number',
@@ -106,10 +109,16 @@ class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 8,
+              ),
               Text(
                 'Matches',
                 style: AppTextStyles.spanTextStyle
                     .copyWith(color: AppColors.headingTextColor, fontSize: 18),
+              ),
+              const SizedBox(
+                height: 5,
               ),
               const Text(
                 'If you turn these off, you might miss out on our recommendations based on your preferences',
@@ -134,12 +143,15 @@ class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
                 basedOnActivity,
                 (value) => setState(() => basedOnActivity = value),
               ),
+              const SizedBox(
+                height: 5,
+              ),
               Center(
                 child: GestureDetector(
                   onTap: () {
                     NavigationHelper.slideNavigateTo(
                       context: context,
-                      screen: OtherSettingScreen(),
+                      screen: const OtherSettingScreen(),
                     );
                   },
                   child: Container(
