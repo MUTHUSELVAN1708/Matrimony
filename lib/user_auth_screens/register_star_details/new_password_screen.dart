@@ -68,7 +68,7 @@ class _ChangePasswordScreenState extends ConsumerState<NewPasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'If you want to change a password',
+                'If you want to change a Password',
                 style: AppTextStyles.spanTextStyle.copyWith(fontSize: 18),
               ),
               const SizedBox(height: 20),

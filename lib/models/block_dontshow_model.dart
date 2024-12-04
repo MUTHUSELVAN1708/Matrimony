@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class SentModel extends Equatable {
-  final int? interestId;
+class BlockModel extends Equatable {
+  final int? blockId;
   final List<String>? images;
   final String? name;
   final String? uniqueId;
@@ -10,12 +10,11 @@ class SentModel extends Equatable {
   final String? education;
   final String? city;
   final String? state;
-  final String? interestCreatedAt;
-  final String? status;
+  final String? blockedAt;
   final int? userId;
 
-  const SentModel({
-    this.interestId,
+  const BlockModel({
+    this.blockId,
     this.images,
     this.name,
     this.uniqueId,
@@ -24,14 +23,13 @@ class SentModel extends Equatable {
     this.education,
     this.city,
     this.state,
-    this.interestCreatedAt,
-    this.status,
+    this.blockedAt,
     this.userId,
   });
 
-  factory SentModel.fromJson(Map<String, dynamic> json) {
-    return SentModel(
-      interestId: json['interestId'] as int?,
+  factory BlockModel.fromJson(Map<String, dynamic> json) {
+    return BlockModel(
+      blockId: json['blockId'] as int?,
       images:
           (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
       name: json['name'] as String?,
@@ -41,15 +39,14 @@ class SentModel extends Equatable {
       education: json['education'] as String?,
       city: json['city'] as String?,
       state: json['state'] as String?,
-      interestCreatedAt: json['interestCreatedAt'] as String?,
-      status: json['status'] as String?,
-      userId: json['id'] as int?,
+      blockedAt: json['blockedAt'] as String?,
+      userId: json['blockedUserId'] as int?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'interestId': interestId,
+      'blockId': blockId,
       'images': images,
       'name': name,
       'uniqueId': uniqueId,
@@ -58,15 +55,14 @@ class SentModel extends Equatable {
       'education': education,
       'city': city,
       'state': state,
-      'interestCreatedAt': interestCreatedAt,
-      'status': status,
-      'id': userId
+      'blockedAt': blockedAt,
+      'blockedUserId': userId
     };
   }
 
   @override
   List<Object?> get props => [
-        interestId,
+        blockId,
         images,
         name,
         uniqueId,
@@ -75,14 +71,13 @@ class SentModel extends Equatable {
         education,
         city,
         state,
-        interestCreatedAt,
-        status,
+        blockedAt,
         userId
       ];
 }
 
-class ReceiveModel extends Equatable {
-  final int? interestId;
+class DoNotShowModel extends Equatable {
+  final int? id;
   final List<String>? images;
   final String? name;
   final String? uniqueId;
@@ -91,12 +86,12 @@ class ReceiveModel extends Equatable {
   final String? education;
   final String? city;
   final String? state;
-  final String? interestCreatedAt;
+  final String? createdAt;
   final String? status;
   final int? userId;
 
-  const ReceiveModel({
-    this.interestId,
+  const DoNotShowModel({
+    this.id,
     this.images,
     this.name,
     this.uniqueId,
@@ -105,14 +100,14 @@ class ReceiveModel extends Equatable {
     this.education,
     this.city,
     this.state,
-    this.interestCreatedAt,
+    this.createdAt,
     this.status,
     this.userId,
   });
 
-  factory ReceiveModel.fromJson(Map<String, dynamic> json) {
-    return ReceiveModel(
-        interestId: json['interestId'] as int?,
+  factory DoNotShowModel.fromJson(Map<String, dynamic> json) {
+    return DoNotShowModel(
+        id: json['id'] as int?,
         images: (json['images'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
@@ -123,14 +118,14 @@ class ReceiveModel extends Equatable {
         education: json['education'] as String?,
         city: json['city'] as String?,
         state: json['state'] as String?,
-        interestCreatedAt: json['interestCreatedAt'] as String?,
+        createdAt: json['createdAt'] as String?,
         status: json['status'] as String?,
-        userId: json['id'] as int?);
+        userId: json['hiddenId'] as int?);
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'interestId': interestId,
+      'id': id,
       'images': images,
       'name': name,
       'uniqueId': uniqueId,
@@ -139,15 +134,15 @@ class ReceiveModel extends Equatable {
       'education': education,
       'city': city,
       'state': state,
-      'interestCreatedAt': interestCreatedAt,
+      'createdAt': createdAt,
       'status': status,
-      'userId': userId
+      'hiddenId': userId
     };
   }
 
   @override
   List<Object?> get props => [
-        interestId,
+        id,
         images,
         name,
         uniqueId,
@@ -156,7 +151,7 @@ class ReceiveModel extends Equatable {
         education,
         city,
         state,
-        interestCreatedAt,
+        createdAt,
         status,
         userId
       ];

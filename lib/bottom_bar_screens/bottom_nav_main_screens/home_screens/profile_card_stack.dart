@@ -3,11 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/interest_accept_reject/screens/all_recieved_profile_list_screen.dart';
 import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
 import 'package:matrimony/interest_block_dontshow_report_profile/riverpod/interest_provider.dart';
+import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+import 'package:matrimony/models/user_partner_data.dart';
+import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
 
 class ProfileCardStack extends ConsumerStatefulWidget {
   const ProfileCardStack({super.key});
@@ -62,22 +68,28 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                       ),
                     ),
                   ),
-                  // GestureDetector(
-                  //   onTap: () {},
-                  //   child: Container(
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 6, vertical: 4),
-                  //     decoration: const BoxDecoration(
-                  //       color: AppColors.primaryButtonColor,
-                  //       borderRadius: BorderRadius.all(Radius.circular(6)),
-                  //     ),
-                  //     child: Text(
-                  //       'View All',
-                  //       style: AppTextStyles.primarybuttonText
-                  //           .copyWith(fontSize: 12),
-                  //     ),
-                  //   ),
-                  // ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const RequestProfilesScreen()));
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 4),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryButtonColor,
+                        borderRadius: BorderRadius.all(Radius.circular(6)),
+                      ),
+                      child: Text(
+                        'View All',
+                        style: AppTextStyles.primarybuttonText
+                            .copyWith(fontSize: 12),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -108,7 +120,7 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                                   color: Colors.grey.withOpacity(0.3))),
                           child: const Center(
                             child: Text(
-                              'No Requests Here!',
+                              'No requests received yet.',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 18),
                             ),
@@ -147,17 +159,50 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Container(
-                                      height: 155,
-                                      margin: const EdgeInsets.only(right: 8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                        ),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        final getImageApiProviderState =
+                                            ref.watch(getImageApiProvider);
+                                        final partnerDetails = await ref
+                                            .read(
+                                                userManagementProvider.notifier)
+                                            .getPartnerDetails(
+                                                interest.userId ?? 0);
+                                        if (getImageApiProviderState.data !=
+                                                null &&
+                                            getImageApiProviderState
+                                                .data!.paymentStatus) {
+                                          if (mounted) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AllMatchesDetailsScreen(
+                                                          userPartnerData:
+                                                              partnerDetails ??
+                                                                  UserPartnerData(),
+                                                        )));
+                                          }
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const PlanUpgradeScreen()));
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 155,
+                                        margin: const EdgeInsets.only(right: 8),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                          ),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -175,15 +220,16 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                                             interest.name ?? 'N/A',
                                             style: const TextStyle(
                                               fontSize: 20,
+                                              color: Color(0xFFD6151A),
                                               fontWeight: FontWeight.bold,
                                             ),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                           ),
                                           Text(
-                                            interest.uniqueId ?? 'N/A',
+                                            '#${interest.uniqueId ?? 'N/A'}',
                                             style: TextStyle(
-                                              color: Colors.grey[600],
+                                              color: Colors.grey[800],
                                               fontSize: 14,
                                             ),
                                             overflow: TextOverflow.ellipsis,
@@ -220,9 +266,9 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                                           ),
                                           Text(
                                             interest.city != null
-                                                ? '${interest.city}'
+                                                ? '${interest.city}${interest.state != null ? ', ${interest.state}' : ''}'
                                                 : interest.state != null
-                                                    ? ', ${interest.state}'
+                                                    ? '${interest.state}'
                                                     : '',
                                             style: TextStyle(
                                               color: Colors.grey[600],
@@ -232,31 +278,35 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                                             maxLines: 1,
                                           ),
                                           const SizedBox(height: 5),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              await ref
-                                                  .read(
-                                                      interestProvider.notifier)
-                                                  .acceptProfile('Accepted',
-                                                      interest.interestId!);
-                                              await ref
-                                                  .read(interestModelProvider
-                                                      .notifier)
-                                                  .getReceivedInterests();
-                                            },
-                                            child: Container(
-                                              height: 20,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black54,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: const Center(
-                                                child: Text(
-                                                  'Accept',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 4),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await ref
+                                                    .read(interestProvider
+                                                        .notifier)
+                                                    .acceptProfile('Accepted',
+                                                        interest.interestId!);
+                                                await ref
+                                                    .read(interestModelProvider
+                                                        .notifier)
+                                                    .getReceivedInterests();
+                                              },
+                                              child: Container(
+                                                height: 20,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black54,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    'Accept',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -287,7 +337,7 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                                                       CrossAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      '"He has sent an\ninterest to you"',
+                                                      '"${ref.watch(userManagementProvider).userDetails.gender == 'Male' ? 'She' : 'He'} has sent an\ninterest to you"',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -319,31 +369,35 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                                             ),
                                           ),
                                           const SizedBox(height: 30),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              await ref
-                                                  .read(
-                                                      interestProvider.notifier)
-                                                  .rejectProfile('Rejected',
-                                                      interest.interestId!);
-                                              await ref
-                                                  .read(interestModelProvider
-                                                      .notifier)
-                                                  .getReceivedInterests();
-                                            },
-                                            child: Container(
-                                              height: 20,
-                                              width: 98,
-                                              decoration: BoxDecoration(
-                                                color: Colors.red.shade700,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: const Center(
-                                                child: Text(
-                                                  'Decline',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 4),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await ref
+                                                    .read(interestProvider
+                                                        .notifier)
+                                                    .rejectProfile('Rejected',
+                                                        interest.interestId!);
+                                                await ref
+                                                    .read(interestModelProvider
+                                                        .notifier)
+                                                    .getReceivedInterests();
+                                              },
+                                              child: Container(
+                                                height: 20,
+                                                width: 98,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.red.shade700,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    'Decline',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
                                                 ),
                                               ),
                                             ),

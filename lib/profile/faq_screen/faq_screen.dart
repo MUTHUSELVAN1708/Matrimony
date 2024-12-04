@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FAQScreen extends StatelessWidget {
   const FAQScreen({Key? key}) : super(key: key);
@@ -53,11 +55,12 @@ class FAQScreen extends StatelessWidget {
               _buildFAQItem(
                   'How do i login if i forget my email, mobile number?',
                   [
-                    'If you forgot your registered email ID, and mobile number, please reach out to our support team at helpdesk@ahatirumanam.com.',
+                    'If you forgot your registered email ID, and mobile number, please reach out to our support team at ',
                     'They will assist you in the retrieval process and help you regain access to your account. Having at least one of these details is essential for the login process.',
                   ],
                   isExpanded: true,
-                  heading: true),
+                  heading: true,
+                  isEmail: true),
               const SizedBox(
                 height: 10,
               ),
@@ -65,10 +68,10 @@ class FAQScreen extends StatelessWidget {
                   'How do i log in if i forget my password?',
                   [
                     'If you forgot your login password or want to change it, follow these steps:',
-                    'Access the Forgot Password link.',
-                    'Enter your mobile number or email ID associated with your account.',
-                    'You will receive a SMS & email ID with a link to reset your password.',
-                    'Follow the link to reset your password securely.',
+                    'If you are logged in log out first. Click forgot password',
+                    'Enter email ID associated with your account.',
+                    'You will receive OTP your email ID.',
+                    'Verify OTP and Change your new password.',
                   ],
                   heading: true),
               const SizedBox(
@@ -77,11 +80,11 @@ class FAQScreen extends StatelessWidget {
               _buildFAQItem(
                   'Can i change the mobile number, email address associated with my matrimony account?',
                   [
-                    'Yes, you can change your mobile number or email address.',
+                    'Yes, you can change your mobile number and Email is not editable.',
                     'If you are using your account via app,',
-                    'Go to the "Edit contact" section.',
-                    'Select "Edit contact info" tab.',
-                    'Follow the steps provided to edit your email ID, mobile number, or both.',
+                    'Go to the "Edit Profile" section.',
+                    'Select "Edit contact" tab.',
+                    'Follow the steps provided to edit your mobile number.',
                     'If you are using via Web Go to the "Profile settings" -> Privacy -> Mobile Privacy section to change your mobile number.',
                     'Go to the "Profile settings" -> Edit email address section to change your email address.',
                     'Please ensure that these details are accurate as they are essential for login and communication.'
@@ -95,20 +98,22 @@ class FAQScreen extends StatelessWidget {
                   [
                     'If you haven\'t received the OTP for login,please ensure your mobile number is entered correctly.',
                     'Also check if your mobile device has a stable network connection, your mobile number is active and capable of receiving SMS.',
-                    'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
+                    'If the issue persists, reach out to our support team at ',
+                    'for further assistance.'
                   ],
-                  heading: true),
+                  heading: true,
+                  isLogin: true),
               const SizedBox(
                 height: 10,
               ),
-              _buildFAQItem(
-                  'I didn\'t receive the password reset email, what should i do?',
-                  [
-                    'If you haven\'t received the password reset email, please ensure that your email address is correct.',
-                    'Also, check your spam or junk folders for the email. You can also try requesting another password reset email.',
-                    'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
-                  ],
-                  heading: true),
+              // _buildFAQItem(
+              //     'I didn\'t receive the password reset email, what should i do?',
+              //     [
+              //       'If you haven\'t received the password reset email, please ensure that your email address is correct.',
+              //       'Also, check your spam or junk folders for the email. You can also try requesting another password reset email.',
+              //       'If the issue persists, reach out to our support team at helpdesk@bharatmatrimony.com for further assistance.'
+              //     ],
+              //     heading: true),
               const SizedBox(
                 height: 10,
               ),
@@ -131,13 +136,13 @@ class FAQScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              _buildFAQItem(
-                  'Can i log into my profile from multiple devices simultaneously?',
-                  [
-                    'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
-                    'Please recheck your credentials and ensure that the details are accurate.'
-                  ],
-                  heading: true),
+              // _buildFAQItem(
+              //     'Can i log into my profile from multiple devices simultaneously?',
+              //     [
+              //       'This message is displayed if the Email ID, mobile number, or password entered during login is incorrect.',
+              //       'Please recheck your credentials and ensure that the details are accurate.'
+              //     ],
+              //     heading: true),
             ],
           ),
         ),
@@ -146,7 +151,10 @@ class FAQScreen extends StatelessWidget {
   }
 
   Widget _buildFAQItem(String question, List<String> answers,
-      {bool isExpanded = false, bool heading = false}) {
+      {bool isExpanded = false,
+      bool heading = false,
+      bool isEmail = false,
+      bool isLogin = false}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white, // White background
@@ -158,7 +166,7 @@ class FAQScreen extends StatelessWidget {
             blurRadius: 11.1, // Blur radius for the shadow
           ),
         ],
-        borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Theme(
         data: ThemeData().copyWith(dividerColor: Colors.transparent),
@@ -191,13 +199,79 @@ class FAQScreen extends StatelessWidget {
                     ] else ...[
                       Padding(
                         padding: const EdgeInsets.only(left: 4),
-                        child: Text(
-                          '*  $answer',
-                          style: AppTextStyles.spanTextStyle.copyWith(
-                            fontSize: 17,
-                            color: const Color(0XFF171717),
-                          ),
-                        ),
+                        child: isLogin
+                            ? RichText(
+                                text: TextSpan(
+                                text: '',
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                                children: [
+                                  TextSpan(
+                                    text: answers.indexOf(answer) == 0
+                                        ? '* $answer\n'
+                                        : '',
+                                  ),
+                                  TextSpan(
+                                    text: answers.indexOf(answer) == 1
+                                        ? '* $answer\n'
+                                        : '',
+                                  ),
+                                  TextSpan(
+                                    text: answers.indexOf(answer) == 2
+                                        ? '* $answer '
+                                        : '',
+                                  ),
+                                  _linkText(answers.indexOf(answer) == 2
+                                      ? 'info@ahathirumanam.com'
+                                      : ''),
+                                  TextSpan(
+                                    text: answers.indexOf(answer) == 3
+                                        ? answer
+                                        : '',
+                                  ),
+                                ],
+                              ))
+                            : isEmail
+                                ? RichText(
+                                    text: TextSpan(
+                                    text: '',
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                    children: [
+                                      TextSpan(
+                                        text: answers.indexOf(answer) == 0
+                                            ? '* $answer'
+                                            : '',
+                                      ),
+                                      _linkText(answers.indexOf(answer) == 0
+                                          ? 'info@ahathirumanam.com'
+                                          : ''),
+                                      TextSpan(
+                                        text: answers.indexOf(answer) == 0
+                                            ? ' & '
+                                            : '',
+                                      ),
+                                      _linkText(answers.indexOf(answer) == 0
+                                          ? 'astarmatrimonal@gmail.com'
+                                          : ''),
+                                      TextSpan(
+                                        text: answers.indexOf(answer) == 1
+                                            ? '\n* $answer'
+                                            : '',
+                                      ),
+                                    ],
+                                  ))
+                                : Text(
+                                    '*  $answer',
+                                    style: AppTextStyles.spanTextStyle.copyWith(
+                                      fontSize: 17,
+                                      color: const Color(0XFF171717),
+                                    ),
+                                  ),
                       ),
                     ],
                   ],
@@ -207,6 +281,26 @@ class FAQScreen extends StatelessWidget {
           }).toList(),
         ),
       ),
+    );
+  }
+
+  TextSpan _linkText(String email) {
+    return TextSpan(
+      text: email,
+      style: const TextStyle(
+          color: Colors.red, decoration: TextDecoration.underline),
+      recognizer: TapGestureRecognizer()
+        ..onTap = () async {
+          final Uri emailUri = Uri(
+            scheme: 'mailto',
+            path: email,
+          );
+          if (await canLaunchUrl(emailUri)) {
+            await launchUrl(emailUri);
+          } else {
+            throw 'Could not launch $email';
+          }
+        },
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/call_list_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/request_user_list_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/screens/received_profiles_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/screens/sent_profile_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/user_chat_screen.dart';
 
 class Inbox extends StatefulWidget {
-  const Inbox({Key? key}) : super(key: key);
+  const Inbox({super.key});
 
   @override
   State<Inbox> createState() => _InboxState();
@@ -13,7 +15,7 @@ class Inbox extends StatefulWidget {
 class _InboxState extends State<Inbox> {
   int _selectedTabIndex = 0; // Default to Chat
   int _selectedChipIndex = 0; // Default to first chip
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   @override
   void dispose() {
@@ -52,13 +54,13 @@ class _InboxState extends State<Inbox> {
                     children: [
                       // Filter chips
                       SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
+                        // scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         child: Row(
                           children: [
                             _buildFilterChip('Received', 0),
-                            _buildFilterChip('Awaiting Response', 1),
+                            _buildFilterChip('Sent', 1),
                             _buildFilterChip('Requests', 2),
                             _buildFilterChip('Calls', 3),
                           ],
@@ -74,22 +76,22 @@ class _InboxState extends State<Inbox> {
                             });
                           },
                           children: [
-                            _buildMessagePage("Received Messages"),
-                            _buildMessagePage("Awaiting Response Messages"),
-                            RequestUsersList(
-                              userImages: [
-                                'url1',
-                                'url2',
-                                'url3',
-                                'url4',
-                                'url5',
-                              ],
-                              totalRequests: 7,
-                              onAddPhoto: () {
-                                // Handle add photo action
-                              },
-                            ),
-                            CallListScreen(),
+                            const ReceivedProfilesScreen(),
+                            const SentProfileScreen(),
+                            // RequestUsersList(
+                            //   userImages: [
+                            //     'url1',
+                            //     'url2',
+                            //     'url3',
+                            //     'url4',
+                            //     'url5',
+                            //   ],
+                            //   totalRequests: 7,
+                            //   onAddPhoto: () {
+                            //     // Handle add photo action
+                            //   },
+                            // ),
+                            const CallListScreen(),
                           ],
                         ),
                       ),
@@ -179,9 +181,9 @@ class MailboxChatToggle extends StatefulWidget {
   final Function(int)? onTabChanged;
 
   const MailboxChatToggle({
-    Key? key,
+    super.key,
     this.onTabChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<MailboxChatToggle> createState() => _MailboxChatToggleState();

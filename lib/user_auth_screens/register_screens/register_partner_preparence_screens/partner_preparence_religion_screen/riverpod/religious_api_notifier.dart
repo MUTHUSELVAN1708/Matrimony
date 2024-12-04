@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:matrimony/common/api_list.dart';
+import 'package:matrimony/models/religion_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReligiousModel extends Equatable {
   final int id;
@@ -145,7 +147,7 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
     }
   }
 
-  Future<void> getCasteData(String religioId) async {
+  Future<void> getCasteData(int religioId) async {
     state = state.copyWith(isLoading: true);
     print('+++++++++');
 
@@ -183,6 +185,66 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
     }
   }
 
+  Future<void> getReligiousDetails(String? religion, String? caste) async {
+    final prefs = await SharedPreferences.getInstance();
+    final religionString = prefs.getString('religion');
+    int? religionId;
+    if (religionString != null && religionString.isNotEmpty) {
+      final List<dynamic> religious = jsonDecode(religionString);
+      List<ReligiousModel> religionList = religious
+          .map((e) => ReligiousModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      for (final a in religionList) {
+        if (a.religion == religion) {
+          religionId = a.id;
+          break;
+        }
+      }
+      state = state.copyWith(data: religionList);
+    } else {
+      state = state.copyWith(data: []);
+    }
+    getCasteDetails(religionId, caste);
+  }
+
+  Future<void> getCasteDetails(int? religionId, String? caste1) async {
+    final prefs = await SharedPreferences.getInstance();
+    final caste = prefs.getString('caste');
+    int? casteId;
+    if (caste != null && caste.isNotEmpty) {
+      final List<dynamic> castes = jsonDecode(caste);
+      List<CasteModel> casteList = castes
+          .map((e) => CasteModel.fromJson(e as Map<String, dynamic>))
+          .where((caste) => caste.religionId == religionId)
+          .toList();
+      for (final a in casteList) {
+        if (a.caste == caste1) {
+          casteId = a.id;
+          break;
+        }
+      }
+      state = state.copyWith(casteList: casteList);
+    } else {
+      state = state.copyWith(casteList: []);
+    }
+    getSubCasteDetails(casteId);
+  }
+
+  Future<void> getSubCasteDetails(int? casteId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final subCaste = prefs.getString('subcaste');
+    if (subCaste != null && subCaste.isNotEmpty) {
+      final List<dynamic> subCastes = jsonDecode(subCaste);
+      List<SubCasteModel> subCasteList = subCastes
+          .map((e) => SubCasteModel.fromJson(e as Map<String, dynamic>))
+          .where((subcaste) => subcaste.casteId == casteId)
+          .toList();
+      state = state.copyWith(subCasteList: subCasteList);
+    } else {
+      state = state.copyWith(subCasteList: []);
+    }
+  }
+
   void removeCasteData() async {
     state = state.copyWith(casteList: []);
   }
@@ -191,7 +253,7 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
     state = state.copyWith(subCasteList: []);
   }
 
-  Future<void> getSubCasteData(String casteId) async {
+  Future<void> getSubCasteData(int casteId) async {
     state = state.copyWith(isLoading: true);
     print('+++++++++');
 

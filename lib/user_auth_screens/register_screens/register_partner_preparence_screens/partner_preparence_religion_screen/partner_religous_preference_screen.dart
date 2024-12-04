@@ -222,7 +222,7 @@ class _PartnerReligiousPreferenceScreenState
                       if (stateId != null) {
                         await ref
                             .read(religiousProvider.notifier)
-                            .getCasteData('$stateId');
+                            .getCasteData(stateId);
                       } else {
                         print("No state ID found for the selected country.");
                       }
@@ -292,7 +292,7 @@ class _PartnerReligiousPreferenceScreenState
                             if (stateId != null) {
                               await ref
                                   .read(religiousProvider.notifier)
-                                  .getSubCasteData("$stateId");
+                                  .getSubCasteData(stateId);
                             } else {
                               print(
                                   "No state ID found for the selected country.");

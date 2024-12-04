@@ -34,7 +34,7 @@ class _AdvancedSettingScreenState extends State<AdvancedSettingScreen> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,7 +46,9 @@ class _AdvancedSettingScreenState extends State<AdvancedSettingScreen> {
                 );
               },
               child: Container(
+                color: Colors.transparent,
                 padding: const EdgeInsets.all(8),
+                width: double.infinity,
                 child: const Row(
                   children: [
                     CustomSvg(name: 'block_list'),
@@ -68,10 +70,12 @@ class _AdvancedSettingScreenState extends State<AdvancedSettingScreen> {
               onTap: () {
                 NavigationHelper.slideNavigateTo(
                   context: context,
-                  screen: const IgnoreListScreen(),
+                  screen: const IgnoreListsScreen(),
                 );
               },
               child: Container(
+                color: Colors.transparent,
+                width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 child: const Row(
                   children: [

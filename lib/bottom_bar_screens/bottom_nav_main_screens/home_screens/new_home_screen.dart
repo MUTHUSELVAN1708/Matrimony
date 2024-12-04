@@ -8,6 +8,7 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screen
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profile_card_stack.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
@@ -72,10 +73,19 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
   Future<void> fetchInterests() async {
     if (mounted) {
-      await ref.read(interestModelProvider.notifier).getReceivedInterests();
+      ref.read(interestModelProvider.notifier).getReceivedInterests();
     }
     if (mounted) {
-      await ref.read(interestModelProvider.notifier).getSentInterests();
+      ref.read(interestModelProvider.notifier).getSentInterests();
+    }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getBlockedUsers();
+    }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getDoNotShowUsers();
+    }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getReportedUsers();
     }
   }
 
@@ -118,6 +128,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                   !getImageApiProviderState.data!.paymentStatus) ...[
                 _buildUpgradeNow(context),
               ],
+              // _buildSocialMediaBanner(),
               const ProfileCardStack(),
               _buildAssistanceService(),
             ],
@@ -248,7 +259,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 children: [
                   Text(
                     index == 0
-                        ? interestState.receivedInterests
+                        ? interestState.sentInterests
                             .where((accept) => accept.status == 'Accepted')
                             .length
                             .toString()
@@ -796,7 +807,61 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     );
   }
 
-  // Widget _buildDownloadBanner() {
+  Widget _buildSocialMediaBanner() {
+    List<String> svg = ['what', 'link', 'ig', 'yt', 'twi', 'fb'];
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 15),
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/image/follow.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Column(
+                  children: [
+                    CustomSvg(
+                      name: 'astro_logo',
+                      height: 40,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Follow us for more',
+                      style: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                        fontSize: 20,
+                        fontFamily: 'Michroma',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(6, (index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: CustomSvg(
+                        name: svg[index],
+                        height: 25,
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildSuccessStory(BuildContext context) {
     final List<String> imagePaths = [

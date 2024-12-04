@@ -6,11 +6,11 @@ class RequestUsersList extends StatelessWidget {
   final VoidCallback onAddPhoto;
 
   const RequestUsersList({
-    Key? key,
+    super.key,
     required this.userImages,
     required this.totalRequests,
     required this.onAddPhoto,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

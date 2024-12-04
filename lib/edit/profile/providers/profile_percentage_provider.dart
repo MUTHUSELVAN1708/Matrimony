@@ -10,7 +10,7 @@ class IncompleteFieldsNotifier extends StateNotifier<IncompleteFieldsState> {
   IncompleteFieldsNotifier()
       : super(IncompleteFieldsState(
             incompleteFields: IncompleteFields(
-                completionPercentage: 100.0,
+                completionPercentage: 0.0,
                 govtIdProof: true,
                 horoscope: true,
                 location: true,
@@ -20,38 +20,40 @@ class IncompleteFieldsNotifier extends StateNotifier<IncompleteFieldsState> {
                 uploadPhoto: true)));
 
   Future<void> getIncompleteFields() async {
-    state = state.copyWith(isLoading: true);
-    try {
-      final int? userId = await SharedPrefHelper.getUserId();
+    if (state.incompleteFields.completionPercentage.toInt() != 100) {
+      state = state.copyWith(isLoading: true);
+      try {
+        final int? userId = await SharedPrefHelper.getUserId();
 
-      final response = await http.post(
-        Uri.parse(Api.profilePercentage),
-        headers: {
-          'Content-Type': 'application/json',
-          'AppId': '1',
-        },
-        body: jsonEncode({
-          'userId': userId,
-        }),
-      );
-      print(response.body);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        print(data);
-        state = state.copyWith(
-            incompleteFields: IncompleteFields.fromJson(data),
-            isLoading: false);
-        print(state.incompleteFields);
-      } else {
+        final response = await http.post(
+          Uri.parse(Api.profilePercentage),
+          headers: {
+            'Content-Type': 'application/json',
+            'AppId': '1',
+          },
+          body: jsonEncode({
+            'userId': userId,
+          }),
+        );
+        print(response.body);
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          print(data);
+          state = state.copyWith(
+              incompleteFields: IncompleteFields.fromJson(data),
+              isLoading: false);
+          print(state.incompleteFields);
+        } else {
+          state = state.copyWith(
+            isLoading: false,
+          );
+        }
+      } catch (e) {
+        print(e);
         state = state.copyWith(
           isLoading: false,
         );
       }
-    } catch (e) {
-      print(e);
-      state = state.copyWith(
-        isLoading: false,
-      );
     }
   }
 }

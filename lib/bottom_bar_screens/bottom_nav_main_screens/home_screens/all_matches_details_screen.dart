@@ -11,6 +11,7 @@ import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
 import 'package:matrimony/interest_block_dontshow_report_profile/riverpod/interest_provider.dart';
+import 'package:matrimony/models/block_dontshow_model.dart';
 import 'package:matrimony/models/interest_model.dart';
 import 'package:matrimony/models/partner_details_model.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
@@ -45,7 +46,9 @@ class _AllMatchesDetailsScreenState
     ref.read(interestProvider.notifier).setStatus(
         ref.read(interestModelProvider).sentInterests,
         ref.read(interestModelProvider).receivedInterests,
-        widget.userPartnerData.userDetails?.uniqueId ?? '');
+        ref.read(interestModelProvider).blockLists,
+        ref.read(interestModelProvider).ignoredLists,
+        widget.userPartnerData.userDetails?.userId ?? 0);
   }
 
   @override
@@ -55,8 +58,11 @@ class _AllMatchesDetailsScreenState
     final allMatchProvider = ref.watch(allMatchesProvider);
     final dailyRecommendState = ref.watch(dailyRecommendProvider);
     final interestProviderState = ref.watch(interestProvider);
+    final interestModelProviderState = ref.watch(interestModelProvider);
     return EnhancedLoadingWrapper(
-      isLoading: interestProviderState.isLoading || allMatchProvider.isLoading,
+      isLoading: interestProviderState.isLoading ||
+          allMatchProvider.isLoading ||
+          interestModelProviderState.isLoading,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -98,6 +104,7 @@ class _AllMatchesDetailsScreenState
   Widget _buildProfileHeader(BuildContext context, UserDetails userDetails,
       PartnerDetailsModel partnerDetails) {
     final interestProviderState = ref.watch(interestProvider);
+    final interestModelProviderState = ref.watch(interestModelProvider);
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -161,6 +168,8 @@ class _AllMatchesDetailsScreenState
                         else
                           const SizedBox(),
                         PopupMenuButton<String>(
+                          color: Colors.white,
+                          elevation: 2,
                           icon: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -183,21 +192,41 @@ class _AllMatchesDetailsScreenState
                                 await ref
                                     .read(allMatchesProvider.notifier)
                                     .allMatchDataFetch();
+                                await ref
+                                    .read(interestModelProvider.notifier)
+                                    .getDoNotShowUsers();
                                 Navigator.of(context).pop();
+                                break;
+                              case 'showagain':
+                                await ref
+                                    .read(interestProvider.notifier)
+                                    .showAgain(userDetails.userId!);
+                                await ref
+                                    .read(interestModelProvider.notifier)
+                                    .getDoNotShowUsers();
                                 break;
                               case 'block':
                                 await ref
                                     .read(interestProvider.notifier)
                                     .blockProfile(userDetails.userId!);
                                 await ref
-                                    .read(allMatchesProvider.notifier)
-                                    .allMatchDataFetch();
+                                    .read(interestModelProvider.notifier)
+                                    .getBlockedUsers();
                                 Navigator.of(context).pop();
+                                break;
+                              case 'unblock':
+                                await ref
+                                    .read(interestProvider.notifier)
+                                    .unblockProfile(userDetails.userId!);
+                                await ref
+                                    .read(interestModelProvider.notifier)
+                                    .getBlockedUsers();
                                 break;
                               case 'report':
                                 await ref
                                     .read(interestProvider.notifier)
-                                    .reportProfile(userDetails.userId!);
+                                    .reportProfile(
+                                        userDetails.userId!, 'more calls');
                                 await ref
                                     .read(allMatchesProvider.notifier)
                                     .allMatchDataFetch();
@@ -210,25 +239,33 @@ class _AllMatchesDetailsScreenState
                             //   value: 'share',
                             //   child: Text('Share Profile'),
                             // ),
-                            if ((interestProviderState.sentStatus == null ||
-                                    interestProviderState.sentStatus == '') &&
-                                (interestProviderState.receiveStatus == null ||
-                                    interestProviderState.receiveStatus == ''))
-                              const PopupMenuItem<String>(
-                                value: 'shortlist',
-                                child: Text('Shortlist'),
-                              ),
-                            if ((interestProviderState.sentStatus == null ||
-                                    interestProviderState.sentStatus == '') &&
-                                (interestProviderState.receiveStatus == null ||
-                                    interestProviderState.receiveStatus == ''))
-                              const PopupMenuItem<String>(
-                                value: 'dontShow',
-                                child: Text("Don't Show"),
-                              ),
+                            // if ((interestProviderState.sentStatus == null ||
+                            //         interestProviderState.sentStatus == '') &&
+                            //     (interestProviderState.receiveStatus == null ||
+                            //         interestProviderState.receiveStatus == ''))
                             const PopupMenuItem<String>(
-                              value: 'block',
-                              child: Text('Block'),
+                              value: 'shortlist',
+                              child: Text('Shortlist'),
+                            ),
+                            if ((interestProviderState.sentStatus == null ||
+                                    interestProviderState.sentStatus == '') &&
+                                (interestProviderState.receiveStatus == null ||
+                                    interestProviderState.receiveStatus == ''))
+                              PopupMenuItem<String>(
+                                value: interestProviderState.isIgnored
+                                    ? 'showagain'
+                                    : 'dontShow',
+                                child: Text(interestProviderState.isIgnored
+                                    ? 'Show Again'
+                                    : "Don't Show"),
+                              ),
+                            PopupMenuItem<String>(
+                              value: interestProviderState.isBlocked
+                                  ? 'unblock'
+                                  : 'block',
+                              child: Text(interestProviderState.isBlocked
+                                  ? 'Unblock'
+                                  : 'Block'),
                             ),
                             const PopupMenuItem<String>(
                               value: 'report',
@@ -402,7 +439,10 @@ class _AllMatchesDetailsScreenState
               (interestProviderState.sentStatus == 'Accepted' ||
                       interestProviderState.receiveStatus == 'Accepted')
                   ? userDetails.phoneNumber.toString()
-                  : '${userDetails.phoneNumber!.substring(0, userDetails.phoneNumber!.length - 10)}**********',
+                  : userDetails.phoneNumber != null &&
+                          userDetails.phoneNumber!.isNotEmpty
+                      ? '${userDetails.phoneNumber!.substring(0, userDetails.phoneNumber!.length - 10)}**********'
+                      : '***********',
               'Phone _Calling_icon'),
           _buildDetailItem(
               'Whom To Contact', userDetails.whomToContact ?? '-', 'user_alt'),
@@ -791,130 +831,98 @@ class _AllMatchesDetailsScreenState
               _buildDetailItem('Preferred Own House',
                   partnerDetailsModel.partnerOwnHouse ?? '-', ''),
             ]),
-        interestProviderState.receiveStatus == 'Pending'
-            ? Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        final value = ref
-                            .read(interestModelProvider)
-                            .receivedInterests
-                            .firstWhere(
-                                (model) =>
-                                    model.uniqueId == userDetails.uniqueId,
-                                orElse: () => const ReceiveModel());
-                        if (value.interestId != null) {
-                          await ref
-                              .read(interestProvider.notifier)
-                              .rejectProfile('Rejected', value.interestId!);
-                          await ref
-                              .read(interestModelProvider.notifier)
-                              .getReceivedInterests();
-                          ref.read(interestProvider.notifier).setStatus(
-                              interestModelProviderState.sentInterests,
-                              interestModelProviderState.receivedInterests,
-                              value.uniqueId.toString());
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: Container(
-                          height: 50,
-                          margin: const EdgeInsets.only(
-                              left: 24, right: 8, top: 8, bottom: 8),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              border:
-                                  Border.all(color: AppColors.spanTextColor),
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const CustomSvg(name: 'Close_round'),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                'Reject',
-                                style: AppTextStyles.primarybuttonText.copyWith(
-                                    color: AppColors.spanTextColor,
-                                    fontSize: 20),
-                              ),
-                            ],
-                          )),
+        interestProviderState.isBlocked || interestProviderState.isIgnored
+            ? GestureDetector(
+                onTap: () async {
+                  final blockValue = ref
+                      .read(interestModelProvider)
+                      .blockLists
+                      .firstWhere((model) => model.userId == userDetails.userId,
+                          orElse: () => const BlockModel());
+                  final ignoreValue = ref
+                      .read(interestModelProvider)
+                      .ignoredLists
+                      .firstWhere((model) => model.userId == userDetails.userId,
+                          orElse: () => const DoNotShowModel());
+                  if (interestProviderState.isBlocked) {
+                    if (blockValue.blockId != null) {
+                      await ref
+                          .read(interestProvider.notifier)
+                          .unblockProfile(userDetails.userId!);
+                      await ref
+                          .read(interestModelProvider.notifier)
+                          .getBlockedUsers();
+                    }
+                  } else {
+                    if (ignoreValue.id != null) {
+                      await ref
+                          .read(interestProvider.notifier)
+                          .showAgain(userDetails.userId!);
+                      await ref
+                          .read(interestModelProvider.notifier)
+                          .getDoNotShowUsers();
+                    }
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: AppColors.primaryButtonColor),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          interestProviderState.isBlocked
+                              ? 'Unblock'
+                              : 'Show Again',
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          interestProviderState.isBlocked
+                              ? Icons.lock_open_outlined
+                              : Icons.undo_outlined,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        final value = ref
-                            .read(interestModelProvider)
-                            .receivedInterests
-                            .firstWhere(
-                                (model) =>
-                                    model.uniqueId == userDetails.uniqueId,
-                                orElse: () => const ReceiveModel());
-                        if (value.interestId != null) {
-                          await ref
-                              .read(interestProvider.notifier)
-                              .acceptProfile('Accepted', value.interestId!);
-                          await ref
-                              .read(interestModelProvider.notifier)
-                              .getReceivedInterests();
-                          ref.read(interestProvider.notifier).setStatus(
-                              interestModelProviderState.sentInterests,
-                              interestModelProviderState.receivedInterests,
-                              value.uniqueId.toString());
-                        }
-                      },
-                      child: Container(
-                          height: 50,
-                          margin: const EdgeInsets.only(
-                              left: 8, right: 24, top: 8, bottom: 8),
-                          decoration: BoxDecoration(
-                              color: AppColors.primaryButtonColor,
-                              border:
-                                  Border.all(color: AppColors.spanTextColor),
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const CustomSvg(name: 'Done_intrest'),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text('Accept',
-                                    style: AppTextStyles.primarybuttonText
-                                        .copyWith(fontSize: 20)),
-                              ],
-                            ),
-                          )),
-                    ),
-                  ),
-                ],
+                ),
               )
-            : (interestProviderState.sentStatus == null ||
-                        interestProviderState.sentStatus == '') &&
-                    (interestProviderState.receiveStatus == null ||
-                        interestProviderState.receiveStatus == '')
+            : interestProviderState.receiveStatus == 'Pending'
                 ? Row(
                     children: [
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
-                            await ref
-                                .read(interestProvider.notifier)
-                                .doNotShow(userDetails.userId!);
-                            await ref
-                                .read(allMatchesProvider.notifier)
-                                .allMatchDataFetch();
-                            Navigator.of(context).pop();
+                            final value = ref
+                                .read(interestModelProvider)
+                                .receivedInterests
+                                .firstWhere(
+                                    (model) =>
+                                        model.userId == userDetails.userId,
+                                    orElse: () => const ReceiveModel());
+                            if (value.interestId != null) {
+                              await ref
+                                  .read(interestProvider.notifier)
+                                  .rejectProfile('Rejected', value.interestId!);
+                              await ref
+                                  .read(interestModelProvider.notifier)
+                                  .getReceivedInterests();
+                              ref.read(interestProvider.notifier).setStatus(
+                                  interestModelProviderState.sentInterests,
+                                  interestModelProviderState.receivedInterests,
+                                  ref.read(interestModelProvider).blockLists,
+                                  ref.read(interestModelProvider).ignoredLists,
+                                  value.userId ?? 0);
+                              Navigator.of(context).pop();
+                            }
                           },
                           child: Container(
                               height: 50,
@@ -930,11 +938,15 @@ class _AllMatchesDetailsScreenState
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   const CustomSvg(name: 'Close_round'),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(
-                                    'Don’t show',
+                                    'Decline',
                                     style: AppTextStyles.primarybuttonText
                                         .copyWith(
-                                            color: AppColors.spanTextColor),
+                                            color: AppColors.spanTextColor,
+                                            fontSize: 20),
                                   ),
                                 ],
                               )),
@@ -946,12 +958,27 @@ class _AllMatchesDetailsScreenState
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
-                            await ref
-                                .read(interestProvider.notifier)
-                                .sendInterest(userDetails.userId!);
-                            await ref
-                                .read(interestModelProvider.notifier)
-                                .getSentInterests();
+                            final value = ref
+                                .read(interestModelProvider)
+                                .receivedInterests
+                                .firstWhere(
+                                    (model) =>
+                                        model.uniqueId == userDetails.uniqueId,
+                                    orElse: () => const ReceiveModel());
+                            if (value.interestId != null) {
+                              await ref
+                                  .read(interestProvider.notifier)
+                                  .acceptProfile('Accepted', value.interestId!);
+                              await ref
+                                  .read(interestModelProvider.notifier)
+                                  .getReceivedInterests();
+                              ref.read(interestProvider.notifier).setStatus(
+                                  interestModelProviderState.sentInterests,
+                                  interestModelProviderState.receivedInterests,
+                                  ref.read(interestModelProvider).blockLists,
+                                  ref.read(interestModelProvider).ignoredLists,
+                                  value.userId ?? 0);
+                            }
                           },
                           child: Container(
                               height: 50,
@@ -968,11 +995,12 @@ class _AllMatchesDetailsScreenState
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const CustomSvg(name: 'Done_intrest'),
-                                    Text('Send interest',
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text('Accept',
                                         style: AppTextStyles.primarybuttonText
-                                            .copyWith(
-                                                overflow:
-                                                    TextOverflow.ellipsis)),
+                                            .copyWith(fontSize: 20)),
                                   ],
                                 ),
                               )),
@@ -980,60 +1008,150 @@ class _AllMatchesDetailsScreenState
                       ),
                     ],
                   )
-                : GestureDetector(
-                    onTap: () async {
-                      if (interestProviderState.sentStatus.toString() ==
-                              'Accepted' ||
-                          interestProviderState.receiveStatus.toString() ==
-                              'Accepted') {}
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        height: 40,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: AppColors.primaryButtonColor),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              interestProviderState.sentStatus.toString() ==
-                                      'Pending'
-                                  ? 'Requested'
-                                  : interestProviderState.sentStatus
-                                                  .toString() ==
-                                              'Rejected' ||
-                                          interestProviderState.receiveStatus
-                                                  .toString() ==
-                                              'Rejected'
-                                      ? 'Rejected'
-                                      : 'Send Message',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
+                : (interestProviderState.sentStatus == null ||
+                            interestProviderState.sentStatus == '') &&
+                        (interestProviderState.receiveStatus == null ||
+                            interestProviderState.receiveStatus == '')
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                await ref
+                                    .read(interestProvider.notifier)
+                                    .doNotShow(userDetails.userId!);
+                                await ref
+                                    .read(allMatchesProvider.notifier)
+                                    .allMatchDataFetch();
+                                await ref
+                                    .read(interestModelProvider.notifier)
+                                    .getDoNotShowUsers();
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                  height: 50,
+                                  margin: const EdgeInsets.only(
+                                      left: 24, right: 8, top: 8, bottom: 8),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: AppColors.spanTextColor),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      const CustomSvg(name: 'Close_round'),
+                                      Text(
+                                        'Don’t show',
+                                        style: AppTextStyles.primarybuttonText
+                                            .copyWith(
+                                                color: AppColors.spanTextColor),
+                                      ),
+                                    ],
+                                  )),
                             ),
-                            const Spacer(),
-                            Icon(
-                              interestProviderState.sentStatus.toString() ==
-                                      'Pending'
-                                  ? Icons.access_time_filled_outlined
-                                  : interestProviderState.sentStatus
-                                                  .toString() ==
-                                              'Rejected' ||
-                                          interestProviderState.receiveStatus
-                                                  .toString() ==
-                                              'Rejected'
-                                      ? Icons.block_rounded
-                                      : Icons.send_outlined,
-                              color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                await ref
+                                    .read(interestProvider.notifier)
+                                    .sendInterest(userDetails.userId!);
+                                await ref
+                                    .read(interestModelProvider.notifier)
+                                    .getSentInterests();
+                              },
+                              child: Container(
+                                  height: 50,
+                                  margin: const EdgeInsets.only(
+                                      left: 8, right: 24, top: 8, bottom: 8),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.primaryButtonColor,
+                                      border: Border.all(
+                                          color: AppColors.spanTextColor),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const CustomSvg(name: 'Done_intrest'),
+                                        Text('Send interest',
+                                            style: AppTextStyles
+                                                .primarybuttonText
+                                                .copyWith(
+                                                    overflow:
+                                                        TextOverflow.ellipsis)),
+                                      ],
+                                    ),
+                                  )),
                             ),
-                          ],
+                          ),
+                        ],
+                      )
+                    : GestureDetector(
+                        onTap: () async {
+                          if (interestProviderState.sentStatus.toString() ==
+                                  'Accepted' ||
+                              interestProviderState.receiveStatus.toString() ==
+                                  'Accepted') {}
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: AppColors.primaryButtonColor),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  interestProviderState.sentStatus.toString() ==
+                                          'Pending'
+                                      ? 'Requested'
+                                      : interestProviderState.sentStatus
+                                                      .toString() ==
+                                                  'Rejected' ||
+                                              interestProviderState
+                                                      .receiveStatus
+                                                      .toString() ==
+                                                  'Rejected'
+                                          ? 'Rejected'
+                                          : 'Send Message',
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
+                                const Spacer(),
+                                Icon(
+                                  interestProviderState.sentStatus.toString() ==
+                                          'Pending'
+                                      ? Icons.access_time_filled_outlined
+                                      : interestProviderState.sentStatus
+                                                      .toString() ==
+                                                  'Rejected' ||
+                                              interestProviderState
+                                                      .receiveStatus
+                                                      .toString() ==
+                                                  'Rejected'
+                                          ? Icons.block_rounded
+                                          : Icons.send_outlined,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
+                      )
       ],
     );
   }
