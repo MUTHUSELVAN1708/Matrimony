@@ -375,6 +375,14 @@ class CountryNotifier extends StateNotifier<CountryState> {
     }
   }
 
+  void removeStateData() {
+    state = state.copyWith(stateList: [], cityList: []);
+  }
+
+  void removeCityData() {
+    state = state.copyWith(cityList: []);
+  }
+
   Future<bool> editLocationApi(String country, String states, String pinCode,
       String city, String flatNumber, String address, bool? ownHouse) async {
     state = state.copyWith(isLoading: true);

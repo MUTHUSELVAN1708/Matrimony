@@ -12,6 +12,7 @@ import 'package:matrimony/edit_partner_preferences/screens/edit_partner_preferen
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/profile/faq_screen/faq_screen.dart';
 import 'package:matrimony/profile/help_screens/ui/help_screen.dart';
+import 'package:matrimony/profile/more/screens/more_screen.dart';
 import 'package:matrimony/profile/profile.dart';
 import 'package:matrimony/profile/setting_screens/ui/setting_screen.dart';
 import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
@@ -233,8 +234,13 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       ),
       MenuItem(
         icon: 'assets/feedback.svg',
-        title: 'Feedback',
-        onTap: () {},
+        title: 'FAQ',
+        onTap: () {
+          NavigationHelper.slideNavigateTo(
+            context: context,
+            screen: const FAQScreen(),
+          );
+        },
       ),
       // MenuItem(
       //   icon: 'assets/successstories.svg',
@@ -243,11 +249,11 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
       // ),
       MenuItem(
         icon: 'assets/more.svg',
-        title: 'FAQ',
+        title: 'More',
         onTap: () {
           NavigationHelper.slideNavigateTo(
             context: context,
-            screen: const FAQScreen(),
+            screen: const MoreScreen(),
           );
         },
       ),

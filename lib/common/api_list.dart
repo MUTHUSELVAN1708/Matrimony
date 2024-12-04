@@ -52,6 +52,7 @@ class Api {
   static const String block = '$baseUrl/account/block';
   static const String report = '$baseUrl/account/report';
   static const String blocked = '$baseUrl/account/blocked';
+  static const String myBlocked = '$baseUrl/account/';
   static const String reported = '$baseUrl/account/reported';
   static const String send = '$baseUrl/interest/send';
   static const String dontShow = '$baseUrl/interest/dont-show';
@@ -67,5 +68,5 @@ class Api {
   static const String forgototpverify = '$baseUrl/forgototpverify';
   static const String newpassword = '$baseUrl/newpassword';
   static const String profilePercentage = '$baseUrl/profilePercentage';
-  // static const String editHoroscope = '$baseUrl/editHoroscope';
+  static const String getUserIdWithUniqueId = '$baseUrl/getuserdetailsuniqueId';
 }

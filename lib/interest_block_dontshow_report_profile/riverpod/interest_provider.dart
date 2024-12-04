@@ -258,6 +258,35 @@ class InterestProvider extends StateNotifier<InterestState> {
     }
   }
 
+  Future<int?> getUserIdWithUniqueId(String uniqueId) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response = await http.post(
+        Uri.parse(Api.getUserIdWithUniqueId),
+        headers: {
+          'Content-Type': 'application/json',
+          'AppId': '1',
+        },
+        body: jsonEncode({
+          'uniqueId': uniqueId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        state = state.copyWith(isLoading: false);
+        return data['userId'];
+      } else {
+        state = state.copyWith(isLoading: false);
+        return null;
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false);
+      return null;
+    }
+  }
+
   void disposeState() {
     state = InterestState.initial();
   }

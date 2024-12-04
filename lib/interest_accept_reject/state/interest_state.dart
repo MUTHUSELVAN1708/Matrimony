@@ -11,6 +11,7 @@ class InterestModelState extends Equatable {
   final List<BlockModel> blockLists;
   final List<DoNotShowModel> ignoredLists;
   final List<ReportModel> reportLists;
+  final List<int> blockedMeList;
   final bool isLoading;
 
   const InterestModelState({
@@ -19,6 +20,7 @@ class InterestModelState extends Equatable {
     this.blockLists = const [],
     this.ignoredLists = const [],
     this.reportLists = const [],
+    this.blockedMeList = const [],
     this.isLoading = false,
   });
 
@@ -28,6 +30,7 @@ class InterestModelState extends Equatable {
     List<BlockModel>? blockLists,
     List<DoNotShowModel>? ignoredLists,
     List<ReportModel>? reportLists,
+    List<int>? blockedMeList,
     bool? isLoading,
   }) {
     return InterestModelState(
@@ -36,6 +39,7 @@ class InterestModelState extends Equatable {
       blockLists: blockLists ?? this.blockLists,
       ignoredLists: ignoredLists ?? this.ignoredLists,
       reportLists: reportLists ?? this.reportLists,
+      blockedMeList: blockedMeList ?? this.blockedMeList,
       isLoading: isLoading ?? this.isLoading,
     );
   }
@@ -47,6 +51,7 @@ class InterestModelState extends Equatable {
         blockLists,
         ignoredLists,
         reportLists,
+        blockedMeList,
         isLoading
       ];
 }

@@ -636,9 +636,6 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // ref
-                        //     .read(searchFilterInputProvider.notifier)
-                        //     .updateSearchFilterInput();
                         final result = await ref
                             .read(searchFilterProvider.notifier)
                             .searchResults(searchInput!);
@@ -1590,8 +1587,9 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                       .read(religiousProvider.notifier)
                                       .getCasteData(stateId);
                                 } else {
-                                  print(
-                                      "No state ID found for the selected country.");
+                                  ref
+                                      .read(religiousProvider.notifier)
+                                      .removeCasteData();
                                 }
                               } else if (hint == 'Caste') {
                                 ref
@@ -1612,8 +1610,9 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                       .read(religiousProvider.notifier)
                                       .getSubCasteData(stateId);
                                 } else {
-                                  print(
-                                      "No state ID found for the selected country.");
+                                  ref
+                                      .read(religiousProvider.notifier)
+                                      .removeSubCasteData();
                                 }
                               } else if (hint == 'Sub Caste') {
                                 ref
@@ -1642,8 +1641,9 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                       .read(locationProvider.notifier)
                                       .getStateData(stateId);
                                 } else {
-                                  print(
-                                      "No state ID found for the selected country.");
+                                  ref
+                                      .read(locationProvider.notifier)
+                                      .removeStateData();
                                 }
                               } else if (hint == 'State') {
                                 ref
@@ -1666,8 +1666,9 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                                       .read(locationProvider.notifier)
                                       .getCityData(stateId);
                                 } else {
-                                  print(
-                                      "No state ID found for the selected country.");
+                                  ref
+                                      .read(locationProvider.notifier)
+                                      .removeCityData();
                                 }
                               } else if (hint == 'City') {
                                 ref

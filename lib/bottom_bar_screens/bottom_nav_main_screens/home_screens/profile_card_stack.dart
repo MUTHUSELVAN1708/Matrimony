@@ -134,8 +134,10 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                           itemBuilder: (context, index) {
                             final filteredInterests = interestModelState
                                 .receivedInterests
-                                .where(
-                                    (interest) => interest.status == 'Pending')
+                                .where((interest) =>
+                                    interest.status == 'Pending' &&
+                                    !interestModelState.blockedMeList
+                                        .contains(interest.userId))
                                 .toList();
                             final interest = filteredInterests[index];
                             final imageProvider = interest.images!.isEmpty

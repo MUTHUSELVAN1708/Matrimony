@@ -33,6 +33,7 @@ class InterestModelNotifier extends Notifier<InterestModelState> {
         ignoredLists: [],
         blockLists: [],
         reportLists: [],
+        blockedMeList: [],
         isLoading: false);
   }
 
@@ -153,6 +154,29 @@ class InterestModelNotifier extends Notifier<InterestModelState> {
       }
     } catch (error) {
       state = state.copyWith(isLoading: false, reportLists: []);
+    }
+  }
+
+  Future<void> getMeBlockedUsers() async {
+    state = state.copyWith(isLoading: false, blockedMeList: []);
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.get(
+        Uri.parse("${Api.myBlocked}$userId"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final blockedMeList = List<int>.from(data);
+        state = state.copyWith(isLoading: false, blockedMeList: blockedMeList);
+      } else {
+        state = state.copyWith(isLoading: false, blockedMeList: []);
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false, blockedMeList: []);
     }
   }
 

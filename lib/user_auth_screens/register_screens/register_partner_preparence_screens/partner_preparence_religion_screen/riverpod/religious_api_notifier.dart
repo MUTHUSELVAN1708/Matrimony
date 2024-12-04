@@ -246,7 +246,7 @@ class ReligiousNotifier extends StateNotifier<ReligiousState> {
   }
 
   void removeCasteData() async {
-    state = state.copyWith(casteList: []);
+    state = state.copyWith(casteList: [], subCasteList: []);
   }
 
   void removeSubCasteData() async {

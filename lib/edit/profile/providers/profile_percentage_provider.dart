@@ -35,14 +35,11 @@ class IncompleteFieldsNotifier extends StateNotifier<IncompleteFieldsState> {
             'userId': userId,
           }),
         );
-        print(response.body);
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
-          print(data);
           state = state.copyWith(
               incompleteFields: IncompleteFields.fromJson(data),
               isLoading: false);
-          print(state.incompleteFields);
         } else {
           state = state.copyWith(
             isLoading: false,
