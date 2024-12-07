@@ -8,6 +8,8 @@ import 'package:matrimony/models/block_dontshow_model.dart';
 import 'package:matrimony/models/interest_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:matrimony/models/report_model.dart';
+import 'package:matrimony/models/shortlist_model.dart';
+import 'package:matrimony/models/view_model.dart';
 
 class InterestModelNotifier extends Notifier<InterestModelState> {
   @override
@@ -34,6 +36,8 @@ class InterestModelNotifier extends Notifier<InterestModelState> {
         blockLists: [],
         reportLists: [],
         blockedMeList: [],
+        viewList: [],
+        shortList: [],
         isLoading: false);
   }
 
@@ -177,6 +181,102 @@ class InterestModelNotifier extends Notifier<InterestModelState> {
       }
     } catch (error) {
       state = state.copyWith(isLoading: false, blockedMeList: []);
+    }
+  }
+
+  Future<void> getViewedList() async {
+    state = state.copyWith(isLoading: true, viewList: []);
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.get(
+        Uri.parse("${Api.getProfileView}/$userId"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final viewList = data.map((e) => ViewModel.fromJson(e)).toList();
+        // print('Otha');
+        // print(receivedInterests.first.userId);
+        state = state.copyWith(isLoading: false, viewList: viewList);
+      } else {
+        state = state.copyWith(isLoading: false, viewList: []);
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false, viewList: []);
+    }
+  }
+
+  Future<void> getViewedToMeList() async {
+    state = state.copyWith(isLoading: true, viewListToMe: []);
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.get(
+        Uri.parse("${Api.getMyProfileViews}/$userId"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final viewList = data.map((e) => ViewModel.fromJson(e)).toList();
+        // print('Otha');
+        // print(receivedInterests.first.userId);
+        state = state.copyWith(isLoading: false, viewListToMe: viewList);
+      } else {
+        state = state.copyWith(isLoading: false, viewListToMe: []);
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false, viewListToMe: []);
+    }
+  }
+
+  Future<void> getShortList() async {
+    state = state.copyWith(isLoading: true, shortList: []);
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.get(
+        Uri.parse("${Api.getShortListedYou}/$userId"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final shortlist = data.map((e) => ShortlistModel.fromJson(e)).toList();
+        state = state.copyWith(isLoading: false, shortList: shortlist);
+      } else {
+        state = state.copyWith(isLoading: false, shortList: []);
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false, shortList: []);
+    }
+  }
+
+  Future<void> getShortListToMe() async {
+    state = state.copyWith(isLoading: true, shortListToMe: []);
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.get(
+        Uri.parse("${Api.getShortListedMe}/$userId"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final shortlist = data.map((e) => ShortlistModel.fromJson(e)).toList();
+        state = state.copyWith(isLoading: false, shortListToMe: shortlist);
+      } else {
+        state = state.copyWith(isLoading: false, shortListToMe: []);
+      }
+    } catch (error) {
+      state = state.copyWith(isLoading: false, shortListToMe: []);
     }
   }
 

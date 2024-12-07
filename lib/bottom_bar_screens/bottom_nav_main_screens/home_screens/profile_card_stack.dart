@@ -48,6 +48,7 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
   Widget build(BuildContext context) {
     final interestModelState = ref.watch(interestModelProvider);
     final interestState = ref.watch(interestProvider);
+    final getImageApiProviderState = ref.watch(getImageApiProvider);
     return Stack(
       children: [
         Container(
@@ -68,28 +69,30 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const RequestProfilesScreen()));
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 4),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryButtonColor,
-                        borderRadius: BorderRadius.all(Radius.circular(6)),
-                      ),
-                      child: Text(
-                        'View All',
-                        style: AppTextStyles.primarybuttonText
-                            .copyWith(fontSize: 12),
+                  if (getImageApiProviderState.data != null &&
+                      getImageApiProviderState.data!.paymentStatus)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const RequestProfilesScreen()));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 4),
+                        decoration: const BoxDecoration(
+                          color: AppColors.primaryButtonColor,
+                          borderRadius: BorderRadius.all(Radius.circular(6)),
+                        ),
+                        child: Text(
+                          'View All',
+                          style: AppTextStyles.primarybuttonText
+                              .copyWith(fontSize: 12),
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -107,312 +110,368 @@ class _ProfileCardStackState extends ConsumerState<ProfileCardStack> {
                         color: Colors.pink,
                       )),
                     )
-                  : interestModelState.receivedInterests
-                          .where((status) => status.status == 'Pending')
-                          .isEmpty
-                      ? Container(
-                          height: 155,
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: Colors.grey.withOpacity(0.3))),
-                          child: const Center(
-                            child: Text(
-                              'No requests received yet.',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 18),
-                            ),
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: interestModelState.receivedInterests
-                              .where((status) => status.status == 'Pending')
-                              .length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            final filteredInterests = interestModelState
-                                .receivedInterests
-                                .where((interest) =>
-                                    interest.status == 'Pending' &&
-                                    !interestModelState.blockedMeList
-                                        .contains(interest.userId))
-                                .toList();
-                            final interest = filteredInterests[index];
-                            final imageProvider = interest.images!.isEmpty
-                                ? const AssetImage(
-                                        'assets/image/emptyProfile.png')
-                                    as ImageProvider<Object>
-                                : MemoryImage(
-                                    base64Decode(
-                                      interest.images!.first
-                                          .toString()
-                                          .replaceAll('\n', '')
-                                          .replaceAll('\r', ''),
-                                    ),
-                                  );
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 8),
-                              decoration: BoxDecoration(
+                  : getImageApiProviderState.data != null &&
+                          !getImageApiProviderState.data!.paymentStatus
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PlanUpgradeScreen()));
+                          },
+                          child: Container(
+                            height: 155,
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.white,
+                                border: Border.all(
+                                    color: Colors.grey.withOpacity(0.3))),
+                            child: Center(
+                                child: Container(
+                              height: 30,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal:
+                                      MediaQuery.of(context).size.width / 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryButtonColor,
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        final getImageApiProviderState =
-                                            ref.watch(getImageApiProvider);
-                                        final partnerDetails = await ref
-                                            .read(
-                                                userManagementProvider.notifier)
-                                            .getPartnerDetails(
-                                                interest.userId ?? 0);
-                                        if (getImageApiProviderState.data !=
-                                                null &&
-                                            getImageApiProviderState
-                                                .data!.paymentStatus) {
-                                          if (mounted) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AllMatchesDetailsScreen(
-                                                          userPartnerData:
-                                                              partnerDetails ??
-                                                                  UserPartnerData(),
-                                                        )));
-                                          }
-                                        } else {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const PlanUpgradeScreen()));
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 155,
-                                        margin: const EdgeInsets.only(right: 8),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10),
-                                          ),
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
+                              child: const Center(
+                                child: Text(
+                                  'Upgrade Now',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            )),
+                          ),
+                        )
+                      : interestModelState.receivedInterests
+                              .where((status) => status.status == 'Pending')
+                              .isEmpty
+                          ? Container(
+                              height: 155,
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.3))),
+                              child: const Center(
+                                child: Text(
+                                  'No requests received yet.',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: interestModelState.receivedInterests
+                                  .where((status) => status.status == 'Pending')
+                                  .length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                final filteredInterests = interestModelState
+                                    .receivedInterests
+                                    .where((interest) =>
+                                        interest.status == 'Pending' &&
+                                        !interestModelState.blockedMeList
+                                            .contains(interest.userId))
+                                    .toList();
+                                final interest = filteredInterests[index];
+                                final imageProvider = interest.images!.isEmpty
+                                    ? const AssetImage(
+                                            'assets/image/emptyProfile.png')
+                                        as ImageProvider<Object>
+                                    : MemoryImage(
+                                        base64Decode(
+                                          interest.images!.first
+                                              .toString()
+                                              .replaceAll('\n', '')
+                                              .replaceAll('\r', ''),
+                                        ),
+                                      );
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            if (getImageApiProviderState.data !=
+                                                    null &&
+                                                getImageApiProviderState
+                                                    .data!.paymentStatus) {
+                                              final partnerDetails = await ref
+                                                  .read(userManagementProvider
+                                                      .notifier)
+                                                  .getPartnerDetails(
+                                                      interest.userId ?? 0);
+                                              if (mounted) {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AllMatchesDetailsScreen(
+                                                              userPartnerData:
+                                                                  partnerDetails ??
+                                                                      UserPartnerData(),
+                                                            )));
+                                              }
+                                            } else {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const PlanUpgradeScreen()));
+                                            }
+                                          },
+                                          child: Container(
+                                            height: 155,
+                                            margin:
+                                                const EdgeInsets.only(right: 8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: SizedBox(
-                                      height: 155,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            interest.name ?? 'N/A',
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              color: Color(0xFFD6151A),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            '#${interest.uniqueId ?? 'N/A'}',
-                                            style: TextStyle(
-                                              color: Colors.grey[800],
-                                              fontSize: 14,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            interest.age != null
-                                                ? '${interest.age} Yrs'
-                                                : 'N/A',
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 14,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            interest.height ?? 'N/A',
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 14,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            interest.education ?? 'N/A',
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 14,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          Text(
-                                            interest.city != null
-                                                ? '${interest.city}${interest.state != null ? ', ${interest.state}' : ''}'
-                                                : interest.state != null
-                                                    ? '${interest.state}'
-                                                    : '',
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 14,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 4),
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                await ref
-                                                    .read(interestProvider
-                                                        .notifier)
-                                                    .acceptProfile('Accepted',
-                                                        interest.interestId!);
-                                                await ref
-                                                    .read(interestModelProvider
-                                                        .notifier)
-                                                    .getReceivedInterests();
-                                              },
-                                              child: Container(
-                                                height: 20,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black54,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
+                                      Expanded(
+                                        child: SizedBox(
+                                          height: 155,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                interest.name ?? 'N/A',
+                                                style: const TextStyle(
+                                                  fontSize: 20,
+                                                  color: Color(0xFFD6151A),
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                child: const Center(
-                                                  child: Text(
-                                                    'Accept',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                '#${interest.uniqueId ?? 'N/A'}',
+                                                style: TextStyle(
+                                                  color: Colors.grey[800],
+                                                  fontSize: 14,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                interest.age != null
+                                                    ? '${interest.age} Yrs'
+                                                    : 'N/A',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                interest.height ?? 'N/A',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                interest.education ?? 'N/A',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              Text(
+                                                interest.city != null
+                                                    ? '${interest.city}${interest.state != null ? ', ${interest.state}' : ''}'
+                                                    : interest.state != null
+                                                        ? '${interest.state}'
+                                                        : '',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 4),
+                                                child: GestureDetector(
+                                                  onTap: () async {
+                                                    await ref
+                                                        .read(interestProvider
+                                                            .notifier)
+                                                        .acceptProfile(
+                                                            'Accepted',
+                                                            interest
+                                                                .interestId!);
+                                                    await ref
+                                                        .read(
+                                                            interestModelProvider
+                                                                .notifier)
+                                                        .getReceivedInterests();
+                                                  },
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black54,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: const Center(
+                                                      child: Text(
+                                                        'Accept',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: SizedBox(
-                                      height: 155,
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.black38),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      '"${ref.watch(userManagementProvider).userDetails.gender == 'Male' ? 'She' : 'He'} has sent an\ninterest to you"',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        color: Colors.grey[600],
-                                                      ),
+                                      Expanded(
+                                        child: SizedBox(
+                                          height: 155,
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(height: 10),
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.black38),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          '"${ref.watch(userManagementProvider).userDetails.gender == 'Male' ? 'She' : 'He'} has sent an\ninterest to you"',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontStyle: FontStyle
+                                                                .italic,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 4),
+                                                        Text(
+                                                          interest.interestCreatedAt !=
+                                                                  null
+                                                              ? DateFormat(
+                                                                      'dd MMM yyyy')
+                                                                  .format(DateTime
+                                                                      .parse(interest
+                                                                          .interestCreatedAt!))
+                                                              : 'N/A',
+                                                          style: TextStyle(
+                                                            fontStyle: FontStyle
+                                                                .italic,
+                                                            color: Colors
+                                                                .grey[500],
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      interest.interestCreatedAt !=
-                                                              null
-                                                          ? DateFormat(
-                                                                  'dd MMM yyyy')
-                                                              .format(DateTime
-                                                                  .parse(interest
-                                                                      .interestCreatedAt!))
-                                                          : 'N/A',
-                                                      style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        color: Colors.grey[500],
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 30),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 4),
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                await ref
-                                                    .read(interestProvider
-                                                        .notifier)
-                                                    .rejectProfile('Rejected',
-                                                        interest.interestId!);
-                                                await ref
-                                                    .read(interestModelProvider
-                                                        .notifier)
-                                                    .getReceivedInterests();
-                                              },
-                                              child: Container(
-                                                height: 20,
-                                                width: 98,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red.shade700,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                ),
-                                                child: const Center(
-                                                  child: Text(
-                                                    'Decline',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                              const SizedBox(height: 30),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 4),
+                                                child: GestureDetector(
+                                                  onTap: () async {
+                                                    await ref
+                                                        .read(interestProvider
+                                                            .notifier)
+                                                        .rejectProfile(
+                                                            'Rejected',
+                                                            interest
+                                                                .interestId!);
+                                                    await ref
+                                                        .read(
+                                                            interestModelProvider
+                                                                .notifier)
+                                                        .getReceivedInterests();
+                                                  },
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 98,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.red.shade700,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: const Center(
+                                                      child: Text(
+                                                        'Decline',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                        )
+                                );
+                              },
+                            )
             ],
           ),
         ),

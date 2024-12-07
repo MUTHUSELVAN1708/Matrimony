@@ -4,15 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/payment_state.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/profile_card_stack.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/matches_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
+import 'package:matrimony/common/widget/carosal_slider.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
+import 'package:matrimony/common/widget/social_media_banner.dart';
 import 'package:matrimony/edit/profile/providers/profile_percentage_state.dart';
+import 'package:matrimony/interest_accept_reject/screens/all_accepted_profiles_to_you.dart';
+import 'package:matrimony/interest_accept_reject/screens/all_recieved_profile_list_screen.dart';
+import 'package:matrimony/interest_accept_reject/screens/all_shortlisted_you_by_others_screen.dart';
+import 'package:matrimony/interest_accept_reject/screens/all_viewed_to_you_screen.dart';
 import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_partner_data.dart';
@@ -59,6 +67,14 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
     fetchDailyRecommendations();
     fetchInterests();
     fetchPercentage();
+    fetchAllPlans();
+    fetchSuccessStories();
+  }
+
+  Future<void> fetchSuccessStories() async {
+    if (mounted) {
+      await ref.read(dailyRecommendProvider.notifier).fetchSuccessStories();
+    }
   }
 
   Future<void> fetchAllMatches() async {
@@ -67,6 +83,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
       setState(() {
         isAllMatchesLoading = false;
       });
+    }
+  }
+
+  Future<void> fetchAllPlans() async {
+    if (mounted) {
+      await ref.read(paymentNotifier.notifier).getAllPlans();
     }
   }
 
@@ -94,6 +116,18 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
     }
     if (mounted) {
       ref.read(interestModelProvider.notifier).getMeBlockedUsers();
+    }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getViewedList();
+    }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getShortList();
+    }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getShortListToMe();
+    }
+    if (mounted) {
+      ref.read(interestModelProvider.notifier).getViewedToMeList();
     }
   }
 
@@ -132,14 +166,14 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(context),
-              _buildAllMatches(ref),
+              _buildAllMatches(),
               _buildCompleteProfile(),
-              _buildSuccessStory(context),
+              const SuccessStoryWidget(),
               if (getImageApiProviderState.data != null &&
                   !getImageApiProviderState.data!.paymentStatus) ...[
                 _buildUpgradeNow(context),
               ],
-              // _buildSocialMediaBanner(),
+              const SocialMediaIcon(),
               const ProfileCardStack(),
               _buildAssistanceService(),
             ],
@@ -241,12 +275,11 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
     );
   }
 
-  // Rest of your existing code remains the same...
   Widget _buildPendingTasks() {
-    // Your existing _buildPendingTasks code...
     final colors = [0xFF0D5986, 0xFFD6151A, 0xFFD65915, 0xFF7C590C];
     final colorsBackground = [0xFFE7F6FF, 0xFFFFE4E4, 0xFFFDDACB, 0xFFFFF4E7];
     final interestState = ref.watch(interestModelProvider);
+    final dailyRecommendState = ref.watch(dailyRecommendProvider);
     final strings = [
       'Accept\nReceived',
       'Interests\nReceived',
@@ -257,47 +290,74 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
         4,
-        (index) => Column(
-          children: [
-            Container(
-              width: 60,
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-              decoration: BoxDecoration(
-                color: Color(colorsBackground[index]),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    index == 0
-                        ? interestState.sentInterests
-                            .where((accept) => accept.status == 'Accepted')
-                            .length
-                            .toString()
-                            .padLeft(2, '0')
-                        : index == 1
-                            ? interestState.receivedInterests.length
-                                .toString()
-                                .padLeft(2, '0')
-                            : '00',
-                    style: TextStyle(
-                      fontSize: 35,
-                      color: Color(colors[index]),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    strings[index],
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Color(colors[index]),
-                    ),
-                  ),
-                ],
-              ),
+        (index) => GestureDetector(
+          onTap: () async {
+            final getImageApiProviderState = ref.watch(getImageApiProvider);
+            if (getImageApiProviderState.data != null &&
+                getImageApiProviderState.data!.paymentStatus) {
+              if (mounted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => index == 0
+                            ? const AllAcceptedProfilesToYou()
+                            : index == 1
+                                ? const RequestProfilesScreen()
+                                : index == 2
+                                    ? const AllViewedToYouScreen()
+                                    : const AllShortlistedYouByOthersScreen()));
+              }
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PlanUpgradeScreen()));
+            }
+          },
+          child: Container(
+            width: 60,
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            decoration: BoxDecoration(
+              color: Color(colorsBackground[index]),
+              borderRadius: BorderRadius.circular(8),
             ),
-          ],
+            child: Column(
+              children: [
+                Text(
+                  index == 0
+                      ? interestState.sentInterests
+                          .where((accept) => accept.status == 'Accepted')
+                          .length
+                          .toString()
+                          .padLeft(2, '0')
+                      : index == 1
+                          ? interestState.receivedInterests.length
+                              .toString()
+                              .padLeft(2, '0')
+                          : index == 2
+                              ? interestState.viewListToMe.length
+                                  .toString()
+                                  .padLeft(2, '0')
+                              : interestState.shortListToMe.length
+                                  .toString()
+                                  .padLeft(2, '0'),
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: Color(colors[index]),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  strings[index],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Color(colors[index]),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -448,7 +508,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
     );
   }
 
-  Widget _buildAllMatches(WidgetRef ref) {
+  Widget _buildAllMatches() {
     final matingData = ref.watch(allMatchesProvider);
     final interestModelState = ref.watch(interestModelProvider);
     final allMatchList = matingData.allMatchList
@@ -472,10 +532,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const BottomNavBarScreen(
-                                isFetch: true,
-                                index: 1,
-                              )));
+                          builder: (context) => const MatchesScreen()));
                 },
                 child: Container(
                   padding:
@@ -523,12 +580,13 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
                                 onTap: () async {
                                   final getImageApiProviderState =
                                       ref.watch(getImageApiProvider);
-                                  final partnerDetails = await ref
-                                      .read(userManagementProvider.notifier)
-                                      .getPartnerDetails(matching.id ?? 0);
+
                                   if (getImageApiProviderState.data != null &&
                                       getImageApiProviderState
                                           .data!.paymentStatus) {
+                                    final partnerDetails = await ref
+                                        .read(userManagementProvider.notifier)
+                                        .getPartnerDetails(matching.id ?? 0);
                                     if (mounted) {
                                       Navigator.push(
                                           context,
@@ -822,124 +880,6 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen>
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSocialMediaBanner() {
-    List<String> svg = ['what', 'link', 'ig', 'yt', 'twi', 'fb'];
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 15),
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/image/follow.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Column(
-                  children: [
-                    CustomSvg(
-                      name: 'astro_logo',
-                      height: 40,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Follow us for more',
-                      style: TextStyle(
-                        color: Color(0xFFFFFFFF),
-                        fontSize: 20,
-                        fontFamily: 'Michroma',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(6, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: CustomSvg(
-                        name: svg[index],
-                        height: 25,
-                      ),
-                    );
-                  }),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuccessStory(BuildContext context) {
-    final List<String> imagePaths = [
-      'assets/image/successimage.png',
-      'assets/image/successimage.png',
-      'assets/image/successimage.png',
-    ];
-
-    return Container(
-      margin: const EdgeInsets.all(16),
-      height: MediaQuery.of(context).size.height * 0.50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Stack(
-        children: [
-          CarouselSlider.builder(
-            itemCount: imagePaths.length,
-            itemBuilder: (context, index, realIndex) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  imagePaths[index],
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-              );
-            },
-            options: CarouselOptions(
-              height: MediaQuery.of(context).size.height * 0.50,
-              viewportFraction: 1.0,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 3),
-              enableInfiniteScroll: true,
-              onPageChanged: (index, reason) {},
-            ),
-          ),
-
-          // Dots Indicator
-          Positioned(
-            bottom: 10,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(imagePaths.length, (index) {
-                return Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.8), // Indicator color
-                  ),
-                );
-              }),
-            ),
-          ),
-        ],
       ),
     );
   }

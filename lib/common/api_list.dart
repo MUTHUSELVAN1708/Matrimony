@@ -2,7 +2,7 @@ class Api {
   // static const String baseUrl = 'http://192.168.29.223:8080/api/ahathirumanam';
   // static const String baseUrl = 'http://192.168.29.49:8080/api/ahathirumanam';
   // static const String baseUrl = 'http://192.168.1.12:8080/api/ahathirumanam';
-  static const String baseUrl = 'http://192.168.235.182:8080/api/ahathirumanam';
+  static const String baseUrl = 'http://192.168.213.182:8080/api/ahathirumanam';
 
   static const String createUser = '$baseUrl/profileCreate';
   static const String loginOtpVerify = '$baseUrl/loginotpverify';
@@ -67,6 +67,18 @@ class Api {
   static const String forgot = '$baseUrl/forgot';
   static const String forgototpverify = '$baseUrl/forgototpverify';
   static const String newpassword = '$baseUrl/newpassword';
+  static const String changePassword = '$baseUrl/changePassword';
   static const String profilePercentage = '$baseUrl/profilePercentage';
   static const String getUserIdWithUniqueId = '$baseUrl/getuserdetailsuniqueId';
+  static const String deleteAccount = '$baseUrl/deleteaccount';
+  static const String fcmToken = '$baseUrl/saveToken';
+  static const String getAllPlans = '$baseUrl/getallplan';
+  static const String profileView = '$baseUrl/profile-view';
+  static const String getProfileView = '$baseUrl/profile/view-list';
+  static const String getMyProfileViews = '$baseUrl/profile/viewed-by';
+  static const String shortList = '$baseUrl/favorites/add';
+  static const String unShortList = '$baseUrl/favorites/remove';
+  static const String getShortListedYou = '$baseUrl/favorites';
+  static const String getShortListedMe = '$baseUrl/favoriteds';
+  static const String successStory = '$baseUrl/successstory';
 }

@@ -287,6 +287,61 @@ class InterestProvider extends StateNotifier<InterestState> {
     }
   }
 
+  Future<void> viewUser(int viewId) async {
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.post(
+        Uri.parse("${Api.profileView}?viewerId=$userId&viewedId=$viewId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'AppId': '1',
+        },
+      );
+      if (response.statusCode == 200) {
+      } else {}
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> shortListUser(int shortListId) async {
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.post(
+        Uri.parse(
+            "${Api.shortList}?favoriterUserId=$userId&favoritedUserId=$shortListId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'AppId': '1',
+        },
+      );
+
+      if (response.statusCode == 200) {
+      } else {}
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> unShortListUser(int shortListId) async {
+    try {
+      final int? userId = await SharedPrefHelper.getUserId();
+      final response = await http.delete(
+        Uri.parse(
+            "${Api.unShortList}?favoriterUserId=$userId&favoritedUserId=$shortListId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'AppId': '1',
+        },
+      );
+
+      if (response.statusCode == 200) {
+      } else {}
+    } catch (error) {
+      print(error);
+    }
+  }
+
   void disposeState() {
     state = InterestState.initial();
   }

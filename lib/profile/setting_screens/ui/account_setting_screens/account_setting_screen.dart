@@ -6,6 +6,7 @@ import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/log_out_model.dart';
 import 'package:matrimony/helper/nav_helper.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
+import 'package:matrimony/profile/setting_screens/riverpod/delete_account_state.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/change_password_screen.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/deactivate_account_screen.dart';
 import 'package:matrimony/profile/setting_screens/ui/account_setting_screens/delete_profile_screen.dart';
@@ -169,6 +170,7 @@ class AccountSettingScreenState extends ConsumerState<AccountSettingScreen> {
             ),
             GestureDetector(
               onTap: () {
+                ref.read(deleteAccountProvider.notifier).clearState();
                 NavigationHelper.slideNavigateTo(
                   context: context,
                   screen: const DeleteProfileScreen(),

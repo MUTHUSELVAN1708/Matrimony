@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/daily_recommented_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/widgets/custom_svg.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/chat_screen.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
@@ -35,6 +38,8 @@ class AllMatchesDetailsScreen extends ConsumerStatefulWidget {
 
 class _AllMatchesDetailsScreenState
     extends ConsumerState<AllMatchesDetailsScreen> {
+  Uint8List? decodedImage;
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +48,11 @@ class _AllMatchesDetailsScreenState
 
   Future<void> getData() async {
     await Future.delayed(Duration.zero);
+    if (widget.userPartnerData.userDetails?.images != null &&
+        widget.userPartnerData.userDetails!.images!.isNotEmpty) {
+      decodedImage =
+          base64Decode(widget.userPartnerData.userDetails!.images![0]);
+    }
     ref.read(interestProvider.notifier).disposeState();
     ref.read(interestProvider.notifier).setStatus(
         ref.read(interestModelProvider).sentInterests,
@@ -50,6 +60,18 @@ class _AllMatchesDetailsScreenState
         ref.read(interestModelProvider).blockLists,
         ref.read(interestModelProvider).ignoredLists,
         widget.userPartnerData.userDetails?.userId ?? 0);
+    final userId = widget.userPartnerData.userDetails?.userId;
+    if (userId != null &&
+        ref
+            .watch(interestModelProvider)
+            .viewList
+            .any((id) => id.userId == userId)) {
+    } else {
+      if (userId != null) {
+        await ref.read(interestProvider.notifier).viewUser(userId);
+      }
+      await ref.read(interestModelProvider.notifier).getViewedList();
+    }
   }
 
   @override
@@ -106,6 +128,9 @@ class _AllMatchesDetailsScreenState
       PartnerDetailsModel partnerDetails) {
     final interestProviderState = ref.watch(interestProvider);
     final interestModelProviderState = ref.watch(interestModelProvider);
+    final isShortListed = userDetails.userId != null &&
+        interestModelProviderState.shortList
+            .any((id) => id.userId == userDetails.userId);
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -121,12 +146,9 @@ class _AllMatchesDetailsScreenState
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    image: userDetails.images != null &&
-                            userDetails.images!.isNotEmpty
+                    image: decodedImage != null
                         ? DecorationImage(
-                            image: MemoryImage(
-                              base64Decode(userDetails.images![0]),
-                            ),
+                            image: MemoryImage(decodedImage!),
                             fit: BoxFit.cover,
                           )
                         : const DecorationImage(
@@ -145,30 +167,57 @@ class _AllMatchesDetailsScreenState
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if ((interestProviderState.sentStatus == null ||
-                                interestProviderState.sentStatus == '') &&
-                            (interestProviderState.receiveStatus == null ||
-                                interestProviderState.receiveStatus == ''))
-                          Container(
+                        // if ((interestProviderState.sentStatus == null ||
+                        //         interestProviderState.sentStatus == '') &&
+                        //     (interestProviderState.receiveStatus == null ||
+                        //         interestProviderState.receiveStatus == ''))
+                        GestureDetector(
+                          onTap: () async {
+                            final userId = userDetails.userId;
+                            if (userId != null) {
+                              if (isShortListed) {
+                                await ref
+                                    .read(interestProvider.notifier)
+                                    .unShortListUser(userId);
+                              } else {
+                                await ref
+                                    .read(interestProvider.notifier)
+                                    .shortListUser(userId);
+                              }
+                              await ref
+                                  .read(interestModelProvider.notifier)
+                                  .getShortList();
+                            }
+                          },
+                          child: Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 4, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Row(
+                            child: Row(
                               children: [
-                                Icon(Icons.star_border_outlined,
-                                    color: Colors.black),
+                                Icon(
+                                  isShortListed
+                                      ? Icons.star
+                                      : Icons.star_border_outlined,
+                                  color: isShortListed
+                                      ? Colors.amber
+                                      : Colors.black,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 4),
                                 Text(
-                                  'Shortlist',
+                                  isShortListed ? 'Shortlisted' : 'Shortlist',
                                   style: AppTextStyles.spanTextStyle,
-                                )
+                                ),
                               ],
                             ),
-                          )
-                        else
-                          const SizedBox(),
+                          ),
+                        ),
+                        // else
+                        //   const SizedBox(),
                         PopupMenuButton<String>(
                           color: Colors.white,
                           elevation: 2,
@@ -245,10 +294,10 @@ class _AllMatchesDetailsScreenState
                             //         interestProviderState.sentStatus == '') &&
                             //     (interestProviderState.receiveStatus == null ||
                             //         interestProviderState.receiveStatus == ''))
-                            const PopupMenuItem<String>(
-                              value: 'shortlist',
-                              child: Text('Shortlist'),
-                            ),
+                            // const PopupMenuItem<String>(
+                            //   value: 'shortlist',
+                            //   child: Text('Shortlist'),
+                            // ),
                             if ((interestProviderState.sentStatus == null ||
                                     interestProviderState.sentStatus == '') &&
                                 (interestProviderState.receiveStatus == null ||
@@ -494,7 +543,13 @@ class _AllMatchesDetailsScreenState
                       child: Center(
                         child: Row(
                           children: [
-                            const CustomSvg(name: 'whatsapp-icon'),
+                            const Icon(
+                              FontAwesomeIcons.whatsapp,
+                              color: Colors.green,
+                            ),
+                            const SizedBox(
+                              width: 3,
+                            ),
                             Text(
                               'whatsapp',
                               style: AppTextStyles.spanTextStyle
@@ -527,6 +582,9 @@ class _AllMatchesDetailsScreenState
                         child: Row(
                           children: [
                             const CustomSvg(name: 'call_now'),
+                            const SizedBox(
+                              width: 3,
+                            ),
                             Text('Call Now',
                                 style: AppTextStyles.spanTextStyle
                                     .copyWith(color: Colors.black))
@@ -1103,7 +1161,19 @@ class _AllMatchesDetailsScreenState
                           if (interestProviderState.sentStatus.toString() ==
                                   'Accepted' ||
                               interestProviderState.receiveStatus.toString() ==
-                                  'Accepted') {}
+                                  'Accepted') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                          sent: SentModel(
+                                        name: userDetails.name,
+                                        userId: userDetails.userId,
+                                        images: userDetails.images,
+                                        uniqueId: userDetails.uniqueId,
+                                      ))),
+                            );
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),

@@ -187,11 +187,11 @@ class MatchCard extends ConsumerWidget {
                   onPressed: () async {
                     final getImageApiProviderState =
                         ref.watch(getImageApiProvider);
-                    final partnerDetails = await ref
-                        .read(userManagementProvider.notifier)
-                        .getPartnerDetails(searchModel.id ?? 0);
                     if (getImageApiProviderState.data != null &&
                         getImageApiProviderState.data!.paymentStatus) {
+                      final partnerDetails = await ref
+                          .read(userManagementProvider.notifier)
+                          .getPartnerDetails(searchModel.id ?? 0);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

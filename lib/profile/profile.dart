@@ -495,7 +495,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               // Light gray shadow for elevation
               spreadRadius: 1,
               blurRadius: 5,
-              offset: Offset(0, 2), // Shadow direction
+              offset: const Offset(0, 2), // Shadow direction
             ),
           ],
         ),

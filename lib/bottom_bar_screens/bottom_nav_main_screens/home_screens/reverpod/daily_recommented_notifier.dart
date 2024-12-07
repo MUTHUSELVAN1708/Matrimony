@@ -5,6 +5,9 @@ import 'package:matrimony/common/local_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:matrimony/models/success_story.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class DailyRecommend extends Equatable {
   final int? userId;
   final String? name;
@@ -69,28 +72,33 @@ class DailyRecommend extends Equatable {
 class DailyRecommendState extends Equatable {
   final bool isLoading;
   final List<DailyRecommend> dailyRecommendList;
+  final List<SuccessStory> successStories;
   final String? error;
 
   const DailyRecommendState({
     this.isLoading = false,
     this.dailyRecommendList = const [],
+    this.successStories = const [],
     this.error,
   });
 
   DailyRecommendState copyWith({
     bool? isLoading,
     List<DailyRecommend>? dailyRecommendList,
+    List<SuccessStory>? successStories,
     String? error,
   }) {
     return DailyRecommendState(
       isLoading: isLoading ?? this.isLoading,
       dailyRecommendList: dailyRecommendList ?? this.dailyRecommendList,
+      successStories: successStories ?? this.successStories,
       error: error,
     );
   }
 
   @override
-  List<Object?> get props => [isLoading, dailyRecommendList, error];
+  List<Object?> get props =>
+      [isLoading, dailyRecommendList, error, successStories];
 }
 
 class DailyRecommendNotifier extends StateNotifier<DailyRecommendState> {
@@ -137,6 +145,58 @@ class DailyRecommendNotifier extends StateNotifier<DailyRecommendState> {
         isLoading: false,
         error: 'No Recommendations Available.',
       );
+    }
+  }
+
+  Future<void> fetchSuccessStories() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lastFetchTime = prefs.getString('lastSuccessStoryFetchTime');
+      DateTime lastFetchDateTime = lastFetchTime != null
+          ? DateTime.parse(lastFetchTime)
+          : DateTime(2000, 1, 1);
+
+      final now = DateTime.now();
+
+      final localData = prefs.getString('successStories');
+      if (now.difference(lastFetchDateTime).inDays < 1 &&
+          now.day == lastFetchDateTime.day &&
+          localData != null) {
+        final List<dynamic> data = jsonDecode(localData);
+        final List<SuccessStory> successStories = data
+            .map((item) => SuccessStory.fromJson(item as Map<String, dynamic>))
+            .toList();
+        state = state.copyWith(successStories: successStories);
+        return;
+      }
+
+      final response = await http.post(
+        Uri.parse(Api.successStory),
+        headers: {
+          'Content-Type': 'application/json',
+          'AppId': '1',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final List<SuccessStory> successStories = data
+            .map((item) => SuccessStory.fromJson(item as Map<String, dynamic>))
+            .toList();
+
+        state = state.copyWith(successStories: successStories);
+
+        await prefs.setString(
+          'successStories',
+          jsonEncode(successStories.map((e) => e.toJson()).toList()),
+        );
+        await prefs.setString(
+            'lastSuccessStoryFetchTime', now.toIso8601String());
+      } else {
+        throw Exception('Failed to fetch success stories.');
+      }
+    } catch (e) {
+      print('Error fetching success stories: $e');
     }
   }
 }

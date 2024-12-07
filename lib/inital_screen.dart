@@ -6,6 +6,8 @@ import 'package:matrimony/user_auth_screens/login_screens/login_screen.dart';
 import 'package:matrimony/user_auth_screens/register_screens/register_user_select_screen.dart';
 
 class InitialScreen extends StatelessWidget {
+  const InitialScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

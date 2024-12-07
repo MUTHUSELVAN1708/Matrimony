@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/chat_screen.dart';
+import 'package:matrimony/models/interest_model.dart';
 
 enum ChatCardType { newRequest, sentMessage, pending }
 
@@ -165,7 +166,10 @@ class ChatCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChatScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const ChatScreen(
+                              sent: SentModel(),
+                            )),
                   );
                 },
                 style: ElevatedButton.styleFrom(

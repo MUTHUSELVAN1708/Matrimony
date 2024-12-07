@@ -89,7 +89,7 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
                         children: [
                           _buildListTile(
                             'Age',
-                            '${searchInput?.fromAge == 0 ? '-' : searchInput?.fromAge} yrs - ${searchInput?.toAge == 0 ? '-' : searchInput?.toAge} yrs',
+                            '${searchInput?.fromAge} yrs - ${searchInput?.toAge} yrs',
                             onTap: () => showAgeSelectionDialog(
                                 context,
                                 'Age',
@@ -1060,10 +1060,12 @@ class _PartnerSearchScreenState extends ConsumerState<PartnerSearchScreen> {
   void showAgeSelectionDialog(BuildContext context, String hint, String hint1,
       String hint2, List<String> items, bool ageheight) {
     final value = ref.read(searchFilterInputProvider);
-    List<String> fromItem =
-        value?.fromAge != 0 ? [value?.fromAge.toString() ?? ''] : [];
-    List<String> toItem =
-        value?.toAge != 0 ? [value?.toAge.toString() ?? ''] : [];
+    List<String> fromItem = value?.fromAge != 0 && value?.fromAge != null
+        ? [value?.fromAge.toString() ?? '']
+        : [];
+    List<String> toItem = value?.toAge != 0 && value?.toAge != null
+        ? [value?.toAge.toString() ?? '']
+        : [];
     late List<String> selectedValues;
     bool isSelectAll = false;
     bool isSingleSelection = false;

@@ -27,7 +27,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
       "message_id": 2,
       "send_user_id": 102,
       "receive_user_id": 101,
-      "content": "I'm good, thanks! What about you?",
+      "content":
+          "I'm good, thanks! What about you? djqwjd ajsawdjaasdakd asjdawdkaw;lasdajd",
       "message_type": "text",
       "timestamp": "10:32 AM",
       "status": "delivered",
@@ -69,23 +70,22 @@ class _ConversationScreenState extends State<ConversationScreen> {
             isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isSender) ...[
-            CircleAvatar(
-              radius: 16,
-              backgroundImage:
-                  AssetImage(userImage ?? "assets/image/emptyProfile.png"),
-            ),
-            const SizedBox(width: 8),
-          ],
           Flexible(
             child: Column(
               crossAxisAlignment:
                   isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  margin: EdgeInsets.only(
+                    left: isSender ? 70 : 0,
+                    right: isSender ? 0 : 70,
+                  ),
+                  padding: const EdgeInsets.only(
+                      left: 12, right: 12, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                    color: isSender ? Colors.blue : Colors.grey.shade200,
+                    color: isSender
+                        ? const Color(0xFF383838)
+                        : const Color(0xFFD6151A),
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(12),
                       topRight: const Radius.circular(12),
@@ -96,7 +96,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   child: Text(
                     content,
                     style: TextStyle(
-                      color: isSender ? Colors.white : Colors.black87,
+                      color: isSender ? Colors.white : Colors.white,
                     ),
                   ),
                 ),
@@ -158,53 +158,65 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _buildMessage(message),
-                );
-              },
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            filterQuality: FilterQuality.high,
+            colorFilter: ColorFilter.srgbToLinearGamma(),
+            image: AssetImage('assets/image/bg.png') as ImageProvider<Object>,
+            fit: BoxFit.cover,
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            color: Colors.grey.shade100,
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: "Type a message",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildMessage(message),
+                  );
+                },
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              height: 50,
+              margin: const EdgeInsets.only(left: 20, bottom: 8, right: 20),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFFD6151A))),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(0),
+                        hintText: "Type a message",
+                        hintStyle: const TextStyle(color: Color(0xFFD6151A)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        // filled: true,
+                        // fillColor: Colors.white,
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.blue,
-                  child: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: _sendMessage,
-                  ),
-                ),
-              ],
+                  GestureDetector(
+                      onTap: () {
+                        _sendMessage();
+                      },
+                      child: const Icon(Icons.send, color: Color(0xFFD6151A))),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/data/profile_options.dart';
@@ -59,7 +60,8 @@ class _PartnerPreferenceBasicDetailScreenState
         ref.read(userManagementProvider).userPartnerDetails.partnerToHeight ??
             '');
     return EnhancedLoadingWrapper(
-      isLoading: editPartnerPreferenceProviderState.isLoading,
+      isLoading: editPartnerPreferenceProviderState.isLoading ||
+          ref.watch(allMatchesProvider).isLoading,
       child: Material(
         color: Colors.transparent,
         child: Scaffold(
@@ -334,6 +336,7 @@ class _PartnerPreferenceBasicDetailScreenState
           final result = await ref
               .read(editPartnerPreferenceProvider.notifier)
               .updateBasicDetails();
+          await ref.read(allMatchesProvider.notifier).allMatchDataFetch();
           ref
               .read(userManagementProvider.notifier)
               .updatePartnerBasicDetails(editPreference);
