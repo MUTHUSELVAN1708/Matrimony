@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/all_matches_details_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/plan_upgrade_screen.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/chat_screen.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/interest_accept_reject/state/interest_state.dart';
 import 'package:matrimony/interest_block_dontshow_report_profile/riverpod/interest_provider.dart';
+import 'package:matrimony/models/interest_model.dart';
 import 'package:matrimony/models/riverpod/usermanagement_state.dart';
 import 'package:matrimony/models/user_partner_data.dart';
 import 'package:matrimony/user_register_riverpods/riverpod/user_image_get_notifier.dart';
@@ -109,12 +111,13 @@ class _RequestProfilesScreenState extends ConsumerState<RequestProfilesScreen> {
                                 if (!isBlocked) {
                                   final getImageApiProviderState =
                                       ref.watch(getImageApiProvider);
-                                  final partnerDetails = await ref
-                                      .read(userManagementProvider.notifier)
-                                      .getPartnerDetails(interest.userId ?? 0);
                                   if (getImageApiProviderState.data != null &&
                                       getImageApiProviderState
                                           .data!.paymentStatus) {
+                                    final partnerDetails = await ref
+                                        .read(userManagementProvider.notifier)
+                                        .getPartnerDetails(
+                                            interest.userId ?? 0);
                                     if (mounted) {
                                       Navigator.push(
                                           context,
@@ -526,7 +529,26 @@ class _RequestProfilesScreenState extends ConsumerState<RequestProfilesScreen> {
                                                   : interest.status ==
                                                           'Accepted'
                                                       ? GestureDetector(
-                                                          onTap: () async {},
+                                                          onTap: () async {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => ChatScreen(
+                                                                      sent: SentModel(
+                                                                          name: interest
+                                                                              .name,
+                                                                          userId: interest
+                                                                              .userId,
+                                                                          images: interest
+                                                                              .images,
+                                                                          interestId: interest
+                                                                              .interestId,
+                                                                          uniqueId: interest
+                                                                              .uniqueId,
+                                                                          status:
+                                                                              interest.status))),
+                                                            );
+                                                          },
                                                           child: Container(
                                                             margin:
                                                                 const EdgeInsets

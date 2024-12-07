@@ -41,10 +41,10 @@ class SearchFilterInput {
   // Constructor with default values (empty or zero values)
   SearchFilterInput({
     this.userId,
-    this.fromAge = 0,
-    this.toAge = 0,
-    this.fromHeight = "",
-    this.toHeight = "",
+    this.fromAge = 18,
+    this.toAge = 40,
+    this.fromHeight = "4 ft 6 in (137 cm)",
+    this.toHeight = "6 ft 9 in (206 cm)",
     this.maritalStatus = "Any",
     this.motherTongue = "Any",
     this.profileCreatedBy = 'Any',
@@ -241,10 +241,10 @@ class SearchFilterInputNotifier extends StateNotifier<SearchFilterInput?> {
 
   void setSearchFilterInput(PartnerDetailsModel partnerDetails) {
     state = SearchFilterInput(
-      fromAge: isNullOrEmpty(partnerDetails.partnerFromAge.toString())
+      fromAge: isNullOrEmpty(partnerDetails.partnerFromAge?.toString())
           ? state?.fromAge
           : partnerDetails.partnerFromAge,
-      toAge: isNullOrEmpty(partnerDetails.partnerToAge.toString())
+      toAge: isNullOrEmpty(partnerDetails.partnerToAge?.toString())
           ? state?.toAge
           : partnerDetails.partnerToAge,
       fromHeight: isNullOrEmpty(partnerDetails.partnerFromHeight)

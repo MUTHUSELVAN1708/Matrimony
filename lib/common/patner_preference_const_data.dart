@@ -182,6 +182,7 @@ class PartnerPreferenceConstData {
     '38',
     '39',
     '40',
+    '41',
   ];
 
   static List<String> weightListPartner = [

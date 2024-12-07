@@ -46,7 +46,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     return EnhancedLoadingWrapper(
       isLoading: changePassState.isLoading,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -269,6 +269,14 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                           CustomSnackBar.show(
                             context: context,
                             message: 'Confirm Password is different',
+                            isError: true,
+                          );
+                          return;
+                        }
+                        if (oldPassword.text == confirmPassword.text) {
+                          CustomSnackBar.show(
+                            context: context,
+                            message: 'Old and New Password is Same.',
                             isError: true,
                           );
                           return;

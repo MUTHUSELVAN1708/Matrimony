@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/reverpod/get_all_matches_notifier.dart';
 import 'package:matrimony/common/patner_preference_const_data.dart';
+import 'package:matrimony/common/widget/full_screen_loader.dart';
 import 'package:matrimony/edit/profile/data/profile_options.dart';
 import 'package:matrimony/edit/profile/notifier/profile_notifier.dart';
 import 'package:matrimony/edit/profile/providers/profile_provider.dart';
@@ -51,27 +53,31 @@ class _PartnerPreferenceBasicDetailScreenState
     final width = MediaQuery.of(context).size.width;
     return Material(
       color: Colors.transparent,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              height: double.infinity,
-              margin: EdgeInsets.only(bottom: heightQuery * 0.2),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/initialimage.png'),
-                  // Use your image path here
-                  fit: BoxFit.cover,
+      child: EnhancedLoadingWrapper(
+        isLoading: editPartnerPreferenceProviderState.isLoading ||
+            ref.watch(allMatchesProvider).isLoading,
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Container(
+                height: double.infinity,
+                margin: EdgeInsets.only(bottom: heightQuery * 0.2),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/initialimage.png'),
+                    // Use your image path here
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  color: Colors.black.withOpacity(0.4),
                 ),
               ),
-              child: Container(
-                color: Colors.black.withOpacity(0.4),
-              ),
-            ),
-            _buildHeader(context, width),
-            _buildForm(
-                context, ref, editPartnerPreferenceProviderState, heightQuery),
-          ],
+              _buildHeader(context, width),
+              _buildForm(context, ref, editPartnerPreferenceProviderState,
+                  heightQuery),
+            ],
+          ),
         ),
       ),
     );
@@ -281,6 +287,7 @@ class _PartnerPreferenceBasicDetailScreenState
           final result = await ref
               .read(editPartnerPreferenceProvider.notifier)
               .updateLifeStyleDetails();
+          await ref.read(allMatchesProvider.notifier).allMatchDataFetch();
           ref
               .read(userManagementProvider.notifier)
               .updatePartnerLifeStyleDetails(profileState);

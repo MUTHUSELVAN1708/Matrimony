@@ -4,6 +4,7 @@ import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_scree
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/screens/received_profiles_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/screens/sent_profile_screen.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/user_chat_screen.dart';
+import 'package:matrimony/interest_accept_reject/screens/all_shortlisted_you_screen.dart';
 
 class Inbox extends StatefulWidget {
   const Inbox({super.key});
@@ -54,14 +55,14 @@ class _InboxState extends State<Inbox> {
                     children: [
                       // Filter chips
                       SingleChildScrollView(
-                        // scrollDirection: Axis.horizontal,
+                        scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         child: Row(
                           children: [
                             _buildFilterChip('Received', 0),
                             _buildFilterChip('Sent', 1),
-                            _buildFilterChip('Requests', 2),
+                            _buildFilterChip('Shortlisted By You', 2),
                             _buildFilterChip('Calls', 3),
                           ],
                         ),
@@ -75,9 +76,9 @@ class _InboxState extends State<Inbox> {
                               _selectedChipIndex = index;
                             });
                           },
-                          children: [
-                            const ReceivedProfilesScreen(),
-                            const SentProfileScreen(),
+                          children: const [
+                            ReceivedProfilesScreen(),
+                            SentProfileScreen(),
                             // RequestUsersList(
                             //   userImages: [
                             //     'url1',
@@ -91,7 +92,8 @@ class _InboxState extends State<Inbox> {
                             //     // Handle add photo action
                             //   },
                             // ),
-                            const CallListScreen(),
+                            AllShortlistedYouScreen(),
+                            CallListScreen(),
                           ],
                         ),
                       ),

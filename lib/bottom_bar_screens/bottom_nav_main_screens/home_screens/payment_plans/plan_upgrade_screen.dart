@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/home_screens/payment_plans/payment_state.dart';
 import 'package:matrimony/common/app_text_style.dart';
 import 'package:matrimony/common/colors.dart';
 import 'package:matrimony/common/widget/circularprogressIndicator.dart';
@@ -19,126 +20,27 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
   String selectedPlan = 'Basic';
   bool isThreeMonthSelected = true;
 
-  final List<FeatureItem> basicFeatures = [
-    FeatureItem('Send unlimited personalized messages', true),
-    FeatureItem('Access verified mobile numbers', true,
-        threeMonthText: '40 Nos', sixMonthText: '80 Nos'),
-    FeatureItem('Send SMS', true,
-        threeMonthText: '30 SMS', sixMonthText: '60 SMS'),
-    FeatureItem('Chat instantly with prospects', true),
-    FeatureItem('View horoscope of members', true),
-    FeatureItem('Profile Highlighter-Makes your profile stand out', false),
-    FeatureItem('Message - Stamping Shortcuts and contacts', false),
-    FeatureItem('Priority in search results', true),
-    FeatureItem('Profile tagged as paid member for more response', true),
-    FeatureItem('Premium display in search results', false),
-    FeatureItem('Get instant notifications', true),
-    FeatureItem('View Social and Professional profile of members', true),
-  ];
-
-  final List<FeatureItem> premiumFeatures = [
-    FeatureItem('Send unlimited personalized Messages', true),
-    FeatureItem('Access verified mobile numbers', true,
-        threeMonthText: '80 Nos', sixMonthText: '160 Nos'),
-    FeatureItem('Send SMS', true,
-        threeMonthText: '60 SMS', sixMonthText: '120 SMS'),
-    FeatureItem('Chat instantly with prospects', true),
-    FeatureItem('View horoscope of members', true),
-    FeatureItem('Profile Highlighter-Makes your profile stand out', true,
-        threeMonthText: '4 month', sixMonthText: '6 month'),
-    FeatureItem('Message - Stamping Shortcuts and contacts', false),
-    FeatureItem('Priority in search results', true),
-    FeatureItem('Profile tagged as paid member for more response', true),
-    FeatureItem('Premium display in search results', true),
-    FeatureItem('Get instant notifications', true),
-    FeatureItem('View Social and Professional profile of members', true),
-  ];
-
-  final List<FeatureItem> eliteFeatures = [
-    FeatureItem('Send unlimited personalized Messages', true),
-    FeatureItem('Access verified mobile numbers', true),
-    FeatureItem('Send SMS', true),
-    FeatureItem('Chat instantly with prospects', true),
-    FeatureItem('View horoscope of members', true),
-    FeatureItem('Profile Highlighter-Makes your profile stand out', true,
-        threeMonthText: '1 month', sixMonthText: '2 month'),
-    FeatureItem('Message - Stamping Shortcuts and contacts', true),
-    FeatureItem('Priority in search results', true),
-    FeatureItem('Profile tagged as paid member for more response', true),
-    FeatureItem('Premium display in search results', true),
-    FeatureItem('Get instant notifications', true),
-    FeatureItem('Profile Horoscope / Reference', true),
-    FeatureItem('View Social and Professional profile of members', true),
-  ];
-
-  List<FeatureItem> get currentFeatures {
-    switch (selectedPlan) {
-      case 'Premium':
-        return premiumFeatures;
-      case 'Elite':
-        return eliteFeatures;
-      default:
-        return basicFeatures;
-    }
-  }
-
-  String get currentPrice {
-    switch (selectedPlan) {
-      case 'Premium':
-        return isThreeMonthSelected ? '3000' : '9000';
-      case 'Elite':
-        return isThreeMonthSelected ? '4000' : '12000';
-      default:
-        return isThreeMonthSelected ? '2000' : '6000';
-    }
-  }
-
-  String get providedProfile {
-    switch (selectedPlan) {
-      case 'Elite':
-        return isThreeMonthSelected
-            ? '3 month (50 Profile/Month)'
-            : '6 month (50 Profile/Month)';
-      case 'Premium':
-        return isThreeMonthSelected
-            ? '3 month (25 Profile/Month)'
-            : '6 month (25 Profile/Month)';
-      default:
-        return isThreeMonthSelected
-            ? '3 month (5 Profile/Month)'
-            : '6 month (5 Profile/Month)';
-    }
-  }
-
-  String get totalProfile {
-    switch (selectedPlan) {
-      case 'Elite':
-        return isThreeMonthSelected
-            ? 'Total Profile (150)'
-            : 'Total Profile(300)';
-      case 'Premium':
-        return isThreeMonthSelected
-            ? 'Total Profile (75)'
-            : 'Total Profile (150)';
-      default:
-        return isThreeMonthSelected ? 'Total Profile (5)' : 'Total Profile(15)';
-    }
-  }
-
   late Razorpay _razorpay;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    getPlan();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
+  Future<void> getPlan() async {
+    await Future.delayed(Duration.zero);
+    ref.read(paymentNotifier.notifier).getPlan(1);
+  }
+
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     final userManagementState = ref.watch(userManagementProvider);
+    final paymentState = ref.watch(paymentNotifier);
     setState(() {
       _isLoading = false;
     });
@@ -150,7 +52,7 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
       'paymentId': paymentId,
       'orderId': orderId,
       'signature': signature,
-      'amount': (currentPrice * 100),
+      'amount': (paymentState.plan!.priceInr.toInt() * 100),
       'plan': selectedPlan,
       'duration': isThreeMonthSelected ? '3 months' : '6 months',
       'serviceName': 'RazorPay',
@@ -195,12 +97,14 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
   }
 
   void openPayment(UserDetails userDetails) {
+    final paymentState = ref.watch(paymentNotifier);
     setState(() {
       _isLoading = true;
     });
 
     var options = {
       'key': 'rzp_live_ILgsfZCZoFIKMb',
+      // 'amount': (double.parse(paymentState.plan!.priceInr.toInt().toString()) * 100).toInt(),
       'amount': (double.parse(1.toString()) * 100).toInt(),
       'name': 'Aha Thirumanam',
       'description': '$selectedPlan Membership',
@@ -231,6 +135,7 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
   @override
   Widget build(BuildContext context) {
     final userManagementState = ref.watch(userManagementProvider);
+    final paymentState = ref.watch(paymentNotifier);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -274,6 +179,20 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
                   child: Switch(
                     value: !isThreeMonthSelected,
                     onChanged: (value) {
+                      print(!value);
+                      if (selectedPlan == 'Basic' && !value) {
+                        ref.read(paymentNotifier.notifier).getPlan(1);
+                      } else if (selectedPlan == 'Basic' && value) {
+                        ref.read(paymentNotifier.notifier).getPlan(2);
+                      } else if (selectedPlan == 'Premium' && !value) {
+                        ref.read(paymentNotifier.notifier).getPlan(3);
+                      } else if (selectedPlan == 'Premium' && value) {
+                        ref.read(paymentNotifier.notifier).getPlan(4);
+                      } else if (selectedPlan == 'Elite' && !value) {
+                        ref.read(paymentNotifier.notifier).getPlan(5);
+                      } else if (selectedPlan == 'Elite' && value) {
+                        ref.read(paymentNotifier.notifier).getPlan(6);
+                      }
                       setState(() {
                         isThreeMonthSelected = !value;
                       });
@@ -315,7 +234,7 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '$selectedPlan Plan',
+                        paymentState.plan?.packageName ?? '',
                         style: AppTextStyles.headingTextstyle
                             .copyWith(fontSize: 27),
                       ),
@@ -326,12 +245,12 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
                         ),
                       ),
                       Text(
-                        '₹$currentPrice',
+                        '₹${paymentState.plan?.priceInr.toInt()}',
                         style: AppTextStyles.headingTextstyle
                             .copyWith(fontSize: 50),
                       ),
                       Text(
-                        providedProfile,
+                        '${paymentState.plan?.duration} (${paymentState.plan!.totalProfiles ~/ int.parse(paymentState.plan!.duration.split(' ')[0])} Profile/Month)',
                         style: const TextStyle(
                           color: Colors.black,
                         ),
@@ -340,7 +259,7 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
                         height: 3,
                       ),
                       Text(
-                        totalProfile,
+                        'Total Profiles ${paymentState.plan?.totalProfiles}',
                         style: const TextStyle(
                           color: Colors.black,
                         ),
@@ -365,13 +284,15 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
-                            children: currentFeatures
+                            children: paymentState.plan!.planDetails
                                 .map((feature) => _buildFeatureItem(
-                                      feature.name,
-                                      feature.isIncluded,
-                                      additionalText: isThreeMonthSelected
-                                          ? feature.threeMonthText
-                                          : feature.sixMonthText,
+                                      feature.featureName,
+                                      isThreeMonthSelected
+                                          ? feature.isAvailableFor3Months
+                                          : feature.isAvailableFor6Months,
+                                      // additionalText: isThreeMonthSelected
+                                      //     ? feature.threeMonthText
+                                      //     : feature.sixMonthText,
                                     ))
                                 .toList(),
                           ),
@@ -389,9 +310,23 @@ class _PlanUpgradeScreenState extends ConsumerState<PlanUpgradeScreen> {
   }
 
   Widget _buildSegmentButton(String text) {
-    bool isSelected = selectedPlan == text;
+    final paymentState = ref.watch(paymentNotifier);
+    bool isSelected = paymentState.plan?.packageName.contains(text) ?? false;
     return GestureDetector(
       onTap: () {
+        if (text == 'Basic' && isThreeMonthSelected) {
+          ref.read(paymentNotifier.notifier).getPlan(1);
+        } else if (text == 'Basic' && !isThreeMonthSelected) {
+          ref.read(paymentNotifier.notifier).getPlan(2);
+        } else if (text == 'Premium' && isThreeMonthSelected) {
+          ref.read(paymentNotifier.notifier).getPlan(3);
+        } else if (text == 'Premium' && !isThreeMonthSelected) {
+          ref.read(paymentNotifier.notifier).getPlan(4);
+        } else if (text == 'Elite' && isThreeMonthSelected) {
+          ref.read(paymentNotifier.notifier).getPlan(5);
+        } else if (text == 'Elite' && !isThreeMonthSelected) {
+          ref.read(paymentNotifier.notifier).getPlan(6);
+        }
         setState(() {
           selectedPlan = text;
         });

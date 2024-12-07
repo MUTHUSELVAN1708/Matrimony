@@ -119,7 +119,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Get An Exclusive ₹1500 Off On 3 Month Gold',
+              'Get An Exclusive ₹1500 Off On 3 Month Plan',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

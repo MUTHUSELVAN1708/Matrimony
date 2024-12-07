@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:matrimony/bottom_bar_screens/bottom_nav_main_screens/inbox_screens/screens/coversation_screen.dart';
+import 'package:matrimony/models/interest_model.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final SentModel sent;
+
+  const ChatScreen({super.key, required this.sent});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -21,7 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(widget.sent),
       body: const Column(
         children: [
           Expanded(
@@ -32,20 +38,25 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(SentModel sent) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
+        icon: const Icon(Icons.arrow_back_ios, color: Colors.red, size: 20),
         onPressed: () => Navigator.pop(context),
       ),
       titleSpacing: 0,
       title: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 20,
-            backgroundImage: AssetImage('assets/image/emptyProfile.png'),
+            backgroundImage: sent.images != null && sent.images!.isNotEmpty
+                ? MemoryImage(
+                    base64Decode(sent.images![0]),
+                  )
+                : const AssetImage('assets/image/emptyProfile.png')
+                    as ImageProvider,
           ),
           const SizedBox(width: 12),
           Column(
@@ -53,9 +64,9 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               Row(
                 children: [
-                  const Text(
-                    'Girl',
-                    style: TextStyle(
+                  Text(
+                    sent.name ?? '',
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -64,6 +75,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   const SizedBox(width: 4),
                   Icon(Icons.verified, size: 16, color: Colors.blue[400]),
                 ],
+              ),
+              const SizedBox(
+                height: 4,
               ),
               Text(
                 'Last seen just now',
@@ -78,15 +92,23 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       actions: [
         IconButton(
-          icon: Icon(Icons.call, color: Colors.red[400]),
+          icon: Icon(
+            FontAwesomeIcons.phone,
+            color: Color(0xFFD6151A),
+            size: 20,
+          ),
           onPressed: () {},
         ),
         IconButton(
-          icon: Icon(Icons.videocam, color: Colors.red[400]),
+          icon: Icon(
+            FontAwesomeIcons.video,
+            color: Color(0xFFD6151A),
+            size: 20,
+          ),
           onPressed: () {},
         ),
         IconButton(
-          icon: const Icon(Icons.more_vert, color: Colors.black),
+          icon: const Icon(Icons.more_vert, color: Color(0xFFD6151A)),
           onPressed: () {},
         ),
       ],
